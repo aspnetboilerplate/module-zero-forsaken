@@ -1,0 +1,3 @@
+"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero\Abp.Zero.csproj" -Properties Configuration=Release -IncludeReferencedProjects
+"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj" -Properties Configuration=Release -IncludeReferencedProjects
+"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj" -Properties Configuration=Release -IncludeReferencedProjects

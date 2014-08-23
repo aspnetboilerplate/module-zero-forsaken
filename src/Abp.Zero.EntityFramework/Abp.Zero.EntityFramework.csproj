@@ -85,7 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Abp.Modules.Core.Infrastructure.NHibernate.nuspec" />
+    <None Include="Abp.Zero.EntityFramework.nuspec" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
