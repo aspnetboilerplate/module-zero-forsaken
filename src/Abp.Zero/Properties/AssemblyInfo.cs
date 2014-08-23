@@ -18,6 +18,8 @@ using Abp.Zero;
 
 [assembly: InternalsVisibleTo("Abp.Zero.NHibernate")]
 [assembly: InternalsVisibleTo("Abp.Zero.EntityFramework")]
+[assembly: InternalsVisibleTo("Abp.Zero.Application")]
+[assembly: InternalsVisibleTo("Abp.Zero.Web.Api")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -37,5 +39,5 @@ using Abp.Zero;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(AbpZeroModuleConsts.CurrentVersion)]
-[assembly: AssemblyFileVersion(AbpZeroModuleConsts.CurrentVersion)]
+[assembly: AssemblyVersion(AbpZeroModule.CurrentVersion)]
+[assembly: AssemblyFileVersion(AbpZeroModule.CurrentVersion)]
