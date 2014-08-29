@@ -19,6 +19,14 @@ namespace Abp.Zero.DbMigrations
                 .OnColumn("TenancyName").Ascending()
                 .WithOptions().Unique()
                 .WithOptions().NonClustered();
+
+            //Default tenant
+            Insert.IntoTable("AbpTenants").Row(
+                new
+                {
+                    TenancyName = "default", //Reserved TenancyName
+                    Name = "Default"
+                });
         }
     }
 }
