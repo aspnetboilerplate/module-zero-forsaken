@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 using FluentMigrator;
+using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create.Table;
 
 namespace Abp.Data.Migrations.FluentMigrator
@@ -10,6 +11,8 @@ namespace Abp.Data.Migrations.FluentMigrator
     /// </summary>
     public static class AbpCoreModuleFluentMigratorExtensions
     {
+        #region Create table
+
         /// <summary>
         /// Adds auditing columns to a table. See <see cref="IAudited"/>.
         /// </summary>
@@ -41,7 +44,8 @@ namespace Abp.Data.Migrations.FluentMigrator
         }
 
         /// <summary>
-        /// Adds creation auditing columns to a table. See <see cref="ICreationAudited"/>.
+        /// Ads creation auditing columns to a table. See <see cref="ICreationAudited"/>.
+        /// TODO: Moved to Abp.Infrastructure.NHibernate, remove from here when updated to ABP v0.3.2!
         /// </summary>
         public static ICreateTableColumnOptionOrWithColumnSyntax WithCreationTimeColumn(this ICreateTableWithColumnSyntax table)
         {
@@ -88,5 +92,29 @@ namespace Abp.Data.Migrations.FluentMigrator
             return table
                 .WithColumn(columnName).AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
         }
+
+        #endregion
+
+        #region Alter table
+
+        /// <summary>
+        /// Ads creation auditing columns to a table. See <see cref="ICreationAudited"/>.
+        /// TODO: Moved to Abp.Infrastructure.NHibernate, remove from here when updated to ABP v0.3.2!
+        /// </summary>
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+        }
+
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddCreationTimeColumn()
+                .AddColumn("CreatorUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
+        }
+
+        #endregion
+
     }
 }

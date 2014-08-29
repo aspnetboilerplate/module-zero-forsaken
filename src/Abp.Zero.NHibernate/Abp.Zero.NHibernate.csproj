@@ -75,14 +75,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Migrations\FluentMigrator\AbpFluentMigratorExtensions.cs" />
-    <Compile Include="Zero\DbMigrations\V20140323\_20140323_01_CreateAbpTenantsTable.cs" />
-    <Compile Include="Zero\DbMigrations\V20140323\_20140323_02_CreateAbpRolesTable.cs" />
-    <Compile Include="Zero\DbMigrations\V20140323\_20140323_03_CreateAbpUsersTable.cs" />
-    <Compile Include="Zero\DbMigrations\V20140323\_20140323_04_CreateAbpUserRolesTable.cs" />
-    <Compile Include="Zero\DbMigrations\V20140323\_20140323_05_CreatePermissionsTable.cs" />
-    <Compile Include="Zero\DbMigrations\V20140323\_20140323_06_CreateAbpUserLoginsTable.cs" />
-    <Compile Include="Zero\DbMigrations\V20140323\_20140323_07_CreateAbpSettingsTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140323_01_CreateAbpTenantsTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140323_02_CreateAbpRolesTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140323_03_CreateAbpUsersTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140323_04_CreateAbpUserRolesTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140323_05_CreatePermissionsTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140323_06_CreateAbpUserLoginsTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140323_07_CreateAbpSettingsTable.cs" />
     <Compile Include="Zero\DbMigrations\VersionTable.cs" />
+    <Compile Include="Zero\DbMigrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpTenantRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpUserRepository.cs" />

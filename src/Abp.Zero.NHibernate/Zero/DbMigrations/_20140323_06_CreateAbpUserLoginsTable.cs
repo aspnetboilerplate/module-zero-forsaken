@@ -1,7 +1,7 @@
 ﻿using Abp.Data.Migrations.FluentMigrator;
 using FluentMigrator;
 
-namespace Abp.Zero.DbMigrations.V20140323
+namespace Abp.Zero.DbMigrations
 {
     [Migration(2014032306)]
     public class _20140323_06_CreateAbpUserLoginsTable : AutoReversingMigration
