@@ -1,14 +1,12 @@
-﻿using System;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
+﻿using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Application.Authorization.Permissions
 {
     /// <summary>
-    /// Represents a permission for a role.
-    /// Used to grant/deny a permission for a role.
+    /// Represents a permission for a role or user.
+    /// Used to grant/deny a permission for a role or user.
     /// </summary>
-    public class Permission : Entity<long>, ICreationAudited
+    public class Permission : CreationAuditedEntity<long>
     {
         /// <summary>
         /// Role Id.
@@ -30,16 +28,6 @@ namespace Abp.Application.Authorization.Permissions
         /// Default value: true.
         /// </summary>
         public virtual bool IsGranted { get; set; }
-
-        /// <summary>
-        /// Creation date of this entity.
-        /// </summary>
-        public virtual DateTime CreationTime { get; set; }
-
-        /// <summary>
-        /// Creator user of this entity.
-        /// </summary>
-        public virtual long? CreatorUserId { get; set; }
 
         public Permission()
         {

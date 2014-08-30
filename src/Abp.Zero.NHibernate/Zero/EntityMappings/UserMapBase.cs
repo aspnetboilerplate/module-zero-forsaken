@@ -17,6 +17,9 @@ namespace Abp.Zero.EntityMappings
             Map(x => x.EmailConfirmationCode);
             Map(x => x.Password);
             Map(x => x.PasswordResetCode);
+            Map(x => x.CreationTime);
+            Map(x => x.CreatorUserId);
+            Map(x => x.LastLoginTime);
 
             Polymorphism.Explicit();
         }

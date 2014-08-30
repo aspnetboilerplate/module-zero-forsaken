@@ -8,6 +8,7 @@ namespace Abp.Zero.EntityMappings
         protected RoleMapBase()
             : base("AbpRoles")
         {
+            Map(x => x.TenantId);
             Map(x => x.Name);
             Map(x => x.DisplayName);
 
