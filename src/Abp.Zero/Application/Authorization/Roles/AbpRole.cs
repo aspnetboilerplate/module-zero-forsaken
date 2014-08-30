@@ -12,7 +12,7 @@ namespace Abp.Application.Authorization.Roles
     /// </summary>
     public class AbpRole : AuditedEntity, IRole<int>, IMustHaveTenant
     {
-        public int TenantId { get; set; }
+        public virtual int TenantId { get; set; }
 
         /// <summary>
         /// Unique name of this role.
