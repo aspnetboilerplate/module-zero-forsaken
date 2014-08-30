@@ -10,7 +10,7 @@ namespace Abp.Zero.DbMigrations
         {
             Create.Table("AbpUsers")
                 .WithIdAsInt64()
-                .WithNullableTenantId()
+                .WithTenantIdAsNullable()
                 .WithColumn("UserName").AsString(32).NotNullable()
                 .WithColumn("Name").AsString(30).NotNullable()
                 .WithColumn("Surname").AsString(30).NotNullable()

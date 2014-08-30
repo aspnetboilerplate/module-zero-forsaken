@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Authorization.Permissions;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Application.Authorization.Roles
@@ -9,8 +10,10 @@ namespace Abp.Application.Authorization.Roles
     /// <summary>
     /// Represents a role in an application.
     /// </summary>
-    public class AbpRole : AuditedEntity, IRole<int>
+    public class AbpRole : AuditedEntity, IRole<int>, IMustHaveTenant
     {
+        public int TenantId { get; set; }
+
         /// <summary>
         /// Unique name of this role.
         /// </summary>

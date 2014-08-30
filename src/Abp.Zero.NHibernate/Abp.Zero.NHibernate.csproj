@@ -84,6 +84,7 @@
     <Compile Include="Zero\DbMigrations\_20140323_07_CreateAbpSettingsTable.cs" />
     <Compile Include="Zero\DbMigrations\VersionTable.cs" />
     <Compile Include="Zero\DbMigrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
+    <Compile Include="Zero\DbMigrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpTenantRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpUserRepository.cs" />

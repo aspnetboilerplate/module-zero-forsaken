@@ -61,6 +61,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
+    <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
     <Compile Include="Runtime\Session\AbpIdentitySession.cs" />
     <Compile Include="Configuration\ISettingRepository.cs" />
     <Compile Include="Configuration\SettingStore.cs" />

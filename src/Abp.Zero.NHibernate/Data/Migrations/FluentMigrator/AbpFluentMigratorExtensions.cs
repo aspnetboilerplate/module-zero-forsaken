@@ -56,7 +56,7 @@ namespace Abp.Data.Migrations.FluentMigrator
         /// <summary>
         /// Adds TenantId column to a table as not nullable. See <see cref="AbpTenant"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantId(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsRequired(this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id");
@@ -65,7 +65,7 @@ namespace Abp.Data.Migrations.FluentMigrator
         /// <summary>
         /// Adds TenantId column to a table as nullable. See <see cref="AbpTenant"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithNullableTenantId(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsNullable(this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithColumn("TenantId").AsInt32().Nullable().ForeignKey("AbpTenants", "Id");
@@ -112,6 +112,18 @@ namespace Abp.Data.Migrations.FluentMigrator
             return table
                 .AddCreationTimeColumn()
                 .AddColumn("CreatorUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
+        }
+
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddTenantIdColumnAsRequired(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id");
+        }
+
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddTenantIdColumnAsNullable(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("TenantId").AsInt32().Nullable().ForeignKey("AbpTenants", "Id");
         }
 
         #endregion

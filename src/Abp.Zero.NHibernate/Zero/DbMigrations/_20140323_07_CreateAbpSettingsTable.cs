@@ -10,7 +10,7 @@ namespace Abp.Zero.DbMigrations
         {
             Create.Table("AbpSettings")
                 .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
-                .WithNullableTenantId()
+                .WithTenantIdAsNullable()
                 .WithNullableUserId()
                 .WithColumn("Name").AsAnsiString(128).NotNullable()
                 .WithColumn("Value").AsString().NotNullable()
