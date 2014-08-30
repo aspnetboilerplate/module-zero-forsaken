@@ -52,6 +52,7 @@
       <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
@@ -63,7 +64,7 @@
   <ItemGroup>
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
-    <Compile Include="Runtime\Session\AbpIdentitySession.cs" />
+    <Compile Include="Runtime\Session\AbpSession.cs" />
     <Compile Include="Configuration\ISettingRepository.cs" />
     <Compile Include="Configuration\SettingStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,6 +8,7 @@ namespace Abp.Zero.EntityMappings
         protected TenantMapBase()
             : base("AbpTenants")
         {
+            Map(x => x.TenancyName);
             Map(x => x.Name);
             Map(x => x.CreationTime);
 

@@ -7,7 +7,7 @@ namespace Abp.Zero
 {
     public class AbpZeroModule : AbpModule
     {
-        public const string CurrentVersion = "0.1.1.2";
+        public const string CurrentVersion = "0.1.1.5";
 
         public override void Initialize(IAbpInitializationContext initializationContext)
         {
