@@ -1,5 +1,6 @@
 using System;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 using Abp.Utils.Helpers;
 using Microsoft.AspNet.Identity;
 
@@ -8,7 +9,7 @@ namespace Abp.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser : CreationAuditedEntity<long>, IUser<long>
+    public class AbpUser : CreationAuditedEntity<long>, IUser<long>, IMayHaveTenant
     {
         /// <summary>
         /// Tenant of this user.
