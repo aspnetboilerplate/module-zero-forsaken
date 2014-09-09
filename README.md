@@ -10,6 +10,7 @@ What is 'module zero'
 
 * Implements ASP.NET Identity framework for User and Role management.
 * Provides a Role and Permission based authorization system.
+* Provides infrastructure to develop multi-tenant applications.
 * Implements Setting system of ASP.NET Boilerplate to store Tenant, Application and User level settings in the database.
 * And much more...
  
