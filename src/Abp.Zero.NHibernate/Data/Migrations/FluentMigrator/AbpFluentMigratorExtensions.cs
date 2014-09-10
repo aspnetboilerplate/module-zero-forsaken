@@ -44,16 +44,6 @@ namespace Abp.Data.Migrations.FluentMigrator
         }
 
         /// <summary>
-        /// Ads creation auditing columns to a table. See <see cref="ICreationAudited"/>.
-        /// TODO: Moved to Abp.Infrastructure.NHibernate, remove from here when updated to ABP v0.3.2!
-        /// </summary>
-        public static ICreateTableColumnOptionOrWithColumnSyntax WithCreationTimeColumn(this ICreateTableWithColumnSyntax table)
-        {
-            return table
-                .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
-        }
-
-        /// <summary>
         /// Adds TenantId column to a table as not nullable. See <see cref="AbpTenant"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsRequired(this ICreateTableWithColumnSyntax table)
@@ -96,16 +86,6 @@ namespace Abp.Data.Migrations.FluentMigrator
         #endregion
 
         #region Alter table
-
-        /// <summary>
-        /// Ads creation auditing columns to a table. See <see cref="ICreationAudited"/>.
-        /// TODO: Moved to Abp.Infrastructure.NHibernate, remove from here when updated to ABP v0.3.2!
-        /// </summary>
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
-        {
-            return table
-                .AddColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
-        }
 
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
