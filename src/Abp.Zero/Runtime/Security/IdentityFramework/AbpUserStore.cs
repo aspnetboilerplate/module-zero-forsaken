@@ -17,6 +17,7 @@ namespace Abp.Runtime.Security.IdentityFramework
         IUserEmailStore<AbpUser, long>,
         IUserLoginStore<AbpUser, long>,
         IUserRoleStore<AbpUser, long>,
+        IQueryableUserStore<AbpUser, long>,
         ITransientDependency
     {
         #region Private fields
@@ -233,6 +234,15 @@ namespace Abp.Runtime.Security.IdentityFramework
                     ur => ur.User.Id == user.Id && ur.Role.Name == roleName
                     ) != null
                 );
+        }
+
+        #endregion
+
+        #region IQueryableUserStore
+
+        public IQueryable<AbpUser> Users
+        {
+            get { return _userRepository.GetAll(); }
         }
 
         #endregion
