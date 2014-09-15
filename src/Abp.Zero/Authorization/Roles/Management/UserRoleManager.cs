@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using Abp.Runtime.Caching;
 
-namespace Abp.Application.Authorization.Roles.Management
+namespace Abp.Authorization.Roles.Management
 {
     public class UserRoleManager : IUserRoleManager
     {

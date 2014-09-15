@@ -1,5 +1,5 @@
+using Abp.Authorization.Users;
 using Abp.Dependency;
-using Abp.Users;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Runtime.Security.IdentityFramework

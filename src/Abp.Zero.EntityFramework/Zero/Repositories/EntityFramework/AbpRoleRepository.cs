@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Abp.Application.Authorization.Roles;
+using Abp.Authorization.Roles;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {

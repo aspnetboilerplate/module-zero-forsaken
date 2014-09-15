@@ -1,7 +1,7 @@
-﻿using Abp.Application.Authorization.Permissions;
+﻿using Abp.Authorization.Permissions;
 using Abp.Dependency;
 
-namespace Abp.Application.Authorization.Roles.Management
+namespace Abp.Authorization.Roles.Management
 {
     public interface IRoleManager : ISingletonDependency
     {

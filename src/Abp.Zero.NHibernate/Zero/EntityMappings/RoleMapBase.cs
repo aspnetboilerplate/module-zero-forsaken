@@ -1,4 +1,4 @@
-using Abp.Application.Authorization.Roles;
+using Abp.Authorization.Roles;
 using Abp.Domain.Entities.Mapping;
 
 namespace Abp.Zero.EntityMappings

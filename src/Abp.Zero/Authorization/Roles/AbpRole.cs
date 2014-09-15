@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Application.Authorization.Permissions;
+using Abp.Authorization.Permissions;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Application.Authorization.Roles
+namespace Abp.Authorization.Roles
 {
     /// <summary>
     /// Represents a role in an application.

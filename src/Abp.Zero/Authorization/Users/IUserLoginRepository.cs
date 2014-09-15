@@ -1,6 +1,6 @@
 using Abp.Domain.Repositories;
 
-namespace Abp.Users
+namespace Abp.Authorization.Users
 {
     public interface IUserLoginRepository : IRepository<UserLogin, long>
     {

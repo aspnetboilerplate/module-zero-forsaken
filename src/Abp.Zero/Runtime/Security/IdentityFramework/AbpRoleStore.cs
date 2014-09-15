@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Abp.Application.Authorization.Roles;
+using Abp.Authorization.Roles;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Runtime.Security.IdentityFramework

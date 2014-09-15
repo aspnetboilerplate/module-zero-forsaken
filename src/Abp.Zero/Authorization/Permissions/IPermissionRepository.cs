@@ -1,6 +1,6 @@
 ﻿using Abp.Domain.Repositories;
 
-namespace Abp.Application.Authorization.Permissions
+namespace Abp.Authorization.Permissions
 {
     public interface IPermissionRepository : IRepository<Permission, long>
     {

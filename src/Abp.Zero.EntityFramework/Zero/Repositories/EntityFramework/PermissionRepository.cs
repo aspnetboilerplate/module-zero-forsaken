@@ -1,4 +1,4 @@
-using Abp.Application.Authorization.Permissions;
+using Abp.Authorization.Permissions;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {

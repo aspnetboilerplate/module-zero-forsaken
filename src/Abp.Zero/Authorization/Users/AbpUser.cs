@@ -4,7 +4,7 @@ using Abp.MultiTenancy;
 using Abp.Utils.Helpers;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Users
+namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Represents a user.
