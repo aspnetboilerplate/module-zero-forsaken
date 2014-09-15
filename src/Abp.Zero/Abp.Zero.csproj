@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
+    <Compile Include="Runtime\Security\IdentityFramework\AbpRoleManager.cs" />
     <Compile Include="Runtime\Session\AbpSession.cs" />
     <Compile Include="Configuration\ISettingRepository.cs" />
     <Compile Include="Configuration\SettingStore.cs" />
@@ -77,10 +78,6 @@
     <Compile Include="Authorization\Roles\AbpRole.cs" />
     <Compile Include="Authorization\Roles\IAbpRoleRepository.cs" />
     <Compile Include="Authorization\Users\Roles\IUserRoleRepository.cs" />
-    <Compile Include="Authorization\Roles\IRoleManager.cs" />
-    <Compile Include="Authorization\Users\Roles\IUserRoleManager.cs" />
-    <Compile Include="Authorization\Roles\RoleManager.cs" />
-    <Compile Include="Authorization\Users\Roles\UserRoleManager.cs" />
     <Compile Include="Authorization\Users\Roles\UserRole.cs" />
     <Compile Include="MultiTenancy\AbpTenant.cs" />
     <Compile Include="MultiTenancy\IAbpTenantRepository.cs" />
