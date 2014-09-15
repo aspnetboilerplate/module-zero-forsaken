@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
-using Abp.Authorization.Roles;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Abp.Dependency;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Runtime.Security.IdentityFramework
+namespace Abp.Authorization.Roles
 {
-    public class AbpRoleStore : IRoleStore<AbpRole, int> 
+    public class AbpRoleStore :
+        IQueryableRoleStore<AbpRole, int>,
+        ITransientDependency
     {
         private readonly IAbpRoleRepository _roleRepository;
 
@@ -41,6 +44,11 @@ namespace Abp.Runtime.Security.IdentityFramework
         public Task<AbpRole> FindByNameAsync(string roleName)
         {
             return Task.Factory.StartNew(() => _roleRepository.FirstOrDefault(role => role.Name == roleName));
+        }
+
+        public IQueryable<AbpRole> Roles
+        {
+            get { return _roleRepository.GetAll(); }
         }
     }
 }
