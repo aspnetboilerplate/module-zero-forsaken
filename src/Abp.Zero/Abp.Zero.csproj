@@ -76,18 +76,18 @@
     <Compile Include="Authorization\Permissions\Permission.cs" />
     <Compile Include="Authorization\Roles\AbpRole.cs" />
     <Compile Include="Authorization\Roles\IAbpRoleRepository.cs" />
-    <Compile Include="Authorization\Roles\IUserRoleRepository.cs" />
-    <Compile Include="Authorization\Roles\Management\IRoleManager.cs" />
-    <Compile Include="Authorization\Roles\Management\IUserRoleManager.cs" />
-    <Compile Include="Authorization\Roles\Management\RoleManager.cs" />
-    <Compile Include="Authorization\Roles\Management\UserRoleManager.cs" />
-    <Compile Include="Authorization\Roles\UserRole.cs" />
+    <Compile Include="Authorization\Users\Roles\IUserRoleRepository.cs" />
+    <Compile Include="Authorization\Roles\IRoleManager.cs" />
+    <Compile Include="Authorization\Users\Roles\IUserRoleManager.cs" />
+    <Compile Include="Authorization\Roles\RoleManager.cs" />
+    <Compile Include="Authorization\Users\Roles\UserRoleManager.cs" />
+    <Compile Include="Authorization\Users\Roles\UserRole.cs" />
     <Compile Include="MultiTenancy\AbpTenant.cs" />
     <Compile Include="MultiTenancy\IAbpTenantRepository.cs" />
     <Compile Include="Authorization\Users\AbpUser.cs" />
     <Compile Include="Authorization\Users\IAbpUserRepository.cs" />
-    <Compile Include="Authorization\Users\IUserLoginRepository.cs" />
-    <Compile Include="Authorization\Users\UserLogin.cs" />
+    <Compile Include="Authorization\Users\Logins\IUserLoginRepository.cs" />
+    <Compile Include="Authorization\Users\Logins\UserLogin.cs" />
     <Compile Include="Zero\AbpZeroModule.cs" />
     <Compile Include="Utils\Helpers\RandomCodeGenerator.cs" />
   </ItemGroup>
