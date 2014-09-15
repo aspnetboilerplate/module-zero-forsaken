@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Authorization.Users.Logins;
+using Abp.Authorization.Users.Roles;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Microsoft.AspNet.Identity;

@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Authorization.Users;
+using Abp.Authorization.Roles;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Authorization.Roles
+namespace Abp.Authorization.Users.Roles
 {
     /// <summary>
     /// Represents role record of a user.

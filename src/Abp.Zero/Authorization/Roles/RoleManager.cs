@@ -2,7 +2,7 @@
 using Abp.Authorization.Permissions;
 using Abp.Utils.Extensions.Collections;
 
-namespace Abp.Authorization.Roles.Management
+namespace Abp.Authorization.Roles
 {
     public class RoleManager : IRoleManager
     {

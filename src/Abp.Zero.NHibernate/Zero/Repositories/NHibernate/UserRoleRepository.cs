@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Abp.Authorization.Roles;
+using Abp.Authorization.Users.Roles;
 using Abp.Domain.Repositories.NHibernate;
 
 namespace Abp.Zero.Repositories.NHibernate

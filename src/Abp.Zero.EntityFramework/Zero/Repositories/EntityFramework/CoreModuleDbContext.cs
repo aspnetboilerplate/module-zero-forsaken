@@ -2,6 +2,8 @@ using System.Data.Entity;
 using Abp.Authorization.Permissions;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Authorization.Users.Logins;
+using Abp.Authorization.Users.Roles;
 using Abp.Configuration;
 using Abp.Domain.Repositories.EntityFramework;
 using Abp.MultiTenancy;
