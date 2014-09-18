@@ -114,4 +114,4 @@ Further
 -------
 
 * Read ASP.NET Identity Framework's documentation for more information on ASP.NET Identity Framework.
-* Download investigate source codes.
+* Download and investigate source codes.
