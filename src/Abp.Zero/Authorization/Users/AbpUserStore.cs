@@ -7,6 +7,7 @@ using Abp.Authorization.Users.Logins;
 using Abp.Authorization.Users.Roles;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -25,6 +26,7 @@ namespace Abp.Authorization.Users
         private readonly IUserLoginRepository _userLoginRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IAbpRoleRepository _abpRoleRepository;
+        private readonly IAbpSession _session;
 
         #endregion
 
@@ -34,12 +36,14 @@ namespace Abp.Authorization.Users
             IAbpUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
             IUserRoleRepository userRoleRepository,
-            IAbpRoleRepository abpRoleRepository)
+            IAbpRoleRepository abpRoleRepository,
+            IAbpSession session)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _abpRoleRepository = abpRoleRepository;
+            _session = session;
         }
 
         #endregion
@@ -73,7 +77,7 @@ namespace Abp.Authorization.Users
 
         public Task<AbpUser> FindByNameAsync(string userName)
         {
-            return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => (user.UserName == userName || user.EmailAddress == userName) && user.IsEmailConfirmed));
+            return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => user.TenantId == _session.TenantId && (user.UserName == userName || user.EmailAddress == userName) && user.IsEmailConfirmed));
         }
 
         #endregion
