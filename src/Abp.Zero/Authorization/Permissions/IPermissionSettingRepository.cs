@@ -2,7 +2,7 @@
 
 namespace Abp.Authorization.Permissions
 {
-    public interface IPermissionRepository : IRepository<Permission, long>
+    public interface IPermissionSettingRepository : IRepository<PermissionSetting, long>
     {
 
     }

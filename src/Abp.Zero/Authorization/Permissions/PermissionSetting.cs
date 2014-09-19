@@ -6,7 +6,7 @@ namespace Abp.Authorization.Permissions
     /// Represents a permission for a role or user.
     /// Used to grant/deny a permission for a role or user.
     /// </summary>
-    public class Permission : CreationAuditedEntity<long>
+    public class PermissionSetting : CreationAuditedEntity<long>
     {
         /// <summary>
         /// Role Id.
@@ -29,7 +29,7 @@ namespace Abp.Authorization.Permissions
         /// </summary>
         public virtual bool IsGranted { get; set; }
 
-        public Permission()
+        public PermissionSetting()
         {
             IsGranted = true;
         }

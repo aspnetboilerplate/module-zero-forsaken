@@ -32,13 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.3.2.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.0.3.2.0\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\packages\Abp.0.3.2.2\lib\net451\Abp.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Infrastructure.NHibernate, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.Infrastructure.NHibernate, Version=0.3.2.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.Infrastructure.NHibernate.0.3.2.0\lib\net451\Abp.Infrastructure.NHibernate.dll</HintPath>
+      <HintPath>..\packages\Abp.Infrastructure.NHibernate.0.3.2.2\lib\net451\Abp.Infrastructure.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
@@ -91,7 +91,7 @@
     <Compile Include="Zero\Repositories\NHibernate\AbpRoleRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpTenantRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\AbpUserRepository.cs" />
-    <Compile Include="Zero\Repositories\NHibernate\PermissionRepository.cs" />
+    <Compile Include="Zero\Repositories\NHibernate\PermissionSettingRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\SettingRepository.cs" />
     <Compile Include="Zero\Repositories\NHibernate\UserLoginRepositoryOfTUser.cs" />
     <Compile Include="Zero\Repositories\NHibernate\UserRoleRepository.cs" />
@@ -99,7 +99,7 @@
     <Compile Include="Zero\EntityMappings\AbpUserMap.cs" />
     <Compile Include="Zero\EntityMappings\PermissionMap.cs" />
     <Compile Include="Zero\EntityMappings\RoleMapBase.cs" />
-    <Compile Include="Zero\EntityMappings\SettingValueMap.cs" />
+    <Compile Include="Zero\EntityMappings\SettingMap.cs" />
     <Compile Include="Zero\EntityMappings\TenantMap.cs" />
     <Compile Include="Zero\EntityMappings\TenantMapBase.cs" />
     <Compile Include="Zero\EntityMappings\UserMapBase.cs" />

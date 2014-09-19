@@ -32,13 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.3.2.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.0.3.2.0\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\packages\Abp.0.3.2.2\lib\net451\Abp.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Infrastructure.EntityFramework, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.Infrastructure.EntityFramework, Version=0.3.2.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.Infrastructure.EntityFramework.0.3.2.0\lib\net451\Abp.Infrastructure.EntityFramework.dll</HintPath>
+      <HintPath>..\packages\Abp.Infrastructure.EntityFramework.0.3.2.2\lib\net451\Abp.Infrastructure.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
@@ -79,7 +79,7 @@
     <Compile Include="Zero\Repositories\EntityFramework\AbpUserRepository.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\CoreModuleDbContext.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\CoreModuleEfRepositoryBase.cs" />
-    <Compile Include="Zero\Repositories\EntityFramework\PermissionRepository.cs" />
+    <Compile Include="Zero\Repositories\EntityFramework\PermissionSettingRepository.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\SettingRepository.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\UserLoginRepositoryOfTUser.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\UserRoleRepository.cs" />

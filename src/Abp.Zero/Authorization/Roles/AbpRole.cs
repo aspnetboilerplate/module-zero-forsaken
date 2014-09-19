@@ -28,6 +28,6 @@ namespace Abp.Authorization.Roles
         /// List of permissions of this role.
         /// </summary>
         [ForeignKey("RoleId")]
-        public virtual IList<Permission> Permissions { get; set; }
+        public virtual IList<PermissionSetting> Permissions { get; set; }
     }
 }

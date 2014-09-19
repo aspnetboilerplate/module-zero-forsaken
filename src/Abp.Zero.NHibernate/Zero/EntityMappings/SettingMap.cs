@@ -3,9 +3,9 @@ using Abp.Domain.Entities.Mapping;
 
 namespace Abp.Zero.EntityMappings
 {
-    public class SettingValueMap : EntityMap<Setting, long>
+    public class SettingMap : EntityMap<Setting, long>
     {
-        public SettingValueMap()
+        public SettingMap()
             : base("AbpSettings")
         {
             Map(x => x.TenantId);

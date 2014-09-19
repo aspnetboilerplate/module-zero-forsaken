@@ -22,7 +22,7 @@ namespace Abp.Zero.Repositories.EntityFramework
         
         public virtual IDbSet<AbpTenant> AbpTenants { get; set; }
         
-        public virtual IDbSet<Permission> Permissions { get; set; }
+        public virtual IDbSet<PermissionSetting> Permissions { get; set; }
         
         public virtual IDbSet<Setting> Settings { get; set; }
 
@@ -41,7 +41,7 @@ namespace Abp.Zero.Repositories.EntityFramework
             modelBuilder.Entity<AbpRole>().ToTable("AbpRoles");
             modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
             modelBuilder.Entity<AbpTenant>().ToTable("AbpTenants");
-            modelBuilder.Entity<Permission>().ToTable("AbpPermissions");
+            modelBuilder.Entity<PermissionSetting>().ToTable("AbpPermissions");
             modelBuilder.Entity<Setting>().ToTable("AbpSettings");
         }
     }

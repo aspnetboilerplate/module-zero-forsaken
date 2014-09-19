@@ -3,7 +3,7 @@ using Abp.Domain.Entities.Mapping;
 
 namespace Abp.Zero.EntityMappings
 {
-    public class PermissionMap : EntityMap<Permission, long>
+    public class PermissionMap : EntityMap<PermissionSetting, long>
     {
         public PermissionMap()
             : base("AbpPermissions")

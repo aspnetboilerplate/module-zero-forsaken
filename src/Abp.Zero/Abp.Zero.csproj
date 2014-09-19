@@ -32,9 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.3.2.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.0.3.2.0\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\packages\Abp.0.3.2.2\lib\net451\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\Permissions\PermissionSettingInfo.cs" />
+    <Compile Include="Authorization\Roles\IRolePermissionStore.cs" />
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
     <Compile Include="Authorization\Roles\AbpRoleManager.cs" />
@@ -73,8 +75,8 @@
     <Compile Include="Authorization\Roles\AbpRoleStore.cs" />
     <Compile Include="Authorization\Users\AbpUserManager.cs" />
     <Compile Include="Authorization\Users\AbpUserStore.cs" />
-    <Compile Include="Authorization\Permissions\IPermissionRepository.cs" />
-    <Compile Include="Authorization\Permissions\Permission.cs" />
+    <Compile Include="Authorization\Permissions\IPermissionSettingRepository.cs" />
+    <Compile Include="Authorization\Permissions\PermissionSetting.cs" />
     <Compile Include="Authorization\Roles\AbpRole.cs" />
     <Compile Include="Authorization\Roles\IAbpRoleRepository.cs" />
     <Compile Include="Authorization\Users\Roles\IUserRoleRepository.cs" />
