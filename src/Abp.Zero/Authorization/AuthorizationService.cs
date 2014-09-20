@@ -9,7 +9,6 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization
 {
-    //TODO: Move this to Abp.Zero module since it should be open source!
     public class AuthorizationService : IAuthorizationService, ITransientDependency
     {
         private readonly IPermissionManager _permissionManager;

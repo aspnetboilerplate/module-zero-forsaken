@@ -6,21 +6,12 @@ namespace Abp.Authorization.Roles
 {
     public class AbpRoleManager : RoleManager<AbpRole, int>, ITransientDependency
     {
-        private readonly IPermissionSettingRepository _permissionSettingRepository;
         private readonly IPermissionManager _permissionManager;
 
-        public AbpRoleManager(AbpRoleStore store, IPermissionSettingRepository permissionSettingRepository, IPermissionManager permissionManager)
+        public AbpRoleManager(AbpRoleStore store, IPermissionManager permissionManager)
             : base(store)
         {
-            _permissionSettingRepository = permissionSettingRepository;
             _permissionManager = permissionManager;
-        }
-
-        public PermissionSetting GetPermissionOrNull(string roleName, string permissionName)
-        {
-            //TODO: We can define a IRolePermissionStore to manipulate role permissions as identity framework.
-            var role = this.FindByName(roleName);
-            return _permissionSettingRepository.FirstOrDefault(p => p.RoleId == role.Id);
         }
 
         public bool HasPermission(string roleName, string permissionName) //TODO: Async

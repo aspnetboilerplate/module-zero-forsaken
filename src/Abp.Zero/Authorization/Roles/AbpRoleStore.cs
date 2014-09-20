@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Permissions;
 using Abp.Dependency;
+using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -16,15 +17,17 @@ namespace Abp.Authorization.Roles
 
         private readonly IAbpRoleRepository _roleRepository;
         private readonly IPermissionSettingRepository _permissionSettingRepository;
+        private readonly IAbpSession _session;
 
         #endregion
 
         #region Constructor
 
-        public AbpRoleStore(IAbpRoleRepository roleRepository, IPermissionSettingRepository permissionSettingRepository)
+        public AbpRoleStore(IAbpRoleRepository roleRepository, IPermissionSettingRepository permissionSettingRepository, IAbpSession session)
         {
             _roleRepository = roleRepository;
             _permissionSettingRepository = permissionSettingRepository;
+            _session = session;
         }
 
         #endregion
@@ -38,6 +41,7 @@ namespace Abp.Authorization.Roles
 
         public Task CreateAsync(AbpRole role)
         {
+            role.TenantId = _session.TenantId;
             return Task.Factory.StartNew(() => _roleRepository.Insert(role));
         }
 
@@ -58,7 +62,7 @@ namespace Abp.Authorization.Roles
 
         public Task<AbpRole> FindByNameAsync(string roleName)
         {
-            return Task.Factory.StartNew(() => _roleRepository.FirstOrDefault(role => role.Name == roleName));
+            return Task.Factory.StartNew(() => _roleRepository.FirstOrDefault(role => role.Name == roleName && role.TenantId == _session.TenantId));
         }
 
         #endregion
