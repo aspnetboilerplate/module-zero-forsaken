@@ -83,16 +83,16 @@
     <Compile Include="Authorization\Permissions\PermissionSetting.cs" />
     <Compile Include="Authorization\Roles\AbpRole.cs" />
     <Compile Include="Authorization\Roles\IAbpRoleRepository.cs" />
-    <Compile Include="Authorization\Users\Roles\IUserRoleRepository.cs" />
-    <Compile Include="Authorization\Users\Roles\UserRole.cs" />
+    <Compile Include="Authorization\Users\IUserRoleRepository.cs" />
+    <Compile Include="Authorization\Users\UserRole.cs" />
     <Compile Include="MultiTenancy\AbpTenant.cs" />
     <Compile Include="MultiTenancy\IAbpTenantRepository.cs" />
     <Compile Include="Authorization\Users\AbpUser.cs" />
     <Compile Include="Authorization\Users\IAbpUserRepository.cs" />
-    <Compile Include="Authorization\Users\Logins\IUserLoginRepository.cs" />
-    <Compile Include="Authorization\Users\Logins\UserLogin.cs" />
+    <Compile Include="Authorization\Users\IUserLoginRepository.cs" />
+    <Compile Include="Authorization\Users\UserLogin.cs" />
     <Compile Include="Zero\AbpZeroModule.cs" />
-    <Compile Include="Utils\Helpers\RandomCodeGenerator.cs" />
+    <Compile Include="Utils\Helpers\RandomHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Zero.nuspec" />

@@ -2,7 +2,7 @@
 using Abp.Authorization.Roles;
 using Abp.Domain.Repositories;
 
-namespace Abp.Authorization.Users.Roles
+namespace Abp.Authorization.Users
 {
     public interface IUserRoleRepository : IRepository<UserRole, long>
     {

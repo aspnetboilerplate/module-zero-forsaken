@@ -67,12 +67,12 @@ namespace Abp.Authorization.Users
 
         public virtual void GenerateEmailConfirmationCode() //TODO: Remove this method?
         {
-            EmailConfirmationCode = RandomCodeGenerator.Generate(16);
+            EmailConfirmationCode = RandomHelper.GenerateCode(16);
         }
 
         public virtual void GeneratePasswordResetCode() //TODO: Remove this method?
         {
-            PasswordResetCode = RandomCodeGenerator.Generate(32);
+            PasswordResetCode = RandomHelper.GenerateCode(32);
         }
 
         public virtual bool ConfirmEmail(string confirmationCode)

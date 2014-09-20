@@ -32,12 +32,12 @@ namespace Abp.Authorization
             AbpSession = NullAbpSession.Instance;
         }
 
-        public bool HasAnyOfPermissions(string[] permissionNames)
+        public bool HasAnyOfPermissions(string[] permissionNames) //TODO: Change to params..
         {
             return permissionNames.Any(HasPermission);
         }
 
-        public bool HasAllOfPermissions(string[] permissionNames)
+        public bool HasAllOfPermissions(string[] permissionNames) //TODO: Change to params..
         {
             return permissionNames.All(HasPermission);
         }
