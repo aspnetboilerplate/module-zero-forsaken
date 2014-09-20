@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Abp.Zero.EntityFramework.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Abp.Zero.EntityFramework.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Abp, Version=0.3.2.3, Culture=neutral, processorArchitecture=MSIL">
@@ -77,8 +79,8 @@
     <Compile Include="Zero\Repositories\EntityFramework\AbpRoleRepository.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\AbpTenantRepository.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\AbpUserRepository.cs" />
-    <Compile Include="Zero\Repositories\EntityFramework\CoreModuleDbContext.cs" />
-    <Compile Include="Zero\Repositories\EntityFramework\CoreModuleEfRepositoryBase.cs" />
+    <Compile Include="Zero\Repositories\EntityFramework\AbpZeroDbContext.cs" />
+    <Compile Include="Zero\Repositories\EntityFramework\AbpZeroEfRepositoryBase.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\PermissionSettingRepository.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\SettingRepository.cs" />
     <Compile Include="Zero\Repositories\EntityFramework\UserLoginRepositoryOfTUser.cs" />

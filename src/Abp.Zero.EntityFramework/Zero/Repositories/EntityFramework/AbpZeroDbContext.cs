@@ -10,7 +10,10 @@ using Abp.MultiTenancy;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {
-    public class CoreModuleDbContext : AbpDbContext
+    /// <summary>
+    /// 
+    /// </summary>
+    public class AbpZeroDbContext : AbpDbContext
     {
         public virtual IDbSet<AbpUser> AbpUsers { get; set; }
         
@@ -26,8 +29,8 @@ namespace Abp.Zero.Repositories.EntityFramework
         
         public virtual IDbSet<Setting> Settings { get; set; }
 
-        public CoreModuleDbContext()
-            : base("Taskever")
+        public AbpZeroDbContext()
+            : base("Main")
         {
             
         }

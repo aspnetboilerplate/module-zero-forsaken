@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Abp.Zero.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Abp.Zero.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Abp, Version=0.3.2.3, Culture=neutral, processorArchitecture=MSIL">
@@ -64,8 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorization\AuthorizationService.cs" />
-    <Compile Include="Authorization\Permissions\PermissionSettingInfo.cs" />
+    <Compile Include="Authorization\Permissions\PermissionGrantInfo.cs" />
     <Compile Include="Authorization\Roles\IRolePermissionStore.cs" />
+    <Compile Include="MultiTenancy\IFilterByTenant.cs" />
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
     <Compile Include="Authorization\Roles\AbpRoleManager.cs" />

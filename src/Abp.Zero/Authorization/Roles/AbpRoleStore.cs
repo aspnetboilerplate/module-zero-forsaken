@@ -8,6 +8,9 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
 {
+    /// <summary>
+    /// Implements 'Role Store' of ASP.NET Identity Framework.
+    /// </summary>
     public class AbpRoleStore :
         IQueryableRoleStore<AbpRole, int>,
         IRolePermissionStore,
@@ -62,18 +65,18 @@ namespace Abp.Authorization.Roles
 
         public Task<AbpRole> FindByNameAsync(string roleName)
         {
-            return Task.Factory.StartNew(() => _roleRepository.FirstOrDefault(role => role.Name == roleName && role.TenantId == _session.TenantId));
+            return Task.Factory.StartNew(() => _roleRepository.FirstOrDefault(role => role.Name == roleName && role.TenantId == _session.TenantId)); //TODO: Tenant should be automatically filtered
         }
 
         #endregion
 
         #region IRolePermissionStore
 
-        public Task AddPermissionAsync(AbpRole role, PermissionSettingInfo permissionSetting)
+        public Task AddPermissionAsync(AbpRole role, PermissionGrantInfo permissionGrant)
         {
             return Task.Factory.StartNew(() =>
                                          {
-                                             if (HasPermissionAsync(role, permissionSetting).Result) //TODO: async/await?
+                                             if (HasPermissionAsync(role, permissionGrant).Result) //TODO: async/await?
                                              {
                                                  return;
                                              }
@@ -82,20 +85,20 @@ namespace Abp.Authorization.Roles
                                                  new PermissionSetting
                                                  {
                                                      RoleId = role.Id,
-                                                     Name = permissionSetting.Name,
-                                                     IsGranted = permissionSetting.IsGranted
+                                                     Name = permissionGrant.Name,
+                                                     IsGranted = permissionGrant.IsGranted
                                                  });
                                          });
         }
 
-        public Task RemovePermissionAsync(AbpRole role, PermissionSettingInfo permissionSetting)
+        public Task RemovePermissionAsync(AbpRole role, PermissionGrantInfo permissionGrant)
         {
             return Task.Factory.StartNew(() =>
                                          {
                                              var permissionEntity = _permissionSettingRepository.FirstOrDefault(
                                                  p => p.RoleId == role.Id &&
-                                                      p.Name == permissionSetting.Name &&
-                                                      p.IsGranted == permissionSetting.IsGranted);
+                                                      p.Name == permissionGrant.Name &&
+                                                      p.IsGranted == permissionGrant.IsGranted);
                                              if (permissionEntity == null)
                                              {
                                                  return;
@@ -105,19 +108,19 @@ namespace Abp.Authorization.Roles
                                          });
         }
 
-        public Task<IList<PermissionSettingInfo>> GetPermissionsAsync(AbpRole role)
+        public Task<IList<PermissionGrantInfo>> GetPermissionsAsync(AbpRole role)
         {
-            return Task.Factory.StartNew<IList<PermissionSettingInfo>>(
+            return Task.Factory.StartNew<IList<PermissionGrantInfo>>(
                 () => _permissionSettingRepository
                     .GetAllList(p => p.RoleId == role.Id)
-                    .Select(p => new PermissionSettingInfo(p.Name, p.IsGranted))
+                    .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                     .ToList()
                 );
         }
 
-        public Task<bool> HasPermissionAsync(AbpRole role, PermissionSettingInfo permissionSetting)
+        public Task<bool> HasPermissionAsync(AbpRole role, PermissionGrantInfo permissionGrant)
         {
-            return Task.Factory.StartNew(() => _permissionSettingRepository.FirstOrDefault(p => p.RoleId == role.Id && p.Name == permissionSetting.Name && p.IsGranted == permissionSetting.IsGranted) != null);
+            return Task.Factory.StartNew(() => _permissionSettingRepository.FirstOrDefault(p => p.RoleId == role.Id && p.Name == permissionGrant.Name && p.IsGranted == permissionGrant.IsGranted) != null);
         }
 
         #endregion

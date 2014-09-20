@@ -5,6 +5,9 @@
     /// </summary>
     public interface IMayHaveTenant
     {
+        /// <summary>
+        /// Id of the tenant.
+        /// </summary>
         int? TenantId { get; set; }
     }
 }

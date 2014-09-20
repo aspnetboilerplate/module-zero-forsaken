@@ -5,7 +5,7 @@ using Abp.Authorization.Users.Roles;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {
-    public class UserRoleRepository : CoreModuleEfRepositoryBase<UserRole, long>, IUserRoleRepository
+    public class UserRoleRepository : AbpZeroEfRepositoryBase<UserRole, long>, IUserRoleRepository
     {
         public List<AbpRole> GetRolesOfUser(int userId)
         {

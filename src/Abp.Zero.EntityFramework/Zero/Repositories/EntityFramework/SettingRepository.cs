@@ -2,7 +2,7 @@ using Abp.Configuration;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {
-    public class SettingRepository : CoreModuleEfRepositoryBase<Setting, long>, ISettingRepository
+    public class SettingRepository : AbpZeroEfRepositoryBase<Setting, long>, ISettingRepository
     {
 
     }

@@ -1,26 +1,33 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using System.ComponentModel.DataAnnotations;
+using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Authorization.Permissions
 {
     /// <summary>
-    /// Represents a permission for a role or user.
     /// Used to grant/deny a permission for a role or user.
+    /// <see cref="RoleId"/> or <see cref="UserId"/> must be filled.
     /// </summary>
     public class PermissionSetting : CreationAuditedEntity<long>
     {
+        public const int MaxNameLength = 128;
+
         /// <summary>
         /// Role Id.
+        /// It's required if <see cref="UserId"/> is null.
         /// </summary>
         public virtual int? RoleId { get; set; }
 
         /// <summary>
         /// User Id.
+        /// It's required if <see cref="RoleId"/> is null.
         /// </summary>
         public virtual long? UserId { get; set; }
 
         /// <summary>
         /// Unique name of the permission.
         /// </summary>
+        [Required]
+        [MaxLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         /// <summary>
@@ -29,6 +36,9 @@ namespace Abp.Authorization.Permissions
         /// </summary>
         public virtual bool IsGranted { get; set; }
 
+        /// <summary>
+        /// Creates a new <see cref="PermissionSetting"/> entity.
+        /// </summary>
         public PermissionSetting()
         {
             IsGranted = true;

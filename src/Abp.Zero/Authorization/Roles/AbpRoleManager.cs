@@ -4,6 +4,13 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
 {
+    /// <summary>
+    /// Extends <see cref="RoleManager{TRole,TKey}"/> of ASP.NET Identity Framework.
+    /// </summary>
+    /// <remarks>
+    /// Do not directly use <see cref="IAbpRoleRepository"/> to perform role operations.
+    /// Instead, use this class.
+    /// </remarks>
     public class AbpRoleManager : RoleManager<AbpRole, int>, ITransientDependency
     {
         private readonly IPermissionManager _permissionManager;
@@ -38,8 +45,8 @@ namespace Abp.Authorization.Roles
             var permissionStore = Store as IRolePermissionStore;
 
             return permission.IsGrantedByDefault
-                ? !permissionStore.HasPermissionAsync(role, new PermissionSettingInfo(permissionName, false)).Result
-                : permissionStore.HasPermissionAsync(role, new PermissionSettingInfo(permissionName, true)).Result;
+                ? !permissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permissionName, false)).Result
+                : permissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permissionName, true)).Result;
         }
     }
 }

@@ -11,8 +11,6 @@ namespace Abp.Zero.EntityMappings
             Map(x => x.TenantId);
             Map(x => x.Name);
             Map(x => x.DisplayName);
-
-            HasMany(x => x.Permissions).KeyColumn("RoleId");
             
             this.MapAudited();
 

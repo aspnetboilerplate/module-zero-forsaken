@@ -75,19 +75,25 @@ namespace Abp.Authorization.Users
             PasswordResetCode = RandomCodeGenerator.Generate(32);
         }
 
-        public virtual void ConfirmEmail(string confirmationCode)
+        public virtual bool ConfirmEmail(string confirmationCode)
         {
             if (IsEmailConfirmed)
             {
-                return;
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(EmailConfirmationCode))
+            {
+                throw new ApplicationException("Email confirmation code is not set for this user.");                
             }
 
             if (EmailConfirmationCode != confirmationCode)
             {
-                throw new ApplicationException("Wrong email confirmation code!");
+                return false;
             }
 
             IsEmailConfirmed = true;
+            return true;
         }
     }
 }

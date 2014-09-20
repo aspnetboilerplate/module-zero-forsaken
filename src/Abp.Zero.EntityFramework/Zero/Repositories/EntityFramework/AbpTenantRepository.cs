@@ -2,7 +2,7 @@
 
 namespace Abp.Zero.Repositories.EntityFramework
 {
-    public class AbpTenantRepository : CoreModuleEfRepositoryBase<AbpTenant>, IAbpTenantRepository
+    public class AbpTenantRepository : AbpZeroEfRepositoryBase<AbpTenant>, IAbpTenantRepository
     {
 
     }

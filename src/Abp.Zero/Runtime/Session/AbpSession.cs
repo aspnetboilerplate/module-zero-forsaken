@@ -33,8 +33,6 @@ namespace Abp.Runtime.Session
         {
             get
             {
-                //enabled deðilse default'un id'sini al, dön
-                //enabled ise principal'dan al...
                 if (!IsMultiTenancyEnabled)
                 {
                     return GetDefaultTenantId();

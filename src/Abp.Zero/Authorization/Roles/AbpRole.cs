@@ -9,9 +9,17 @@ namespace Abp.Authorization.Roles
 {
     /// <summary>
     /// Represents a role in an application.
+    /// A role is used to group some permissions to grant users all together.
+    /// A user can have multiple roles.
     /// </summary>
+    /// <remarks> 
+    /// Application should use permissions to check if user is granted to perform an operation.
+    /// </remarks>
     public class AbpRole : AuditedEntity, IRole<int>, IMayHaveTenant
     {
+        /// <summary>
+        /// Tenant's Id if this role is a tenant-level role.
+        /// </summary>
         public virtual int? TenantId { get; set; }
 
         /// <summary>
@@ -23,11 +31,5 @@ namespace Abp.Authorization.Roles
         /// Display name of this role.
         /// </summary>
         public virtual string DisplayName { get; set; }
-
-        /// <summary>
-        /// List of permissions of this role.
-        /// </summary>
-        [ForeignKey("RoleId")]
-        public virtual IList<PermissionSetting> Permissions { get; set; }
     }
 }

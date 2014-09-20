@@ -8,9 +8,6 @@ namespace Abp.Zero.Repositories.NHibernate
 {
     public class AbpRoleRepository : NhRepositoryBase<AbpRole>, IAbpRoleRepository
     {
-        public List<AbpRole> GetAllListWithPermissions()
-        {
-            return GetAll().Fetch(role => role.Permissions).ToList();
-        }       
+  
     }
 }

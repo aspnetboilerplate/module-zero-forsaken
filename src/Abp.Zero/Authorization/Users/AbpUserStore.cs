@@ -12,6 +12,9 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
 {
+    /// <summary>
+    /// Implements 'User Store' of ASP.NET Identity Framework.
+    /// </summary>
     public class AbpUserStore :
         IUserPasswordStore<AbpUser, long>,
         IUserEmailStore<AbpUser, long>,

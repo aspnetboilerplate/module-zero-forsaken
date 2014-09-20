@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
 
 namespace Abp.Authorization.Roles
 {
+    /// <summary>
+    /// Role repository.
+    /// </summary>
     public interface IAbpRoleRepository : IRepository<AbpRole>
     {
-        List<AbpRole> GetAllListWithPermissions();
+
     }
 }

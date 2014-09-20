@@ -2,7 +2,7 @@ using Abp.Authorization.Users;
 
 namespace Abp.Zero.Repositories.EntityFramework
 {
-    public class AbpUserRepository : CoreModuleEfRepositoryBase<AbpUser, long>, IAbpUserRepository
+    public class AbpUserRepository : AbpZeroEfRepositoryBase<AbpUser, long>, IAbpUserRepository
     {
         public void UpdatePassword(long userId, string password)
         {
