@@ -23,6 +23,12 @@ namespace Abp.Authorization.Roles
             return _permissionSettingRepository.FirstOrDefault(p => p.RoleId == role.Id);
         }
 
+        public bool HasPermission(string roleName, string permissionName) //TODO: Async
+        {
+            var role = this.FindByName(roleName);
+            return HasPermission(role.Id, permissionName);
+        }
+
         public bool HasPermission(int roleId, string permissionName) //TODO: Async
         {
             if (!(Store is IRolePermissionStore))
