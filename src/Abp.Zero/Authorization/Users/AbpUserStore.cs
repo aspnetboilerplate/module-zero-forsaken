@@ -189,15 +189,23 @@ namespace Abp.Authorization.Users
         public Task AddToRoleAsync(AbpUser user, string roleName)
         {
             //TODO: Check if already exists?
-            return Task.Factory.StartNew(
-                () =>
-                    _userRoleRepository.Insert(
-                        new UserRole
-                        {
-                            User = user,
-                            Role = _abpRoleRepository.Single(role => role.Name == roleName) //TODO: Can find another way?
-                        })
-                );
+
+            var tenantId = _session.TenantId;
+
+            return Task.Factory.StartNew(() =>
+                                         {
+                                             var role = _abpRoleRepository.Single(r => r.Name == roleName && r.TenantId == tenantId);
+
+                                             //TODO: Can find another way?
+                                             var userRole = new UserRole
+                                                            {
+                                                                //User = user,
+                                                                UserId = user.Id,
+                                                                //Role = role,
+                                                                RoleId = role.Id
+                                                            };
+                                             _userRoleRepository.Insert(userRole);
+                                         });
         }
 
         public Task RemoveFromRoleAsync(AbpUser user, string roleName)

@@ -19,7 +19,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// User Id.
         /// </summary>
-        public virtual long UserId { get; set; } //Needed for EntityFramework. Try to remove if possible!
+        public virtual long UserId { get; set; }
 
         /// <summary>
         /// Role.
@@ -30,6 +30,6 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Role Id.
         /// </summary>
-        public virtual int RoleId { get; set; } //Needed for EntityFramework. Try to remove if possible!
+        public virtual int RoleId { get; set; }
     }
 }

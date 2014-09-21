@@ -6,6 +6,6 @@ namespace Abp.Authorization.Users
 {
     public interface IUserRoleRepository : IRepository<UserRole, long>
     {
-        List<AbpRole> GetRolesOfUser(int userId);
+
     }
 }
