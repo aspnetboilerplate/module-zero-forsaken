@@ -9,6 +9,9 @@ namespace Abp.Authorization.Permissions
     /// </summary>
     public class PermissionSetting : CreationAuditedEntity<long>
     {
+        /// <summary>
+        /// Maximum lenegth of the <see cref="Name"/> field.
+        /// </summary>
         public const int MaxNameLength = 128;
 
         /// <summary>

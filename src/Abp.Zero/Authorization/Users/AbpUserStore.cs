@@ -26,7 +26,7 @@ namespace Abp.Authorization.Users
         private readonly IAbpUserRepository _userRepository;
         private readonly IUserLoginRepository _userLoginRepository;
         private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IAbpRoleRepository _abpRoleRepository;
+        private readonly IAbpRoleRepository _roleRepository;
         private readonly IAbpSession _session;
 
         #endregion
@@ -37,13 +37,13 @@ namespace Abp.Authorization.Users
             IAbpUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
             IUserRoleRepository userRoleRepository,
-            IAbpRoleRepository abpRoleRepository,
+            IAbpRoleRepository roleRepository,
             IAbpSession session)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
-            _abpRoleRepository = abpRoleRepository;
+            _roleRepository = roleRepository;
             _session = session;
         }
 
@@ -194,7 +194,7 @@ namespace Abp.Authorization.Users
 
             return Task.Factory.StartNew(() =>
                                          {
-                                             var role = _abpRoleRepository.Single(r => r.Name == roleName && r.TenantId == tenantId);
+                                             var role = _roleRepository.Single(r => r.Name == roleName && r.TenantId == tenantId);
 
                                              //TODO: Can find another way?
                                              var userRole = new UserRole
@@ -213,16 +213,23 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew(
                 () =>
                 {
-                    var userRole = _userRoleRepository.FirstOrDefault(
-                        ur => ur.User.Id == user.Id && ur.Role.Name == roleName
-                        );
-
-                    if (userRole == null)
+                    using (new UnitOfWorkScope())
                     {
-                        return;
-                    }
+                        var query =
+                            from userRole in _userRoleRepository.GetAll()
+                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                            where userRole.UserId == user.Id && role.Name == roleName
+                            select userRole;
 
-                    _userRoleRepository.Delete(userRole.Id);
+                        var searchedUserRole = query.FirstOrDefault();
+
+                        if (searchedUserRole == null)
+                        {
+                            return;
+                        }
+
+                        _userRoleRepository.Delete(searchedUserRole);
+                    }
                 });
         }
 
@@ -230,22 +237,36 @@ namespace Abp.Authorization.Users
         {
             return Task.Factory.StartNew<IList<string>>(
                 () =>
-                    _userRoleRepository
-                        .Query(q => q
-                            .Where(ur => ur.User.Id == user.Id)
-                            .Select(ur => ur.Role.Name)
-                            .ToList()
-                        )
-                );
+                {
+                    using (new UnitOfWorkScope())
+                    {
+                        var query =
+                            from userRole in _userRoleRepository.GetAll()
+                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                            where userRole.UserId == user.Id
+                            select role.Name;
+
+                        return query.ToList();
+                    }
+                });
         }
 
         public Task<bool> IsInRoleAsync(AbpUser user, string roleName)
         {
             return Task.Factory.StartNew(
-                () => _userRoleRepository.FirstOrDefault(
-                    ur => ur.User.Id == user.Id && ur.Role.Name == roleName
-                    ) != null
-                );
+                () =>
+                {
+                    using (new UnitOfWorkScope())
+                    {
+                        var query =
+                            from userRole in _userRoleRepository.GetAll()
+                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                            where userRole.UserId == user.Id && role.Name == roleName
+                            select userRole;
+
+                        return query.FirstOrDefault() != null;
+                    }
+                });
         }
 
         #endregion

@@ -21,13 +21,42 @@ namespace Abp.Authorization.Roles
             _permissionManager = permissionManager;
         }
 
+        /// <summary>
+        /// Checks if a role has a permission.
+        /// </summary>
+        /// <param name="roleName">The role's name to check it's permission</param>
+        /// <param name="permissionName">Name of the permission</param>
+        /// <returns>True, if the role has the permission</returns>
         public bool HasPermission(string roleName, string permissionName) //TODO: Async
         {
             var role = this.FindByName(roleName);
-            return HasPermission(role.Id, permissionName);
+            if (role == null)
+            {
+                throw new AbpAuthorizationException("There is no role named " + roleName);
+            }
+
+            return HasPermissionInternal(role, permissionName);
         }
 
+        /// <summary>
+        /// Checks if a role has a permission.
+        /// </summary>
+        /// <param name="roleId">The role's id to check it's permission</param>
+        /// <param name="permissionName">Name of the permission</param>
+        /// <returns>True, if the role has the permission</returns>
         public bool HasPermission(int roleId, string permissionName) //TODO: Async
+        {
+            var role = this.FindById(roleId);
+
+            if (role == null)
+            {
+                throw new AbpAuthorizationException("There is no role by id = " + roleId);
+            }
+
+            return HasPermissionInternal(role, permissionName);
+        }
+
+        private bool HasPermissionInternal(AbpRole role, string permissionName) //TODO: Async
         {
             if (!(Store is IRolePermissionStore))
             {
@@ -39,8 +68,6 @@ namespace Abp.Authorization.Roles
             {
                 throw new AbpException("There is no permission with name: " + permissionName);
             }
-
-            var role = this.FindById(roleId);
 
             var permissionStore = Store as IRolePermissionStore;
 
