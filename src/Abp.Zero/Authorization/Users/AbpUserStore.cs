@@ -204,6 +204,7 @@ namespace Abp.Authorization.Users
                                                                 //Role = role,
                                                                 RoleId = role.Id
                                                             };
+
                                              _userRoleRepository.Insert(userRole);
                                          });
         }
@@ -213,7 +214,7 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew(
                 () =>
                 {
-                    using (new UnitOfWorkScope())
+                    using (var uow = new UnitOfWorkScope())
                     {
                         var query =
                             from userRole in _userRoleRepository.GetAll()
@@ -229,6 +230,8 @@ namespace Abp.Authorization.Users
                         }
 
                         _userRoleRepository.Delete(searchedUserRole);
+
+                        uow.Commit();
                     }
                 });
         }

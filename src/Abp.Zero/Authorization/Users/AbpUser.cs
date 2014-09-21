@@ -1,7 +1,7 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
-using Abp.Utils.Helpers;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -12,6 +12,41 @@ namespace Abp.Authorization.Users
     public class AbpUser : CreationAuditedEntity<long>, IUser<long>, IMayHaveTenant
     {
         /// <summary>
+        /// Maximum length of the <see cref="Name"/> property.
+        /// </summary>
+        public const int MaxNameLength = 30;
+
+        /// <summary>
+        /// Maximum length of the <see cref="Surname"/> property.
+        /// </summary>
+        public const int MaxSurnameLength = 30;
+
+        /// <summary>
+        /// Maximum length of the <see cref="UserName"/> property.
+        /// </summary>
+        public const int MaxUserNameLength = 32;
+
+        /// <summary>
+        /// Maximum length of the <see cref="Password"/> property.
+        /// </summary>
+        public const int MaxPasswordLength = 100;
+
+        /// <summary>
+        /// Maximum length of the <see cref="EmailAddress"/> property.
+        /// </summary>
+        public const int MaxEmailAddressLength = 100;
+
+        /// <summary>
+        /// Maximum length of the <see cref="EmailConfirmationCode"/> property.
+        /// </summary>
+        public const int MaxEmailConfirmationCodeLength = 16;
+
+        /// <summary>
+        /// Maximum length of the <see cref="PasswordResetCode"/> property.
+        /// </summary>
+        public const int MaxPasswordResetCodeLength = 32;
+
+        /// <summary>
         /// Tenant of this user.
         /// </summary>
         public virtual int? TenantId { get; set; }
@@ -19,28 +54,38 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Name of the user.
         /// </summary>
+        [Required]
+        [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         /// <summary>
         /// Surname of the user.
         /// </summary>
+        [Required]
+        [StringLength(MaxSurnameLength)]
         public virtual string Surname { get; set; }
 
         /// <summary>
         /// User name.
         /// User name must be unique for it's tenant.
         /// </summary>
+        [Required]
+        [StringLength(MaxUserNameLength)]
         public virtual string UserName { get; set; }
 
         /// <summary>
         /// Password of the user.
         /// </summary>
+        [Required]
+        [StringLength(MaxPasswordLength)]
         public virtual string Password { get; set; }
 
         /// <summary>
         /// Email address of the user.
         /// Email address must be unique for it's tenant.
         /// </summary>
+        [Required]
+        [StringLength(MaxEmailAddressLength)]
         public virtual string EmailAddress { get; set; }
 
         /// <summary>
@@ -51,6 +96,8 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Confirmation code for email.
         /// </summary>
+        [Required]
+        [StringLength(MaxEmailConfirmationCodeLength)]
         public virtual string EmailConfirmationCode { get; set; }
 
         /// <summary>
@@ -58,6 +105,8 @@ namespace Abp.Authorization.Users
         /// It's not valid if it's null.
         /// It's for one usage and must be set to null after reset.
         /// </summary>
+        [Required]
+        [StringLength(MaxPasswordResetCodeLength)]
         public virtual string PasswordResetCode { get; set; }
 
         /// <summary>
@@ -65,16 +114,14 @@ namespace Abp.Authorization.Users
         /// </summary>
         public virtual DateTime? LastLoginTime { get; set; }
 
-        public virtual void GenerateEmailConfirmationCode() //TODO: Remove this method?
-        {
-            EmailConfirmationCode = RandomHelper.GenerateCode(16);
-        }
-
-        public virtual void GeneratePasswordResetCode() //TODO: Remove this method?
-        {
-            PasswordResetCode = RandomHelper.GenerateCode(32);
-        }
-
+        /// <summary>
+        /// Used to confirm email address with given code.
+        /// </summary>
+        /// <param name="confirmationCode">Email confirmation code</param>
+        /// <returns>
+        /// Returns true, if code correct and email is confirmed.
+        /// Returns false if not.
+        /// </returns>
         public virtual bool ConfirmEmail(string confirmationCode)
         {
             if (IsEmailConfirmed)
