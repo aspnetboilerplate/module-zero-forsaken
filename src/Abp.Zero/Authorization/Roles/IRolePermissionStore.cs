@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Authorization.Permissions;
 
 namespace Abp.Authorization.Roles
 {

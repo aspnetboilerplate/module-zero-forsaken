@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 
 namespace Abp.Configuration
 {
@@ -15,24 +17,43 @@ namespace Abp.Configuration
             _settingRepository = settingRepository;
         }
 
-        public Setting GetSettingOrNull(int? tenantId, long? userId, string name)
+        public virtual List<SettingInfo> GetAll(int? tenantId, long? userId)
         {
-            return _settingRepository.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name);
+            return _settingRepository
+                .GetAllList(s => s.TenantId == tenantId && s.UserId == userId)
+                .Select(s => s.ToSettingInfo())
+                .ToList();
         }
 
-        public void Delete(Setting setting)
+        public virtual SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
         {
-            _settingRepository.Delete(setting);
+            return _settingRepository
+                .FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name)
+                .ToSettingInfo();
         }
 
-        public void Add(Setting setting)
+        public virtual void Delete(SettingInfo settingInfo)
         {
-            _settingRepository.Insert(setting);
+            _settingRepository
+                .Delete(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name);
         }
 
-        public List<Setting> GetAll(int? tenantId, long? userId)
+        public virtual void Create(SettingInfo settingInfo)
         {
-            return _settingRepository.GetAllList(s => s.TenantId == tenantId && s.UserId == userId);
+            _settingRepository.Insert(settingInfo.ToSetting());
+        }
+
+        [UnitOfWork]
+        public virtual void Update(SettingInfo settingInfo)
+        {
+            var setting = _settingRepository
+                .FirstOrDefault(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name)
+                .ToSettingInfo();
+
+            if (setting != null)
+            {
+                setting.Value = settingInfo.Value;
+            }
         }
     }
 }

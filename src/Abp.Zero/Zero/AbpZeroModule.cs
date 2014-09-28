@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-using Abp.Dependency;
 using Abp.Modules;
-using Abp.Startup;
 
 namespace Abp.Zero
 {
@@ -13,12 +11,12 @@ namespace Abp.Zero
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.2.0.0";
+        public const string CurrentVersion = "0.2.1.0";
 
-        public override void Initialize(IAbpInitializationContext initializationContext)
+        public override void Initialize()
         {
-            base.Initialize(initializationContext);
-            IocManager.Instance.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            base.Initialize();
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }

@@ -34,9 +34,9 @@
     <DocumentationFile>bin\Release\Abp.Zero.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.3.2.3, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.3.2.5, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.0.3.2.3\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\packages\Abp.0.3.2.5\lib\net451\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
@@ -65,9 +65,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authorization\AuthorizationService.cs" />
-    <Compile Include="Authorization\Permissions\PermissionGrantInfo.cs" />
+    <Compile Include="Authorization\PermissionGrantStore.cs" />
+    <Compile Include="Authorization\PermissionGrantInfo.cs" />
     <Compile Include="Authorization\Roles\IRolePermissionStore.cs" />
+    <Compile Include="Configuration\Setting.cs" />
+    <Compile Include="Configuration\SettingExtensions.cs" />
     <Compile Include="MultiTenancy\IFilterByTenant.cs" />
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
@@ -79,8 +81,8 @@
     <Compile Include="Authorization\Roles\AbpRoleStore.cs" />
     <Compile Include="Authorization\Users\AbpUserManager.cs" />
     <Compile Include="Authorization\Users\AbpUserStore.cs" />
-    <Compile Include="Authorization\Permissions\IPermissionSettingRepository.cs" />
-    <Compile Include="Authorization\Permissions\PermissionSetting.cs" />
+    <Compile Include="Authorization\IPermissionSettingRepository.cs" />
+    <Compile Include="Authorization\PermissionSetting.cs" />
     <Compile Include="Authorization\Roles\AbpRole.cs" />
     <Compile Include="Authorization\Roles\IAbpRoleRepository.cs" />
     <Compile Include="Authorization\Users\IUserRoleRepository.cs" />

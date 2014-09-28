@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Authorization.Permissions;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
