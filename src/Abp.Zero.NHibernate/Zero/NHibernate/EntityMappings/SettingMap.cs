@@ -1,5 +1,5 @@
 ﻿using Abp.Configuration;
-using Abp.Domain.Entities.Mapping;
+using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {

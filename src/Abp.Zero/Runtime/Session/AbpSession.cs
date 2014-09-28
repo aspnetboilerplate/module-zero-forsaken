@@ -15,6 +15,13 @@ namespace Abp.Runtime.Session
     /// </summary>
     public class AbpSession : IAbpSession, ISingletonDependency
     {
+        private readonly IIocResolver _iocResolver;
+
+        public AbpSession(IIocResolver iocResolver)
+        {
+            _iocResolver = iocResolver;
+        }
+
         public long? UserId
         {
             get
@@ -54,13 +61,13 @@ namespace Abp.Runtime.Session
             }
         }
 
-        private static int? _defaultTenantId;
+        private int? _defaultTenantId;
 
-        private static int GetDefaultTenantId()
+        private int GetDefaultTenantId()
         {
             if (!_defaultTenantId.HasValue)
             {
-                using (var tenantRepository = IocHelper.ResolveAsDisposable<IAbpTenantRepository>())
+                using (var tenantRepository = _iocResolver.ResolveAsDisposable<IAbpTenantRepository>())
                 {
                     var defaultTenant = tenantRepository.Object.FirstOrDefault(t => t.TenancyName == "default");
                     if (defaultTenant == null)
@@ -75,7 +82,7 @@ namespace Abp.Runtime.Session
             return _defaultTenantId.Value;
         }
 
-        private static bool IsMultiTenancyEnabled
+        private bool IsMultiTenancyEnabled
         {
             get { return string.Equals(ConfigurationManager.AppSettings["Abp.MultiTenancy.IsEnabled"], "true", StringComparison.InvariantCultureIgnoreCase); }
         }

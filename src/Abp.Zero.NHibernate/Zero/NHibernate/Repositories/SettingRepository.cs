@@ -1,5 +1,5 @@
 using Abp.Configuration;
-using Abp.Domain.Repositories.NHibernate;
+using Abp.NHibernate.Repositories;
 
 namespace Abp.Zero.NHibernate.Repositories
 {

@@ -1,5 +1,5 @@
-﻿using Abp.Domain.Repositories.NHibernate;
-using Abp.MultiTenancy;
+﻿using Abp.MultiTenancy;
+using Abp.NHibernate.Repositories;
 
 namespace Abp.Zero.NHibernate.Repositories
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
+using Abp.EntityFramework;
 using Abp.Modules;
-using Abp.Startup.Infrastructure.EntityFramework;
 
 namespace Abp.Zero.EntityFramework
 {

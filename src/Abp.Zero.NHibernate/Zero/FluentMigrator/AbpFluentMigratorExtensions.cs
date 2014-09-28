@@ -1,5 +1,5 @@
-﻿using Abp.Data.Migrations.FluentMigrator;
-using Abp.Domain.Entities.Auditing;
+﻿using Abp.Domain.Entities.Auditing;
+using Abp.FluentMigrator;
 using Abp.MultiTenancy;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create.Table;

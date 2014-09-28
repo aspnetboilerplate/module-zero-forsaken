@@ -3,7 +3,7 @@ using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Configuration;
-using Abp.Domain.Repositories.EntityFramework;
+using Abp.EntityFramework;
 using Abp.MultiTenancy;
 
 namespace Abp.Zero.EntityFramework.Repositories

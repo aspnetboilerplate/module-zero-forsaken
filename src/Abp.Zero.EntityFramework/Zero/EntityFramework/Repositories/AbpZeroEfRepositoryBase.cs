@@ -1,5 +1,5 @@
 using Abp.Domain.Entities;
-using Abp.Domain.Repositories.EntityFramework;
+using Abp.EntityFramework.Repositories;
 
 namespace Abp.Zero.EntityFramework.Repositories
 {

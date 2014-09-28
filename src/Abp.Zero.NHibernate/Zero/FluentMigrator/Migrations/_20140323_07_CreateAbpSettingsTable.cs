@@ -1,3 +1,4 @@
+using Abp.FluentMigrator;
 using FluentMigrator;
 
 namespace Abp.Zero.FluentMigrator.Migrations
@@ -8,7 +9,7 @@ namespace Abp.Zero.FluentMigrator.Migrations
         public override void Up()
         {
             Create.Table("AbpSettings")
-                .WithColumn("Id").AsInt64().NotNullable().PrimaryKey().Identity()
+                .WithIdAsInt64()
                 .WithTenantIdAsNullable()
                 .WithNullableUserId()
                 .WithColumn("Name").AsAnsiString(128).NotNullable()
