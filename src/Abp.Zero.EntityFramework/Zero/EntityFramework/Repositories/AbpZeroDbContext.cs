@@ -27,10 +27,10 @@ namespace Abp.Zero.EntityFramework.Repositories
         
         public virtual IDbSet<Setting> Settings { get; set; }
 
-        public AbpZeroDbContext()
-            : base("Main")
+        public AbpZeroDbContext(string nameOrConnectionString)
+            : base(nameOrConnectionString)
         {
-            
+
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
