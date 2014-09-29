@@ -96,7 +96,6 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Confirmation code for email.
         /// </summary>
-        [Required]
         [StringLength(MaxEmailConfirmationCodeLength)]
         public virtual string EmailConfirmationCode { get; set; }
 
@@ -105,7 +104,6 @@ namespace Abp.Authorization.Users
         /// It's not valid if it's null.
         /// It's for one usage and must be set to null after reset.
         /// </summary>
-        [Required]
         [StringLength(MaxPasswordResetCodeLength)]
         public virtual string PasswordResetCode { get; set; }
 

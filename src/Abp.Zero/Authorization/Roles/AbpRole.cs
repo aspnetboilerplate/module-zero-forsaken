@@ -28,5 +28,26 @@ namespace Abp.Authorization.Roles
         /// Display name of this role.
         /// </summary>
         public virtual string DisplayName { get; set; }
+
+        /// <summary>
+        /// Creates a new <see cref="AbpRole"/> object.
+        /// </summary>
+        public AbpRole()
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="AbpRole"/> object.
+        /// </summary>
+        /// <param name="tenantId">Tenant's Id if this role is a tenant-level role</param>
+        /// <param name="name">Unique name of this role</param>
+        /// <param name="displayName">Display name of this role</param>
+        public AbpRole(int? tenantId, string name, string displayName)
+        {
+            TenantId = tenantId;
+            Name = name;
+            DisplayName = displayName;
+        }
     }
 }

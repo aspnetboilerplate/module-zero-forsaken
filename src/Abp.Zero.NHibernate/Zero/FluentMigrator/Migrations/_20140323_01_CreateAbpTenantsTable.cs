@@ -24,7 +24,7 @@ namespace Abp.Zero.FluentMigrator.Migrations
             Insert.IntoTable("AbpTenants").Row(
                 new
                 {
-                    TenancyName = "default", //Reserved TenancyName
+                    TenancyName = "Default", //Reserved TenancyName
                     Name = "Default"
                 });
         }

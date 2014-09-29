@@ -19,7 +19,7 @@ namespace Abp.MultiTenancy
         /// Display name of the Tenant.
         /// </summary>
         public virtual string Name { get; set; }
-        
+
         /// <summary>
         /// Creation time of this Tenant.
         /// </summary>
@@ -31,6 +31,18 @@ namespace Abp.MultiTenancy
         public AbpTenant()
         {
             CreationTime = DateTime.Now; //TODO: UtcNow?
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="AbpTenant"/> object.
+        /// </summary>
+        /// <param name="tenancyName">UNIQUE name of this Tenant</param>
+        /// <param name="name">Display name of the Tenant</param>
+        public AbpTenant(string tenancyName, string name)
+            : this()
+        {
+            TenancyName = tenancyName;
+            Name = name;
         }
     }
 }

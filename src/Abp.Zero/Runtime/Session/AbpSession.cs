@@ -69,10 +69,10 @@ namespace Abp.Runtime.Session
             {
                 using (var tenantRepository = _iocResolver.ResolveAsDisposable<IAbpTenantRepository>())
                 {
-                    var defaultTenant = tenantRepository.Object.FirstOrDefault(t => t.TenancyName == "default");
+                    var defaultTenant = tenantRepository.Object.FirstOrDefault(t => t.TenancyName == "Default");
                     if (defaultTenant == null)
                     {
-                        throw new AbpException("A tenant must be exist with TenancyName = 'default'");
+                        throw new AbpException("A tenant must be exist with TenancyName = 'Default'");
                     }
 
                     _defaultTenantId = defaultTenant.Id;

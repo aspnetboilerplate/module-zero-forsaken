@@ -16,5 +16,16 @@ namespace Abp.Authorization.Users
         /// Role Id.
         /// </summary>
         public virtual int RoleId { get; set; }
+
+        public UserRole()
+        {
+            
+        }
+
+        public UserRole(int userId, int roleId)
+        {
+            UserId = userId;
+            RoleId = roleId;
+        }
     }
 }
