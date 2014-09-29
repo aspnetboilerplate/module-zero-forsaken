@@ -10,7 +10,7 @@ namespace Abp.MultiTenancy
     public class AbpTenant : Entity, IHasCreationTime
     {
         /// <summary>
-        /// Tenancy name. This peoperty is the UNIQUE name of this Tenant.
+        /// Tenancy name. This property is the UNIQUE name of this Tenant.
         /// It can be used as subdomain name.
         /// </summary>
         public virtual string TenancyName { get; set; }
@@ -30,7 +30,7 @@ namespace Abp.MultiTenancy
         /// </summary>
         public AbpTenant()
         {
-            CreationTime = DateTime.Now;
+            CreationTime = DateTime.Now; //TODO: UtcNow?
         }
     }
 }

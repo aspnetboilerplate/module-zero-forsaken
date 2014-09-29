@@ -29,11 +29,21 @@ namespace Abp.Configuration
         /// </summary>
         public virtual string Value { get; set; }
 
+        /// <summary>
+        /// Creates a new <see cref="Setting"/> object.
+        /// </summary>
         public Setting()
         {
 
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Setting"/> object.
+        /// </summary>
+        /// <param name="tenantId">TenantId for this setting</param>
+        /// <param name="userId">UserId for this setting</param>
+        /// <param name="name">Unique name of the setting</param>
+        /// <param name="value">Value of the setting</param>
         public Setting(int? tenantId, long? userId, string name, string value)
         {
             TenantId = tenantId;

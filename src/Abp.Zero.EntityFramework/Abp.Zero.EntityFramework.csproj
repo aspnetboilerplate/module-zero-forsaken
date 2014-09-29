@@ -80,7 +80,7 @@
     <Compile Include="Zero\EntityFramework\Repositories\AbpRoleRepository.cs" />
     <Compile Include="Zero\EntityFramework\Repositories\AbpTenantRepository.cs" />
     <Compile Include="Zero\EntityFramework\Repositories\AbpUserRepository.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\AbpZeroDbContext.cs" />
+    <Compile Include="Zero\EntityFramework\AbpZeroDbContext.cs" />
     <Compile Include="Zero\EntityFramework\Repositories\AbpZeroEfRepositoryBase.cs" />
     <Compile Include="Zero\EntityFramework\Repositories\PermissionSettingRepository.cs" />
     <Compile Include="Zero\EntityFramework\Repositories\SettingRepository.cs" />

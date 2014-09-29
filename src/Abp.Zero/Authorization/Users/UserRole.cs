@@ -3,10 +3,9 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Authorization.Users
 {
     /// <summary>
-    /// Represents role record of a user.
-    /// TODO: Add a unique index for UserId, RoleId
+    /// Represents role record of a user. 
     /// </summary>
-    public class UserRole : CreationAuditedEntity<long>
+    public class UserRole : CreationAuditedEntity<long> //TODO: Add a unique index for UserId, RoleId
     {
         /// <summary>
         /// User Id.

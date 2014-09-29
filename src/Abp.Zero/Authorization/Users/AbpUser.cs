@@ -131,7 +131,7 @@ namespace Abp.Authorization.Users
 
             if (string.IsNullOrEmpty(EmailConfirmationCode))
             {
-                throw new ApplicationException("Email confirmation code is not set for this user.");                
+                throw new ApplicationException("Email confirmation code is not set for this user.");
             }
 
             if (EmailConfirmationCode != confirmationCode)
