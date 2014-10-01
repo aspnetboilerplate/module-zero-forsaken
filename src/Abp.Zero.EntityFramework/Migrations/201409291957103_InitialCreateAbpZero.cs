@@ -39,7 +39,7 @@ namespace Abp.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AbpTenants", user => user.TenantId, true, "FK_AbpUsers_TenantId_AbpTenants_Id")
                 .ForeignKey("dbo.AbpUsers", user => user.CreatorUserId, false, "FK_AbpUsers_CreatorUserId_AbpUsers_Id");
-
+            
             CreateTable(
                 "dbo.AbpRoles",
                 c => new

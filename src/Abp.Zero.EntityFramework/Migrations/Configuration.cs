@@ -1,6 +1,7 @@
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
+using Abp.Zero.EntityFramework;
 
 namespace Abp.Migrations
 {
@@ -9,63 +10,88 @@ namespace Abp.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Abp.Zero.EntityFramework.AbpZeroDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<AbpZeroDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            ContextKey = "Abp.Zero";
         }
 
-        protected override void Seed(Abp.Zero.EntityFramework.AbpZeroDbContext context)
+        protected override void Seed(AbpZeroDbContext context)
         {
+            //Admin role for tenancy owner
+
+            var adminRoleForTenancyOwner = context.AbpRoles.FirstOrDefault(r => r.TenantId == null && r.Name == "Admin");
+            if (adminRoleForTenancyOwner == null)
+            {
+                adminRoleForTenancyOwner = context.AbpRoles.Add(new AbpRole(null, "Admin", "Admin"));
+                context.SaveChanges();
+            }
+
+            //Admin user for tenancy owner
+
+            var adminUserForTenancyOwner = context.AbpUsers.FirstOrDefault(u => u.TenantId == null && u.UserName == "admin");
+            if (adminUserForTenancyOwner == null)
+            {
+                adminUserForTenancyOwner = context.AbpUsers.Add(
+                    new AbpUser
+                    {
+                        TenantId = null,
+                        UserName = "admin",
+                        Name = "System",
+                        Surname = "Administrator",
+                        EmailAddress = "admin@aspnetboilerplate.com",
+                        IsEmailConfirmed = true,
+                        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
+                    });
+
+                context.SaveChanges();
+
+                context.UserRoles.Add(new UserRole(adminUserForTenancyOwner.Id, adminRoleForTenancyOwner.Id));
+
+                context.SaveChanges();
+            }
+
             //Default tenant
 
-            context.AbpTenants.AddOrUpdate(
-                t => t.TenancyName,
-                new AbpTenant("Default", "Default")
-                );
+            var defaultTenant = context.AbpTenants.FirstOrDefault(t => t.TenancyName == "Default");
+            if (defaultTenant == null)
+            {
+                defaultTenant = context.AbpTenants.Add(new AbpTenant("Default", "Default"));
+                context.SaveChanges();
+            }
 
-            //Default roles
+            //Admin role for 'Default' tenant (above code does not works for this case)
 
-            context.AbpRoles.AddOrUpdate(
-                r => new { r.TenantId, r.Name },
-                new AbpRole(null, "Admin", "Admin")
-                //new AbpRole(1, "Admin", "Admin") //TODO: Not working, error: The binary operator Equal is not defined for the types 'System.Nullable`1[System.Int32]' and 'System.Int32'.
-                );
+            var adminRoleForDefaultTenant = context.AbpRoles.FirstOrDefault(r => r.TenantId == defaultTenant.Id && r.Name == "Admin");
+            if (adminRoleForDefaultTenant == null)
+            {
+                adminRoleForDefaultTenant = context.AbpRoles.Add(new AbpRole(defaultTenant.Id, "Admin", "Admin"));
+                context.SaveChanges();
+            }
 
-            //Default users
+            //Admin user for 'Default' tenant (above code does not works for this case)
 
-            context.AbpUsers.AddOrUpdate(
-                u => new { u.TenantId, u.UserName },
-                new AbpUser
-                {
-                    TenantId = null,
-                    UserName = "admin",
-                    Name = "System",
-                    Surname = "Administrator",
-                    EmailAddress = "admin@aspnetboilerplate.com",
-                    IsEmailConfirmed = true,
-                    Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-                }//, //TODO: Not working
-                //new AbpUser
-                //{
-                //    TenantId = 1,
-                //    UserName = "admin",
-                //    Name = "System",
-                //    Surname = "Administrator",
-                //    EmailAddress = "admin@aspnetboilerplate.com",
-                //    IsEmailConfirmed = true,
-                //    Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-                //}
-                );
+            var adminUserForDefaultTenant = context.AbpUsers.FirstOrDefault(u => u.TenantId == defaultTenant.Id && u.UserName == "admin");
+            if (adminUserForDefaultTenant == null)
+            {
+                adminUserForDefaultTenant = context.AbpUsers.Add(
+                    new AbpUser
+                    {
+                        TenantId = defaultTenant.Id,
+                        UserName = "admin",
+                        Name = "System",
+                        Surname = "Administrator",
+                        EmailAddress = "admin@aspnetboilerplate.com",
+                        IsEmailConfirmed = true,
+                        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
+                    });
+                context.SaveChanges();
 
-            //User-role relations
-
-            //context.UserRoles.AddOrUpdate(
-            //    ur => new { ur.UserId, ur.RoleId },
-            //    //new UserRole(1, 1)//,
-            //    //new UserRole(2, 2)
-            //    );
+                context.UserRoles.Add(new UserRole(adminUserForDefaultTenant.Id, adminRoleForDefaultTenant.Id));
+                context.SaveChanges();
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Abp.Authorization.Users
             
         }
 
-        public UserRole(int userId, int roleId)
+        public UserRole(long userId, int roleId)
         {
             UserId = userId;
             RoleId = roleId;
