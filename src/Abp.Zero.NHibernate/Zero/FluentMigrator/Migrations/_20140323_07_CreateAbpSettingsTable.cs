@@ -1,4 +1,4 @@
-using Abp.FluentMigrator;
+using Abp.FluentMigrator.Extensions;
 using FluentMigrator;
 
 namespace Abp.Zero.FluentMigrator.Migrations

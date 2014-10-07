@@ -1,24 +1,16 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Abp.Modules;
-using Abp.Startup.Infrastructure.NHibernate;
+using Abp.NHibernate;
+using Abp.NHibernate.Config;
 
 namespace Abp.Zero.NHibernate
 {
     /// <summary>
     /// Startup class for ABP Zero NHibernate module.
     /// </summary>
+    [DependsOn(typeof(AbpZeroModule), typeof(AbpNHibernateModule))]
     public class AbpZeroNHibernateModule : AbpModule
     {
-        public override Type[] GetDependedModules()
-        {
-            return new[]
-                   {
-                       typeof (AbpZeroModule),
-                       typeof (AbpNHibernateModule)
-                   };
-        }
-
         public override void PreInitialize()
         {
             Configuration.Modules.AbpNHibernate().FluentConfiguration
