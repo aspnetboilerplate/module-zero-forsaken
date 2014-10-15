@@ -53,7 +53,6 @@ namespace Abp.Zero.EntityFramework
         /// Do not directly instantiate this class. Instead, use dependency injection!
         /// </summary>
         public AbpZeroDbContext()
-            : base("Main")
         {
 
         }
