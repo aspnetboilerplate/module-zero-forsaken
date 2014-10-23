@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
@@ -53,11 +54,14 @@ namespace Abp.Authorization.Users
 
         #endregion
 
+        /// <summary>
+        /// Tenant of this user.
+        /// </summary>
         [ForeignKey("TenantId")]
         public TTenant Tenant { get; set; }
 
         /// <summary>
-        /// Tenant of this user.
+        /// Tenant Id of this user.
         /// </summary>
         public virtual int? TenantId { get; set; }
 
@@ -121,5 +125,14 @@ namespace Abp.Authorization.Users
         /// The last time this user entered to the system.
         /// </summary>
         public virtual DateTime? LastLoginTime { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual ICollection<UserLogin> Logins { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual ICollection<UserRole> Roles { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual ICollection<UserPermissionSetting> Permissions { get; set; }
     }
 }

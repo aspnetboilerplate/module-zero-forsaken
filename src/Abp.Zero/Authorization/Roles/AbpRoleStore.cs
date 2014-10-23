@@ -24,17 +24,17 @@ namespace Abp.Authorization.Roles
         #region Private fields
 
         private readonly IRepository<TRole> _roleRepository;
-        private readonly IRepository<PermissionSetting, long> _permissionSettingRepository;
+        private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
         private readonly IAbpSession _session;
 
         #endregion
 
         #region Constructor
 
-        public AbpRoleStore(IRepository<TRole> roleRepository, IRepository<PermissionSetting, long> permissionSettingRepository, IAbpSession session)
+        public AbpRoleStore(IRepository<TRole> roleRepository, IRepository<RolePermissionSetting, long> rolePermissionSettingRepository, IAbpSession session)
         {
             _roleRepository = roleRepository;
-            _permissionSettingRepository = permissionSettingRepository;
+            _rolePermissionSettingRepository = rolePermissionSettingRepository;
             _session = session;
         }
 
@@ -86,8 +86,8 @@ namespace Abp.Authorization.Roles
                                                  return;
                                              }
 
-                                             _permissionSettingRepository.Insert(
-                                                 new PermissionSetting
+                                             _rolePermissionSettingRepository.Insert(
+                                                 new RolePermissionSetting
                                                  {
                                                      RoleId = role.Id,
                                                      Name = permissionGrant.Name,
@@ -100,7 +100,7 @@ namespace Abp.Authorization.Roles
         {
             return Task.Factory.StartNew(() =>
                                          {
-                                             var permissionEntity = _permissionSettingRepository.FirstOrDefault(
+                                             var permissionEntity = _rolePermissionSettingRepository.FirstOrDefault(
                                                  p => p.RoleId == role.Id &&
                                                       p.Name == permissionGrant.Name &&
                                                       p.IsGranted == permissionGrant.IsGranted);
@@ -109,14 +109,14 @@ namespace Abp.Authorization.Roles
                                                  return;
                                              }
 
-                                             _permissionSettingRepository.Delete(permissionEntity);
+                                             _rolePermissionSettingRepository.Delete(permissionEntity);
                                          });
         }
 
         public Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
         {
             return Task.Factory.StartNew<IList<PermissionGrantInfo>>(
-                () => _permissionSettingRepository
+                () => _rolePermissionSettingRepository
                     .GetAllList(p => p.RoleId == role.Id)
                     .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                     .ToList()
@@ -125,7 +125,7 @@ namespace Abp.Authorization.Roles
 
         public Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
-            return Task.Factory.StartNew(() => _permissionSettingRepository.FirstOrDefault(p => p.RoleId == role.Id && p.Name == permissionGrant.Name && p.IsGranted == permissionGrant.IsGranted) != null);
+            return Task.Factory.StartNew(() => _rolePermissionSettingRepository.FirstOrDefault(p => p.RoleId == role.Id && p.Name == permissionGrant.Name && p.IsGranted == permissionGrant.IsGranted) != null);
         }
 
         #endregion

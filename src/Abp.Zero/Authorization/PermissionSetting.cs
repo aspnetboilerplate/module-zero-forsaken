@@ -7,24 +7,12 @@ namespace Abp.Authorization
     /// Used to grant/deny a permission for a role or user.
     /// <see cref="RoleId"/> or <see cref="UserId"/> must be filled.
     /// </summary>
-    public class PermissionSetting : CreationAuditedEntity<long>
+    public abstract class PermissionSetting : CreationAuditedEntity<long>
     {
         /// <summary>
         /// Maximum length of the <see cref="Name"/> field.
         /// </summary>
         public const int MaxNameLength = 128;
-
-        /// <summary>
-        /// Role Id.
-        /// It's required if <see cref="UserId"/> is null.
-        /// </summary>
-        public virtual int? RoleId { get; set; }
-
-        /// <summary>
-        /// User Id.
-        /// It's required if <see cref="RoleId"/> is null.
-        /// </summary>
-        public virtual long? UserId { get; set; }
 
         /// <summary>
         /// Unique name of the permission.
@@ -42,9 +30,19 @@ namespace Abp.Authorization
         /// <summary>
         /// Creates a new <see cref="PermissionSetting"/> entity.
         /// </summary>
-        public PermissionSetting()
+        protected PermissionSetting()
         {
             IsGranted = true;
         }
+    }
+
+    public class RolePermissionSetting : PermissionSetting
+    {
+        public virtual int? RoleId { get; set; }
+    }
+
+    public class UserPermissionSetting : PermissionSetting
+    {
+        public virtual long? UserId { get; set; }
     }
 }

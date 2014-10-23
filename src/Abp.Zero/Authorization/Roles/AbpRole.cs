@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Authorization.Users;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
@@ -38,7 +39,10 @@ namespace Abp.Authorization.Roles
         /// Display name of this role.
         /// </summary>
         public virtual string DisplayName { get; set; }
-        
+
+        [ForeignKey("RoleId")]
+        public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
+
         public AbpRole()
         {
             
