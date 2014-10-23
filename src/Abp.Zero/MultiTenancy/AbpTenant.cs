@@ -1,4 +1,7 @@
-﻿using Abp.Authorization.Users;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Authorization.Users;
+using Abp.Configuration;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.MultiTenancy
@@ -20,6 +23,9 @@ namespace Abp.MultiTenancy
         /// Display name of the Tenant.
         /// </summary>
         public virtual string Name { get; set; }
+
+        [ForeignKey("TenantId")]
+        public virtual ICollection<Setting> Settings { get; set; }
 
         public AbpTenant()
         {

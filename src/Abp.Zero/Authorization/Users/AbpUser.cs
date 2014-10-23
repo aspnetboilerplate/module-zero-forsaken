@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Configuration;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
@@ -11,7 +12,7 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser<TTenant, TUser> : CreationAuditedEntity<long>, IUser<long>, IMayHaveTenant<TTenant, TUser>
+    public class AbpUser<TTenant, TUser> : FullAuditedEntity<long, TUser>, IUser<long>, IMayHaveTenant<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
@@ -134,5 +135,8 @@ namespace Abp.Authorization.Users
 
         [ForeignKey("UserId")]
         public virtual ICollection<UserPermissionSetting> Permissions { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual ICollection<Setting> Settings { get; set; }
     }
 }

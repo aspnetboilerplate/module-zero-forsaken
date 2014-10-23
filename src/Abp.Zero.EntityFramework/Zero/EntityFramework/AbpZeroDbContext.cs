@@ -55,7 +55,7 @@ namespace Abp.Zero.EntityFramework
         /// Default constructor.
         /// Do not directly instantiate this class. Instead, use dependency injection!
         /// </summary>
-        public AbpZeroDbContext()
+        protected AbpZeroDbContext()
         {
 
         }
@@ -64,7 +64,7 @@ namespace Abp.Zero.EntityFramework
         /// Constructor with connection string parameter.
         /// </summary>
         /// <param name="nameOrConnectionString">Connection string or a name in connection strings in configuration file</param>
-        public AbpZeroDbContext(string nameOrConnectionString)
+        protected AbpZeroDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
 

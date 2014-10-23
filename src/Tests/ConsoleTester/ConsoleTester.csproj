@@ -76,29 +76,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201410231220056_InitialCreate.cs" />
-    <Compile Include="Migrations\201410231220056_InitialCreate.Designer.cs">
-      <DependentUpon>201410231220056_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201410231238526_Added_Logins_To_User.cs" />
-    <Compile Include="Migrations\201410231238526_Added_Logins_To_User.Designer.cs">
-      <DependentUpon>201410231238526_Added_Logins_To_User.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201410231242513_Added_Roles_To_User.cs" />
-    <Compile Include="Migrations\201410231242513_Added_Roles_To_User.Designer.cs">
-      <DependentUpon>201410231242513_Added_Roles_To_User.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201410231248027_Added_Some_Collections.cs" />
-    <Compile Include="Migrations\201410231248027_Added_Some_Collections.Designer.cs">
-      <DependentUpon>201410231248027_Added_Some_Collections.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201410231254371_Splitted_PermissionSetting.cs" />
-    <Compile Include="Migrations\201410231254371_Splitted_PermissionSetting.Designer.cs">
-      <DependentUpon>201410231254371_Splitted_PermissionSetting.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201410231258215_Test.cs" />
-    <Compile Include="Migrations\201410231258215_Test.Designer.cs">
-      <DependentUpon>201410231258215_Test.cs</DependentUpon>
+    <Compile Include="Migrations\201410231339029_InitialCreate.cs" />
+    <Compile Include="Migrations\201410231339029_InitialCreate.Designer.cs">
+      <DependentUpon>201410231339029_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
@@ -124,23 +104,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201410231220056_InitialCreate.resx">
-      <DependentUpon>201410231220056_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201410231238526_Added_Logins_To_User.resx">
-      <DependentUpon>201410231238526_Added_Logins_To_User.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201410231242513_Added_Roles_To_User.resx">
-      <DependentUpon>201410231242513_Added_Roles_To_User.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201410231248027_Added_Some_Collections.resx">
-      <DependentUpon>201410231248027_Added_Some_Collections.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201410231254371_Splitted_PermissionSetting.resx">
-      <DependentUpon>201410231254371_Splitted_PermissionSetting.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201410231258215_Test.resx">
-      <DependentUpon>201410231258215_Test.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201410231339029_InitialCreate.resx">
+      <DependentUpon>201410231339029_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
