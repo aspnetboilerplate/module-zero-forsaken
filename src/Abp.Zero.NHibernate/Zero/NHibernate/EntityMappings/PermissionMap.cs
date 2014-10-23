@@ -1,4 +1,6 @@
 using Abp.Authorization;
+using Abp.Authorization.Roles;
+using Abp.Authorization.Users;
 using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings

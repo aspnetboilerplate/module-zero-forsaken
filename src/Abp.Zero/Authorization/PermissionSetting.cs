@@ -35,14 +35,4 @@ namespace Abp.Authorization
             IsGranted = true;
         }
     }
-
-    public class RolePermissionSetting : PermissionSetting
-    {
-        public virtual int? RoleId { get; set; }
-    }
-
-    public class UserPermissionSetting : PermissionSetting
-    {
-        public virtual long? UserId { get; set; }
-    }
 }
