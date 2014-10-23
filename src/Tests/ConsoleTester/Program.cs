@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Reflection;
 using Abp;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Modules;
 using Abp.MultiTenancy;
+using Abp.Runtime.Session;
 using Abp.Zero.EntityFramework;
 
 namespace ConsoleTester
@@ -15,6 +18,7 @@ namespace ConsoleTester
     {
         static void Main(string[] args)
         {
+
             using (var bootstrapper = new AbpBootstrapper())
             {
                 bootstrapper.Initialize();
@@ -40,10 +44,14 @@ namespace ConsoleTester
     public class Tester : ITransientDependency
     {
         private readonly IRepository<User, long> _userRepository;
+        private readonly MyUserStore _userStore;
+        private readonly IRepository<MyEntity> _myEntityRepository;
 
-        public Tester(IRepository<User, long> userRepository)
+        public Tester(IRepository<User, long> userRepository, MyUserStore userStore, IRepository<MyEntity> myEntityRepository)
         {
             _userRepository = userRepository;
+            _userStore = userStore;
+            _myEntityRepository = myEntityRepository;
         }
 
         public void DoTests()
@@ -57,6 +65,8 @@ namespace ConsoleTester
 
     public class MyDbContext : AbpZeroDbContext<Tenant, Role, User>
     {
+        public IDbSet<MyEntity> MyEntities { get; set; }
+
         public MyDbContext()
             : base("Default")
         {
@@ -68,7 +78,7 @@ namespace ConsoleTester
     {
         protected Tenant()
         {
-            
+
         }
 
         public Tenant(string tenancyName, string name)
@@ -96,6 +106,37 @@ namespace ConsoleTester
             : base(tenantId, name, displayName)
         {
 
+        }
+    }
+
+    public class MyEntity : Entity
+    {
+        public string MyEntityProp { get; set; }
+    }
+
+    public class MyUserManager : AbpUserManager<Role, Tenant, User>
+    {
+        public MyUserManager(MyUserStore store)
+            : base(store)
+        {
+        }
+    }
+
+    public class MyUserStore : AbpUserStore<Role, Tenant, User>
+    {
+        public MyUserStore(
+            IRepository<User, long> userRepository,
+            IRepository<UserLogin, long> userLoginRepository,
+            IRepository<UserRole, long> userRoleRepository,
+            IRepository<Role> roleRepository,
+            IAbpSession session)
+            : base(
+                userRepository,
+                userLoginRepository,
+                userRoleRepository,
+                roleRepository,
+                session)
+        {
         }
     }
 }
