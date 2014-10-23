@@ -8,7 +8,7 @@ namespace Abp.Zero.NHibernate
     /// <summary>
     /// Startup class for ABP Zero NHibernate module.
     /// </summary>
-    [DependsOn(typeof(AbpZeroModule), typeof(AbpNHibernateModule))]
+    [DependsOn(typeof(AbpZeroCoreModule), typeof(AbpNHibernateModule))]
     public class AbpZeroNHibernateModule : AbpModule
     {
         public override void PreInitialize()

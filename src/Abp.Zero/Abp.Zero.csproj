@@ -90,7 +90,7 @@
     <Compile Include="MultiTenancy\AbpTenant.cs" />
     <Compile Include="Authorization\Users\AbpUser.cs" />
     <Compile Include="Authorization\Users\UserLogin.cs" />
-    <Compile Include="Zero\AbpZeroModule.cs" />
+    <Compile Include="Zero\AbpZeroCoreModule.cs" />
     <Compile Include="Utils\Helpers\RandomHelper.cs" />
   </ItemGroup>
   <ItemGroup>

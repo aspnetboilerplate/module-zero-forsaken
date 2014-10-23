@@ -6,12 +6,12 @@ namespace Abp.Zero
     /// <summary>
     /// ABP zero module.
     /// </summary>
-    public class AbpZeroModule : AbpModule
+    public class AbpZeroCoreModule : AbpModule
     {
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.2.1.6";
+        public const string CurrentVersion = "0.3.0.0";
 
         public override void Initialize()
         {
