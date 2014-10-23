@@ -1,13 +1,19 @@
-﻿namespace Abp.MultiTenancy
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Authorization.Users;
+using Abp.Domain.Entities;
+
+namespace Abp.MultiTenancy
 {
     /// <summary>
-    /// Implement this interface for an entity which must have TenantId.
+    /// Implement this interface for an entity which must have Tenant.
     /// </summary>
-    public interface IMustHaveTenant : IFilterByTenant
+    public interface IMustHaveTenant<TTenant, TUser> : IMustHaveTenant, IFilterByTenant
+        where TTenant : AbpTenant<TTenant, TUser>
+        where TUser : AbpUser<TTenant, TUser>
     {
         /// <summary>
-        /// Id of the tenant.
+        /// Tenant.
         /// </summary>
-        int TenantId { get; set; }
+        TTenant Tenant { get; set; }
     }
 }

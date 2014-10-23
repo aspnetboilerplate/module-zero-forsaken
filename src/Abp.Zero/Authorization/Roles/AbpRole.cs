@@ -1,4 +1,6 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Authorization.Users;
+using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 
@@ -12,8 +14,16 @@ namespace Abp.Authorization.Roles
     /// <remarks> 
     /// Application should use permissions to check if user is granted to perform an operation.
     /// </remarks>
-    public class AbpRole : AuditedEntity, IRole<int>, IMayHaveTenant
+    public class AbpRole<TTenant, TUser> : AuditedEntity<int, TUser>, IRole<int>, IMayHaveTenant<TTenant, TUser>
+        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TTenant, TUser>
     {
+        /// <summary>
+        /// The Tenant if this role is a tenant-level role.
+        /// </summary>
+        [ForeignKey("TenantId")]
+        public TTenant Tenant { get; set; }
+
         /// <summary>
         /// Tenant's Id if this role is a tenant-level role.
         /// </summary>
@@ -28,21 +38,12 @@ namespace Abp.Authorization.Roles
         /// Display name of this role.
         /// </summary>
         public virtual string DisplayName { get; set; }
-
-        /// <summary>
-        /// Creates a new <see cref="AbpRole"/> object.
-        /// </summary>
+        
         public AbpRole()
         {
             
         }
-
-        /// <summary>
-        /// Creates a new <see cref="AbpRole"/> object.
-        /// </summary>
-        /// <param name="tenantId">Tenant's Id if this role is a tenant-level role</param>
-        /// <param name="name">Unique name of this role</param>
-        /// <param name="displayName">Display name of this role</param>
+        
         public AbpRole(int? tenantId, string name, string displayName)
         {
             TenantId = tenantId;

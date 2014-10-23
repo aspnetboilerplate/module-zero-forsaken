@@ -1,41 +1,38 @@
-using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
-using Abp.Zero.EntityFramework;
 
-namespace Abp.Migrations
+namespace ConsoleTester.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<AbpZeroDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ConsoleTester.MyDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "Abp.Zero";
         }
 
-        protected override void Seed(AbpZeroDbContext context)
+        protected override void Seed(ConsoleTester.MyDbContext context)
         {
             //Admin role for tenancy owner
 
-            var adminRoleForTenancyOwner = context.AbpRoles.FirstOrDefault(r => r.TenantId == null && r.Name == "Admin");
+            var adminRoleForTenancyOwner = context.Roles.FirstOrDefault(r => r.TenantId == null && r.Name == "Admin");
             if (adminRoleForTenancyOwner == null)
             {
-                adminRoleForTenancyOwner = context.AbpRoles.Add(new AbpRole(null, "Admin", "Admin"));
+                adminRoleForTenancyOwner = context.Roles.Add(new Role(null, "Admin", "Admin"));
                 context.SaveChanges();
             }
 
             //Admin user for tenancy owner
 
-            var adminUserForTenancyOwner = context.AbpUsers.FirstOrDefault(u => u.TenantId == null && u.UserName == "admin");
+            var adminUserForTenancyOwner = context.Users.FirstOrDefault(u => u.TenantId == null && u.UserName == "admin");
             if (adminUserForTenancyOwner == null)
             {
-                adminUserForTenancyOwner = context.AbpUsers.Add(
-                    new AbpUser
+                adminUserForTenancyOwner = context.Users.Add(
+                    new User
                     {
                         TenantId = null,
                         UserName = "admin",
@@ -55,31 +52,31 @@ namespace Abp.Migrations
 
             //Default tenant
 
-            var defaultTenant = context.AbpTenants.FirstOrDefault(t => t.TenancyName == "Default");
+            var defaultTenant = context.Tenants.FirstOrDefault(t => t.TenancyName == "Default");
             if (defaultTenant == null)
             {
-                defaultTenant = context.AbpTenants.Add(new AbpTenant("Default", "Default"));
+                defaultTenant = context.Tenants.Add(new Tenant("Default", "Default"));
                 context.SaveChanges();
             }
 
             //Admin role for 'Default' tenant (above code does not works for this case)
 
-            var adminRoleForDefaultTenant = context.AbpRoles.FirstOrDefault(r => r.TenantId == defaultTenant.Id && r.Name == "Admin");
+            var adminRoleForDefaultTenant = context.Roles.FirstOrDefault(r => r.TenantId == defaultTenant.Id && r.Name == "Admin");
             if (adminRoleForDefaultTenant == null)
             {
-                adminRoleForDefaultTenant = context.AbpRoles.Add(new AbpRole(defaultTenant.Id, "Admin", "Admin"));
+                adminRoleForDefaultTenant = context.Roles.Add(new Role(defaultTenant.Id, "Admin", "Admin"));
                 context.SaveChanges();
             }
 
             //Admin user for 'Default' tenant (above code does not works for this case)
 
-            var adminUserForDefaultTenant = context.AbpUsers.FirstOrDefault(u => u.TenantId == defaultTenant.Id && u.UserName == "admin");
+            var adminUserForDefaultTenant = context.Users.FirstOrDefault(u => u.TenantId == defaultTenant.Id && u.UserName == "admin");
             if (adminUserForDefaultTenant == null)
             {
-                adminUserForDefaultTenant = context.AbpUsers.Add(
-                    new AbpUser
+                adminUserForDefaultTenant = context.Users.Add(
+                    new User
                     {
-                        TenantId = defaultTenant.Id,
+                        Tenant = defaultTenant,
                         UserName = "admin",
                         Name = "System",
                         Surname = "Administrator",
@@ -92,6 +89,7 @@ namespace Abp.Migrations
                 context.UserRoles.Add(new UserRole(adminUserForDefaultTenant.Id, adminRoleForDefaultTenant.Id));
                 context.SaveChanges();
             }
+
         }
     }
 }

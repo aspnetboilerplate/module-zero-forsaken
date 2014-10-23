@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Dependency;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 
 namespace Abp.Configuration
@@ -10,9 +11,9 @@ namespace Abp.Configuration
     /// </summary>
     public class SettingStore : ISettingStore, ITransientDependency
     {
-        private readonly ISettingRepository _settingRepository;
+        private readonly IRepository<Setting, long> _settingRepository;
 
-        public SettingStore(ISettingRepository settingRepository)
+        public SettingStore(IRepository<Setting, long> settingRepository)
         {
             _settingRepository = settingRepository;
         }

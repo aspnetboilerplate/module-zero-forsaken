@@ -16,6 +16,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{96C4AD
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{8633A076-A52A-470B-B941-BD865A80287C}"
+	ProjectSection(SolutionItems) = preProject
+		SeedDataBackup.txt = SeedDataBackup.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34AA52E9-B75E-46EF-AEBB-460AED9A0767}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "Tests\ConsoleTester\ConsoleTester.csproj", "{660B405C-C16B-45FB-8AC9-B458764B552C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,8 +43,15 @@ Global
 		{C43A88EE-1537-40BB-8154-4271E6AAD919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C43A88EE-1537-40BB-8154-4271E6AAD919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C43A88EE-1537-40BB-8154-4271E6AAD919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{660B405C-C16B-45FB-8AC9-B458764B552C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{660B405C-C16B-45FB-8AC9-B458764B552C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{660B405C-C16B-45FB-8AC9-B458764B552C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{660B405C-C16B-45FB-8AC9-B458764B552C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{660B405C-C16B-45FB-8AC9-B458764B552C} = {34AA52E9-B75E-46EF-AEBB-460AED9A0767}
 	EndGlobalSection
 EndGlobal

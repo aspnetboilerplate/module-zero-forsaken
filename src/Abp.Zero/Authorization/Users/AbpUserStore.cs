@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
@@ -13,20 +16,23 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Implements 'User Store' of ASP.NET Identity Framework.
     /// </summary>
-    public class AbpUserStore :
-        IUserPasswordStore<AbpUser, long>,
-        IUserEmailStore<AbpUser, long>,
-        IUserLoginStore<AbpUser, long>,
-        IUserRoleStore<AbpUser, long>,
-        IQueryableUserStore<AbpUser, long>,
+    public class AbpUserStore<TRole, TTenant, TUser> :
+        IUserPasswordStore<TUser, long>,
+        IUserEmailStore<TUser, long>,
+        IUserLoginStore<TUser, long>,
+        IUserRoleStore<TUser, long>,
+        IQueryableUserStore<TUser, long>,
         ITransientDependency
+        where TRole : AbpRole<TTenant, TUser>
+        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TTenant, TUser>
     {
         #region Private fields
 
-        private readonly IAbpUserRepository _userRepository;
-        private readonly IUserLoginRepository _userLoginRepository;
-        private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IAbpRoleRepository _roleRepository;
+        private readonly IRepository<TUser, long> _userRepository;
+        private readonly IRepository<UserLogin, long> _userLoginRepository;
+        private readonly IRepository<UserRole, long> _userRoleRepository;
+        private readonly IRepository<TRole> _roleRepository;
         private readonly IAbpSession _session;
 
         #endregion
@@ -34,10 +40,10 @@ namespace Abp.Authorization.Users
         #region Constructor
 
         public AbpUserStore(
-            IAbpUserRepository userRepository,
-            IUserLoginRepository userLoginRepository,
-            IUserRoleRepository userRoleRepository,
-            IAbpRoleRepository roleRepository,
+            IRepository<TUser, long> userRepository,
+            IRepository<UserLogin, long> userLoginRepository,
+            IRepository<UserRole, long> userRoleRepository,
+            IRepository<TRole> roleRepository,
             IAbpSession session)
         {
             _userRepository = userRepository;
@@ -56,27 +62,27 @@ namespace Abp.Authorization.Users
             //No need to dispose since using dependency injection manager
         }
 
-        public Task CreateAsync(AbpUser user)
+        public Task CreateAsync(TUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Insert(user));
         }
 
-        public Task UpdateAsync(AbpUser user)
+        public Task UpdateAsync(TUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Update(user));
         }
 
-        public Task DeleteAsync(AbpUser user)
+        public Task DeleteAsync(TUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Delete(user.Id));
         }
 
-        public Task<AbpUser> FindByIdAsync(long userId)
+        public Task<TUser> FindByIdAsync(long userId)
         {
             return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(userId));
         }
 
-        public Task<AbpUser> FindByNameAsync(string userName)
+        public Task<TUser> FindByNameAsync(string userName)
         {
             return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => user.TenantId == _session.TenantId && (user.UserName == userName || user.EmailAddress == userName) && user.IsEmailConfirmed));
         }
@@ -85,17 +91,21 @@ namespace Abp.Authorization.Users
 
         #region IUserPasswordStore
 
-        public Task SetPasswordHashAsync(AbpUser user, string passwordHash)
+        public Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
-            return Task.Factory.StartNew(() => _userRepository.UpdatePassword(user.Id, passwordHash));
+            return Task.Factory.StartNew(() =>
+                                         {
+                                             user.Password = passwordHash;
+                                             _userRepository.Update(user); //TODO: TEST
+                                         });
         }
 
-        public Task<string> GetPasswordHashAsync(AbpUser user)
+        public Task<string> GetPasswordHashAsync(TUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Get(user.Id).Password); //TODO: Optimize
         }
 
-        public Task<bool> HasPasswordAsync(AbpUser user)
+        public Task<bool> HasPasswordAsync(TUser user)
         {
             return Task.Factory.StartNew(() => !string.IsNullOrEmpty(_userRepository.Get(user.Id).Password)); //TODO: Optimize
         }
@@ -104,27 +114,35 @@ namespace Abp.Authorization.Users
 
         #region IUserEmailStore
 
-        public Task SetEmailAsync(AbpUser user, string email)
+        public Task SetEmailAsync(TUser user, string email)
         {
-            return Task.Factory.StartNew(() => _userRepository.UpdateEmail(user.Id, email));
+            return Task.Factory.StartNew(() =>
+                                         {
+                                             user.EmailAddress = email;
+                                             _userRepository.Update(user); //TODO: TEST
+                                         });
         }
 
-        public Task<string> GetEmailAsync(AbpUser user)
+        public Task<string> GetEmailAsync(TUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Get(user.Id).EmailAddress);
         }
 
-        public Task<bool> GetEmailConfirmedAsync(AbpUser user)
+        public Task<bool> GetEmailConfirmedAsync(TUser user)
         {
             return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize?
         }
 
-        public Task SetEmailConfirmedAsync(AbpUser user, bool confirmed)
+        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
         {
-            return Task.Factory.StartNew(() => _userRepository.UpdateIsEmailConfirmed(user.Id, confirmed));
+            return Task.Factory.StartNew(() =>
+                                         {
+                                             user.IsEmailConfirmed = confirmed;
+                                             _userRepository.Update(user); //TODO: TEST
+                                         });
         }
 
-        public Task<AbpUser> FindByEmailAsync(string email)
+        public Task<TUser> FindByEmailAsync(string email)
         {
             return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => user.EmailAddress == email));
         }
@@ -133,7 +151,7 @@ namespace Abp.Authorization.Users
 
         #region IUserLoginStore
 
-        public Task AddLoginAsync(AbpUser user, UserLoginInfo login)
+        public Task AddLoginAsync(TUser user, UserLoginInfo login)
         {
             //TODO: Check if already exists?
             return Task.Factory.StartNew(
@@ -148,12 +166,12 @@ namespace Abp.Authorization.Users
                 );
         }
 
-        public Task RemoveLoginAsync(AbpUser user, UserLoginInfo login)
+        public Task RemoveLoginAsync(TUser user, UserLoginInfo login)
         {
             throw new NotImplementedException(); //TODO: Implement!
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(AbpUser user)
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
         {
             return Task.Factory.StartNew<IList<UserLoginInfo>>(
                 () =>
@@ -164,7 +182,7 @@ namespace Abp.Authorization.Users
                 );
         }
 
-        public Task<AbpUser> FindAsync(UserLoginInfo login)
+        public Task<TUser> FindAsync(UserLoginInfo login)
         {
             return Task.Factory.StartNew(
                 () => FindUser(login.LoginProvider, login.ProviderKey)
@@ -172,7 +190,7 @@ namespace Abp.Authorization.Users
         }
 
         [UnitOfWork]
-        protected virtual AbpUser FindUser(string loginProvider, string providerKey)
+        protected virtual TUser FindUser(string loginProvider, string providerKey)
         {
             var query =
                 from user in _userRepository.GetAll()
@@ -186,7 +204,7 @@ namespace Abp.Authorization.Users
 
         #region IUserRoleStore
 
-        public Task AddToRoleAsync(AbpUser user, string roleName)
+        public Task AddToRoleAsync(TUser user, string roleName)
         {
             //TODO: Check if already exists?
 
@@ -209,7 +227,7 @@ namespace Abp.Authorization.Users
                                          });
         }
 
-        public Task RemoveFromRoleAsync(AbpUser user, string roleName)
+        public Task RemoveFromRoleAsync(TUser user, string roleName)
         {
             return Task.Factory.StartNew(
                 () =>
@@ -236,7 +254,7 @@ namespace Abp.Authorization.Users
                 });
         }
 
-        public Task<IList<string>> GetRolesAsync(AbpUser user)
+        public Task<IList<string>> GetRolesAsync(TUser user)
         {
             return Task.Factory.StartNew<IList<string>>(
                 () =>
@@ -254,7 +272,7 @@ namespace Abp.Authorization.Users
                 });
         }
 
-        public Task<bool> IsInRoleAsync(AbpUser user, string roleName)
+        public Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
             return Task.Factory.StartNew(
                 () =>
@@ -276,7 +294,7 @@ namespace Abp.Authorization.Users
 
         #region IQueryableUserStore
 
-        public IQueryable<AbpUser> Users
+        public IQueryable<TUser> Users
         {
             get { return _userRepository.GetAll(); }
         }

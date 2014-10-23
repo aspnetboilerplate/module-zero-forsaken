@@ -1,4 +1,6 @@
+using Abp.Authorization.Users;
 using Abp.Dependency;
+using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -10,11 +12,14 @@ namespace Abp.Authorization.Roles
     /// Do not directly use <see cref="IAbpRoleRepository"/> to perform role operations.
     /// Instead, use this class.
     /// </remarks>
-    public class AbpRoleManager : RoleManager<AbpRole, int>, ITransientDependency
+    public class AbpRoleManager<TRole, TTenant, TUser> : RoleManager<TRole, int>, ITransientDependency
+        where TRole : AbpRole<TTenant, TUser>
+        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TTenant, TUser>
     {
         private readonly IPermissionManager _permissionManager;
 
-        public AbpRoleManager(AbpRoleStore store, IPermissionManager permissionManager)
+        public AbpRoleManager(AbpRoleStore<TRole, TTenant, TUser> store, IPermissionManager permissionManager)
             : base(store)
         {
             _permissionManager = permissionManager;
@@ -55,9 +60,9 @@ namespace Abp.Authorization.Roles
             return HasPermissionInternal(role, permissionName);
         }
 
-        private bool HasPermissionInternal(AbpRole role, string permissionName) //TODO: Async
+        private bool HasPermissionInternal(TRole role, string permissionName) //TODO: Async
         {
-            if (!(Store is IRolePermissionStore))
+            if (!(Store is IRolePermissionStore<TRole, TTenant, TUser>))
             {
                 throw new AbpException("Store is not IRolePermissionStore");
             }
@@ -68,7 +73,7 @@ namespace Abp.Authorization.Roles
                 throw new AbpException("There is no permission with name: " + permissionName);
             }
 
-            var permissionStore = Store as IRolePermissionStore;
+            var permissionStore = Store as IRolePermissionStore<TRole, TTenant, TUser>;
 
             return permission.IsGrantedByDefault
                 ? !permissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permissionName, false)).Result

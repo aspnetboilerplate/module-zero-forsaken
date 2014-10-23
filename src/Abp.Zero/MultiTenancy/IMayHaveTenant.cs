@@ -1,13 +1,18 @@
-﻿namespace Abp.MultiTenancy
+﻿using Abp.Authorization.Users;
+using Abp.Domain.Entities;
+
+namespace Abp.MultiTenancy
 {
     /// <summary>
-    /// Implement this interface for an entity which may optionally have TenantId.
+    /// Implement this interface for an entity which may have Tenant.
     /// </summary>
-    public interface IMayHaveTenant
+    public interface IMayHaveTenant<TTenant, TUser> : IMayHaveTenant
+        where TTenant : AbpTenant<TTenant, TUser>
+        where TUser : AbpUser<TTenant, TUser>
     {
         /// <summary>
-        /// Id of the tenant.
+        /// Tenant.
         /// </summary>
-        int? TenantId { get; set; }
+        TTenant Tenant { get; set; }
     }
 }

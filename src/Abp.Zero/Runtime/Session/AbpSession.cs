@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using Abp.Dependency;
+using Abp.Domain.Repositories;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Microsoft.AspNet.Identity;
@@ -42,7 +43,7 @@ namespace Abp.Runtime.Session
             {
                 if (!IsMultiTenancyEnabled)
                 {
-                    return GetDefaultTenantId();
+                    return 1;
                 }
 
                 var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
@@ -59,27 +60,6 @@ namespace Abp.Runtime.Session
 
                 return Convert.ToInt32(claim.Value);
             }
-        }
-
-        private int? _defaultTenantId;
-
-        private int GetDefaultTenantId()
-        {
-            if (!_defaultTenantId.HasValue)
-            {
-                using (var tenantRepository = _iocResolver.ResolveAsDisposable<IAbpTenantRepository>())
-                {
-                    var defaultTenant = tenantRepository.Object.FirstOrDefault(t => t.TenancyName == "Default");
-                    if (defaultTenant == null)
-                    {
-                        throw new AbpException("A tenant must be exist with TenancyName = 'Default'");
-                    }
-
-                    _defaultTenantId = defaultTenant.Id;
-                }
-            }
-
-            return _defaultTenantId.Value;
         }
 
         private bool IsMultiTenancyEnabled

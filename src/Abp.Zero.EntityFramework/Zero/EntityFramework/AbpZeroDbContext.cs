@@ -11,38 +11,41 @@ namespace Abp.Zero.EntityFramework
     /// <summary>
     /// DbContext object for  ABP zero.
     /// </summary>
-    public class AbpZeroDbContext : AbpDbContext
+    public abstract class AbpZeroDbContext<TTenant, TRole, TUser> : AbpDbContext
+        where TRole : AbpRole<TTenant, TUser>
+        where TTenant : AbpTenant<TTenant, TUser>
+        where TUser : AbpUser<TTenant, TUser>
     {
         /// <summary>
         /// Tenants
         /// </summary>
-        public virtual IDbSet<AbpTenant> AbpTenants { get; set; }
+        public virtual IDbSet<TTenant> Tenants { get; set; }
+
+        /// <summary>
+        /// Roles.
+        /// </summary>
+        public virtual IDbSet<TRole> Roles { get; set; }
 
         /// <summary>
         /// Users.
         /// </summary>
-        public virtual IDbSet<AbpUser> AbpUsers { get; set; }
-        
+        public virtual IDbSet<TUser> Users { get; set; }
+
         /// <summary>
         /// User logins.
         /// </summary>
         public virtual IDbSet<UserLogin> UserLogins { get; set; }
-        
-        /// <summary>
-        /// Roles.
-        /// </summary>
-        public virtual IDbSet<AbpRole> AbpRoles { get; set; }
-        
+
         /// <summary>
         /// User roles.
         /// </summary>
         public virtual IDbSet<UserRole> UserRoles { get; set; }
-        
+
         /// <summary>
         /// Permissions.
         /// </summary>
         public virtual IDbSet<PermissionSetting> Permissions { get; set; }
-        
+
         /// <summary>
         /// Settings.
         /// </summary>
@@ -71,11 +74,12 @@ namespace Abp.Zero.EntityFramework
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<AbpUser>().ToTable("AbpUsers");
+            modelBuilder.Entity<TTenant>().ToTable("AbpTenants");
+            modelBuilder.Entity<TRole>().ToTable("AbpRoles");
+            modelBuilder.Entity<TUser>().ToTable("AbpUsers");
+
             modelBuilder.Entity<UserLogin>().ToTable("AbpUserLogins");
-            modelBuilder.Entity<AbpRole>().ToTable("AbpRoles");
             modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
-            modelBuilder.Entity<AbpTenant>().ToTable("AbpTenants");
             modelBuilder.Entity<PermissionSetting>().ToTable("AbpPermissions");
             modelBuilder.Entity<Setting>().ToTable("AbpSettings");
         }

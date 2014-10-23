@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
@@ -9,8 +10,12 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser : CreationAuditedEntity<long>, IUser<long>, IMayHaveTenant
+    public class AbpUser<TTenant, TUser> : CreationAuditedEntity<long>, IUser<long>, IMayHaveTenant<TTenant, TUser>
+        where TTenant : AbpTenant<TTenant, TUser>
+        where TUser : AbpUser<TTenant, TUser>
     {
+        #region Consts
+
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
@@ -45,6 +50,11 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="PasswordResetCode"/> property.
         /// </summary>
         public const int MaxPasswordResetCodeLength = 32;
+
+        #endregion
+
+        [ForeignKey("TenantId")]
+        public TTenant Tenant { get; set; }
 
         /// <summary>
         /// Tenant of this user.
@@ -111,34 +121,5 @@ namespace Abp.Authorization.Users
         /// The last time this user entered to the system.
         /// </summary>
         public virtual DateTime? LastLoginTime { get; set; }
-
-        /// <summary>
-        /// Used to confirm email address with given code.
-        /// </summary>
-        /// <param name="confirmationCode">Email confirmation code</param>
-        /// <returns>
-        /// Returns true, if code correct and email is confirmed.
-        /// Returns false if not.
-        /// </returns>
-        public virtual bool ConfirmEmail(string confirmationCode)
-        {
-            if (IsEmailConfirmed)
-            {
-                return true;
-            }
-
-            if (string.IsNullOrEmpty(EmailConfirmationCode))
-            {
-                throw new ApplicationException("Email confirmation code is not set for this user.");
-            }
-
-            if (EmailConfirmationCode != confirmationCode)
-            {
-                return false;
-            }
-
-            IsEmailConfirmed = true;
-            return true;
-        }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using Abp.Authorization.Users;
+using Abp.MultiTenancy;
 using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public abstract class UserMapBase<TUser> : EntityMap<TUser, long> where TUser : AbpUser
+    public class UserMap<TTenant, TUser> : EntityMap<TUser, long>
+        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TTenant, TUser>
     {
-        protected UserMapBase()
+        protected UserMap()
             : base("AbpUsers")
         {
             Map(x => x.TenantId);

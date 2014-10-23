@@ -77,20 +77,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201409291957103_InitialCreateAbpZero.cs" />
-    <Compile Include="Migrations\201409291957103_InitialCreateAbpZero.Designer.cs">
-      <DependentUpon>201409291957103_InitialCreateAbpZero.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\AbpRoleRepository.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\AbpTenantRepository.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\AbpUserRepository.cs" />
     <Compile Include="Zero\EntityFramework\AbpZeroDbContext.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\AbpZeroEfRepositoryBase.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\PermissionSettingRepository.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\SettingRepository.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\UserLoginRepositoryOfTUser.cs" />
-    <Compile Include="Zero\EntityFramework\Repositories\UserRoleRepository.cs" />
     <Compile Include="Zero\EntityFramework\AbpZeroEntityFrameworkModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -107,11 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dynamic Expressions.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201409291957103_InitialCreateAbpZero.resx">
-      <DependentUpon>201409291957103_InitialCreateAbpZero.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
