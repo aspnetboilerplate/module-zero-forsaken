@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
-using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
@@ -16,16 +15,16 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Implements 'User Store' of ASP.NET Identity Framework.
     /// </summary>
-    public class AbpUserStore<TRole, TTenant, TUser> :
+    public class AbpUserStore<TTenant, TRole, TUser> :
         IUserPasswordStore<TUser, long>,
         IUserEmailStore<TUser, long>,
         IUserLoginStore<TUser, long>,
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
         ITransientDependency
+        where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
     {
         #region Private fields
 

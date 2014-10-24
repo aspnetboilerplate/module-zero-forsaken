@@ -114,7 +114,7 @@ namespace ConsoleTester
         public string MyEntityProp { get; set; }
     }
 
-    public class MyUserManager : AbpUserManager<Role, Tenant, User>
+    public class MyUserManager : AbpUserManager<Tenant, Role, User>
     {
         public MyUserManager(MyUserStore store)
             : base(store)
@@ -122,7 +122,7 @@ namespace ConsoleTester
         }
     }
 
-    public class MyUserStore : AbpUserStore<Role, Tenant, User>
+    public class MyUserStore : AbpUserStore<Tenant, Role, User>
     {
         public MyUserStore(
             IRepository<User, long> userRepository,

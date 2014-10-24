@@ -14,14 +14,14 @@ namespace Abp.Authorization
         where TUser : AbpUser<TTenant, TUser> 
         where TTenant : AbpTenant<TTenant, TUser>
     {
-        private readonly AbpRoleManager<TRole, TTenant, TUser> _roleManager;
-        private readonly AbpUserManager<TRole, TTenant, TUser> _userManager;
+        private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
+        private readonly AbpUserManager<TTenant,TRole, TUser> _userManager;
 
         public ILogger Logger { get; set; }
 
         public IAbpSession AbpSession { get; set; }
 
-        public PermissionGrantStore(AbpRoleManager<TRole, TTenant, TUser> roleManager, AbpUserManager<TRole, TTenant, TUser> userManager)
+        public PermissionGrantStore(AbpRoleManager<TTenant, TRole, TUser> roleManager, AbpUserManager<TTenant, TRole, TUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;

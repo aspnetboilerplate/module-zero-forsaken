@@ -8,14 +8,10 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Extends <see cref="RoleManager{TRole,TKey}"/> of ASP.NET Identity Framework.
     /// </summary>
-    /// <remarks>
-    /// Do not directly use <see cref="IAbpRoleRepository"/> to perform role operations.
-    /// Instead, use this class.
-    /// </remarks>
-    public class AbpRoleManager<TRole, TTenant, TUser> : RoleManager<TRole, int>, ITransientDependency
+    public class AbpRoleManager<TTenant, TRole, TUser> : RoleManager<TRole, int>, ITransientDependency
+        where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
     {
         private readonly IPermissionManager _permissionManager;
 
