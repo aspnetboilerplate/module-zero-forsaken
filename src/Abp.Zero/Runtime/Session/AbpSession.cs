@@ -4,8 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using Abp.Dependency;
-using Abp.Domain.Repositories;
-using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Microsoft.AspNet.Identity;
 
@@ -16,13 +14,6 @@ namespace Abp.Runtime.Session
     /// </summary>
     public class AbpSession : IAbpSession, ISingletonDependency
     {
-        private readonly IIocResolver _iocResolver;
-
-        public AbpSession(IIocResolver iocResolver)
-        {
-            _iocResolver = iocResolver;
-        }
-
         public long? UserId
         {
             get
@@ -43,7 +34,7 @@ namespace Abp.Runtime.Session
             {
                 if (!IsMultiTenancyEnabled)
                 {
-                    return 1;
+                    return 1; //TODO: !!!
                 }
 
                 var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;

@@ -98,6 +98,7 @@ namespace ConsoleTester
     public class Role : AbpRole<Tenant, User>
     {
         protected Role()
+
         {
 
         }
