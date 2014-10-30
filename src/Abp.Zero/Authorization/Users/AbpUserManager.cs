@@ -8,16 +8,12 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Extends <see cref="UserManager{TRole,TKey}"/> of ASP.NET Identity Framework.
     /// </summary>
-    /// <remarks>
-    /// Do not directly use <see cref="IAbpUserRepository"/> to perform user operations.
-    /// Instead, use this class.
-    /// </remarks>
-    public class AbpUserManager<TRole, TTenant, TUser> : UserManager<TUser, long>, ITransientDependency
+    public class AbpUserManager<TTenant, TRole, TUser> : UserManager<TUser, long>, ITransientDependency
+        where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser> 
-        where TTenant : AbpTenant<TTenant, TUser> 
         where TUser : AbpUser<TTenant, TUser>
     {
-        public AbpUserManager(AbpUserStore<TRole, TTenant, TUser> store)
+        public AbpUserManager(AbpUserStore<TTenant, TRole, TUser> store)
             : base(store)
         {
 
