@@ -1,8 +1,11 @@
-﻿using Abp.EntityFramework;
+﻿using Abp.Zero.EntityFramework;
+using ModuleZeroSampleProject.Authorization;
+using ModuleZeroSampleProject.MultiTenancy;
+using ModuleZeroSampleProject.Users;
 
 namespace ModuleZeroSampleProject.EntityFramework
 {
-    public class ModuleZeroSampleProjectDbContext : AbpDbContext
+    public class ModuleZeroSampleProjectDbContext : AbpZeroDbContext<Tenant, Role, User>
     {
         //TODO: Define an IDbSet for each Entity...
 
@@ -30,12 +33,4 @@ namespace ModuleZeroSampleProject.EntityFramework
 
         }
     }
-
-    //Example:
-    //public class User : Entity
-    //{
-    //    public string Name { get; set; }
-
-    //    public string Password { get; set; }
-    //}
 }

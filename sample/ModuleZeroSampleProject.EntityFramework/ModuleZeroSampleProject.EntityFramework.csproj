@@ -88,6 +88,10 @@
   <ItemGroup>
     <Compile Include="EntityFramework\ModuleZeroSampleProjectDbContext.cs" />
     <Compile Include="EntityFramework\Repositories\ModuleZeroSampleProjectRepositoryBase.cs" />
+    <Compile Include="Migrations\201411072219476_Create_AbpZero_Tables.cs" />
+    <Compile Include="Migrations\201411072219476_Create_AbpZero_Tables.Designer.cs">
+      <DependentUpon>201411072219476_Create_AbpZero_Tables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModuleZeroSampleProjectDataModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,6 +105,11 @@
       <Project>{17298EA0-AF73-4F30-B6F1-2066100D7D74}</Project>
       <Name>ModuleZeroSampleProject.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201411072219476_Create_AbpZero_Tables.resx">
+      <DependentUpon>201411072219476_Create_AbpZero_Tables.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
