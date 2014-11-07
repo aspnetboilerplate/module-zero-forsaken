@@ -48,8 +48,8 @@ namespace ModuleZeroSampleProject.Web
                         "~/Scripts/moment-with-locales.min.js",
                         "~/Scripts/jquery.blockUI.min.js",
                         "~/Scripts/toastr.min.js",
-                        "~/Scripts/others/spinjs/spin.js",
-                        "~/Scripts/others/spinjs/jquery.spin.js",
+                        "~/bower_components/spin.js/spin.js",
+                        "~/bower_components/spin.js/jquery.spin.js",
 
                         "~/bower_components/angular/angular.min.js",
                         "~/bower_components/angular-animate/angular-animate.min.js",
