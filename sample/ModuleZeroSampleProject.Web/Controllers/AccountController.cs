@@ -12,7 +12,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using ModuleZeroSampleProject.MultiTenancy;
 using ModuleZeroSampleProject.Users;
-using ModuleZeroSampleProject.Web.Models.Home;
+using ModuleZeroSampleProject.Web.Models.Account;
 
 namespace ModuleZeroSampleProject.Web.Controllers
 {
@@ -64,6 +64,10 @@ namespace ModuleZeroSampleProject.Web.Controllers
             if (!IsMultiTenancyEnabled())
             {
                 user = _userManager.Find(loginModel.UsernameOrEmailAddress, loginModel.Password);
+                if (user == null)
+                {
+                    throw new UserFriendlyException("Invalid user name or password!");
+                }
             }
             else if (!string.IsNullOrWhiteSpace(loginModel.TenancyName))
             {
@@ -110,6 +114,12 @@ namespace ModuleZeroSampleProject.Web.Controllers
             }
 
             return Json(new MvcAjaxResponse { TargetUrl = returnUrl });
+        }
+
+        public ActionResult Logout()
+        {
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Login");
         }
 
         private static bool IsMultiTenancyEnabled()

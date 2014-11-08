@@ -22,6 +22,9 @@
                         <li ng-repeat="language in vm.languages" ng-hide="vm.currentLanguage.name == language.name"><a href="/AbpLocalization/ChangeCulture?cultureName={{language.name}}"><i ng-class="language.icon"></i> {{language.displayName}}</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href="@Url.Action("Logout", "Account")"><i class="fa fa-sign-out"></i> Logout</a>
+                </li>
             </ul>
         </div>
     </div>

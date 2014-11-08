@@ -1,7 +1,9 @@
 using System.Web.Mvc;
+using Abp.Web.Mvc.Authorization;
 
 namespace ModuleZeroSampleProject.Web.Controllers
 {
+    [AbpAuthorize]
     public class HomeController : ModuleZeroSampleProjectControllerBase
     {
         public ActionResult Index()

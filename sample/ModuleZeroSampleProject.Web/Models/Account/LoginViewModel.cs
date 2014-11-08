@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ModuleZeroSampleProject.Web.Models.Home
+namespace ModuleZeroSampleProject.Web.Models.Account
 {
     public class LoginViewModel
     {

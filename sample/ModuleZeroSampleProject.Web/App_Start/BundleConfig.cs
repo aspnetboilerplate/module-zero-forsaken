@@ -8,6 +8,8 @@ namespace ModuleZeroSampleProject.Web
         {
             bundles.IgnoreList.Clear();
 
+            #region Bundles for Angular application (private pages, entered after login)
+            
             //VENDOR RESOURCES
 
             //~/Bundles/App/vendor/css
@@ -21,7 +23,7 @@ namespace ModuleZeroSampleProject.Web
                         "~/bower_components/bootstrap-material-design/dist/css/ripples.min.css",
                         "~/bower_components/bootstrap-material-design/dist/css/material-wfont.min.css",
                         "~/bower_components/angular-material/angular-material.min.css",
-                        "~/bower_components/bower_components/angular-material/themes/default-theme.css",
+                        "~/bower_components/angular-material/themes/default-theme.css",
 
                         "~/Content/toastr.min.css",
                         "~/Content/flags/famfamfam-flags.css",
@@ -37,7 +39,7 @@ namespace ModuleZeroSampleProject.Web
                         "~/Scripts/json2.min.js",
 
                         "~/Scripts/modernizr-2.8.3.js",
-                        
+
                         "~/Scripts/jquery-2.1.1.min.js",
                         "~/Scripts/jquery-ui.min-1.11.1.js",
 
@@ -60,7 +62,7 @@ namespace ModuleZeroSampleProject.Web
                         "~/bower_components/hammerjs/hammer.min.js",
 
                         "~/bower_components/angular-material/angular-material.min.js",
-                        
+
                         "~/Scripts/angular-ui/ui-bootstrap.min.js",
                         "~/Scripts/angular-ui/ui-bootstrap-tpls.min.js",
                         "~/Scripts/angular-ui/ui-utils.min.js",
@@ -87,6 +89,81 @@ namespace ModuleZeroSampleProject.Web
                 new ScriptBundle("~/Bundles/App/Main/js")
                     .IncludeDirectory("~/App/Main", "*.js", true)
                 );
+
+            #endregion
+
+            #region Bundles for MVC application (public pages, can be seen without login)
+
+            //VENDOR RESOURCES
+
+            //~/Bundles/vendor/css
+            bundles.Add(
+                new StyleBundle("~/Bundles/vendor/css")
+                    .Include(
+                        "~/Content/themes/base/all.css",
+
+                        "~/Content/bootstrap.min.css",
+                        "~/bower_components/bootstrap-material-design/dist/css/ripples.min.css",
+                        "~/bower_components/bootstrap-material-design/dist/css/material-wfont.min.css",
+
+                        "~/Content/toastr.min.css",
+                        "~/Content/flags/famfamfam-flags.css",
+                        "~/Content/font-awesome.min.css"
+                    )
+                );
+
+            //~/Bundles/vendor/js/top (These scripts should be included in the head of the page)
+            bundles.Add(
+                new ScriptBundle("~/Bundles/vendor/js/top")
+                    .Include(
+                        "~/Abp/Framework/scripts/utils/ie10fix.js",
+                        "~/Scripts/modernizr-2.8.3.js"
+                    )
+                );
+
+            //~/Bundles/vendor/bottom (Included in the bottom for fast page load)
+            bundles.Add(
+                new ScriptBundle("~/Bundles/vendor/js/bottom")
+                    .Include(
+                        "~/Scripts/json2.min.js",
+
+                        "~/Scripts/jquery-2.1.1.min.js",
+                        "~/Scripts/jquery-ui.min-1.11.1.js",
+
+                        "~/Scripts/bootstrap.min.js",
+                        "~/bower_components/bootstrap-material-design/dist/css/ripples.min.js",
+                        "~/bower_components/bootstrap-material-design/dist/css/material.min.js",
+
+                        "~/Scripts/moment-with-locales.min.js",
+                        "~/Scripts/jquery.validate.min.js",
+                        "~/Scripts/jquery.blockUI.min.js",
+                        "~/Scripts/toastr.min.js",
+                        "~/bower_components/spin.js/spin.js",
+                        "~/bower_components/spin.js/jquery.spin.js",
+
+                        "~/Abp/Framework/scripts/abp.js",
+                        "~/Abp/Framework/scripts/libs/abp.jquery.js",
+                        "~/Abp/Framework/scripts/libs/abp.toastr.js",
+                        "~/Abp/Framework/scripts/libs/abp.blockUI.js",
+                        "~/Abp/Framework/scripts/libs/abp.spin.js"
+                    )
+                );
+
+            //APPLICATION RESOURCES
+
+            //~/Bundles/css
+            bundles.Add(
+                new StyleBundle("~/Bundles/css")
+                    .Include("~/css/main.css")
+                );
+
+            //~/Bundles/js
+            bundles.Add(
+                new ScriptBundle("~/Bundles/js")
+                    .Include("~/js/main.js")
+                );
+
+            #endregion
         }
     }
 }
