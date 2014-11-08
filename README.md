@@ -26,4 +26,7 @@ There is a sample project in the **sample** folder. To run it:
  
 ![alt login form](https://raw.githubusercontent.com/aspnetboilerplate/module-zero/master/doc/login-form.png)
 
+Test User: admin@aspnetboilerplate.com
+Password: 123qwe
+
 This sample is still being developed. A CodeProject article is will be written when it's finished.
