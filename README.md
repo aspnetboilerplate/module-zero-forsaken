@@ -24,6 +24,6 @@ There is a sample project in the **sample** folder. To run it:
 - Run DB migrations (Run 'Update-Database' command from Package Manager Console while ModuleZeroSampleProject.EntityFramework is selected as default project) to create database and initial data.
 - Run the application! You will see the login form:
  
-![alt tag](https://raw.github.com/aspnetboilerplate/module-zero/blob/master/doc/login-form.png)
+![alt login form](https://raw.githubusercontent.com/aspnetboilerplate/module-zero/master/doc/login-form.png)
 
 This sample is still being developed. A CodeProject article is will be written when it's finished.
