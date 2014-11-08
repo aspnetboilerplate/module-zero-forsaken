@@ -8,6 +8,7 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Security;
 using Abp.UI;
 using Abp.Web.Mvc.Models;
+using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using ModuleZeroSampleProject.MultiTenancy;
@@ -22,6 +23,7 @@ namespace ModuleZeroSampleProject.Web.Controllers
 
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<Tenant> _tenantRepository;
+        private readonly MultiTenancyConfig _multiTenancy;
 
         private IAuthenticationManager AuthenticationManager
         {
@@ -31,11 +33,12 @@ namespace ModuleZeroSampleProject.Web.Controllers
             }
         }
 
-        public AccountController(ModuleZeroSampleProjectUserManager userManager, IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository)
+        public AccountController(ModuleZeroSampleProjectUserManager userManager, IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository, MultiTenancyConfig multiTenancy)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _tenantRepository = tenantRepository;
+            _multiTenancy = multiTenancy;
         }
 
         public ActionResult Login(string returnUrl = "")
@@ -61,7 +64,7 @@ namespace ModuleZeroSampleProject.Web.Controllers
 
             User user;
 
-            if (!IsMultiTenancyEnabled())
+            if (!_multiTenancy.IsEnabled)
             {
                 user = _userManager.Find(loginModel.UsernameOrEmailAddress, loginModel.Password);
                 if (user == null)
@@ -120,11 +123,6 @@ namespace ModuleZeroSampleProject.Web.Controllers
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("Login");
-        }
-
-        private static bool IsMultiTenancyEnabled()
-        {
-            return string.Equals(ConfigurationManager.AppSettings["Abp.MultiTenancy.IsEnabled"], "true", StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }
