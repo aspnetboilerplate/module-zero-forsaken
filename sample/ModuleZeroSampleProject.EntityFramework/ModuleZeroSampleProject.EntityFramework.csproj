@@ -94,6 +94,10 @@
     <Compile Include="Migrations\201411072219476_Create_AbpZero_Tables.Designer.cs">
       <DependentUpon>201411072219476_Create_AbpZero_Tables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201411082145343_Created_Message_Entities.cs" />
+    <Compile Include="Migrations\201411082145343_Created_Message_Entities.Designer.cs">
+      <DependentUpon>201411082145343_Created_Message_Entities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModuleZeroSampleProjectDataModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -111,6 +115,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201411072219476_Create_AbpZero_Tables.resx">
       <DependentUpon>201411072219476_Create_AbpZero_Tables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411082145343_Created_Message_Entities.resx">
+      <DependentUpon>201411082145343_Created_Message_Entities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

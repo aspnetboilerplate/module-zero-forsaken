@@ -1,5 +1,7 @@
-﻿using Abp.Zero.EntityFramework;
+﻿using System.Data.Entity;
+using Abp.Zero.EntityFramework;
 using ModuleZeroSampleProject.Authorization;
+using ModuleZeroSampleProject.Messages;
 using ModuleZeroSampleProject.MultiTenancy;
 using ModuleZeroSampleProject.Users;
 
@@ -10,7 +12,9 @@ namespace ModuleZeroSampleProject.EntityFramework
         //TODO: Define an IDbSet for each Entity...
 
         //Example:
-        //public virtual IDbSet<User> Users { get; set; }
+        public virtual IDbSet<Question> Questions { get; set; }
+
+        public virtual IDbSet<Answer> Answers { get; set; }
 
         /* NOTE: 
          *   Setting "Default" to base class helps us when working migration commands on Package Manager Console.
