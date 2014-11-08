@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.Zero.Configuration;
 
 namespace Abp.Zero
 {
@@ -11,7 +12,13 @@ namespace Abp.Zero
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.4.0.0";
+        public const string CurrentVersion = "0.4.1.0";
+
+        public override void PreInitialize()
+        {
+            IocManager.Register<MultiTenancyConfig>();
+            IocManager.Register<ZeroConfig>();
+        }
 
         public override void Initialize()
         {
