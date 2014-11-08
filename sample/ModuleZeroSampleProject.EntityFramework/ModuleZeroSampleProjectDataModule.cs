@@ -1,12 +1,12 @@
 ﻿using System.Data.Entity;
 using System.Reflection;
-using Abp.EntityFramework;
 using Abp.Modules;
+using Abp.Zero.EntityFramework;
 using ModuleZeroSampleProject.EntityFramework;
 
 namespace ModuleZeroSampleProject
 {
-    [DependsOn(typeof(AbpEntityFrameworkModule), typeof(ModuleZeroSampleProjectCoreModule))]
+    [DependsOn(typeof(AbpZeroEntityFrameworkModule), typeof(ModuleZeroSampleProjectCoreModule))]
     public class ModuleZeroSampleProjectDataModule : AbpModule
     {
         public override void PreInitialize()
