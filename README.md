@@ -33,4 +33,4 @@ After login, a question list is shown:
 
 ![alt login form](https://raw.githubusercontent.com/aspnetboilerplate/module-zero/master/doc/question-list.png)
 
-This sample is still being developed. A CodeProject article is will be written when it's finished.
+This sample is still being developed. A CodeProject article will be written when it's finished.
