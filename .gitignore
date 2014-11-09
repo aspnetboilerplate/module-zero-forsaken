@@ -174,3 +174,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 nupkg/push_abp_zero.bat
 nupkg/*.nupkg
+sample/ModuleZeroSampleProject.Web/Logs/Logs.txt
