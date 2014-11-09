@@ -4,6 +4,7 @@ using Abp.Configuration;
 using Abp.MultiTenancy;
 using ModuleZeroSampleProject.Authorization;
 using ModuleZeroSampleProject.EntityFramework;
+using ModuleZeroSampleProject.Messages;
 using ModuleZeroSampleProject.MultiTenancy;
 using ModuleZeroSampleProject.Users;
 
@@ -82,7 +83,6 @@ namespace ModuleZeroSampleProject.Migrations
                 //Permission definitions for Admin of 'Default' tenant
                 context.Permissions.Add(new RolePermissionSetting { RoleId = adminRoleForDefaultTenant.Id, Name = "CanDeleteAnswers", IsGranted = true });
                 context.Permissions.Add(new RolePermissionSetting { RoleId = adminRoleForDefaultTenant.Id, Name = "CanDeleteQuestions", IsGranted = true });
-                context.Permissions.Add(new RolePermissionSetting { RoleId = adminRoleForDefaultTenant.Id, Name = "CanCreateQuestions", IsGranted = true });
                 context.SaveChanges();
             }
 
@@ -118,6 +118,18 @@ namespace ModuleZeroSampleProject.Migrations
                 context.SaveChanges();
 
                 context.UserRoles.Add(new UserRole(adminUserForDefaultTenant.Id, adminRoleForDefaultTenant.Id));
+                context.UserRoles.Add(new UserRole(adminUserForDefaultTenant.Id, userRoleForDefaultTenant.Id));
+                context.SaveChanges();
+
+                var question1 = context.Questions.Add(
+                    new Question(
+                        "What's the answer of ultimate question of life the universe and everything?",
+                        "What's the answer of ultimate question of life the universe and everything? Please answer this question!"
+                        )
+                    );
+                context.SaveChanges();
+
+                question1.CreatorUserId = adminUserForDefaultTenant.Id;
                 context.SaveChanges();
             }
 
@@ -140,6 +152,17 @@ namespace ModuleZeroSampleProject.Migrations
                 context.SaveChanges();
 
                 context.UserRoles.Add(new UserRole(emreUserForDefaultTenant.Id, userRoleForDefaultTenant.Id));
+                context.SaveChanges();
+
+                var question2 = context.Questions.Add(
+                    new Question(
+                        "Jquery content replacement not working within my function",
+                        @"What I am trying to achieve, and I am nearly there, is the user clicks on a checkbox and it turns green (Checkbox-active class). However, I also want the text/content of the clicked element to change to ""Activated"" and then reverts back to the original text when clicked again or on a sibling."
+                        )
+                    );
+                context.SaveChanges();
+
+                question2.CreatorUserId = emreUserForDefaultTenant.Id;
                 context.SaveChanges();
             }
         }

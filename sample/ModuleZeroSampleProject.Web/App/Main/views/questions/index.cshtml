@@ -1,7 +1,7 @@
 ﻿<div ng-controller="app.views.questions.index as vm">
     <div class="command-list row">
         <div class="col-lg-12 text-right">
-            <md-button ng-click="vm.showNewQuestionDialog()" class="md-raised md-primary"><i class="fa fa-asterisk"></i> New question</md-button>
+            <md-button ng-if="vm.permissions.canCreateQuestions" ng-click="vm.showNewQuestionDialog()" class="md-raised md-primary"><i class="fa fa-asterisk"></i> New question</md-button>
         </div>
     </div>
     <div class="question-list">
@@ -10,7 +10,7 @@
                 <div>{{question.voteCount}}</div>
                 <div>votes</div>
             </div>
-            <div class="answer-count col-sm-1 hidden-xs">
+            <div class="answer-count col-sm-1 hidden-xs" ng-class="{'answered':question.answerCount>0}">
                 <div>{{question.answerCount}}</div>
                 <div>answers</div>
             </div>
@@ -21,8 +21,8 @@
             <div class="summary col-xs-12 col-sm-9">
                 <h3>{{question.title}}</h3>
                 <div>
-                    <span class="question-time">{{question.creationTime | fromNow}}</span>,
-                    <span class="question-creator">{{question.creatorUserName}}</span>
+                    <span class="question-creator">{{question.creatorUserName}}</span>,
+                    <span class="question-time text-muted">{{question.creationTime | fromNow}}</span>
                 </div>
             </div>
         </div>

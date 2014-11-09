@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\ModuleZeroSampleProjectAuthorizationProvider.cs" />
     <Compile Include="Messages\Dto\AnswerDto.cs" />
     <Compile Include="Messages\Dto\GetQuestionsInput.cs" />
     <Compile Include="Messages\Dto\QuestionWithAnswersDto.cs" />

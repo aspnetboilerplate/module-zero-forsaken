@@ -5,16 +5,20 @@
         function (questionService) {
             var vm = this;
 
+            vm.permissions = {
+                canCreateQuestions: abp.auth.hasPermission("CanCreateQuestions")
+            };
+
             vm.questions = [];
             vm.totalQuestionCount = [];
 
-            vm.loadQuestions = function() {
+            vm.loadQuestions = function () {
                 abp.ui.setBusy(
                     null,
                     questionService.getQuestions({
                         maxResultCount: 10,
                         skipCount: 0
-                    }).success(function(data) {
+                    }).success(function (data) {
                         vm.questions = data.items;
                         vm.totalQuestionCount = data.totalCount;
                     })
