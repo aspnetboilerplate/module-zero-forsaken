@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ModuleZeroSampleProject.Messages.Dto
+namespace ModuleZeroSampleProject.Questions.Dto
 {
     public class QuestionWithAnswersDto : QuestionDto
     {

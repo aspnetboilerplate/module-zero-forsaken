@@ -18,7 +18,7 @@ namespace ModuleZeroSampleProject.Web
                     new MenuItemDefinition(
                         "Questions",
                         new LocalizableString("Questions", ModuleZeroSampleProjectConsts.LocalizationSourceName),
-                        url: "#/",
+                        url: "#/questions",
                         icon: "fa fa-question"
                         )
                 ).AddItem(

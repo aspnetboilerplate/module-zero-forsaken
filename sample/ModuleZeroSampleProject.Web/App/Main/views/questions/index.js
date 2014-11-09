@@ -1,8 +1,8 @@
 ﻿(function () {
     var controllerId = 'app.views.questions.index';
     angular.module('app').controller(controllerId, [
-        'abp.services.app.question',
-        function (questionService) {
+        'abp.services.app.question', '$modal',
+        function (questionService, $modal) {
             var vm = this;
 
             vm.permissions = {
@@ -26,7 +26,15 @@
             };
 
             vm.showNewQuestionDialog = function () {
-                alert('This feature is not implemented!');
+                var modalInstance = $modal.open({
+                    templateUrl: abp.appPath + 'App/Main/views/questions/createDialog.cshtml',
+                    controller: 'app.views.questions.createDialog as vm',
+                    size: 'md'
+                });
+
+                modalInstance.result.then(function () {
+                    vm.loadQuestions();
+                });
             };
 
             vm.loadQuestions();

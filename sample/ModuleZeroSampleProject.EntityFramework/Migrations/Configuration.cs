@@ -1,21 +1,19 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
-using Abp.Configuration;
-using Abp.MultiTenancy;
 using ModuleZeroSampleProject.Authorization;
 using ModuleZeroSampleProject.EntityFramework;
-using ModuleZeroSampleProject.Messages;
 using ModuleZeroSampleProject.MultiTenancy;
+using ModuleZeroSampleProject.Questions;
 using ModuleZeroSampleProject.Users;
 
 namespace ModuleZeroSampleProject.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ModuleZeroSampleProject.EntityFramework.ModuleZeroSampleProjectDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ModuleZeroSampleProjectDbContext>
     {
         public Configuration()
         {

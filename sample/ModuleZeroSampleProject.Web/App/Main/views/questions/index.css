@@ -20,3 +20,6 @@
 .question-list .question .summary h3 {
   margin: 5px 0px 10px 0px;
 }
+.question-list .question .summary h3 .question-id {
+  color: #bbb;
+}

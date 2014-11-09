@@ -1,8 +1,8 @@
 ﻿using System.Data.Entity;
 using Abp.Zero.EntityFramework;
 using ModuleZeroSampleProject.Authorization;
-using ModuleZeroSampleProject.Messages;
 using ModuleZeroSampleProject.MultiTenancy;
+using ModuleZeroSampleProject.Questions;
 using ModuleZeroSampleProject.Users;
 
 namespace ModuleZeroSampleProject.EntityFramework

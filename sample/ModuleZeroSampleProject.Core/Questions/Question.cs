@@ -1,9 +1,15 @@
 ﻿using System.Collections.Generic;
+using Abp.Domain.Entities.Auditing;
+using ModuleZeroSampleProject.Users;
 
-namespace ModuleZeroSampleProject.Messages
+namespace ModuleZeroSampleProject.Questions
 {
-    public class Question : Message
+    public class Question : CreationAuditedEntity<int, User>
     {
+        public virtual string Title { get; set; }
+
+        public virtual string Text { get; set; }
+
         public virtual int VoteCount { get; set; }
 
         public virtual int AnswerCount { get; set; }
@@ -18,9 +24,9 @@ namespace ModuleZeroSampleProject.Messages
         }
 
         public Question(string title, string text)
-            : base(title, text)
         {
-
+            Title = title;
+            Text = text;
         }
     }
 }

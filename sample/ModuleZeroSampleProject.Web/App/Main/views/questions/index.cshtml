@@ -1,7 +1,7 @@
 ﻿<div ng-controller="app.views.questions.index as vm">
     <div class="command-list row">
         <div class="col-lg-12 text-right">
-            <md-button ng-if="vm.permissions.canCreateQuestions" ng-click="vm.showNewQuestionDialog()" class="md-raised md-primary"><i class="fa fa-asterisk"></i> New question</md-button>
+            <button ng-if="vm.permissions.canCreateQuestions" ng-click="vm.showNewQuestionDialog()" class="btn btn-primary"><i class="fa fa-asterisk"></i> New question</button>
         </div>
     </div>
     <div class="question-list">
@@ -19,10 +19,10 @@
                 <div>views</div>
             </div>
             <div class="summary col-xs-12 col-sm-9">
-                <h3>{{question.title}}</h3>
+                <h3><a ng-href="#/questions/{{question.id}}"><span class="question-id">#{{question.id}}</span> {{question.title}}</a></h3>
                 <div>
-                    <span class="question-creator">{{question.creatorUserName}}</span>,
-                    <span class="question-time text-muted">{{question.creationTime | fromNow}}</span>
+                    <span>{{question.creatorUserName}}</span>,
+                    <span class="text-muted">{{question.creationTime | fromNow}}</span>
                 </div>
             </div>
         </div>

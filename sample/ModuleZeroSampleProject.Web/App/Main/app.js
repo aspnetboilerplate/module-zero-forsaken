@@ -17,16 +17,21 @@
     app.config([
         '$stateProvider', '$urlRouterProvider',
         function($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise('/');
+            $urlRouterProvider.otherwise('/questions');
             $stateProvider
                 .state('questions', {
-                    url: '/',
-                    templateUrl: '/App/Main/views/questions/index.cshtml',
+                    url: '/questions',
+                    templateUrl: abp.appPath + 'App/Main/views/questions/index.cshtml',
+                    menu: 'Questions' //Matches to name of 'Questions' menu in ModuleZeroSampleProjectNavigationProvider
+                })
+                .state('questionDetail', {
+                    url: '/questions/:id',
+                    templateUrl: abp.appPath + 'App/Main/views/questions/detail.cshtml',
                     menu: 'Questions' //Matches to name of 'Questions' menu in ModuleZeroSampleProjectNavigationProvider
                 })
                 .state('people', {
                     url: '/people',
-                    templateUrl: '/App/Main/views/people/index.cshtml',
+                    templateUrl: abp.appPath + 'App/Main/views/people/index.cshtml',
                     menu: 'People' //Matches to name of 'People' menu in ModuleZeroSampleProjectNavigationProvider
                 });
         }

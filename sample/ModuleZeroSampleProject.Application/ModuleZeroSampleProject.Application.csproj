@@ -87,13 +87,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorization\ModuleZeroSampleProjectAuthorizationProvider.cs" />
-    <Compile Include="Messages\Dto\AnswerDto.cs" />
-    <Compile Include="Messages\Dto\GetQuestionsInput.cs" />
-    <Compile Include="Messages\Dto\QuestionWithAnswersDto.cs" />
-    <Compile Include="Messages\IQuestionAppService.cs" />
-    <Compile Include="Messages\Dto\MessageDto.cs" />
-    <Compile Include="Messages\Dto\QuestionDto.cs" />
-    <Compile Include="Messages\QuestionAppService.cs" />
+    <Compile Include="Questions\Dto\CreateQuestionInput.cs" />
+    <Compile Include="Questions\Dto\AnswerDto.cs" />
+    <Compile Include="Questions\Dto\GetQuestionsInput.cs" />
+    <Compile Include="Questions\Dto\QuestionWithAnswersDto.cs" />
+    <Compile Include="Questions\Dto\GetQuestionInput.cs" />
+    <Compile Include="Questions\Dto\GetQuestionOutput.cs" />
+    <Compile Include="Questions\IQuestionAppService.cs" />
+    <Compile Include="Questions\Dto\QuestionDto.cs" />
+    <Compile Include="Questions\QuestionAppService.cs" />
     <Compile Include="ModuleZeroSampleProjectApplicationModule.cs" />
     <Compile Include="ModuleZeroSampleProjectAppServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

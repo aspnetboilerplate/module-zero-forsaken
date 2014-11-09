@@ -1,0 +1,23 @@
+﻿<div ng-controller="app.views.questions.detail as vm">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{vm.question.title}}</h3>
+        </div>
+        <div class="panel-body">
+            {{vm.question.text}}
+        </div>
+        <div class="panel-footer">
+            <span>{{vm.question.creatorUserName}}</span>,
+            <span class="text-muted">{{question.creationTime | fromNow}}</span>
+        </div>
+    </div>
+    <div class="panel panel-default" ng-repeat="answer in vm.question.answers">
+        <div class="panel-body">
+            {{answer.text}}
+        </div>
+        <div class="panel-footer">
+            <span ng-if="answer.creatorUserName"><span>{{answer.creatorUserName}}</span>,</span>
+            <span class="text-muted">{{answer.creationTime | fromNow}}</span>
+        </div>
+    </div>
+</div>

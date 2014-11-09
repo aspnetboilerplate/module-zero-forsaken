@@ -102,6 +102,10 @@
     <Compile Include="Migrations\201411090940054_Modified_Message_Entity.Designer.cs">
       <DependentUpon>201411090940054_Modified_Message_Entity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201411092108213_Removed_Message_Class.cs" />
+    <Compile Include="Migrations\201411092108213_Removed_Message_Class.Designer.cs">
+      <DependentUpon>201411092108213_Removed_Message_Class.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModuleZeroSampleProjectDataModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201411090940054_Modified_Message_Entity.resx">
       <DependentUpon>201411090940054_Modified_Message_Entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411092108213_Removed_Message_Class.resx">
+      <DependentUpon>201411092108213_Removed_Message_Class.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

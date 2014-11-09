@@ -70,9 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorization\Role.cs" />
-    <Compile Include="Messages\Answer.cs" />
-    <Compile Include="Messages\Message.cs" />
-    <Compile Include="Messages\Question.cs" />
+    <Compile Include="Questions\Answer.cs" />
+    <Compile Include="Questions\Question.cs" />
     <Compile Include="ModuleZeroSampleProjectConsts.cs" />
     <Compile Include="ModuleZeroSampleProjectCoreModule.cs" />
     <Compile Include="MultiTenancy\Tenant.cs" />

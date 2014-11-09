@@ -2,8 +2,8 @@
 using Abp.Modules;
 using AutoMapper;
 using ModuleZeroSampleProject.Authorization;
-using ModuleZeroSampleProject.Messages;
-using ModuleZeroSampleProject.Messages.Dto;
+using ModuleZeroSampleProject.Questions;
+using ModuleZeroSampleProject.Questions.Dto;
 
 namespace ModuleZeroSampleProject
 {
@@ -17,6 +17,8 @@ namespace ModuleZeroSampleProject
             Configuration.Authorization.Providers.Add<ModuleZeroSampleProjectAuthorizationProvider>();
 
             Mapper.CreateMap<Question, QuestionDto>();
+            Mapper.CreateMap<Question, QuestionWithAnswersDto>();
+            Mapper.CreateMap<Answer, AnswerDto>();
         }
     }
 }

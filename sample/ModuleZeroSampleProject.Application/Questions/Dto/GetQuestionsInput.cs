@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
 
-namespace ModuleZeroSampleProject.Messages.Dto
+namespace ModuleZeroSampleProject.Questions.Dto
 {
     public class GetQuestionsInput : IInputDto, IPagedResultRequest
     {
