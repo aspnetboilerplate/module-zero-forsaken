@@ -16,17 +16,17 @@ namespace ModuleZeroSampleProject.Web
             context.Manager.MainMenu
                 .AddItem(
                     new MenuItemDefinition(
-                        "Home",
-                        new LocalizableString("HomePage", ModuleZeroSampleProjectConsts.LocalizationSourceName),
+                        "Questions",
+                        new LocalizableString("Questions", ModuleZeroSampleProjectConsts.LocalizationSourceName),
                         url: "#/",
-                        icon: "fa fa-home"
+                        icon: "fa fa-question"
                         )
                 ).AddItem(
                     new MenuItemDefinition(
-                        "About",
-                        new LocalizableString("About", ModuleZeroSampleProjectConsts.LocalizationSourceName),
-                        url: "#/about",
-                        icon: "fa fa-info"
+                        "People",
+                        new LocalizableString("People", ModuleZeroSampleProjectConsts.LocalizationSourceName),
+                        url: "#/people",
+                        icon: "fa fa-users"
                         )
                 );
         }

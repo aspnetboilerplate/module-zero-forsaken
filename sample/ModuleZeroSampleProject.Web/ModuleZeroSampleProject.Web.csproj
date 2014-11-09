@@ -220,8 +220,14 @@
     </Content>
     <Content Include="App\Main\views\layout\header.js" />
     <Content Include="App\Main\views\layout\layout.js" />
-    <Content Include="App\Main\views\home\home.js" />
-    <Content Include="App\Main\views\about\about.js" />
+    <Content Include="App\Main\views\questions\index.css">
+      <DependentUpon>index.less</DependentUpon>
+    </Content>
+    <Content Include="App\Main\views\questions\index.js" />
+    <Content Include="App\Main\views\people\index.js" />
+    <Content Include="App\Main\views\questions\index.min.css">
+      <DependentUpon>index.css</DependentUpon>
+    </Content>
     <Content Include="bower_components\angular-animate\angular-animate.js" />
     <Content Include="bower_components\angular-animate\angular-animate.min.js" />
     <Content Include="bower_components\angular-aria\angular-aria.js" />
@@ -521,8 +527,8 @@
     <Content Include="Content\toastr.less" />
     <Content Include="App\Main\main.less" />
     <Content Include="App\Main\views\layout\layout.cshtml" />
-    <Content Include="App\Main\views\home\home.cshtml" />
-    <Content Include="App\Main\views\about\about.cshtml" />
+    <Content Include="App\Main\views\questions\index.cshtml" />
+    <Content Include="App\Main\views\people\index.cshtml" />
     <Content Include="App\Main\web.config" />
     <Content Include="log4net.config" />
     <Content Include="Scripts\bootstrap.js" />
@@ -688,6 +694,7 @@
     <Content Include="bower_components\respond\README.md" />
     <Content Include="css\main.less" />
     <Content Include="css\Account\login.less" />
+    <Content Include="App\Main\views\questions\index.less" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />

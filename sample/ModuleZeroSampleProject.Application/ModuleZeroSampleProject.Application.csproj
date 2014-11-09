@@ -36,6 +36,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Abp.0.4.1.0\lib\net451\Abp.dll</HintPath>
     </Reference>
+    <Reference Include="Abp.EntityFramework">
+      <HintPath>..\packages\Abp.EntityFramework.0.4.1.0\lib\net451\Abp.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Abp.Zero, Version=0.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Abp.Zero.0.4.1.0\lib\net451\Abp.Zero.dll</HintPath>
@@ -60,6 +63,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -77,6 +86,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\Dto\AnswerDto.cs" />
+    <Compile Include="Messages\Dto\GetQuestionsInput.cs" />
+    <Compile Include="Messages\Dto\QuestionWithAnswersDto.cs" />
+    <Compile Include="Messages\IQuestionAppService.cs" />
+    <Compile Include="Messages\Dto\MessageDto.cs" />
+    <Compile Include="Messages\Dto\QuestionDto.cs" />
+    <Compile Include="Messages\QuestionAppService.cs" />
     <Compile Include="ModuleZeroSampleProjectApplicationModule.cs" />
     <Compile Include="ModuleZeroSampleProjectAppServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,6 +6,10 @@ namespace ModuleZeroSampleProject.Messages
     {
         public virtual int VoteCount { get; set; }
 
+        public virtual int AnswerCount { get; set; }
+
+        public virtual int ViewCount { get; set; }
+
         public virtual ICollection<Answer> Answers { get; set; }
 
         public Question()

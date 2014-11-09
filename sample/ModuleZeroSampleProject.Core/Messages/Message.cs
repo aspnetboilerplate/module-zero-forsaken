@@ -1,8 +1,9 @@
 using Abp.Domain.Entities.Auditing;
+using ModuleZeroSampleProject.Users;
 
 namespace ModuleZeroSampleProject.Messages
 {
-    public abstract class Message : CreationAuditedEntity
+    public abstract class Message : CreationAuditedEntity<int, User>
     {
         public virtual string Title { get; set; }
 
