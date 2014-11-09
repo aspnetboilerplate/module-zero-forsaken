@@ -23,7 +23,7 @@ namespace ModuleZeroSampleProject.Web
                         "~/bower_components/bootstrap-material-design/dist/css/ripples.min.css",
                         "~/bower_components/bootstrap-material-design/dist/css/material-wfont.min.css",
                         "~/bower_components/angular-material/angular-material.min.css",
-                        "~/bower_components/angular-material/themes/default-theme.css",
+                        "~/bower_components/angular-material/themes/blue-theme.css",
 
                         "~/Content/toastr.min.css",
                         "~/Content/flags/famfamfam-flags.css",

@@ -8,16 +8,24 @@
             vm.questions = [];
             vm.totalQuestionCount = [];
 
-            abp.ui.setBusy(
-                null,
-                questionService.getQuestions({
-                    maxResultCount: 10,
-                    skipCount: 0
-                }).success(function (data) {
-                    vm.questions = data.items;
-                    vm.totalQuestionCount = data.totalCount;
-                })
-            );
+            vm.loadQuestions = function() {
+                abp.ui.setBusy(
+                    null,
+                    questionService.getQuestions({
+                        maxResultCount: 10,
+                        skipCount: 0
+                    }).success(function(data) {
+                        vm.questions = data.items;
+                        vm.totalQuestionCount = data.totalCount;
+                    })
+                );
+            };
+
+            vm.showNewQuestionDialog = function () {
+                alert('This feature is not implemented!');
+            };
+
+            vm.loadQuestions();
         }
     ]);
 })();
