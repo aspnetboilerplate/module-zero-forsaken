@@ -174,4 +174,5 @@ UpgradeLog*.htm
 FakesAssemblies/
 nupkg/push_abp_zero.bat
 nupkg/*.nupkg
-sample/ModuleZeroSampleProject.Web/Logs/Logs.txt
+sample/ModuleZeroSampleProject.Web/Logs/
+!sample/ModuleZeroSampleProject.Web/bower_components/angular-ui-router/release/
