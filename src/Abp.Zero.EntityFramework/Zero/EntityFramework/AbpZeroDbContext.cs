@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Data.Entity;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
@@ -72,6 +73,12 @@ namespace Abp.Zero.EntityFramework
             : base(nameOrConnectionString)
         {
 
+        }
+
+        protected AbpZeroDbContext(DbConnection dbConnection, bool contextOwnsConnection)
+            : base(dbConnection, contextOwnsConnection)
+        {
+            
         }
     }
 }
