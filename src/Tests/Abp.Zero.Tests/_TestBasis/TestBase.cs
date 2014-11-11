@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Data.Common;
 using Abp.Dependency;
+using Abp.Domain.Repositories;
+using Abp.EntityFramework;
+using Abp.Runtime.Session;
+using Castle.MicroKernel.Registration;
 
 namespace Abp.Tests._TestBasis
 {
@@ -10,20 +14,52 @@ namespace Abp.Tests._TestBasis
 
         protected TestDbContext DbContext { get; private set; }
 
-        private DbConnection Connection { get; set; }
+        protected TestSession Session { get; private set; }
 
         protected TestBase()
         {
             //Temporarily using Activator. It will be changed when ABP make IocManager's constructor public.
             LocalIocManager = (IIocManager)Activator.CreateInstance(typeof(IocManager), true);
-            Connection = Effort.DbConnectionFactory.CreateTransient();
-            DbContext = new TestDbContext(Connection);
+
+            LocalIocManager.IocContainer.Register(
+                Component.For<DbConnection>().UsingFactoryMethod(() => Effort.DbConnectionFactory.CreateTransient()).LifestyleSingleton(),
+
+                Component.For<TestDbContext>().LifestyleSingleton(),
+
+                Component.For<IDbContextProvider<TestDbContext>>().ImplementedBy<TestDbContextProvider>().LifestyleTransient(),
+
+                Component.For(typeof(IRepository<>)).ImplementedBy(typeof(TestEfRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof(IRepository<,>)).ImplementedBy(typeof(TestEfRepositoryBase<,>)).LifestyleTransient(),
+
+                Component.For<IAbpSession, TestSession>().ImplementedBy<TestSession>().LifestyleSingleton(),
+
+                Component.For<TestUserStore>().LifestyleTransient(),
+                Component.For<TestUserManager>().LifestyleTransient()
+
+                );
+
+            DbContext = LocalIocManager.Resolve<TestDbContext>();
+            Session = LocalIocManager.Resolve<TestSession>();
         }
-        
+
         public void Dispose()
         {
-            DbContext.Dispose();
-            Connection.Dispose();
+            LocalIocManager.Dispose();
+        }
+
+        private class TestDbContextProvider : IDbContextProvider<TestDbContext>
+        {
+            private readonly TestDbContext _dbContext;
+
+            public TestDbContextProvider(TestDbContext dbContext)
+            {
+                _dbContext = dbContext;
+            }
+
+            public TestDbContext GetDbContext()
+            {
+                return _dbContext;
+            }
         }
     }
 }

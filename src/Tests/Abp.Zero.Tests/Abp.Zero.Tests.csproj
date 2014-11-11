@@ -85,13 +85,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dependency\Dependency_Tests.cs" />
     <Compile Include="_TestBasis\TestBase.cs" />
     <Compile Include="_TestBasis\TestDbContext.cs" />
+    <Compile Include="_TestBasis\TestEfRepositoryBase.cs" />
     <Compile Include="_TestBasis\TestRole.cs" />
+    <Compile Include="_TestBasis\TestSession.cs" />
     <Compile Include="_TestBasis\TestTenant.cs" />
     <Compile Include="_TestBasis\TestUser.cs" />
-    <Compile Include="Authorization\Users\UserManagerTests.cs" />
+    <Compile Include="Authorization\Users\UserRepository_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="_TestBasis\TestUserManager.cs" />
+    <Compile Include="_TestBasis\TestUserStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
