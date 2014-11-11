@@ -8,14 +8,14 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Extends <see cref="RoleManager{TRole,TKey}"/> of ASP.NET Identity Framework.
     /// </summary>
-    public class AbpRoleManager<TTenant, TRole, TUser> : RoleManager<TRole, int>, ITransientDependency
+    public abstract class AbpRoleManager<TTenant, TRole, TUser> : RoleManager<TRole, int>, ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
         private readonly IPermissionManager _permissionManager;
 
-        public AbpRoleManager(AbpRoleStore<TRole, TTenant, TUser> store, IPermissionManager permissionManager)
+        protected AbpRoleManager(AbpRoleStore<TRole, TTenant, TUser> store, IPermissionManager permissionManager)
             : base(store)
         {
             _permissionManager = permissionManager;
