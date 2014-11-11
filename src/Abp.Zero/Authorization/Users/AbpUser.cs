@@ -12,6 +12,7 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
+    [Table("AbpUsers")]
     public class AbpUser<TTenant, TUser> : FullAuditedEntity<long, TUser>, IUser<long>, IMayHaveTenant<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>

@@ -10,6 +10,15 @@ namespace ConsoleTester.Migrations
         public override void Up()
         {
             CreateTable(
+                "dbo.MyEntities",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        MyEntityProp = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.AbpPermissions",
                 c => new
                     {
@@ -196,6 +205,7 @@ namespace ConsoleTester.Migrations
                 });
             DropTable("dbo.AbpRoles");
             DropTable("dbo.AbpPermissions");
+            DropTable("dbo.MyEntities");
         }
     }
 }

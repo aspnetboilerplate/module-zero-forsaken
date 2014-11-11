@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Authorization.Users
@@ -5,6 +6,7 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents role record of a user. 
     /// </summary>
+    [Table("AbpUserRoles")]
     public class UserRole : CreationAuditedEntity<long>
     {
         public virtual long UserId { get; set; }

@@ -1,10 +1,12 @@
-﻿using Abp.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Domain.Entities;
 
 namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Used to store a User Login for external Login services.
     /// </summary>
+    [Table("AbpUserLogins")]
     public class UserLogin : Entity<long>
     {
         /// <summary>

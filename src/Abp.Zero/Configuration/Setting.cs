@@ -1,10 +1,12 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Configuration
 {
     /// <summary>
     /// Represents a setting.
     /// </summary>
+    [Table("AbpSettings")]
     public class Setting : AuditedEntity<long>
     {
         /// <summary>

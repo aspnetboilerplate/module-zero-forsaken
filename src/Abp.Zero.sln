@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34AA52E9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "Tests\ConsoleTester\ConsoleTester.csproj", "{660B405C-C16B-45FB-8AC9-B458764B552C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.Tests", "Tests\Abp.Zero.Tests\Abp.Zero.Tests.csproj", "{3C90D572-EA4E-499C-AF95-407BFA8A36B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,11 +49,16 @@ Global
 		{660B405C-C16B-45FB-8AC9-B458764B552C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{660B405C-C16B-45FB-8AC9-B458764B552C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{660B405C-C16B-45FB-8AC9-B458764B552C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C90D572-EA4E-499C-AF95-407BFA8A36B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C90D572-EA4E-499C-AF95-407BFA8A36B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C90D572-EA4E-499C-AF95-407BFA8A36B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C90D572-EA4E-499C-AF95-407BFA8A36B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{660B405C-C16B-45FB-8AC9-B458764B552C} = {34AA52E9-B75E-46EF-AEBB-460AED9A0767}
+		{3C90D572-EA4E-499C-AF95-407BFA8A36B8} = {34AA52E9-B75E-46EF-AEBB-460AED9A0767}
 	EndGlobalSection
 EndGlobal

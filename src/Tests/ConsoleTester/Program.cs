@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data.Entity;
 using System.Reflection;
 using Abp;
@@ -18,7 +19,13 @@ namespace ConsoleTester
     {
         static void Main(string[] args)
         {
+            //Console.WriteLine(ConfigurationManager.ConnectionStrings["Default"].ConnectionString);
+            //Console.ReadLine();
+            //Test();
+        }
 
+        private static void Test()
+        {
             using (var bootstrapper = new AbpBootstrapper())
             {
                 bootstrapper.Initialize();
@@ -68,7 +75,7 @@ namespace ConsoleTester
         public IDbSet<MyEntity> MyEntities { get; set; }
 
         public MyDbContext()
-            : base("Default")
+            : base(ConfigurationManager.ConnectionStrings["Default"].ConnectionString)
         {
 
         }

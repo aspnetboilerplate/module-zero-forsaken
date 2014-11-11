@@ -44,11 +44,10 @@ namespace Abp.Zero.EntityFramework
         /// <summary>
         /// Role permissions.
         /// </summary>
-        public virtual IDbSet<RolePermissionSetting> RolePermissions { get; set; }
+        public virtual IDbSet<PermissionSetting> Permissions { get; set; }
 
-        /// <summary>
-        /// User permissions
-        /// </summary>
+        public virtual IDbSet<RolePermissionSetting> RolePermissions { get; set; }
+        
         public virtual IDbSet<UserPermissionSetting> UserPermissions { get; set; }
 
         /// <summary>
@@ -73,20 +72,6 @@ namespace Abp.Zero.EntityFramework
             : base(nameOrConnectionString)
         {
 
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<TTenant>().ToTable("AbpTenants");
-            modelBuilder.Entity<TRole>().ToTable("AbpRoles");
-            modelBuilder.Entity<TUser>().ToTable("AbpUsers");
-
-            modelBuilder.Entity<UserLogin>().ToTable("AbpUserLogins");
-            modelBuilder.Entity<UserRole>().ToTable("AbpUserRoles");
-            modelBuilder.Entity<PermissionSetting>().ToTable("AbpPermissions");
-            modelBuilder.Entity<Setting>().ToTable("AbpSettings");
         }
     }
 }

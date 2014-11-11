@@ -15,6 +15,7 @@ namespace Abp.Authorization.Roles
     /// <remarks> 
     /// Application should use permissions to check if user is granted to perform an operation.
     /// </remarks>
+    [Table("AbpRoles")]
     public class AbpRole<TTenant, TUser> : AuditedEntity<int, TUser>, IRole<int>, IMayHaveTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
