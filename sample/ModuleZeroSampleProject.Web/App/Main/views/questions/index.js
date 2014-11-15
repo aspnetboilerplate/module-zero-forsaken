@@ -10,15 +10,19 @@
             };
 
             vm.questions = [];
-            vm.totalQuestionCount = [];
+            vm.totalQuestionCount = 0;
+            vm.sorting = 'CreationTime DESC';
 
-            vm.loadQuestions = function () {
+            vm.sortingDirections = ['CreationTime DESC', 'VoteCount DESC', 'ViewCount DESC', 'AnswerCount DESC'];
+
+            vm.loadQuestions = function() {
                 abp.ui.setBusy(
                     null,
                     questionService.getQuestions({
                         maxResultCount: 10,
-                        skipCount: 0
-                    }).success(function (data) {
+                        skipCount: 0,
+                        sorting: vm.sorting
+                    }).success(function(data) {
                         vm.questions = data.items;
                         vm.totalQuestionCount = data.totalCount;
                     })
@@ -35,6 +39,11 @@
                 modalInstance.result.then(function () {
                     vm.loadQuestions();
                 });
+            };
+
+            vm.sort = function (sortingDirection) {
+                vm.sorting = sortingDirection;
+                vm.loadQuestions();
             };
 
             vm.loadQuestions();

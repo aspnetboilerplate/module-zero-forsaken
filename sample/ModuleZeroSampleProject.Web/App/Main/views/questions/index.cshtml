@@ -1,7 +1,17 @@
 ﻿<div ng-controller="app.views.questions.index as vm">
     <div class="command-list row">
         <div class="col-lg-12 text-right">
-            <button ng-if="vm.permissions.canCreateQuestions" ng-click="vm.showNewQuestionDialog()" class="btn btn-primary"><i class="fa fa-asterisk"></i> New question</button>
+            <div class="btn-group">
+                <a href="javascript:void(0)" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Sorted by {{vm.sorting}}
+                    <span class="caret"></span>
+                    <div class="ripple-wrapper"></div>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="sortingDirection in vm.sortingDirections" ng-show="sortingDirection != vm.sorting"><a href="javascript:void(0)" class=" withripple" ng-click="vm.sort(sortingDirection)">Sort by {{sortingDirection}}<div class="ripple-wrapper"></div></a></li>
+                </ul>
+            </div>
+            <button ng-if="vm.permissions.canCreateQuestions" ng-click="vm.showNewQuestionDialog()" class="btn btn-primary btn-raised"><i class="fa fa-asterisk"></i> New question</button>
         </div>
     </div>
     <div class="question-list">

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -33,7 +34,7 @@ namespace ModuleZeroSampleProject.Questions
                 _questionRepository
                     .GetAll()
                     .Include(q => q.CreatorUser)
-                    .OrderByDescending(q => q.CreationTime)
+                    .OrderBy(input.Sorting)
                     .PageBy(input)
                     .ToList();
 
