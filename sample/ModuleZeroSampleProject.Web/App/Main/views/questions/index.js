@@ -9,11 +9,11 @@
                 canCreateQuestions: abp.auth.hasPermission("CanCreateQuestions")
             };
 
+            vm.sortingDirections = ['CreationTime DESC', 'VoteCount DESC', 'ViewCount DESC', 'AnswerCount DESC'];
+
             vm.questions = [];
             vm.totalQuestionCount = 0;
             vm.sorting = 'CreationTime DESC';
-
-            vm.sortingDirections = ['CreationTime DESC', 'VoteCount DESC', 'ViewCount DESC', 'AnswerCount DESC'];
 
             vm.loadQuestions = function() {
                 abp.ui.setBusy(
@@ -22,8 +22,11 @@
                         maxResultCount: 10,
                         skipCount: 0,
                         sorting: vm.sorting
-                    }).success(function(data) {
-                        vm.questions = data.items;
+                    }).success(function (data) {
+                        for (var i = 0; i < data.items.length; i++) {
+                            vm.questions.push(data.items[i]);
+                        }
+
                         vm.totalQuestionCount = data.totalCount;
                     })
                 );
@@ -43,6 +46,10 @@
 
             vm.sort = function (sortingDirection) {
                 vm.sorting = sortingDirection;
+                vm.loadQuestions();
+            };
+
+            vm.showMore = function() {
                 vm.loadQuestions();
             };
 
