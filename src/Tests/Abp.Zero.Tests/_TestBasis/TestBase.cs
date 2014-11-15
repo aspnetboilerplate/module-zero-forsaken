@@ -23,19 +23,14 @@ namespace Abp.Tests._TestBasis
 
             LocalIocManager.IocContainer.Register(
                 Component.For<DbConnection>().UsingFactoryMethod(() => Effort.DbConnectionFactory.CreateTransient()).LifestyleSingleton(),
-
                 Component.For<TestDbContext>().LifestyleSingleton(),
-
-                Component.For<IDbContextProvider<TestDbContext>>().ImplementedBy<TestDbContextProvider>().LifestyleTransient(),
+                Component.For<IAbpSession, TestSession>().ImplementedBy<TestSession>().LifestyleSingleton(),
+                Component.For<IDbContextProvider<TestDbContext>>().ImplementedBy<TestDbContextProvider>().LifestyleSingleton(),
 
                 Component.For(typeof(IRepository<>)).ImplementedBy(typeof(TestEfRepositoryBase<>)).LifestyleTransient(),
                 Component.For(typeof(IRepository<,>)).ImplementedBy(typeof(TestEfRepositoryBase<,>)).LifestyleTransient(),
-
-                Component.For<IAbpSession, TestSession>().ImplementedBy<TestSession>().LifestyleSingleton(),
-
                 Component.For<TestUserStore>().LifestyleTransient(),
                 Component.For<TestUserManager>().LifestyleTransient()
-
                 );
 
             DbContext = LocalIocManager.Resolve<TestDbContext>();
