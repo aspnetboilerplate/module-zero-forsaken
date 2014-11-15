@@ -222,7 +222,13 @@
     <Content Include="App\Main\views\layout\header.js" />
     <Content Include="App\Main\views\layout\layout.js" />
     <Content Include="App\Main\views\questions\createDialog.js" />
+    <Content Include="App\Main\views\questions\detail.css">
+      <DependentUpon>detail.less</DependentUpon>
+    </Content>
     <Content Include="App\Main\views\questions\detail.js" />
+    <Content Include="App\Main\views\questions\detail.min.css">
+      <DependentUpon>detail.css</DependentUpon>
+    </Content>
     <Content Include="App\Main\views\questions\index.css">
       <DependentUpon>index.less</DependentUpon>
     </Content>
@@ -700,6 +706,7 @@
     <Content Include="App\Main\views\questions\index.less" />
     <Content Include="App\Main\views\questions\createDialog.cshtml" />
     <Content Include="App\Main\views\questions\detail.cshtml" />
+    <Content Include="App\Main\views\questions\detail.less" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />

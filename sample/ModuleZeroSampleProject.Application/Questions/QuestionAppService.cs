@@ -9,16 +9,21 @@ using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper;
 using ModuleZeroSampleProject.Questions.Dto;
+using ModuleZeroSampleProject.Users;
 
 namespace ModuleZeroSampleProject.Questions
 {
     public class QuestionAppService : ApplicationService, IQuestionAppService
     {
         private readonly IRepository<Question> _questionRepository;
+        private readonly IRepository<Answer> _answerRepository;
+        private readonly IRepository<User, long> _userRepository;
 
-        public QuestionAppService(IRepository<Question> questionRepository)
+        public QuestionAppService(IRepository<Question> questionRepository, IRepository<Answer> answerRepository, IRepository<User, long> userRepository)
         {
             _questionRepository = questionRepository;
+            _answerRepository = answerRepository;
+            _userRepository = userRepository;
         }
 
         public PagedResultOutput<QuestionDto> GetQuestions(GetQuestionsInput input)
@@ -68,6 +73,40 @@ namespace ModuleZeroSampleProject.Questions
             return new GetQuestionOutput
                    {
                        Question = Mapper.Map<QuestionWithAnswersDto>(question)
+                   };
+        }
+
+        public VoteChangeOutput VoteUp(EntityRequestInput input)
+        {
+            var question = _questionRepository.Get(input.Id);
+            question.VoteCount++;
+            return new VoteChangeOutput(question.VoteCount);
+        }
+
+        public VoteChangeOutput VoteDown(EntityRequestInput input)
+        {
+            var question = _questionRepository.Get(input.Id);
+            question.VoteCount--;
+            return new VoteChangeOutput(question.VoteCount);
+        }
+        
+        public SubmitAnswerOutput SubmitAnswer(SubmitAnswerInput input)
+        {
+            var question = _questionRepository.Get(input.QuestionId);
+            var currentUser = _userRepository.Get(CurrentSession.UserId.Value);
+
+            question.AnswerCount++;
+
+            var answer = _answerRepository.Insert(
+                new Answer(input.Text)
+                {
+                    Question = question,
+                    CreatorUser = currentUser
+                });
+
+            return new SubmitAnswerOutput
+                   {
+                       Answer = Mapper.Map<AnswerDto>(answer)
                    };
         }
     }

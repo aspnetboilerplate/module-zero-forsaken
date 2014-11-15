@@ -99,6 +99,9 @@
     <Compile Include="ModuleZeroSampleProjectApplicationModule.cs" />
     <Compile Include="ModuleZeroSampleProjectAppServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Questions\Dto\VoteChangeOutput.cs" />
+    <Compile Include="Questions\Dto\SubmitAnswerInput.cs" />
+    <Compile Include="Questions\Dto\SubmitAnswerOutput.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

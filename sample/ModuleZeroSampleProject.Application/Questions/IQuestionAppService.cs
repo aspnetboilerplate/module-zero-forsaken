@@ -11,5 +11,11 @@ namespace ModuleZeroSampleProject.Questions
         void CreateQuestion(CreateQuestionInput input);
 
         GetQuestionOutput GetQuestion(GetQuestionInput input);
+
+        VoteChangeOutput VoteUp(EntityRequestInput input);
+
+        VoteChangeOutput VoteDown(EntityRequestInput input);
+
+        SubmitAnswerOutput SubmitAnswer(SubmitAnswerInput input);
     }
 }
