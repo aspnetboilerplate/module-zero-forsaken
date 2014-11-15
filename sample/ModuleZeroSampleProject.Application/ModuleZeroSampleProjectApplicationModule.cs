@@ -4,6 +4,8 @@ using AutoMapper;
 using ModuleZeroSampleProject.Authorization;
 using ModuleZeroSampleProject.Questions;
 using ModuleZeroSampleProject.Questions.Dto;
+using ModuleZeroSampleProject.Users;
+using ModuleZeroSampleProject.Users.Dto;
 
 namespace ModuleZeroSampleProject
 {
@@ -19,6 +21,7 @@ namespace ModuleZeroSampleProject
             Mapper.CreateMap<Question, QuestionDto>();
             Mapper.CreateMap<Question, QuestionWithAnswersDto>();
             Mapper.CreateMap<Answer, AnswerDto>();
+            Mapper.CreateMap<User, UserDto>();
         }
     }
 }

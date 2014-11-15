@@ -2,6 +2,6 @@
 <localizationDictionary culture="en">
   <texts>
     <text name="Questions" value="Questions" />
-    <text name="People" value="People" />
+    <text name="Users" value="Users" />
   </texts>
 </localizationDictionary>

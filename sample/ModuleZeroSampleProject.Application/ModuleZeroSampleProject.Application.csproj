@@ -105,6 +105,9 @@
     <Compile Include="Questions\Dto\VoteChangeOutput.cs" />
     <Compile Include="Questions\Dto\SubmitAnswerInput.cs" />
     <Compile Include="Questions\Dto\SubmitAnswerOutput.cs" />
+    <Compile Include="Users\IUserAppService.cs" />
+    <Compile Include="Users\Dto\UserDto.cs" />
+    <Compile Include="Users\UserAppService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

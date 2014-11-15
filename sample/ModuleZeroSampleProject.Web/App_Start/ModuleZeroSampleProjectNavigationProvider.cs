@@ -23,9 +23,9 @@ namespace ModuleZeroSampleProject.Web
                         )
                 ).AddItem(
                     new MenuItemDefinition(
-                        "People",
-                        new LocalizableString("People", ModuleZeroSampleProjectConsts.LocalizationSourceName),
-                        url: "#/people",
+                        "Users",
+                        new LocalizableString("Users", ModuleZeroSampleProjectConsts.LocalizationSourceName),
+                        url: "#/users",
                         icon: "fa fa-users"
                         )
                 );

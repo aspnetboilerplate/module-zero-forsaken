@@ -233,7 +233,7 @@
       <DependentUpon>index.less</DependentUpon>
     </Content>
     <Content Include="App\Main\views\questions\index.js" />
-    <Content Include="App\Main\views\people\index.js" />
+    <Content Include="App\Main\views\users\index.js" />
     <Content Include="App\Main\views\questions\index.min.css">
       <DependentUpon>index.css</DependentUpon>
     </Content>
@@ -537,7 +537,7 @@
     <Content Include="App\Main\main.less" />
     <Content Include="App\Main\views\layout\layout.cshtml" />
     <Content Include="App\Main\views\questions\index.cshtml" />
-    <Content Include="App\Main\views\people\index.cshtml" />
+    <Content Include="App\Main\views\users\index.cshtml" />
     <Content Include="App\Main\web.config" />
     <Content Include="log4net.config" />
     <Content Include="Scripts\bootstrap.js" />

@@ -2,6 +2,6 @@
 <localizationDictionary culture="tr">
   <texts>
     <text name="Questions" value="Sorular" />
-    <text name="People" value="Kişiler" />
+    <text name="Users" value="Kullanıcılar" />
   </texts>
 </localizationDictionary>

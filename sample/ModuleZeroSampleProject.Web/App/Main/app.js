@@ -29,10 +29,10 @@
                     templateUrl: abp.appPath + 'App/Main/views/questions/detail.cshtml',
                     menu: 'Questions' //Matches to name of 'Questions' menu in ModuleZeroSampleProjectNavigationProvider
                 })
-                .state('people', {
-                    url: '/people',
-                    templateUrl: abp.appPath + 'App/Main/views/people/index.cshtml',
-                    menu: 'People' //Matches to name of 'People' menu in ModuleZeroSampleProjectNavigationProvider
+                .state('users', {
+                    url: '/users',
+                    templateUrl: abp.appPath + 'App/Main/views/users/index.cshtml',
+                    menu: 'Users' //Matches to name of 'Users' menu in ModuleZeroSampleProjectNavigationProvider
                 });
         }
     ]);
