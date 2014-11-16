@@ -17,5 +17,7 @@ namespace ModuleZeroSampleProject.Questions
         VoteChangeOutput VoteDown(EntityRequestInput input);
 
         SubmitAnswerOutput SubmitAnswer(SubmitAnswerInput input);
+
+        void AcceptAnswer(EntityRequestInput input);
     }
 }

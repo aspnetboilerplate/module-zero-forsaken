@@ -23,7 +23,11 @@
     <div class="panel panel-default answer-detail-panel" ng-repeat="answer in vm.question.answers">
         <div class="panel-body">
             {{answer.text}}
-            <i class="fa fa-check-circle accepted-icon" title="This answer is accepted by question owner" ng-if="answer.isAccepted"></i>
+            <div ng-if="!answer.isAccepted">
+                <br />
+                <button ng-click="vm.acceptAnswer(answer)" class="btn btn-success"><i class="fa fa-check"></i> Set as accepted answer</button>
+            </div>
+            <i ng-if="answer.isAccepted" class="fa fa-check-circle accepted-icon" title="This answer is accepted by question owner"></i>
         </div>
         <div class="panel-footer">
             <span ng-if="answer.creatorUserName">{{answer.creatorUserName}}, </span>

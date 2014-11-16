@@ -6,6 +6,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using AutoMapper;
@@ -19,12 +20,14 @@ namespace ModuleZeroSampleProject.Questions
         private readonly IRepository<Question> _questionRepository;
         private readonly IRepository<Answer> _answerRepository;
         private readonly IRepository<User, long> _userRepository;
+        private readonly QuestionDomainService _questionDomainService;
 
-        public QuestionAppService(IRepository<Question> questionRepository, IRepository<Answer> answerRepository, IRepository<User, long> userRepository)
+        public QuestionAppService(IRepository<Question> questionRepository, IRepository<Answer> answerRepository, IRepository<User, long> userRepository, QuestionDomainService questionDomainService)
         {
             _questionRepository = questionRepository;
             _answerRepository = answerRepository;
             _userRepository = userRepository;
+            this._questionDomainService = questionDomainService;
         }
 
         public PagedResultOutput<QuestionDto> GetQuestions(GetQuestionsInput input)
@@ -105,10 +108,18 @@ namespace ModuleZeroSampleProject.Questions
                     CreatorUser = currentUser
                 });
 
+            UnitOfWorkScope.Current.SaveChanges();
+
             return new SubmitAnswerOutput
                    {
                        Answer = Mapper.Map<AnswerDto>(answer)
                    };
+        }
+
+        public void AcceptAnswer(EntityRequestInput input)
+        {
+            var answer = _answerRepository.Get(input.Id);
+            _questionDomainService.AcceptAnswer(answer);
         }
     }
 }

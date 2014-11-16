@@ -7,6 +7,7 @@
 
             vm.question = null;
             vm.answerText = '';
+            vm.ownQuestion = false;
 
             vm.voteUp = function () {
                 questionService.voteUp({
@@ -36,31 +37,44 @@
                 });
             };
 
-            //Loading question
-            abp.ui.setBusy(
-                null,
-                questionService.getQuestion({
-                    id: $state.params.id,
-                    incrementViewCount: true
-                }).success(function(data) {
-                    vm.question = data.question;
+            vm.acceptAnswer = function(answer) {
+                questionService.acceptAnswer({
+                    id: answer.id
+                }).success(function () {
+                    abp.notify.info("You accepted the answer by " + answer.creatorUserName);
+                    loadQuestion();
+                });
+            };
 
-                    //Moving accepted answer to top
-                    var acceptedAnswerIndex = -1;
-                    for (var i = 0; i < vm.question.answers.length; i++) {
-                        if (vm.question.answers[i].isAccepted) {
-                            acceptedAnswerIndex = i;
-                            break;
+            var loadQuestion = function() {
+                abp.ui.setBusy(
+                    null,
+                    questionService.getQuestion({
+                        id: $state.params.id,
+                        incrementViewCount: true
+                    }).success(function(data) {
+                        vm.question = data.question;
+                        vm.ownQuestion = vm.question.creatorUserId == abp.session.userId;
+
+                        //Moving accepted answer to top
+                        var acceptedAnswerIndex = -1;
+                        for (var i = 0; i < vm.question.answers.length; i++) {
+                            if (vm.question.answers[i].isAccepted) {
+                                acceptedAnswerIndex = i;
+                                break;
+                            }
                         }
-                    }
 
-                    if (acceptedAnswerIndex > 0) {
-                        var acceptedAnswer = vm.question.answers[acceptedAnswerIndex];
-                        vm.question.answers.splice(acceptedAnswerIndex, 1);
-                        vm.question.answers.unshift(acceptedAnswer);
-                    }
-                })
-            );
+                        if (acceptedAnswerIndex > 0) {
+                            var acceptedAnswer = vm.question.answers[acceptedAnswerIndex];
+                            vm.question.answers.splice(acceptedAnswerIndex, 1);
+                            vm.question.answers.unshift(acceptedAnswer);
+                        }
+                    })
+                );
+            };
+
+            loadQuestion();
         }
     ]);
 })();

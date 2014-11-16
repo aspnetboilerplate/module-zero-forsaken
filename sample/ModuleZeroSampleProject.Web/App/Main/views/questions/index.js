@@ -15,16 +15,21 @@
             vm.totalQuestionCount = 0;
             vm.sorting = 'CreationTime DESC';
 
-            vm.loadQuestions = function() {
+            vm.loadQuestions = function (append) {
+                var skipCount = append ? vm.questions.length : 0;
                 abp.ui.setBusy(
                     null,
                     questionService.getQuestions({
                         maxResultCount: 10,
-                        skipCount: 0,
+                        skipCount: skipCount,
                         sorting: vm.sorting
                     }).success(function (data) {
-                        for (var i = 0; i < data.items.length; i++) {
-                            vm.questions.push(data.items[i]);
+                        if (append) {
+                            for (var i = 0; i < data.items.length; i++) {
+                                vm.questions.push(data.items[i]);
+                            }
+                        } else {
+                            vm.questions = data.items;
                         }
 
                         vm.totalQuestionCount = data.totalCount;
@@ -49,8 +54,8 @@
                 vm.loadQuestions();
             };
 
-            vm.showMore = function() {
-                vm.loadQuestions();
+            vm.showMore = function () {
+                vm.loadQuestions(true);
             };
 
             vm.loadQuestions();
