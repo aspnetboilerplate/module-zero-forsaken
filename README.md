@@ -26,10 +26,10 @@ There is a sample project in the **sample** folder. To run it:
  
 ![alt login form](https://raw.githubusercontent.com/aspnetboilerplate/module-zero/master/doc/login-form.png)
 
-Test User: admin@aspnetboilerplate.com
-Password: 123qwe
-
 See running application on http://qasample.aspnetboilerplate.com/
+
+User name: admin or emre
+Password: 123qwe
 
 After login, a question list is shown:
 
