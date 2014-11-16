@@ -29,6 +29,7 @@ There is a sample project in the **sample** folder. To run it:
 See running application on http://qasample.aspnetboilerplate.com/
 
 User name: admin or emre
+
 Password: 123qwe
 
 After login, a question list is shown:
