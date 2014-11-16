@@ -23,7 +23,7 @@
     <div class="panel panel-default answer-detail-panel" ng-repeat="answer in vm.question.answers">
         <div class="panel-body">
             {{answer.text}}
-            <div ng-if="!answer.isAccepted">
+            <div ng-if="!answer.isAccepted && vm.ownQuestion">
                 <br />
                 <button ng-click="vm.acceptAnswer(answer)" class="btn btn-success"><i class="fa fa-check"></i> Set as accepted answer</button>
             </div>
