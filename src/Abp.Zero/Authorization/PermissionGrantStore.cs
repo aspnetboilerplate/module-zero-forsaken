@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization
 {
-    public class PermissionGrantStore<TRole, TTenant, TUser> : IPermissionGrantStore, ITransientDependency
+    public abstract class PermissionGrantStore<TRole, TTenant, TUser> : IPermissionGrantStore, ITransientDependency
         where TRole : AbpRole<TTenant, TUser> 
         where TUser : AbpUser<TTenant, TUser> 
         where TTenant : AbpTenant<TTenant, TUser>
