@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 
 namespace ModuleZeroSampleProject.Questions.Dto
 {
+    [AutoMapFrom(typeof(Question))]
     public class QuestionDto : CreationAuditedEntityDto
     {
         public string Title { get; set; }
