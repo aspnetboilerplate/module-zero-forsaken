@@ -35,8 +35,7 @@ namespace Abp.Configuration
 
         public virtual void Delete(SettingInfo settingInfo)
         {
-            _settingRepository
-                .Delete(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name);
+            _settingRepository.Delete(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name);
         }
 
         public virtual void Create(SettingInfo settingInfo)
@@ -48,8 +47,7 @@ namespace Abp.Configuration
         public virtual void Update(SettingInfo settingInfo)
         {
             var setting = _settingRepository
-                .FirstOrDefault(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name)
-                .ToSettingInfo();
+                .FirstOrDefault(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name);
 
             if (setting != null)
             {
