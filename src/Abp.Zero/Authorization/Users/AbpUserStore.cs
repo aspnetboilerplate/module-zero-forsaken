@@ -33,6 +33,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<TRole> _roleRepository;
         private readonly IAbpSession _session;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         #endregion
 
@@ -43,13 +44,15 @@ namespace Abp.Authorization.Users
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
-            IAbpSession session)
+            IAbpSession session,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
             _session = session;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         #endregion
@@ -231,7 +234,7 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew(
                 () =>
                 {
-                    using (var uow = new UnitOfWorkScope())
+                    using (var uow = _unitOfWorkManager.StartNew())
                     {
                         var query =
                             from userRole in _userRoleRepository.GetAll()
@@ -248,7 +251,7 @@ namespace Abp.Authorization.Users
 
                         _userRoleRepository.Delete(searchedUserRole);
 
-                        uow.Commit();
+                        uow.Complete();
                     }
                 });
         }
@@ -258,7 +261,7 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew<IList<string>>(
                 () =>
                 {
-                    using (new UnitOfWorkScope())
+                    using (var uow = _unitOfWorkManager.StartNew())
                     {
                         var query =
                             from userRole in _userRoleRepository.GetAll()
@@ -266,7 +269,9 @@ namespace Abp.Authorization.Users
                             where userRole.UserId == user.Id
                             select role.Name;
 
-                        return query.ToList();
+                        var result = query.ToList();
+                        uow.Complete();
+                        return result;
                     }
                 });
         }
@@ -276,7 +281,7 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew(
                 () =>
                 {
-                    using (new UnitOfWorkScope())
+                    using (var uow = _unitOfWorkManager.StartNew())
                     {
                         var query =
                             from userRole in _userRoleRepository.GetAll()
@@ -284,7 +289,9 @@ namespace Abp.Authorization.Users
                             where userRole.UserId == user.Id && role.Name == roleName
                             select userRole;
 
-                        return query.FirstOrDefault() != null;
+                        var result = query.FirstOrDefault() != null;
+                        uow.Complete();
+                        return result;
                     }
                 });
         }

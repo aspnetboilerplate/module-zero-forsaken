@@ -44,17 +44,12 @@ namespace Abp.Tests._TestBasis
 
         private class TestDbContextProvider : IDbContextProvider<TestDbContext>
         {
-            private readonly TestDbContext _dbContext;
-
             public TestDbContextProvider(TestDbContext dbContext)
             {
-                _dbContext = dbContext;
+                DbContext = dbContext;
             }
 
-            public TestDbContext GetDbContext()
-            {
-                return _dbContext;
-            }
+            public TestDbContext DbContext { get; private set; }
         }
     }
 }

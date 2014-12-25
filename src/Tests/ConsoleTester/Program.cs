@@ -8,6 +8,7 @@ using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
@@ -137,13 +138,15 @@ namespace ConsoleTester
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
             IRepository<Role> roleRepository,
-            IAbpSession session)
+            IAbpSession session,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(
                 userRepository,
                 userLoginRepository,
                 userRoleRepository,
                 roleRepository,
-                session)
+                session,
+                unitOfWorkManager)
         {
         }
     }
