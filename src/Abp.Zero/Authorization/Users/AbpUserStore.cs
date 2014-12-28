@@ -234,7 +234,7 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew(
                 () =>
                 {
-                    using (var uow = _unitOfWorkManager.StartNew())
+                    using (var uow = _unitOfWorkManager.Begin())
                     {
                         var query =
                             from userRole in _userRoleRepository.GetAll()
@@ -261,7 +261,7 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew<IList<string>>(
                 () =>
                 {
-                    using (var uow = _unitOfWorkManager.StartNew())
+                    using (var uow = _unitOfWorkManager.Begin())
                     {
                         var query =
                             from userRole in _userRoleRepository.GetAll()
@@ -281,7 +281,7 @@ namespace Abp.Authorization.Users
             return Task.Factory.StartNew(
                 () =>
                 {
-                    using (var uow = _unitOfWorkManager.StartNew())
+                    using (var uow = _unitOfWorkManager.Begin())
                     {
                         var query =
                             from userRole in _userRoleRepository.GetAll()
