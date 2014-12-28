@@ -5,10 +5,10 @@ using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public abstract class PermissionMap<TPermissionSetting> : EntityMap<TPermissionSetting, long>
+    public abstract class PermissionSettingMap<TPermissionSetting> : EntityMap<TPermissionSetting, long>
         where TPermissionSetting : PermissionSetting
     {
-        protected PermissionMap()
+        protected PermissionSettingMap()
             : base("AbpPermissions")
         {
             Map(x => x.Name);
@@ -17,17 +17,17 @@ namespace Abp.Zero.NHibernate.EntityMappings
         }
     }
 
-    public class UserPermissionMap : PermissionMap<UserPermissionSetting>
+    public class UserPermissionSettingMap : PermissionSettingMap<UserPermissionSetting>
     {
-        public UserPermissionMap()
+        public UserPermissionSettingMap()
         {
             Map(x => x.UserId);
         }
     }
 
-    public class RolePermissionMap : PermissionMap<RolePermissionSetting>
+    public class RolePermissionSettingMap : PermissionSettingMap<RolePermissionSetting>
     {
-        public RolePermissionMap()
+        public RolePermissionSettingMap()
         {
             Map(x => x.RoleId);
         }
