@@ -41,6 +41,9 @@ namespace Abp.Authorization.Roles
         /// </summary>
         public virtual string DisplayName { get; set; }
 
+        /// <summary>
+        /// List of permissions of the role.
+        /// </summary>
         [ForeignKey("RoleId")]
         public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
 
