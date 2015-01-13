@@ -17,17 +17,15 @@ namespace Abp.Authorization.Users
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
-        #region Consts
-
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
-        public const int MaxNameLength = 30;
+        public const int MaxNameLength = 32;
 
         /// <summary>
         /// Maximum length of the <see cref="Surname"/> property.
         /// </summary>
-        public const int MaxSurnameLength = 30;
+        public const int MaxSurnameLength = 32;
 
         /// <summary>
         /// Maximum length of the <see cref="UserName"/> property.
@@ -37,12 +35,12 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="Password"/> property.
         /// </summary>
-        public const int MaxPasswordLength = 100;
+        public const int MaxPasswordLength = 128;
 
         /// <summary>
         /// Maximum length of the <see cref="EmailAddress"/> property.
         /// </summary>
-        public const int MaxEmailAddressLength = 100;
+        public const int MaxEmailAddressLength = 256;
 
         /// <summary>
         /// Maximum length of the <see cref="EmailConfirmationCode"/> property.
@@ -53,8 +51,6 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="PasswordResetCode"/> property.
         /// </summary>
         public const int MaxPasswordResetCodeLength = 32;
-
-        #endregion
 
         /// <summary>
         /// Tenant of this user.

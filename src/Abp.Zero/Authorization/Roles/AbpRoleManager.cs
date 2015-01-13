@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.MultiTenancy;
@@ -54,6 +55,16 @@ namespace Abp.Authorization.Roles
             }
 
             return HasPermissionInternal(role, permissionName);
+        }
+
+        public override Task<IdentityResult> DeleteAsync(TRole role)
+        {
+            if (role.IsStatic)
+            {
+                throw new AbpException("Can not delete a static role: ");
+            }
+
+            return base.DeleteAsync(role);
         }
 
         private bool HasPermissionInternal(TRole role, string permissionName) //TODO: Async
