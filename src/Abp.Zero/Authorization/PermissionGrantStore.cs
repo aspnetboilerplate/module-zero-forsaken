@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
@@ -34,7 +35,7 @@ namespace Abp.Authorization
         {
             return _userManager
                 .GetRoles(userId)
-                .Any(roleName => _roleManager.HasPermission(roleName, permissionName));
+                .Any(roleName => _roleManager.HasPermissionAsync(roleName, permissionName).Result);
         }
     }
 }
