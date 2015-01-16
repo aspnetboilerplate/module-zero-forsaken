@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Modules;
 using Abp.NHibernate;
-using Abp.NHibernate.Config;
 
 namespace Abp.Zero.NHibernate
 {
