@@ -13,9 +13,9 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Implements 'Role Store' of ASP.NET Identity Framework.
     /// </summary>
-    public abstract class AbpRoleStore<TRole, TTenant, TUser> :
+    public abstract class AbpRoleStore<TTenant, TRole, TUser> :
         IQueryableRoleStore<TRole, int>,
-        IRolePermissionStore<TRole, TTenant, TUser>,
+        IRolePermissionStore<TTenant, TRole, TUser>,
         ITransientDependency
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
@@ -96,36 +96,28 @@ namespace Abp.Authorization.Roles
                                          });
         }
 
-        public Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+        public async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
-            return Task.Factory.StartNew(() =>
-                                         {
-                                             var permissionEntity = _rolePermissionSettingRepository.FirstOrDefault(
-                                                 p => p.RoleId == role.Id &&
-                                                      p.Name == permissionGrant.Name &&
-                                                      p.IsGranted == permissionGrant.IsGranted);
-                                             if (permissionEntity == null)
-                                             {
-                                                 return;
-                                             }
-
-                                             _rolePermissionSettingRepository.Delete(permissionEntity);
-                                         });
+            await _rolePermissionSettingRepository.DeleteAsync(p => p.RoleId == role.Id &&
+                                                                    p.Name == permissionGrant.Name &&
+                                                                    p.IsGranted == permissionGrant.IsGranted);
         }
 
-        public Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
+        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
         {
-            return Task.Factory.StartNew<IList<PermissionGrantInfo>>(
-                () => _rolePermissionSettingRepository
-                    .GetAllList(p => p.RoleId == role.Id)
-                    .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
-                    .ToList()
-                );
+            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == role.Id))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
         }
 
         public Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
             return Task.Factory.StartNew(() => _rolePermissionSettingRepository.FirstOrDefault(p => p.RoleId == role.Id && p.Name == permissionGrant.Name && p.IsGranted == permissionGrant.IsGranted) != null);
+        }
+
+        public async Task RemoveAllPermissionSettingsAsync(TRole role)
+        {
+            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
         }
 
         #endregion

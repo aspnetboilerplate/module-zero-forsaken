@@ -17,13 +17,13 @@ namespace Abp.Authorization.Roles
     {
         private readonly IPermissionManager _permissionManager;
 
-        protected AbpRoleManager(AbpRoleStore<TRole, TTenant, TUser> store, IPermissionManager permissionManager)
+        protected AbpRoleManager(AbpRoleStore<TTenant, TRole, TUser> store, IPermissionManager permissionManager)
             : base(store)
         {
             _permissionManager = permissionManager;
         }
 
-        public async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(int roleId)
+        public virtual async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(int roleId)
         {
             var role = await FindByIdAsync(roleId);
             if (role == null)
@@ -44,13 +44,45 @@ namespace Abp.Authorization.Roles
             return permissionList;
         }
 
+        public virtual async Task SetGrantedPermissionsAsync(int roleId, IEnumerable<Permission> permissions)
+        {
+            var role = await FindByIdAsync(roleId);
+            if (role == null)
+            {
+                throw new AbpAuthorizationException("There is no role with id = " + roleId);
+            }
+
+            await ClearAllPermissionsAsync(role);
+            foreach (var permission in permissions)
+            {
+                await GrantPermissionAsync(role, permission);
+            }
+        }
+
+        private async Task GrantPermissionAsync(TRole role, Permission permission)
+        {
+            if (await HasPermissionInternalAsync(role, permission))
+            {
+                return;
+            }
+
+            //TODO: Default'da verilip verilmediðine göre birþeyler yapýlacak.
+
+            await GetRolePermissionStore().AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
+        }
+
+        private async Task ClearAllPermissionsAsync(TRole role)
+        {
+            await GetRolePermissionStore().RemoveAllPermissionSettingsAsync(role);
+        }
+
         /// <summary>
         /// Checks if a role has a permission.
         /// </summary>
         /// <param name="roleName">The role's name to check it's permission</param>
         /// <param name="permissionName">Name of the permission</param>
         /// <returns>True, if the role has the permission</returns>
-        public async Task<bool> HasPermissionAsync(string roleName, string permissionName)
+        public virtual async Task<bool> HasPermissionAsync(string roleName, string permissionName)
         {
             var role = await FindByNameAsync(roleName);
             if (role == null)
@@ -67,7 +99,7 @@ namespace Abp.Authorization.Roles
         /// <param name="roleId">The role's id to check it's permission</param>
         /// <param name="permissionName">Name of the permission</param>
         /// <returns>True, if the role has the permission</returns>
-        public async Task<bool> HasPermissionAsync(int roleId, string permissionName)
+        public virtual async Task<bool> HasPermissionAsync(int roleId, string permissionName)
         {
             var role = await FindByIdAsync(roleId);
             if (role == null)
@@ -101,16 +133,21 @@ namespace Abp.Authorization.Roles
 
         private async Task<bool> HasPermissionInternalAsync(TRole role, Permission permission) //TODO: Async
         {
-            if (!(Store is IRolePermissionStore<TRole, TTenant, TUser>))
-            {
-                throw new AbpException("Store is not IRolePermissionStore");
-            }
-
-            var permissionStore = Store as IRolePermissionStore<TRole, TTenant, TUser>;
+            var permissionStore = GetRolePermissionStore();
 
             return permission.IsGrantedByDefault
                 ? !(await permissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, false)))
                 : (await permissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, true)));
+        }
+
+        private IRolePermissionStore<TTenant, TRole, TUser> GetRolePermissionStore()
+        {
+            if (!(Store is IRolePermissionStore<TTenant, TRole, TUser>))
+            {
+                throw new AbpException("Store is not IRolePermissionStore");
+            }
+
+            return Store as IRolePermissionStore<TTenant, TRole, TUser>;
         }
     }
 }

@@ -93,11 +93,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\Users\RoleManager_Tests.cs" />
     <Compile Include="Dependency\Dependency_Tests.cs" />
     <Compile Include="_TestBasis\TestBase.cs" />
     <Compile Include="_TestBasis\TestDbContext.cs" />
     <Compile Include="_TestBasis\TestEfRepositoryBase.cs" />
     <Compile Include="_TestBasis\TestRole.cs" />
+    <Compile Include="_TestBasis\TestRoleManager.cs" />
+    <Compile Include="_TestBasis\TestRoleStore.cs" />
     <Compile Include="_TestBasis\TestSession.cs" />
     <Compile Include="_TestBasis\TestTenant.cs" />
     <Compile Include="_TestBasis\TestUser.cs" />

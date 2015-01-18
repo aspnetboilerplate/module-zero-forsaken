@@ -30,7 +30,9 @@ namespace Abp.Tests._TestBasis
                 Component.For(typeof(IRepository<>)).ImplementedBy(typeof(TestEfRepositoryBase<>)).LifestyleTransient(),
                 Component.For(typeof(IRepository<,>)).ImplementedBy(typeof(TestEfRepositoryBase<,>)).LifestyleTransient(),
                 Component.For<TestUserStore>().LifestyleTransient(),
-                Component.For<TestUserManager>().LifestyleTransient()
+                Component.For<TestUserManager>().LifestyleTransient(),
+                Component.For<TestRoleStore>().LifestyleTransient(),
+                Component.For<TestRoleManager>().LifestyleTransient()
                 );
 
             DbContext = LocalIocManager.Resolve<TestDbContext>();

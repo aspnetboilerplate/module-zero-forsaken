@@ -8,7 +8,7 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Used to perform database operations for roles.
     /// </summary>
-    public interface IRolePermissionStore<TRole, TTenant, TUser>
+    public interface IRolePermissionStore<TTenant, TRole, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
@@ -41,5 +41,7 @@ namespace Abp.Authorization.Roles
         /// <param name="permissionGrant">Permission grant setting info</param>
         /// <returns></returns>
         Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant);
+
+        Task RemoveAllPermissionSettingsAsync(TRole role);
     }
 }
