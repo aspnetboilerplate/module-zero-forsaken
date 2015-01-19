@@ -16,6 +16,19 @@ namespace Abp.Authorization.Roles
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
+        private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
+        {
+            get
+            {
+                if (!(Store is IRolePermissionStore<TTenant, TRole, TUser>))
+                {
+                    throw new AbpException("Store is not IRolePermissionStore");
+                }
+
+                return Store as IRolePermissionStore<TTenant, TRole, TUser>;
+            }
+        }
+
         private readonly IPermissionManager _permissionManager;
 
         /// <summary>
@@ -213,19 +226,6 @@ namespace Abp.Authorization.Roles
             return base.DeleteAsync(role);
         }
 
-        private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
-        {
-            get
-            {
-                if (!(Store is IRolePermissionStore<TTenant, TRole, TUser>))
-                {
-                    throw new AbpException("Store is not IRolePermissionStore");
-                }
-
-                return Store as IRolePermissionStore<TTenant, TRole, TUser>;
-            }
-        }
-
         private Permission GetPermission(string permissionName)
         {
             var permission = _permissionManager.GetPermissionOrNull(permissionName);
@@ -233,6 +233,7 @@ namespace Abp.Authorization.Roles
             {
                 throw new AbpException("There is no permission with name: " + permissionName);
             }
+
             return permission;
         }
 
