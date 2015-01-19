@@ -26,8 +26,6 @@ namespace Abp.Authorization.Users
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
-        #region Private fields
-
         private readonly IRepository<TUser, long> _userRepository;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
@@ -35,11 +33,10 @@ namespace Abp.Authorization.Users
         private readonly IAbpSession _session;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        #endregion
-
-        #region Constructor
-
-        public AbpUserStore(
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected AbpUserStore(
             IRepository<TUser, long> userRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
@@ -55,256 +52,166 @@ namespace Abp.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        #endregion
-
-        #region IUserStore
-
-        public void Dispose()
+        public async Task CreateAsync(TUser user)
         {
-            //No need to dispose since using dependency injection manager
+            await _userRepository.InsertAsync(user);
         }
 
-        public Task CreateAsync(TUser user)
+        public async Task UpdateAsync(TUser user)
         {
-            return Task.Factory.StartNew(() => _userRepository.Insert(user));
+            await _userRepository.UpdateAsync(user);
         }
 
-        public Task UpdateAsync(TUser user)
+        public async Task DeleteAsync(TUser user)
         {
-            return Task.Factory.StartNew(() => _userRepository.Update(user));
+            await _userRepository.DeleteAsync(user.Id);
         }
 
-        public Task DeleteAsync(TUser user)
+        public async Task<TUser> FindByIdAsync(long userId)
         {
-            return Task.Factory.StartNew(() => _userRepository.Delete(user.Id));
+            return await _userRepository.FirstOrDefaultAsync(userId);
         }
 
-        public Task<TUser> FindByIdAsync(long userId)
+        public async Task<TUser> FindByNameAsync(string userName)
         {
-            return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(userId));
-        }
-
-        public Task<TUser> FindByNameAsync(string userName)
-        {
-            return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => user.TenantId == _session.TenantId && (user.UserName == userName || user.EmailAddress == userName) && user.IsEmailConfirmed));
-        }
-
-        #endregion
-
-        #region IUserPasswordStore
-
-        public Task SetPasswordHashAsync(TUser user, string passwordHash)
-        {
-            return Task.Factory.StartNew(() =>
-                                         {
-                                             user.Password = passwordHash;
-                                             _userRepository.Update(user); //TODO: TEST
-                                         });
-        }
-
-        public Task<string> GetPasswordHashAsync(TUser user)
-        {
-            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).Password); //TODO: Optimize
-        }
-
-        public Task<bool> HasPasswordAsync(TUser user)
-        {
-            return Task.Factory.StartNew(() => !string.IsNullOrEmpty(_userRepository.Get(user.Id).Password)); //TODO: Optimize
-        }
-
-        #endregion
-
-        #region IUserEmailStore
-
-        public Task SetEmailAsync(TUser user, string email)
-        {
-            return Task.Factory.StartNew(() =>
-                                         {
-                                             user.EmailAddress = email;
-                                             _userRepository.Update(user); //TODO: TEST
-                                         });
-        }
-
-        public Task<string> GetEmailAsync(TUser user)
-        {
-            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).EmailAddress);
-        }
-
-        public Task<bool> GetEmailConfirmedAsync(TUser user)
-        {
-            return Task.Factory.StartNew(() => _userRepository.Get(user.Id).IsEmailConfirmed); //TODO: Optimize?
-        }
-
-        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
-        {
-            return Task.Factory.StartNew(() =>
-                                         {
-                                             user.IsEmailConfirmed = confirmed;
-                                             _userRepository.Update(user); //TODO: TEST
-                                         });
-        }
-
-        public Task<TUser> FindByEmailAsync(string email)
-        {
-            return Task.Factory.StartNew(() => _userRepository.FirstOrDefault(user => user.EmailAddress == email));
-        }
-
-        #endregion
-
-        #region IUserLoginStore
-
-        public Task AddLoginAsync(TUser user, UserLoginInfo login)
-        {
-            //TODO: Check if already exists?
-            return Task.Factory.StartNew(
-                () =>
-                    _userLoginRepository.Insert(
-                        new UserLogin
-                        {
-                            LoginProvider = login.LoginProvider,
-                            ProviderKey = login.ProviderKey,
-                            UserId = user.Id
-                        })
+            return await _userRepository.FirstOrDefaultAsync(
+                user =>
+                    user.TenantId == _session.TenantId && //TODO: Should filter automatically when ABP implements it
+                    (user.UserName == userName || user.EmailAddress == userName) &&
+                    user.IsEmailConfirmed
                 );
         }
 
-        public Task RemoveLoginAsync(TUser user, UserLoginInfo login)
+        public async Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
-            throw new NotImplementedException(); //TODO: Implement!
+            user.Password = passwordHash;
+            await _userRepository.UpdateAsync(user);
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
+        public async Task<string> GetPasswordHashAsync(TUser user)
         {
-            return Task.Factory.StartNew<IList<UserLoginInfo>>(
-                () =>
-                    _userLoginRepository
-                        .GetAllList(ul => ul.UserId == user.Id)
-                        .Select(ul => new UserLoginInfo(ul.LoginProvider, ul.ProviderKey))
-                        .ToList()
+            return (await _userRepository.GetAsync(user.Id)).Password;
+        }
+
+        public async Task<bool> HasPasswordAsync(TUser user)
+        {
+            return !string.IsNullOrEmpty((await _userRepository.GetAsync(user.Id)).Password);
+        }
+
+        public async Task SetEmailAsync(TUser user, string email)
+        {
+            user.EmailAddress = email;
+            await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task<string> GetEmailAsync(TUser user)
+        {
+            return (await _userRepository.GetAsync(user.Id)).EmailAddress;
+        }
+
+        public async Task<bool> GetEmailConfirmedAsync(TUser user)
+        {
+            return (await _userRepository.GetAsync(user.Id)).IsEmailConfirmed;
+        }
+
+        public async Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        {
+            user.IsEmailConfirmed = confirmed;
+            await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task<TUser> FindByEmailAsync(string email)
+        {
+            return await _userRepository.FirstOrDefaultAsync(user => user.EmailAddress == email);
+        }
+
+        public async Task AddLoginAsync(TUser user, UserLoginInfo login)
+        {
+            await _userLoginRepository.InsertAsync(
+                new UserLogin
+                {
+                    LoginProvider = login.LoginProvider,
+                    ProviderKey = login.ProviderKey,
+                    UserId = user.Id
+                });
+        }
+
+        public async Task RemoveLoginAsync(TUser user, UserLoginInfo login)
+        {
+            await _userLoginRepository.DeleteAsync(
+                ul => ul.UserId == user.Id &&
+                      ul.LoginProvider == login.LoginProvider &&
+                      ul.ProviderKey == login.ProviderKey
                 );
         }
 
-        public Task<TUser> FindAsync(UserLoginInfo login)
+        public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
         {
-            return Task.Factory.StartNew(
-                () => FindUser(login.LoginProvider, login.ProviderKey)
+            return (await _userLoginRepository.GetAllListAsync(ul => ul.UserId == user.Id))
+                .Select(ul => new UserLoginInfo(ul.LoginProvider, ul.ProviderKey))
+                .ToList();
+        }
+
+        public async Task<TUser> FindAsync(UserLoginInfo login)
+        {
+            var userLogin = await _userLoginRepository.FirstOrDefaultAsync(
+                ul => ul.LoginProvider == login.LoginProvider && ul.ProviderKey == login.ProviderKey
                 );
+            if (userLogin == null)
+            {
+                return null;
+            }
+
+            return await _userRepository.FirstOrDefaultAsync(userLogin.UserId);
         }
 
-        [UnitOfWork]
-        protected virtual TUser FindUser(string loginProvider, string providerKey)
+        public async Task AddToRoleAsync(TUser user, string roleName)
         {
-            var query =
-                from user in _userRepository.GetAll()
-                join userLogin in _userLoginRepository.GetAll() on user.Id equals userLogin.UserId
-                where userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey
-                select user;
-            return query.FirstOrDefault();
+            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);
+            await _userRoleRepository.InsertAsync(new UserRole
+                                                  {
+                                                      UserId = user.Id,
+                                                      RoleId = role.Id
+                                                  });
         }
 
-        #endregion
-
-        #region IUserRoleStore
-
-        public Task AddToRoleAsync(TUser user, string roleName)
+        public async Task RemoveFromRoleAsync(TUser user, string roleName)
         {
-            //TODO: Check if already exists?
+            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);
+            var userRole = await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
+            if (userRole == null)
+            {
+                return;
+            }
 
-            var tenantId = _session.TenantId;
-
-            return Task.Factory.StartNew(() =>
-                                         {
-                                             var role = _roleRepository.Single(r => r.Name == roleName && r.TenantId == tenantId);
-
-                                             //TODO: Can find another way?
-                                             var userRole = new UserRole
-                                                            {
-                                                                //User = user,
-                                                                UserId = user.Id,
-                                                                //Role = role,
-                                                                RoleId = role.Id
-                                                            };
-
-                                             _userRoleRepository.Insert(userRole);
-                                         });
+            await _userRoleRepository.DeleteAsync(userRole);
         }
 
-        public Task RemoveFromRoleAsync(TUser user, string roleName)
+        public async Task<IList<string>> GetRolesAsync(TUser user)
         {
-            return Task.Factory.StartNew(
-                () =>
-                {
-                    using (var uow = _unitOfWorkManager.Begin())
-                    {
-                        var query =
-                            from userRole in _userRoleRepository.GetAll()
-                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                            where userRole.UserId == user.Id && role.Name == roleName
-                            select userRole;
+            //TODO: This is not implemented as async.
+            var roleNames = _userRoleRepository.Query(userRoles => (from userRole in userRoles
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == user.Id
+                select role.Name).ToList());
 
-                        var searchedUserRole = query.FirstOrDefault();
-
-                        if (searchedUserRole == null)
-                        {
-                            return;
-                        }
-
-                        _userRoleRepository.Delete(searchedUserRole);
-
-                        uow.Complete();
-                    }
-                });
+            return roleNames;
         }
 
-        public Task<IList<string>> GetRolesAsync(TUser user)
+        public async Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
-            return Task.Factory.StartNew<IList<string>>(
-                () =>
-                {
-                    using (var uow = _unitOfWorkManager.Begin())
-                    {
-                        var query =
-                            from userRole in _userRoleRepository.GetAll()
-                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                            where userRole.UserId == user.Id
-                            select role.Name;
-
-                        var result = query.ToList();
-                        uow.Complete();
-                        return result;
-                    }
-                });
+            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);
+            return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
         }
-
-        public Task<bool> IsInRoleAsync(TUser user, string roleName)
-        {
-            return Task.Factory.StartNew(
-                () =>
-                {
-                    using (var uow = _unitOfWorkManager.Begin())
-                    {
-                        var query =
-                            from userRole in _userRoleRepository.GetAll()
-                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                            where userRole.UserId == user.Id && role.Name == roleName
-                            select userRole;
-
-                        var result = query.FirstOrDefault() != null;
-                        uow.Complete();
-                        return result;
-                    }
-                });
-        }
-
-        #endregion
-
-        #region IQueryableUserStore
 
         public IQueryable<TUser> Users
         {
             get { return _userRepository.GetAll(); }
         }
 
-        #endregion
+        public void Dispose()
+        {
+            //No need to dispose since using IOC.
+        }
     }
 }

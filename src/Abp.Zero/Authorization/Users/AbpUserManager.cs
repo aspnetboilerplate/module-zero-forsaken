@@ -13,6 +13,10 @@ namespace Abp.Authorization.Users
         where TRole : AbpRole<TTenant, TUser> 
         where TUser : AbpUser<TTenant, TUser>
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="store"></param>
         protected AbpUserManager(AbpUserStore<TTenant, TRole, TUser> store)
             : base(store)
         {
