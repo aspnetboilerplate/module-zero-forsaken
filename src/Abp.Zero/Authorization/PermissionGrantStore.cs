@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
@@ -31,7 +30,7 @@ namespace Abp.Authorization
             AbpSession = NullAbpSession.Instance;
         }
 
-        public bool IsGranted(long userId, string permissionName)
+        public bool IsGranted(long userId, string permissionName) //TODO: Remove this?
         {
             return _userManager
                 .GetRoles(userId)

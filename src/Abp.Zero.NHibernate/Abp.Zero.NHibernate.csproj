@@ -100,9 +100,12 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\PermissionSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\RoleMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\RolePermissionSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\SettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\TenantMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\UserLoginMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\UserPermissionSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserRoleMap.cs" />
     <Compile Include="Zero\NHibernate\AbpZeroNHibernateModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
