@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.MultiTenancy;
-using Castle.Core.Internal;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -60,11 +59,9 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public async Task<bool> HasPermissionAsync(TRole role, Permission permission)
         {
-            var permissionStore = GetRolePermissionStore();
-
             return permission.IsGrantedByDefault
-                ? !(await permissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, false)))
-                : (await permissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, true)));
+                ? !(await RolePermissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, false)))
+                : (await RolePermissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, true)));
         }
 
         /// <summary>
@@ -89,6 +86,7 @@ namespace Abp.Authorization.Roles
 
         /// <summary>
         /// Gets granted permission names for a role.
+        /// Prohibits all other permissions.
         /// </summary>
         /// <param name="role">Role</param>
         /// <returns>List of granted permissions</returns>
@@ -109,7 +107,7 @@ namespace Abp.Authorization.Roles
 
         /// <summary>
         /// Sets all granted permissions of a role at once.
-        /// Clears all other permissions before settings.
+        /// Prohibits all other permissions.
         /// </summary>
         /// <param name="roleId">Role id</param>
         /// <param name="permissions">Permissions</param>
@@ -120,36 +118,91 @@ namespace Abp.Authorization.Roles
 
         /// <summary>
         /// Sets all granted permissions of a role at once.
-        /// Clears all other permissions before settings.
+        /// Prohibits all other permissions.
         /// </summary>
         /// <param name="role">The role</param>
         /// <param name="permissions">Permissions</param>
         public virtual async Task SetGrantedPermissionsAsync(TRole role, IEnumerable<Permission> permissions)
         {
-            await ClearAllPermissionsAsync(role);
+            await ProhibitAllPermissionsAsync(role);
             foreach (var permission in permissions)
             {
                 await GrantPermissionAsync(role, permission);
             }
         }
 
-        private async Task GrantPermissionAsync(TRole role, Permission permission)
+        /// <summary>
+        /// Grants a permission for a role.
+        /// </summary>
+        /// <param name="role">Role</param>
+        /// <param name="permission">Permission</param>
+        public async Task GrantPermissionAsync(TRole role, Permission permission)
         {
             if (await HasPermissionAsync(role, permission))
             {
                 return;
             }
 
-            //TODO: Default'da verilip verilmediðine göre birþeyler yapýlacak.
-
-            await GetRolePermissionStore().AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
+            if (permission.IsGrantedByDefault)
+            {
+                await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, false));
+            }
+            else
+            {
+                await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));                
+            }
         }
 
-        private async Task ClearAllPermissionsAsync(TRole role)
+        /// <summary>
+        /// Prohibits a permission for a role.
+        /// </summary>
+        /// <param name="role">Role</param>
+        /// <param name="permission">Permission</param>
+        public async Task ProhibitPermissionAsync(TRole role, Permission permission)
         {
-            await GetRolePermissionStore().RemoveAllPermissionSettingsAsync(role);
+            if (!await HasPermissionAsync(role, permission))
+            {
+                return;
+            }
+
+            if (permission.IsGrantedByDefault)
+            {
+                await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, false));
+            }
+            else
+            {
+                await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
+            }
+        }
+        
+        /// <summary>
+        /// Prohibits all permissions for a role.
+        /// </summary>
+        /// <param name="role">Role</param>
+        public async Task ProhibitAllPermissionsAsync(TRole role)
+        {
+            foreach (var permission in _permissionManager.GetAllPermissions())
+            {
+                await ProhibitPermissionAsync(role, permission);
+            }
         }
 
+        /// <summary>
+        /// Resets all permission settings for a role.
+        /// It removes all permission settings for the role.
+        /// Role will have permissions those have <see cref="Permission.IsGrantedByDefault"/> set to true.
+        /// </summary>
+        /// <param name="role">Role</param>
+        public async Task ResetAllPermissionsAsync(TRole role)
+        {
+            await RolePermissionStore.RemoveAllPermissionSettingsAsync(role);
+        }
+
+        /// <summary>
+        /// Deletes a role.
+        /// </summary>
+        /// <param name="role">Role</param>
+        /// <returns></returns>
         public override Task<IdentityResult> DeleteAsync(TRole role)
         {
             if (role.IsStatic)
@@ -160,6 +213,19 @@ namespace Abp.Authorization.Roles
             return base.DeleteAsync(role);
         }
 
+        private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
+        {
+            get
+            {
+                if (!(Store is IRolePermissionStore<TTenant, TRole, TUser>))
+                {
+                    throw new AbpException("Store is not IRolePermissionStore");
+                }
+
+                return Store as IRolePermissionStore<TTenant, TRole, TUser>;
+            }
+        }
+
         private Permission GetPermission(string permissionName)
         {
             var permission = _permissionManager.GetPermissionOrNull(permissionName);
@@ -168,16 +234,6 @@ namespace Abp.Authorization.Roles
                 throw new AbpException("There is no permission with name: " + permissionName);
             }
             return permission;
-        }
-
-        private IRolePermissionStore<TTenant, TRole, TUser> GetRolePermissionStore()
-        {
-            if (!(Store is IRolePermissionStore<TTenant, TRole, TUser>))
-            {
-                throw new AbpException("Store is not IRolePermissionStore");
-            }
-
-            return Store as IRolePermissionStore<TTenant, TRole, TUser>;
         }
 
         private async Task<TRole> GetRole(int roleId)
