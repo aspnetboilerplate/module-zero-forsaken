@@ -20,9 +20,12 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.EmailConfirmationCode);
             Map(x => x.Password);
             Map(x => x.PasswordResetCode);
-            Map(x => x.CreationTime);
-            Map(x => x.CreatorUserId);
             Map(x => x.LastLoginTime);
+            Map(x => x.IsDeleted);
+            Map(x => x.DeleterUserId);
+            Map(x => x.DeletionTime);
+
+            this.MapFullAudited();
 
             Polymorphism.Explicit();
         }

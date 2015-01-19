@@ -124,15 +124,27 @@ namespace Abp.Authorization.Users
         /// </summary>
         public virtual DateTime? LastLoginTime { get; set; }
 
+        /// <summary>
+        /// Login definitions for this user.
+        /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<UserLogin> Logins { get; set; }
 
+        /// <summary>
+        /// Role definitions for this user.
+        /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<UserRole> Roles { get; set; }
 
+        /// <summary>
+        /// Permission definitions for this user.
+        /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<UserPermissionSetting> Permissions { get; set; }
 
+        /// <summary>
+        /// Settings for this user.
+        /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<Setting> Settings { get; set; }
     }

@@ -42,6 +42,10 @@ namespace Abp.Authorization.Roles
         /// <returns></returns>
         Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant);
 
+        /// <summary>
+        /// Deleted all permission settings for a role.
+        /// </summary>
+        /// <param name="role">Role</param>
         Task RemoveAllPermissionSettingsAsync(TRole role);
     }
 }

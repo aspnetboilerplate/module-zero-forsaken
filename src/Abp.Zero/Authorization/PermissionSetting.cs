@@ -6,7 +6,6 @@ namespace Abp.Authorization
 {
     /// <summary>
     /// Used to grant/deny a permission for a role or user.
-    /// <see cref="RoleId"/> or <see cref="UserId"/> must be filled.
     /// </summary>
     [Table("AbpPermissions")]
     public abstract class PermissionSetting : CreationAuditedEntity<long>
