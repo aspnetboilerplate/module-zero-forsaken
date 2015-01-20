@@ -2,8 +2,16 @@
 
 namespace Abp.Zero.Configuration
 {
-    public static class MyModuleConfigurationExtensions
+    /// <summary>
+    /// Extension methods for module zero configurations.
+    /// </summary>
+    public static class ModuleZeroConfigurationExtensions
     {
+        /// <summary>
+        /// Used to configure module zero.
+        /// </summary>
+        /// <param name="moduleConfigurations"></param>
+        /// <returns></returns>
         public static ZeroConfig Zero(this IModuleConfigurations moduleConfigurations)
         {
             return moduleConfigurations.AbpConfiguration

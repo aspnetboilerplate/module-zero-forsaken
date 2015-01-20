@@ -5,7 +5,7 @@ using Abp.Zero.Configuration;
 namespace Abp.Zero
 {
     /// <summary>
-    /// ABP zero module.
+    /// ABP zero core module.
     /// </summary>
     public class AbpZeroCoreModule : AbpModule
     {
@@ -22,7 +22,6 @@ namespace Abp.Zero
 
         public override void Initialize()
         {
-            base.Initialize();
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }

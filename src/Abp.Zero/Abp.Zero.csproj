@@ -92,7 +92,7 @@
     <Compile Include="Zero\AbpZeroCoreModule.cs" />
     <Compile Include="Utils\Helpers\RandomHelper.cs" />
     <Compile Include="Zero\Configuration\MultiTenancyConfig.cs" />
-    <Compile Include="Zero\Configuration\MyModuleConfigurationExtensions.cs" />
+    <Compile Include="Zero\Configuration\ModuleZeroConfigurationExtensions.cs" />
     <Compile Include="Zero\Configuration\ZeroConfig.cs" />
   </ItemGroup>
   <ItemGroup>
