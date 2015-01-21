@@ -1,3 +1,4 @@
+using System.Linq;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.MultiTenancy;
@@ -13,14 +14,24 @@ namespace Abp.Authorization.Users
         where TRole : AbpRole<TTenant, TUser> 
         where TUser : AbpUser<TTenant, TUser>
     {
+        private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
+
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="store"></param>
-        protected AbpUserManager(AbpUserStore<TTenant, TRole, TUser> store)
-            : base(store)
+        /// <param name="userStore"></param>
+        /// <param name="roleManager"></param>
+        protected AbpUserManager(AbpUserStore<TTenant, TRole, TUser> userStore, AbpRoleManager<TTenant, TRole, TUser> roleManager)
+            : base(userStore)
         {
+            _roleManager = roleManager;
+        }
 
+        public bool IsGranted(long userId, string permissionName)
+        {
+            //TODO: Should use UserManager for that
+            return this.GetRoles(userId)
+                .Any(roleName => _roleManager.HasPermissionAsync(roleName, permissionName).Result);
         }
     }
 }

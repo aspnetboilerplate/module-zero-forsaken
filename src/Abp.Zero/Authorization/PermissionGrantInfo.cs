@@ -11,7 +11,7 @@
         public string Name { get; private set; }
 
         /// <summary>
-        /// Is this permission granted?
+        /// Is this permission granted Prohibited?
         /// </summary>
         public bool IsGranted { get; private set; }
 

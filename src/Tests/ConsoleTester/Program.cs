@@ -125,8 +125,8 @@ namespace ConsoleTester
 
     public class MyUserManager : AbpUserManager<Tenant, Role, User>
     {
-        public MyUserManager(MyUserStore store)
-            : base(store)
+        public MyUserManager(MyUserStore userStore, )
+            : base(userStore,)
         {
         }
     }
