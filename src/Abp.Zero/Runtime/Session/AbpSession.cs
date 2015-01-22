@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -56,6 +55,9 @@ namespace Abp.Runtime.Session
             }
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public AbpSession(MultiTenancyConfig multiTenancy)
         {
             _multiTenancy = multiTenancy;

@@ -7,6 +7,12 @@ using Castle.Core.Logging;
 
 namespace Abp.Authorization
 {
+    /// <summary>
+    /// Application should inherit this class to implement <see cref="IPermissionChecker"/>.
+    /// </summary>
+    /// <typeparam name="TTenant"></typeparam>
+    /// <typeparam name="TRole"></typeparam>
+    /// <typeparam name="TUser"></typeparam>
     public abstract class PermissionChecker<TTenant, TRole, TUser> : IPermissionChecker, ITransientDependency
         where TRole : AbpRole<TTenant, TUser> 
         where TUser : AbpUser<TTenant, TUser> 
@@ -18,6 +24,9 @@ namespace Abp.Authorization
 
         public IAbpSession AbpSession { get; set; }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         protected PermissionChecker(AbpUserManager<TTenant, TRole, TUser> userManager)
         {
             _userManager = userManager;

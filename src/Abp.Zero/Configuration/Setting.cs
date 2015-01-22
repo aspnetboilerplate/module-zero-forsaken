@@ -4,7 +4,7 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Configuration
 {
     /// <summary>
-    /// Represents a setting.
+    /// Represents a setting for a tenant or user.
     /// </summary>
     [Table("AbpSettings")]
     public class Setting : AuditedEntity<long>

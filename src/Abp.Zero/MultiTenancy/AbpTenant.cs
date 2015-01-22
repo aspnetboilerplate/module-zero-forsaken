@@ -25,14 +25,25 @@ namespace Abp.MultiTenancy
         /// </summary>
         public virtual string Name { get; set; }
 
+        /// <summary>
+        /// Defined settings for this tenant.
+        /// </summary>
         [ForeignKey("TenantId")]
         public virtual ICollection<Setting> Settings { get; set; }
 
+        /// <summary>
+        /// Creates a new tenant.
+        /// </summary>
         public AbpTenant()
         {
             
         }
 
+        /// <summary>
+        /// Creates a new tenant.
+        /// </summary>
+        /// <param name="tenancyName">UNIQUE name of this Tenant</param>
+        /// <param name="name">Display name of the Tenant</param>
         public AbpTenant(string tenancyName, string name)
         {
             TenancyName = tenancyName;

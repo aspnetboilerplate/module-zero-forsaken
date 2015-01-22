@@ -3,7 +3,7 @@ namespace Abp.Configuration
     /// <summary>
     /// Implements methods to convert objects between SettingInfo and Setting classes.
     /// </summary>
-    public static class SettingExtensions
+    internal static class SettingExtensions
     {
         /// <summary>
         /// Creates new <see cref="Setting"/> object from given <see cref="SettingInfo"/> object.

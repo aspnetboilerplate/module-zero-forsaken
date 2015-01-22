@@ -13,6 +13,9 @@ namespace Abp.Configuration
     {
         private readonly IRepository<Setting, long> _settingRepository;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public SettingStore(IRepository<Setting, long> settingRepository)
         {
             _settingRepository = settingRepository;
