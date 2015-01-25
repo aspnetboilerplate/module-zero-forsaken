@@ -70,6 +70,7 @@
     <Compile Include="Authorization\PermissionGrantInfo.cs" />
     <Compile Include="Authorization\Roles\RolePermissionSetting.cs" />
     <Compile Include="Authorization\Roles\IRolePermissionStore.cs" />
+    <Compile Include="Authorization\Users\AbpUserManagerExtensions.cs" />
     <Compile Include="Authorization\Users\UserPermissionSetting.cs" />
     <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingExtensions.cs" />

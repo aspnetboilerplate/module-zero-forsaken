@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.MultiTenancy;
-using Abp.Threading;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -13,27 +12,22 @@ namespace Abp.Authorization.Users
     /// </summary>
     public abstract class AbpUserManager<TTenant, TRole, TUser> : UserManager<TUser, long>, ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser> 
+        where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
         private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="userStore"></param>
-        /// <param name="roleManager"></param>
         protected AbpUserManager(AbpUserStore<TTenant, TRole, TUser> userStore, AbpRoleManager<TTenant, TRole, TUser> roleManager)
             : base(userStore)
         {
             _roleManager = roleManager;
         }
 
-        public bool IsGranted(long userId, string permissionName)
-        {
-            return AsyncHelper.RunSync(() => IsGrantedAsync(userId, permissionName));
-        }
-
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="permissionName">Permission name</param>
         public async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
             foreach (var role in await GetRolesAsync(userId))
