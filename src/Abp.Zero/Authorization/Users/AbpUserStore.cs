@@ -30,7 +30,6 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<TRole> _roleRepository;
         private readonly IAbpSession _session;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
@@ -40,15 +39,13 @@ namespace Abp.Authorization.Users
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
-            IAbpSession session,
-            IUnitOfWorkManager unitOfWorkManager)
+            IAbpSession session)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
             _session = session;
-            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public async Task CreateAsync(TUser user)
