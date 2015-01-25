@@ -1,6 +1,5 @@
 ﻿using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 
 namespace Abp.Tests._TestBasis
@@ -12,15 +11,13 @@ namespace Abp.Tests._TestBasis
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TestRole> roleRepository,
-            IAbpSession session,
-            IUnitOfWorkManager unitOfWorkManager)
+            IAbpSession session)
             : base(
                 userRepository,
                 userLoginRepository,
                 userRoleRepository,
                 roleRepository,
-                session,
-                unitOfWorkManager)
+                session)
         {
 
         }
