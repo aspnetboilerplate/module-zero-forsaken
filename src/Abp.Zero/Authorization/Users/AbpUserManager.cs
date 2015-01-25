@@ -1,7 +1,9 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.MultiTenancy;
+using Abp.Threading;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -29,9 +31,20 @@ namespace Abp.Authorization.Users
 
         public bool IsGranted(long userId, string permissionName)
         {
-            //TODO: Should use UserManager for that
-            return this.GetRoles(userId)
-                .Any(roleName => _roleManager.HasPermissionAsync(roleName, permissionName).Result);
+            return AsyncHelper.RunSync(() => IsGrantedAsync(userId, permissionName));
+        }
+
+        public async Task<bool> IsGrantedAsync(long userId, string permissionName)
+        {
+            foreach (var role in await GetRolesAsync(userId))
+            {
+                if (await _roleManager.HasPermissionAsync(role, permissionName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
