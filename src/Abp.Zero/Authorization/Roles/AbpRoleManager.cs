@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
@@ -137,8 +138,15 @@ namespace Abp.Authorization.Roles
         /// <param name="permissions">Permissions</param>
         public virtual async Task SetGrantedPermissionsAsync(TRole role, IEnumerable<Permission> permissions)
         {
-            await ProhibitAllPermissionsAsync(role);
-            foreach (var permission in permissions)
+            var oldPermissions = await GetGrantedPermissionsAsync(role);
+            var newPermissions = permissions.ToArray();
+
+            foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p)))
+            {
+                await ProhibitPermissionAsync(role, permission);
+            }
+
+            foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p)))
             {
                 await GrantPermissionAsync(role, permission);
             }

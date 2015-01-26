@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\FakePermissionManagerBuilder.cs" />
     <Compile Include="Authorization\Roles\RoleManager_Tests.cs" />
     <Compile Include="Dependency\Dependency_Tests.cs" />
     <Compile Include="_TestBasis\TestBase.cs" />
