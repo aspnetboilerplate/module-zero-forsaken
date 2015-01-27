@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -21,36 +22,36 @@ namespace Abp.Configuration
             _settingRepository = settingRepository;
         }
 
-        public virtual List<SettingInfo> GetAll(int? tenantId, long? userId)
+        public virtual async Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
         {
-            return _settingRepository
-                .GetAllList(s => s.TenantId == tenantId && s.UserId == userId)
-                .Select(s => s.ToSettingInfo())
-                .ToList();
+            var settings = await _settingRepository.GetAllListAsync(s => s.TenantId == tenantId && s.UserId == userId);
+            return settings.Select(s => s.ToSettingInfo()).ToList();
         }
 
-        public virtual SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
+        public virtual async Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
-            return _settingRepository
-                .FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name)
-                .ToSettingInfo();
+            var setting = await _settingRepository.FirstOrDefaultAsync(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name);
+            return setting.ToSettingInfo();
         }
 
-        public virtual void Delete(SettingInfo settingInfo)
+        public virtual async Task DeleteAsync(SettingInfo settingInfo)
         {
-            _settingRepository.Delete(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name);
+            await _settingRepository.DeleteAsync(
+                s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name
+                );
         }
 
-        public virtual void Create(SettingInfo settingInfo)
+        public virtual async Task CreateAsync(SettingInfo settingInfo)
         {
-            _settingRepository.Insert(settingInfo.ToSetting());
+            await _settingRepository.InsertAsync(settingInfo.ToSetting());
         }
 
         [UnitOfWork]
-        public virtual void Update(SettingInfo settingInfo)
+        public virtual async Task UpdateAsync(SettingInfo settingInfo)
         {
-            var setting = _settingRepository
-                .FirstOrDefault(s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name);
+            var setting = await _settingRepository.FirstOrDefaultAsync(
+                s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name
+                );
 
             if (setting != null)
             {

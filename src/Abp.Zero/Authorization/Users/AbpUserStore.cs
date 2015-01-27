@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
@@ -183,7 +182,7 @@ namespace Abp.Authorization.Users
             await _userRoleRepository.DeleteAsync(userRole);
         }
 
-        public async Task<IList<string>> GetRolesAsync(TUser user)
+        public Task<IList<string>> GetRolesAsync(TUser user)
         {
             //TODO: This is not implemented as async.
             var roleNames = _userRoleRepository.Query(userRoles => (from userRole in userRoles
@@ -191,7 +190,7 @@ namespace Abp.Authorization.Users
                 where userRole.UserId == user.Id
                 select role.Name).ToList());
 
-            return roleNames;
+            return Task.FromResult<IList<string>>(roleNames);
         }
 
         public async Task<bool> IsInRoleAsync(TUser user, string roleName)
