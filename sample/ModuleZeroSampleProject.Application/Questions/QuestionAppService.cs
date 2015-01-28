@@ -10,25 +10,27 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
-using AutoMapper;
 using ModuleZeroSampleProject.Questions.Dto;
 using ModuleZeroSampleProject.Users;
 
 namespace ModuleZeroSampleProject.Questions
 {
+    [AbpAuthorize]
     public class QuestionAppService : ApplicationService, IQuestionAppService
     {
         private readonly IRepository<Question> _questionRepository;
         private readonly IRepository<Answer> _answerRepository;
         private readonly IRepository<User, long> _userRepository;
         private readonly QuestionDomainService _questionDomainService;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public QuestionAppService(IRepository<Question> questionRepository, IRepository<Answer> answerRepository, IRepository<User, long> userRepository, QuestionDomainService questionDomainService)
+        public QuestionAppService(IRepository<Question> questionRepository, IRepository<Answer> answerRepository, IRepository<User, long> userRepository, QuestionDomainService questionDomainService, IUnitOfWorkManager unitOfWorkManager)
         {
             _questionRepository = questionRepository;
             _answerRepository = answerRepository;
             _userRepository = userRepository;
-            this._questionDomainService = questionDomainService;
+            _questionDomainService = questionDomainService;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public PagedResultOutput<QuestionDto> GetQuestions(GetQuestionsInput input)
@@ -94,7 +96,8 @@ namespace ModuleZeroSampleProject.Questions
             question.VoteCount--;
             return new VoteChangeOutput(question.VoteCount);
         }
-        
+
+        [AbpAuthorize("CanAnswerToQuestions")]
         public SubmitAnswerOutput SubmitAnswer(SubmitAnswerInput input)
         {
             var question = _questionRepository.Get(input.QuestionId);
@@ -109,7 +112,7 @@ namespace ModuleZeroSampleProject.Questions
                     CreatorUser = currentUser
                 });
 
-            UnitOfWorkScope.Current.SaveChanges();
+            _unitOfWorkManager.Current.SaveChanges();
 
             return new SubmitAnswerOutput
                    {

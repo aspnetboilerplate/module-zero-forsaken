@@ -6,9 +6,9 @@ using ModuleZeroSampleProject.MultiTenancy;
 
 namespace ModuleZeroSampleProject.Users
 {
-    public class ModuleZeroSampleProjectUserStore : AbpUserStore<Tenant, Role, User>
+    public class UserStore : AbpUserStore<Tenant, Role, User>
     {
-        public ModuleZeroSampleProjectUserStore(
+        public UserStore(
             IRepository<User, long> userRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,

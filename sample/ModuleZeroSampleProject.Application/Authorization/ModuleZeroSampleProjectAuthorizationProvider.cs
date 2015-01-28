@@ -9,12 +9,10 @@ namespace ModuleZeroSampleProject.Authorization
         {
             //TODO: Localize (Change FixedLocalizableString to LocalizableString)
 
-            var root = context.CreateRootGroup("QuestionAndAnswerSystem", new FixedLocalizableString("QuestionAndAnswerSystem"));
-
-            root.CreatePermission("CanCreateQuestions", new FixedLocalizableString("Can create questions"));
-            root.CreatePermission("CanDeleteQuestions", new FixedLocalizableString("Can delete questions"));
-            root.CreatePermission("CanDeleteAnswers", new FixedLocalizableString("Can delete answers"));
-            root.CreatePermission("CanAnswerToQuestions", new FixedLocalizableString("Can answer to questions"), isGrantedByDefault: true);
+            context.CreatePermission("CanCreateQuestions", new FixedLocalizableString("Can create questions"));
+            context.CreatePermission("CanDeleteQuestions", new FixedLocalizableString("Can delete questions"));
+            context.CreatePermission("CanDeleteAnswers", new FixedLocalizableString("Can delete answers"));
+            context.CreatePermission("CanAnswerToQuestions", new FixedLocalizableString("Can answer to questions"), isGrantedByDefault: true);
         }
     }
 }

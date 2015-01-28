@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Abp.Domain.Repositories;
@@ -19,7 +24,7 @@ namespace ModuleZeroSampleProject.Web.Controllers
 {
     public class AccountController : ModuleZeroSampleProjectControllerBase
     {
-        private readonly ModuleZeroSampleProjectUserManager _userManager;
+        private readonly UserManager _userManager;
 
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<Tenant> _tenantRepository;
@@ -33,13 +38,15 @@ namespace ModuleZeroSampleProject.Web.Controllers
             }
         }
 
-        public AccountController(ModuleZeroSampleProjectUserManager userManager, IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository, MultiTenancyConfig multiTenancy)
+        public AccountController(UserManager userManager, IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository, MultiTenancyConfig multiTenancy)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _tenantRepository = tenantRepository;
             _multiTenancy = multiTenancy;
         }
+
+        private static List<int> passedThreads = new List<int>();
 
         public ActionResult Login(string returnUrl = "")
         {
@@ -48,6 +55,33 @@ namespace ModuleZeroSampleProject.Web.Controllers
                 returnUrl = Request.ApplicationPath;
             }
 
+            var vaa1 = CallContext.LogicalGetData("halil") as string;
+            if (vaa1 != null)
+            {
+            }
+
+            if (passedThreads.Contains(Thread.CurrentThread.ManagedThreadId))
+            {
+                
+            }
+
+            passedThreads.Add(Thread.CurrentThread.ManagedThreadId);
+
+
+            CallContext.LogicalSetData("halil", "42");
+
+            AsyncHelper2.RunSync(async () =>
+                                 {
+                                     Thread.Sleep(1000);
+                                     var vaa = CallContext.LogicalGetData("halil");
+                                     if (vaa == null)
+                                     {
+                                         
+                                     }
+                                     //var usr = await _userRepository.GetAsync(1);
+                                     var x = 5;
+                                 });
+
             ViewBag.ReturnUrl = returnUrl;
             
             return View();
@@ -55,7 +89,7 @@ namespace ModuleZeroSampleProject.Web.Controllers
 
         [UnitOfWork]
         [HttpPost]
-        public virtual JsonResult Login(LoginViewModel loginModel, string returnUrl = "")
+        public virtual async Task<JsonResult> Login(LoginViewModel loginModel, string returnUrl = "")
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +100,7 @@ namespace ModuleZeroSampleProject.Web.Controllers
 
             if (!_multiTenancy.IsEnabled)
             {
-                user = _userManager.Find(loginModel.UsernameOrEmailAddress, loginModel.Password);
+                user = await _userManager.FindAsync(loginModel.UsernameOrEmailAddress, loginModel.Password);
                 if (user == null)
                 {
                     throw new UserFriendlyException("Invalid user name or password!");
@@ -74,13 +108,13 @@ namespace ModuleZeroSampleProject.Web.Controllers
             }
             else if (!string.IsNullOrWhiteSpace(loginModel.TenancyName))
             {
-                var tenant = _tenantRepository.FirstOrDefault(t => t.TenancyName == loginModel.TenancyName);
+                var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == loginModel.TenancyName);
                 if (tenant == null)
                 {
                     throw new UserFriendlyException("No tenant with name: " + loginModel.TenancyName);
                 }
 
-                user = _userRepository.FirstOrDefault(
+                user = await _userRepository.FirstOrDefaultAsync(
                     u =>
                         (u.UserName == loginModel.UsernameOrEmailAddress ||
                          u.EmailAddress == loginModel.UsernameOrEmailAddress)
@@ -104,9 +138,9 @@ namespace ModuleZeroSampleProject.Web.Controllers
             }
 
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie).Result;
-            identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.HasValue ? user.TenantId.Value.ToString() : null));
 
+            var identity = await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.HasValue ? user.TenantId.Value.ToString() : null));
             AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = loginModel.RememberMe }, identity);
 
             user.LastLoginTime = DateTime.Now;
@@ -123,6 +157,35 @@ namespace ModuleZeroSampleProject.Web.Controllers
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("Login");
+        }
+    }
+
+    internal static class AsyncHelper2
+    {
+        private static readonly TaskFactory _myTaskFactory = new TaskFactory(CancellationToken.None, TaskCreationOptions.None, TaskContinuationOptions.None, TaskScheduler.Default);
+
+        public static TResult RunSync<TResult>(Func<Task<TResult>> func)
+        {
+            CultureInfo cultureUi = CultureInfo.CurrentUICulture;
+            CultureInfo culture = CultureInfo.CurrentCulture;
+            return System.Threading.Tasks.TaskExtensions.Unwrap<TResult>(AsyncHelper2._myTaskFactory.StartNew<Task<TResult>>((Func<Task<TResult>>)(() =>
+            {
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = cultureUi;
+                return func();
+            }))).GetAwaiter().GetResult();
+        }
+
+        public static void RunSync(Func<Task> func)
+        {
+            CultureInfo cultureUi = CultureInfo.CurrentUICulture;
+            CultureInfo culture = CultureInfo.CurrentCulture;
+            System.Threading.Tasks.TaskExtensions.Unwrap(AsyncHelper2._myTaskFactory.StartNew<Task>((Func<Task>)(() =>
+            {
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = cultureUi;
+                return func();
+            }))).GetAwaiter().GetResult();
         }
     }
 }

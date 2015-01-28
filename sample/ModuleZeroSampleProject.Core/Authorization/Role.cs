@@ -1,4 +1,5 @@
 ﻿using Abp.Authorization.Roles;
+using Abp.Authorization.Users;
 using ModuleZeroSampleProject.MultiTenancy;
 using ModuleZeroSampleProject.Users;
 

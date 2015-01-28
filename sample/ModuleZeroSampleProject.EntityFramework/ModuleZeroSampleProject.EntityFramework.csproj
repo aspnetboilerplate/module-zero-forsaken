@@ -32,21 +32,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.5.0.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.0.4.4.0\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\packages\Abp.0.5.0.4\lib\net451\Abp.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.EntityFramework, Version=0.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.EntityFramework, Version=0.5.0.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.EntityFramework.0.4.4.0\lib\net451\Abp.EntityFramework.dll</HintPath>
+      <HintPath>..\packages\Abp.EntityFramework.0.5.0.4\lib\net451\Abp.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Zero, Version=0.4.3.2, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.Zero, Version=0.5.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.Zero.0.4.3.2\lib\net451\Abp.Zero.dll</HintPath>
+      <HintPath>..\packages\Abp.Zero.0.5.0.2\lib\net451\Abp.Zero.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Zero.EntityFramework, Version=0.4.3.2, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.Zero.EntityFramework, Version=0.5.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.Zero.EntityFramework.0.4.3.2\lib\net451\Abp.Zero.EntityFramework.dll</HintPath>
+      <HintPath>..\packages\Abp.Zero.EntityFramework.0.5.0.2\lib\net451\Abp.Zero.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -62,14 +62,23 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.0.34.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -106,6 +115,10 @@
     <Compile Include="Migrations\201411092108213_Removed_Message_Class.Designer.cs">
       <DependentUpon>201411092108213_Removed_Message_Class.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501272022518_ModuleZero_Upgrade_Pre_5_1.cs" />
+    <Compile Include="Migrations\201501272022518_ModuleZero_Upgrade_Pre_5_1.Designer.cs">
+      <DependentUpon>201501272022518_ModuleZero_Upgrade_Pre_5_1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModuleZeroSampleProjectDataModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -132,6 +145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201411092108213_Removed_Message_Class.resx">
       <DependentUpon>201411092108213_Removed_Message_Class.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501272022518_ModuleZero_Upgrade_Pre_5_1.resx">
+      <DependentUpon>201501272022518_ModuleZero_Upgrade_Pre_5_1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
