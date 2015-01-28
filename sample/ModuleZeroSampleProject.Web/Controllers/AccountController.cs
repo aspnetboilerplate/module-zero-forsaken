@@ -46,41 +46,12 @@ namespace ModuleZeroSampleProject.Web.Controllers
             _multiTenancy = multiTenancy;
         }
 
-        private static List<int> passedThreads = new List<int>();
-
         public ActionResult Login(string returnUrl = "")
         {
             if (string.IsNullOrWhiteSpace(returnUrl))
             {
                 returnUrl = Request.ApplicationPath;
             }
-
-            var vaa1 = CallContext.LogicalGetData("halil") as string;
-            if (vaa1 != null)
-            {
-            }
-
-            if (passedThreads.Contains(Thread.CurrentThread.ManagedThreadId))
-            {
-                
-            }
-
-            passedThreads.Add(Thread.CurrentThread.ManagedThreadId);
-
-
-            CallContext.LogicalSetData("halil", "42");
-
-            AsyncHelper2.RunSync(async () =>
-                                 {
-                                     Thread.Sleep(1000);
-                                     var vaa = CallContext.LogicalGetData("halil");
-                                     if (vaa == null)
-                                     {
-                                         
-                                     }
-                                     //var usr = await _userRepository.GetAsync(1);
-                                     var x = 5;
-                                 });
 
             ViewBag.ReturnUrl = returnUrl;
             
@@ -140,7 +111,11 @@ namespace ModuleZeroSampleProject.Web.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
             var identity = await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.HasValue ? user.TenantId.Value.ToString() : null));
+            if (user.TenantId.HasValue)
+            {
+                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
+            }
+
             AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = loginModel.RememberMe }, identity);
 
             user.LastLoginTime = DateTime.Now;
@@ -157,35 +132,6 @@ namespace ModuleZeroSampleProject.Web.Controllers
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("Login");
-        }
-    }
-
-    internal static class AsyncHelper2
-    {
-        private static readonly TaskFactory _myTaskFactory = new TaskFactory(CancellationToken.None, TaskCreationOptions.None, TaskContinuationOptions.None, TaskScheduler.Default);
-
-        public static TResult RunSync<TResult>(Func<Task<TResult>> func)
-        {
-            CultureInfo cultureUi = CultureInfo.CurrentUICulture;
-            CultureInfo culture = CultureInfo.CurrentCulture;
-            return System.Threading.Tasks.TaskExtensions.Unwrap<TResult>(AsyncHelper2._myTaskFactory.StartNew<Task<TResult>>((Func<Task<TResult>>)(() =>
-            {
-                Thread.CurrentThread.CurrentCulture = culture;
-                Thread.CurrentThread.CurrentUICulture = cultureUi;
-                return func();
-            }))).GetAwaiter().GetResult();
-        }
-
-        public static void RunSync(Func<Task> func)
-        {
-            CultureInfo cultureUi = CultureInfo.CurrentUICulture;
-            CultureInfo culture = CultureInfo.CurrentCulture;
-            System.Threading.Tasks.TaskExtensions.Unwrap(AsyncHelper2._myTaskFactory.StartNew<Task>((Func<Task>)(() =>
-            {
-                Thread.CurrentThread.CurrentCulture = culture;
-                Thread.CurrentThread.CurrentUICulture = cultureUi;
-                return func();
-            }))).GetAwaiter().GetResult();
         }
     }
 }
