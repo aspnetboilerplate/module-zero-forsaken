@@ -80,7 +80,10 @@ namespace Abp.Authorization.Users
         public async Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
             user.Password = passwordHash;
-            await _userRepository.UpdateAsync(user);
+            if (!user.IsTransient())
+            {
+                await _userRepository.UpdateAsync(user);
+            }
         }
 
         public async Task<string> GetPasswordHashAsync(TUser user)
@@ -96,7 +99,10 @@ namespace Abp.Authorization.Users
         public async Task SetEmailAsync(TUser user, string email)
         {
             user.EmailAddress = email;
-            await _userRepository.UpdateAsync(user);
+            if (!user.IsTransient())
+            {
+                await _userRepository.UpdateAsync(user);
+            }
         }
 
         public async Task<string> GetEmailAsync(TUser user)
@@ -112,7 +118,10 @@ namespace Abp.Authorization.Users
         public async Task SetEmailConfirmedAsync(TUser user, bool confirmed)
         {
             user.IsEmailConfirmed = confirmed;
-            await _userRepository.UpdateAsync(user);
+            if (!user.IsTransient())
+            {
+                await _userRepository.UpdateAsync(user);
+            }
         }
 
         public async Task<TUser> FindByEmailAsync(string email)
