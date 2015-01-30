@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Data.Common;
+using System.Data.Entity;
 using Abp.Zero.EntityFramework;
 using ModuleZeroSampleProject.Authorization;
 using ModuleZeroSampleProject.MultiTenancy;
@@ -33,6 +34,12 @@ namespace ModuleZeroSampleProject.EntityFramework
          */
         public ModuleZeroSampleProjectDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
+        {
+
+        }
+
+        public ModuleZeroSampleProjectDbContext(DbConnection connection)
+            : base(connection, true)
         {
 
         }

@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
+using Abp.AutoMapper;
 using Abp.Modules;
 using ModuleZeroSampleProject.Authorization;
 
 namespace ModuleZeroSampleProject
 {
-    [DependsOn(typeof(ModuleZeroSampleProjectCoreModule))]
+    [DependsOn(typeof(ModuleZeroSampleProjectCoreModule), typeof(AbpAutoMapperModule))]
     public class ModuleZeroSampleProjectApplicationModule : AbpModule
     {
         public override void Initialize()
