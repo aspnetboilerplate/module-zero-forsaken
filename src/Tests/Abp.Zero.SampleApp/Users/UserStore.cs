@@ -1,16 +1,18 @@
 ﻿using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Runtime.Session;
+using Abp.Zero.SampleApp.MultiTenancy;
+using Abp.Zero.SampleApp.Roles;
 
-namespace Abp.Tests._TestBasis
+namespace Abp.Zero.SampleApp.Users
 {
-    public class TestUserStore : AbpUserStore<TestTenant, TestRole, TestUser>
+    public class UserStore : AbpUserStore<Tenant, Role, User>
     {
-        public TestUserStore(
-            IRepository<TestUser, long> userRepository,
+        public UserStore(
+            IRepository<User, long> userRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
-            IRepository<TestRole> roleRepository,
+            IRepository<Role> roleRepository,
             IAbpSession session)
             : base(
                 userRepository,

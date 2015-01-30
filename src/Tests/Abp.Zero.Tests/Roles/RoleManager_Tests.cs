@@ -2,32 +2,21 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using Abp.Authorization;
-using Abp.Tests._TestBasis;
-using Castle.MicroKernel.Registration;
+using Abp.Zero.SampleApp.Roles;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Tests.Authorization.Roles
+namespace Abp.Zero.SampleApp.Tests.Roles
 {
-    public class RoleManager_Tests : TestBase
+    public class RoleManager_Tests : SampleAppTestBase
     {
-        private readonly TestRoleManager _roleManager;
+        private readonly RoleManager _roleManager;
         private readonly IPermissionManager _permissionManager;
 
         public RoleManager_Tests()
         {
-            _permissionManager = FakePermissionManagerBuilder.Build(
-                new FakePermissionManagerBuilder.FakePermissionInfo("Permission1"),
-                new FakePermissionManagerBuilder.FakePermissionInfo("Permission2"),
-                new FakePermissionManagerBuilder.FakePermissionInfo("Permission3", true),
-                new FakePermissionManagerBuilder.FakePermissionInfo("Permission4", true)
-                );
-
-            LocalIocManager.IocContainer.Register(
-                Component.For<IPermissionManager>().UsingFactoryMethod(() => _permissionManager).LifestyleSingleton()
-                );
-
-            _roleManager = LocalIocManager.Resolve<TestRoleManager>();
+            _roleManager = LocalIocManager.Resolve<RoleManager>();
+            _permissionManager = LocalIocManager.Resolve<IPermissionManager>();
         }
 
         [Fact]
@@ -70,7 +59,6 @@ namespace Abp.Tests.Authorization.Roles
                                     };
 
             await _roleManager.SetGrantedPermissionsAsync(role1, newPermissionList);
-            await DbContext.SaveChangesAsync();
 
             grantedPermissions = await _roleManager.GetGrantedPermissionsAsync(role1);
             
@@ -80,29 +68,29 @@ namespace Abp.Tests.Authorization.Roles
             grantedPermissions.ShouldContain(p => p.Name == "Permission3");
         }
 
-        private async Task ProhibitPermission(TestRole role, string permissionName)
+        private async Task ProhibitPermission(Role role, string permissionName)
         {
             await _roleManager.ProhibitPermissionAsync(role, _permissionManager.GetPermission(permissionName));
-            await DbContext.SaveChangesAsync();
             (await _roleManager.HasPermissionAsync(role, _permissionManager.GetPermission(permissionName))).ShouldBe(false);
         }
 
-        private async Task GrantPermission(TestRole role, string permissionName)
+        private async Task GrantPermission(Role role, string permissionName)
         {
             await _roleManager.GrantPermissionAsync(role, _permissionManager.GetPermission(permissionName));
-            await DbContext.SaveChangesAsync();
             (await _roleManager.HasPermissionAsync(role, _permissionManager.GetPermission(permissionName))).ShouldBe(true);
         }
 
-        private async Task<TestRole> CreateRole(string name)
+        private async Task<Role> CreateRole(string name)
         {
-            var role = new TestRole(null, name, name);
+            var role = new Role(null, name, name);
 
             (await _roleManager.CreateAsync(role)).Succeeded.ShouldBe(true);
-            DbContext.SaveChanges();
-
-            var createdRole = await DbContext.Roles.FirstOrDefaultAsync(r => r.Name == name);
-            createdRole.ShouldNotBe(null);
+            
+            await UsingDbContext(async context =>
+            {
+                var createdRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == name);
+                createdRole.ShouldNotBe(null);
+            });
 
             return role;
         }

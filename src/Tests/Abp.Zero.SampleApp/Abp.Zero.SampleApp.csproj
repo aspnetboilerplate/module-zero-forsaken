@@ -1,20 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3C90D572-EA4E-499C-AF95-407BFA8A36B8}</ProjectGuid>
+    <ProjectGuid>{59AA0119-F76E-433F-B9D1-385F51A13A17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abp.Tests</RootNamespace>
-    <AssemblyName>Abp.Zero.Tests</AssemblyName>
+    <RootNamespace>Abp.Zero.SampleApp</RootNamespace>
+    <AssemblyName>Abp.Zero.SampleApp</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>93a37185</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,13 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.5.0.4, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.5.1.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Abp.0.5.0.4\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\..\packages\Abp.0.5.1.1\lib\net451\Abp.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.EntityFramework, Version=0.5.0.4, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.EntityFramework, Version=0.5.1.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Abp.EntityFramework.0.5.0.4\lib\net451\Abp.EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\Abp.EntityFramework.0.5.1.1\lib\net451\Abp.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -52,31 +50,23 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Effort, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Effort.EF6.1.1.4\lib\net45\Effort.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework">
       <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NMemory">
-      <HintPath>..\..\packages\NMemory.1.0.1\lib\net45\NMemory.dll</HintPath>
+    <Reference Include="Nito.AsyncEx">
+      <HintPath>..\..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
     </Reference>
-    <Reference Include="NSubstitute, Version=1.8.1.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NSubstitute.1.8.1.0\lib\net45\NSubstitute.dll</HintPath>
+    <Reference Include="Nito.AsyncEx.Concurrent">
+      <HintPath>..\..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
     </Reference>
-    <Reference Include="Shouldly, Version=2.3.1.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Shouldly.2.3.1\lib\net40\Shouldly.dll</HintPath>
+    <Reference Include="Nito.AsyncEx.Enlightenment">
+      <HintPath>..\..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable">
@@ -84,33 +74,26 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit">
-      <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authorization\FakePermissionManagerBuilder.cs" />
-    <Compile Include="Authorization\Roles\RoleManager_Tests.cs" />
-    <Compile Include="Dependency\Dependency_Tests.cs" />
-    <Compile Include="_TestBasis\TestBase.cs" />
-    <Compile Include="_TestBasis\TestDbContext.cs" />
-    <Compile Include="_TestBasis\TestEfRepositoryBase.cs" />
-    <Compile Include="_TestBasis\TestRole.cs" />
-    <Compile Include="_TestBasis\TestRoleManager.cs" />
-    <Compile Include="_TestBasis\TestRoleStore.cs" />
-    <Compile Include="_TestBasis\TestSession.cs" />
-    <Compile Include="_TestBasis\TestTenant.cs" />
-    <Compile Include="_TestBasis\TestUser.cs" />
-    <Compile Include="Authorization\Users\UserRepository_Tests.cs" />
+    <Compile Include="Authorization\AppPermissionChecker.cs" />
+    <Compile Include="EntityFramework\AppDbContext.cs" />
+    <Compile Include="EntityFramework\AppEfRepositoryBase.cs" />
+    <Compile Include="MultiTenancy\Tenant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="_TestBasis\TestUserManager.cs" />
-    <Compile Include="_TestBasis\TestUserStore.cs" />
+    <Compile Include="Roles\Role.cs" />
+    <Compile Include="Roles\RoleManager.cs" />
+    <Compile Include="Roles\RoleStore.cs" />
+    <Compile Include="SampleAppModule.cs" />
+    <Compile Include="Authorization\AppAuthorizationProvider.cs" />
+    <Compile Include="Users\User.cs" />
+    <Compile Include="Users\UserManager.cs" />
+    <Compile Include="Users\UserStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -118,16 +101,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj">
-      <Project>{B728E703-345B-4553-A8B0-B28BB6738688}</Project>
+      <Project>{b728e703-345b-4553-a8b0-b28bb6738688}</Project>
       <Name>Abp.Zero.EntityFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp.Zero\Abp.Zero.csproj">
-      <Project>{70D916F2-9BFF-43DA-B3F7-3E0655114D48}</Project>
+      <Project>{70d916f2-9bff-43da-b3f7-3e0655114d48}</Project>
       <Name>Abp.Zero</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -136,7 +116,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
