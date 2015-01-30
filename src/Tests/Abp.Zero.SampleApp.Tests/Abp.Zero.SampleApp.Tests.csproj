@@ -110,13 +110,14 @@
   <ItemGroup>
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
-    <Compile Include="TestAuthorizationProvider.cs" />
     <Compile Include="Users\UserRepository_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj">
