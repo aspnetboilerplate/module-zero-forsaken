@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorization\AppPermissionChecker.cs" />
+    <Compile Include="Configuration\AppSettingProvider.cs" />
     <Compile Include="EntityFramework\AppDbContext.cs" />
     <Compile Include="EntityFramework\AppEfRepositoryBase.cs" />
     <Compile Include="MultiTenancy\Tenant.cs" />

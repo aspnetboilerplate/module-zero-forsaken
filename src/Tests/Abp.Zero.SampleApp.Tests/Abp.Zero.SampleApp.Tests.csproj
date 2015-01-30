@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Settings_Tests.cs" />
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
     <Compile Include="Users\UserRepository_Tests.cs" />
