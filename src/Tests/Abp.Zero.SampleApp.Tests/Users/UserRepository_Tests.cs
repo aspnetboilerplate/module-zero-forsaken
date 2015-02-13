@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
@@ -75,28 +77,36 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Should_Change_Roles()
         {
-            var user = await _userManager.FindByNameAsync("user1");
+            var unitOfWorkManager = LocalIocManager.Resolve<IUnitOfWorkManager>();
+            using (var uow = unitOfWorkManager.Begin(new UnitOfWorkOptions { AsyncFlowOption = TransactionScopeAsyncFlowOption.Enabled }))
+            {
+                var user = await _userManager.FindByNameAsync("user1");
 
-            //Check initial role assignments
-            var roles = await _userManager.GetRolesAsync(user.Id);
-            roles.ShouldContain("role1");
-            roles.ShouldNotContain("role2");
+                //Check initial role assignments
+                var roles = await _userManager.GetRolesAsync(user.Id);
+                roles.ShouldContain("role1");
+                roles.ShouldNotContain("role2");
 
-            //Delete all role assignments
-            await _userManager.RemoveFromRolesAsync(user.Id, "role1");
+                //Delete all role assignments
+                await _userManager.RemoveFromRolesAsync(user.Id, "role1");
+                await unitOfWorkManager.Current.SaveChangesAsync();
 
-            //Check role assignments again
-            roles = await _userManager.GetRolesAsync(user.Id);
-            roles.ShouldNotContain("role1");
-            roles.ShouldNotContain("role2");
+                //Check role assignments again
+                roles = await _userManager.GetRolesAsync(user.Id);
+                roles.ShouldNotContain("role1");
+                roles.ShouldNotContain("role2");
 
-            //Add to roles
-            await _userManager.AddToRolesAsync(user.Id, "role1", "role2");
+                //Add to roles
+                await _userManager.AddToRolesAsync(user.Id, "role1", "role2");
+                await unitOfWorkManager.Current.SaveChangesAsync();
 
-            //Check role assignments again
-            roles = await _userManager.GetRolesAsync(user.Id);
-            roles.ShouldContain("role1");
-            roles.ShouldContain("role2");
+                //Check role assignments again
+                roles = await _userManager.GetRolesAsync(user.Id);
+                roles.ShouldContain("role1");
+                roles.ShouldContain("role2");
+
+                await uow.CompleteAsync();
+            }
         }
     }
 }
