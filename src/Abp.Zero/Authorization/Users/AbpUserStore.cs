@@ -126,7 +126,9 @@ namespace Abp.Authorization.Users
 
         public async Task<TUser> FindByEmailAsync(string email)
         {
-            return await _userRepository.FirstOrDefaultAsync(user => user.EmailAddress == email);
+            return await _userRepository.FirstOrDefaultAsync(
+                user => user.EmailAddress == email && user.TenantId == _session.TenantId
+                );
         }
 
         public async Task AddLoginAsync(TUser user, UserLoginInfo login)
