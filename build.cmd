@@ -9,4 +9,4 @@ if not exist tools\Cake\Cake.exe (
 )
 
 echo Starting Cake...
-tools\Cake\Cake.exe build.cake -target=Default -verbosity=diagnostic
+tools\Cake\Cake.exe build.cake -target=Package -verbosity=diagnostic
