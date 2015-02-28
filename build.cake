@@ -15,7 +15,7 @@ Task("Build")
    .Does(() =>
 {
    // Build the solution using MSBuild.
-   MSBuild("./src/Abp.Zeri.sln", settings => 
+   MSBuild("./src/Abp.Zero.sln", settings => 
       settings.SetConfiguration(config));     
 });
 
