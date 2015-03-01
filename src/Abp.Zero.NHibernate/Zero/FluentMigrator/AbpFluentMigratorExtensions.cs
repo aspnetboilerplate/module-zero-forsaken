@@ -44,7 +44,7 @@ namespace Abp.Zero.FluentMigrator
         }
 
         /// <summary>
-        /// Adds TenantId column to a table as not nullable. See <see cref="AbpTenant"/>.
+        /// Adds TenantId column to a table as not nullable. See <see cref="AbpTenant{TTenant,TUser}"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsRequired(this ICreateTableWithColumnSyntax table)
         {
@@ -53,7 +53,7 @@ namespace Abp.Zero.FluentMigrator
         }
 
         /// <summary>
-        /// Adds TenantId column to a table as nullable. See <see cref="AbpTenant"/>.
+        /// Adds TenantId column to a table as nullable. See <see cref="AbpTenant{TTenant,TUser}"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsNullable(this ICreateTableWithColumnSyntax table)
         {
@@ -107,6 +107,5 @@ namespace Abp.Zero.FluentMigrator
         }
 
         #endregion
-
     }
 }

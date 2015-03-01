@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Authorization.Users;
 using Abp.Configuration;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.MultiTenancy
@@ -10,7 +11,7 @@ namespace Abp.MultiTenancy
     /// Represents a Tenant of the application.
     /// </summary>
     [Table("AbpTenants")]
-    public class AbpTenant<TTenant, TUser> : AuditedEntity<int, TUser>
+    public class AbpTenant<TTenant, TUser> : AuditedEntity<int, TUser>, ISuspendable
         where TUser : AbpUser<TTenant,TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
@@ -24,6 +25,12 @@ namespace Abp.MultiTenancy
         /// Display name of the Tenant.
         /// </summary>
         public virtual string Name { get; set; }
+
+        /// <summary>
+        /// Is this tenant suspended?
+        /// If as tenant is suspended, no user of this tenant can use the application.
+        /// </summary>
+        public bool IsSuspended { get; set; }
 
         /// <summary>
         /// Defined settings for this tenant.

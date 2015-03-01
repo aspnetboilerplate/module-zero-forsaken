@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Configuration;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
@@ -13,7 +14,7 @@ namespace Abp.Authorization.Users
     /// Represents a user.
     /// </summary>
     [Table("AbpUsers")]
-    public class AbpUser<TTenant, TUser> : FullAuditedEntity<long, TUser>, IUser<long>, IMayHaveTenant<TTenant, TUser>
+    public class AbpUser<TTenant, TUser> : FullAuditedEntity<long, TUser>, IUser<long>, IMayHaveTenant<TTenant, TUser>, ISuspendable
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
@@ -123,6 +124,12 @@ namespace Abp.Authorization.Users
         /// The last time this user entered to the system.
         /// </summary>
         public virtual DateTime? LastLoginTime { get; set; }
+
+        /// <summary>
+        /// Is this user suspended?
+        /// If as user is suspended, he/she can not use the application.
+        /// </summary>
+        public bool IsSuspended { get; set; }
 
         /// <summary>
         /// Login definitions for this user.
