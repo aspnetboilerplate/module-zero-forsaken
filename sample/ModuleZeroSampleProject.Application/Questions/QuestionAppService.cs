@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -51,10 +52,10 @@ namespace ModuleZeroSampleProject.Questions
                    };
         }
 
-        [AbpAuthorize("CanCreateQuestions")]
-        public void CreateQuestion(CreateQuestionInput input)
+        [AbpAuthorize("CanCreateQuestions")] //An example of permission checking
+        public async Task CreateQuestion(CreateQuestionInput input)
         {
-            _questionRepository.Insert(new Question(input.Title, input.Text));
+            await _questionRepository.InsertAsync(new Question(input.Title, input.Text));
         }
 
         public GetQuestionOutput GetQuestion(GetQuestionInput input)
