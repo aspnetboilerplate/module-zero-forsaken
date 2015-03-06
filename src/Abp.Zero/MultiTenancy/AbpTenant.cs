@@ -11,8 +11,8 @@ namespace Abp.MultiTenancy
     /// Represents a Tenant of the application.
     /// </summary>
     [Table("AbpTenants")]
-    public class AbpTenant<TTenant, TUser> : AuditedEntity<int, TUser>, ISuspendable
-        where TUser : AbpUser<TTenant,TUser>
+    public class AbpTenant<TTenant, TUser> : AuditedEntity<int, TUser>, IPassivable
+        where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
         /// <summary>
@@ -27,10 +27,10 @@ namespace Abp.MultiTenancy
         public virtual string Name { get; set; }
 
         /// <summary>
-        /// Is this tenant suspended?
-        /// If as tenant is suspended, no user of this tenant can use the application.
+        /// Is this tenant active?
+        /// If as tenant is not active, no user of this tenant can use the application.
         /// </summary>
-        public bool IsSuspended { get; set; }
+        public virtual bool IsActive { get; set; }
 
         /// <summary>
         /// Defined settings for this tenant.
@@ -43,7 +43,7 @@ namespace Abp.MultiTenancy
         /// </summary>
         public AbpTenant()
         {
-            
+            IsActive = true;
         }
 
         /// <summary>
@@ -52,6 +52,7 @@ namespace Abp.MultiTenancy
         /// <param name="tenancyName">UNIQUE name of this Tenant</param>
         /// <param name="name">Display name of the Tenant</param>
         public AbpTenant(string tenancyName, string name)
+            : this()
         {
             TenancyName = tenancyName;
             Name = name;

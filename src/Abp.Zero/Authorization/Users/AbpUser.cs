@@ -14,7 +14,7 @@ namespace Abp.Authorization.Users
     /// Represents a user.
     /// </summary>
     [Table("AbpUsers")]
-    public class AbpUser<TTenant, TUser> : FullAuditedEntity<long, TUser>, IUser<long>, IMayHaveTenant<TTenant, TUser>, ISuspendable
+    public class AbpUser<TTenant, TUser> : FullAuditedEntity<long, TUser>, IUser<long>, IMayHaveTenant<TTenant, TUser>, IPassivable
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
@@ -126,10 +126,10 @@ namespace Abp.Authorization.Users
         public virtual DateTime? LastLoginTime { get; set; }
 
         /// <summary>
-        /// Is this user suspended?
-        /// If as user is suspended, he/she can not use the application.
+        /// Is this user active?
+        /// If as user is not active, he/she can not use the application.
         /// </summary>
-        public bool IsSuspended { get; set; }
+        public virtual bool IsActive { get; set; }
 
         /// <summary>
         /// Login definitions for this user.
@@ -154,5 +154,10 @@ namespace Abp.Authorization.Users
         /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<Setting> Settings { get; set; }
+
+        public AbpUser()
+        {
+            IsActive = true;
+        }
     }
 }
