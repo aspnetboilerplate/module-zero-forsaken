@@ -16,11 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{96C4AD
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{8633A076-A52A-470B-B941-BD865A80287C}"
-	ProjectSection(SolutionItems) = preProject
-		SeedDataBackup.txt = SeedDataBackup.txt
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34AA52E9-B75E-46EF-AEBB-460AED9A0767}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.SampleApp", "Tests\Abp.Zero.SampleApp\Abp.Zero.SampleApp.csproj", "{59AA0119-F76E-433F-B9D1-385F51A13A17}"
