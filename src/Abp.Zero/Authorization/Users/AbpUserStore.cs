@@ -70,58 +70,8 @@ namespace Abp.Authorization.Users
         public async Task<TUser> FindByNameAsync(string userName)
         {
             return await _userRepository.FirstOrDefaultAsync(
-                user =>
-                    user.TenantId == _session.TenantId && //TODO: Should filter automatically when ABP implements it
-                    (user.UserName == userName || user.EmailAddress == userName) &&
-                    user.IsEmailConfirmed
+                user => user.TenantId == _session.TenantId && user.UserName == userName
                 );
-        }
-
-        public async Task SetPasswordHashAsync(TUser user, string passwordHash)
-        {
-            user.Password = passwordHash;
-            if (!user.IsTransient())
-            {
-                await _userRepository.UpdateAsync(user);
-            }
-        }
-
-        public async Task<string> GetPasswordHashAsync(TUser user)
-        {
-            return (await _userRepository.GetAsync(user.Id)).Password;
-        }
-
-        public async Task<bool> HasPasswordAsync(TUser user)
-        {
-            return !string.IsNullOrEmpty((await _userRepository.GetAsync(user.Id)).Password);
-        }
-
-        public async Task SetEmailAsync(TUser user, string email)
-        {
-            user.EmailAddress = email;
-            if (!user.IsTransient())
-            {
-                await _userRepository.UpdateAsync(user);
-            }
-        }
-
-        public async Task<string> GetEmailAsync(TUser user)
-        {
-            return (await _userRepository.GetAsync(user.Id)).EmailAddress;
-        }
-
-        public async Task<bool> GetEmailConfirmedAsync(TUser user)
-        {
-            return (await _userRepository.GetAsync(user.Id)).IsEmailConfirmed;
-        }
-
-        public async Task SetEmailConfirmedAsync(TUser user, bool confirmed)
-        {
-            user.IsEmailConfirmed = confirmed;
-            if (!user.IsTransient())
-            {
-                await _userRepository.UpdateAsync(user);
-            }
         }
 
         public async Task<TUser> FindByEmailAsync(string email)
@@ -129,6 +79,58 @@ namespace Abp.Authorization.Users
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.EmailAddress == email && user.TenantId == _session.TenantId
                 );
+        }
+
+        /// <summary>
+        /// Tries to find a user with user name or email address.
+        /// </summary>
+        /// <param name="userNameOrEmailAddress">User name or email address</param>
+        /// <returns>User or null</returns>
+        public async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        {
+            return await _userRepository.FirstOrDefaultAsync(
+                user => 
+                    user.TenantId == _session.TenantId && 
+                    (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
+                );
+        }
+
+        public Task SetPasswordHashAsync(TUser user, string passwordHash)
+        {
+            user.Password = passwordHash;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetPasswordHashAsync(TUser user)
+        {
+            return Task.FromResult(user.Password);
+        }
+
+        public Task<bool> HasPasswordAsync(TUser user)
+        {
+            return Task.FromResult(!string.IsNullOrEmpty(user.Password));
+        }
+
+        public Task SetEmailAsync(TUser user, string email)
+        {
+            user.EmailAddress = email;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetEmailAsync(TUser user)
+        {
+            return Task.FromResult(user.EmailAddress);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        {
+            return Task.FromResult(user.IsEmailConfirmed);
+        }
+
+        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        {
+            user.IsEmailConfirmed = confirmed;
+            return Task.FromResult(0);
         }
 
         public async Task AddLoginAsync(TUser user, UserLoginInfo login)
@@ -168,17 +170,18 @@ namespace Abp.Authorization.Users
                 return null;
             }
 
-            return await _userRepository.FirstOrDefaultAsync(userLogin.UserId);
+            return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId && u.TenantId == _session.TenantId);
         }
 
         public async Task AddToRoleAsync(TUser user, string roleName)
         {
             var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);
-            await _userRoleRepository.InsertAsync(new UserRole
-                                                  {
-                                                      UserId = user.Id,
-                                                      RoleId = role.Id
-                                                  });
+            await _userRoleRepository.InsertAsync(
+                new UserRole
+                {
+                    UserId = user.Id,
+                    RoleId = role.Id
+                });
         }
 
         public async Task RemoveFromRoleAsync(TUser user, string roleName)
