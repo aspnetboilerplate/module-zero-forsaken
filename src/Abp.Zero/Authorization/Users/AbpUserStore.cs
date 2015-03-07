@@ -88,9 +88,20 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
+            return await FindByNameOrEmailAsync(_session.TenantId, userNameOrEmailAddress);
+        }
+
+        /// <summary>
+        /// Tries to find a user with user name or email address.
+        /// </summary>
+        /// <param name="tenantId">Tenant Id</param>
+        /// <param name="userNameOrEmailAddress">User name or email address</param>
+        /// <returns>User or null</returns>
+        public async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
+        {
             return await _userRepository.FirstOrDefaultAsync(
-                user => 
-                    user.TenantId == _session.TenantId && 
+                user =>
+                    user.TenantId == tenantId &&
                     (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
                 );
         }

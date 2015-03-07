@@ -112,8 +112,10 @@
     <Compile Include="Configuration\Settings_Tests.cs" />
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
+    <Compile Include="Users\UserLogin_Tests.cs" />
     <Compile Include="Users\UserRepository_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Users\UserRole_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

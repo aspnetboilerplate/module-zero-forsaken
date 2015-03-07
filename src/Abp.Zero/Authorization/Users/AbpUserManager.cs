@@ -1,8 +1,14 @@
-using System.Linq;
+using System;
+using System.Globalization;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.MultiTenancy;
+using Abp.Runtime.Security;
+using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -16,11 +22,21 @@ namespace Abp.Authorization.Users
         where TUser : AbpUser<TTenant, TUser>
     {
         private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
+        private readonly IRepository<TTenant> _tenantRepository;
+        private readonly MultiTenancyConfig _multiTenancyConfig;
+        private readonly AbpUserStore<TTenant, TRole, TUser> _abpUserStore;
 
-        protected AbpUserManager(AbpUserStore<TTenant, TRole, TUser> userStore, AbpRoleManager<TTenant, TRole, TUser> roleManager)
+        protected AbpUserManager(
+            AbpUserStore<TTenant, TRole, TUser> userStore,
+            AbpRoleManager<TTenant, TRole, TUser> roleManager,
+            IRepository<TTenant> tenantRepository,
+            MultiTenancyConfig multiTenancyConfig)
             : base(userStore)
         {
+            _abpUserStore = userStore;
             _roleManager = roleManager;
+            _tenantRepository = tenantRepository;
+            _multiTenancyConfig = multiTenancyConfig;
         }
 
         /// <summary>
@@ -39,6 +55,111 @@ namespace Abp.Authorization.Users
             }
 
             return false;
+        }
+
+        public async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        {
+            return await _abpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
+        }
+
+        public async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
+        {
+            //TODO: Email confirmation check? (optional)
+
+            if (userNameOrEmailAddress.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("userNameOrEmailAddress");
+            }
+
+            if (plainPassword.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("plainPassword");                
+            }
+
+            TUser user;
+
+            if (!_multiTenancyConfig.IsEnabled)
+            {
+                //Log in with default denant
+                user = await FindByNameOrEmailAsync(userNameOrEmailAddress);
+                if (user == null)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(tenancyName))
+                {
+                    //Log in as tenancy owner user
+                    user = await _abpUserStore.FindByNameOrEmailAsync(null, userNameOrEmailAddress);
+                }
+                else
+                {
+                    //Log in as tenant user
+                    var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+                    if (tenant == null)
+                    {
+                        return new AbpLoginResult(AbpLoginResultType.InvalidTenancyName);
+                    }
+
+                    if (!tenant.IsActive)
+                    {
+                        return new AbpLoginResult(AbpLoginResultType.TenantIsNotActive);
+                    }
+
+                    user = await _abpUserStore.FindByNameOrEmailAsync(tenant.Id, userNameOrEmailAddress);
+                }
+                
+                if (user == null)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
+                }
+            }
+
+            var verificationResult = new PasswordHasher().VerifyHashedPassword(user.Password, plainPassword);
+            if (verificationResult != PasswordVerificationResult.Success)
+            {
+                return new AbpLoginResult(AbpLoginResultType.InvalidPassword);
+            }
+
+            if (!user.IsActive)
+            {
+                return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
+            }
+
+            user.LastLoginTime = DateTime.Now;
+
+            await Store.UpdateAsync(user);
+
+            var identity = await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            if (user.TenantId.HasValue)
+            {
+                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
+            }
+
+            return new AbpLoginResult(user, identity);
+        }
+
+        public class AbpLoginResult
+        {
+            public AbpLoginResultType Result { get; private set; }
+
+            public TUser User { get; private set; }
+
+            public ClaimsIdentity Identity { get; private set; }
+
+            public AbpLoginResult(AbpLoginResultType result)
+            {
+                Result = result;
+            }
+
+            public AbpLoginResult(TUser user, ClaimsIdentity identity)
+                :this(AbpLoginResultType.Success)
+            {
+                User = user;
+                Identity = identity;
+            }
         }
     }
 }
