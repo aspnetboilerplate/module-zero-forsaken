@@ -19,6 +19,7 @@ namespace Abp.Authorization.Users
         IUserLoginStore<TUser, long>,
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
+        IUserPermissionStore<TTenant, TUser>,
         ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
@@ -28,6 +29,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<TRole> _roleRepository;
+        private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IAbpSession _session;
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace Abp.Authorization.Users
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
+            IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IAbpSession session)
         {
             _userRepository = userRepository;
@@ -45,6 +48,7 @@ namespace Abp.Authorization.Users
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
             _session = session;
+            _userPermissionSettingRepository = userPermissionSettingRepository;
         }
 
         public async Task CreateAsync(TUser user)
@@ -227,6 +231,52 @@ namespace Abp.Authorization.Users
         public IQueryable<TUser> Users
         {
             get { return _userRepository.GetAll(); }
+        }
+
+        public async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        {
+            if (await HasPermissionAsync(user, permissionGrant))
+            {
+                return;
+            }
+
+            await _userPermissionSettingRepository.InsertAsync(
+                new UserPermissionSetting
+                {
+                    UserId = user.Id,
+                    Name = permissionGrant.Name,
+                    IsGranted = permissionGrant.IsGranted
+                });
+        }
+
+        public async Task RemovePermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        {
+            await _userPermissionSettingRepository.DeleteAsync(
+                permissionSetting => permissionSetting.UserId == user.Id &&
+                                     permissionSetting.Name == permissionGrant.Name &&
+                                     permissionSetting.IsGranted == permissionGrant.IsGranted
+                );
+        }
+
+        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TUser user)
+        {
+            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == user.Id))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
+        }
+
+        public async Task<bool> HasPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        {
+            return await _userPermissionSettingRepository.FirstOrDefaultAsync(
+                p => p.UserId == user.Id &&
+                     p.Name == permissionGrant.Name &&
+                     p.IsGranted == permissionGrant.IsGranted
+                ) != null;
+        }
+
+        public async Task RemoveAllPermissionSettingsAsync(TUser user)
+        {
+            await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
         }
 
         public void Dispose()

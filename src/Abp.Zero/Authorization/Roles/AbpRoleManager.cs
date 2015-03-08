@@ -51,7 +51,7 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> HasPermissionAsync(string roleName, string permissionName)
         {
-            return await HasPermissionAsync(await GetRole(roleName), GetPermission(permissionName));
+            return await HasPermissionAsync(await GetRole(roleName), _permissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> HasPermissionAsync(int roleId, string permissionName)
         {
-            return await HasPermissionAsync(await GetRole(roleId), GetPermission(permissionName));
+            return await HasPermissionAsync(await GetRole(roleId), _permissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
@@ -99,8 +99,7 @@ namespace Abp.Authorization.Roles
         }
 
         /// <summary>
-        /// Gets granted permission names for a role.
-        /// Prohibits all other permissions.
+        /// Gets granted permissions for a role.
         /// </summary>
         /// <param name="role">Role</param>
         /// <returns>List of granted permissions</returns>
@@ -232,17 +231,6 @@ namespace Abp.Authorization.Roles
             }
 
             return base.DeleteAsync(role);
-        }
-
-        private Permission GetPermission(string permissionName)
-        {
-            var permission = _permissionManager.GetPermissionOrNull(permissionName);
-            if (permission == null)
-            {
-                throw new AbpException("There is no permission with name: " + permissionName);
-            }
-
-            return permission;
         }
 
         private async Task<TRole> GetRole(int roleId)

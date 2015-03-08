@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
 using Abp.Zero.SampleApp.Users;
 using Shouldly;
 using Xunit;

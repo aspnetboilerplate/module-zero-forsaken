@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
@@ -21,22 +23,38 @@ namespace Abp.Authorization.Users
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
+        private IUserPermissionStore<TTenant, TUser> UserPermissionStore
+        {
+            get
+            {
+                if (!(Store is IUserPermissionStore<TTenant, TUser>))
+                {
+                    throw new AbpException("Store is not IUserPermissionStore");
+                }
+
+                return Store as IUserPermissionStore<TTenant, TUser>;
+            }
+        }
+
+        private readonly IPermissionManager _permissionManager;
         private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly MultiTenancyConfig _multiTenancyConfig;
         private readonly AbpUserStore<TTenant, TRole, TUser> _abpUserStore;
-
+        
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
             AbpRoleManager<TTenant, TRole, TUser> roleManager,
             IRepository<TTenant> tenantRepository,
-            MultiTenancyConfig multiTenancyConfig)
+            MultiTenancyConfig multiTenancyConfig, 
+            IPermissionManager permissionManager)
             : base(userStore)
         {
             _abpUserStore = userStore;
             _roleManager = roleManager;
             _tenantRepository = tenantRepository;
             _multiTenancyConfig = multiTenancyConfig;
+            _permissionManager = permissionManager;
         }
 
         /// <summary>
@@ -44,11 +62,42 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="permissionName">Permission name</param>
-        public async Task<bool> IsGrantedAsync(long userId, string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
-            foreach (var role in await GetRolesAsync(userId))
+            return await IsGrantedAsync(
+                await GetUser(userId),
+                _permissionManager.GetPermission(permissionName)
+                );
+        }
+
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="permission">Permission</param>
+        public virtual async Task<bool> IsGrantedAsync(TUser user, Permission permission)
+        {
+            //Check for user-specific value
+            if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, false)))
             {
-                if (await _roleManager.HasPermissionAsync(role, permissionName))
+                return false;
+            }
+
+            if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, true)))
+            {
+                return true;
+            }
+
+            //Check for roles
+            var roles = await GetRolesAsync(user.Id);
+            if (!roles.Any())
+            {
+                return permission.IsGrantedByDefault;
+            }
+
+            foreach (var role in roles)
+            {
+                if (await _roleManager.HasPermissionAsync(role, permission.Name))
                 {
                     return true;
                 }
@@ -57,12 +106,113 @@ namespace Abp.Authorization.Users
             return false;
         }
 
-        public async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        /// <summary>
+        /// Gets granted permissions for a user.
+        /// </summary>
+        /// <param name="user">Role</param>
+        /// <returns>List of granted permissions</returns>
+        public virtual async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(TUser user)
+        {
+            var permissionList = new List<Permission>();
+
+            foreach (var permission in _permissionManager.GetAllPermissions())
+            {
+                if (await IsGrantedAsync(user, permission))
+                {
+                    permissionList.Add(permission);
+                }
+            }
+
+            return permissionList;
+        }
+        
+        /// <summary>
+        /// Sets all granted permissions of a user at once.
+        /// Prohibits all other permissions.
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <param name="permissions">Permissions</param>
+        public virtual async Task SetGrantedPermissionsAsync(TUser user, IEnumerable<Permission> permissions)
+        {
+            var oldPermissions = await GetGrantedPermissionsAsync(user);
+            var newPermissions = permissions.ToArray();
+
+            foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p)))
+            {
+                await ProhibitPermissionAsync(user, permission);
+            }
+
+            foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p)))
+            {
+                await GrantPermissionAsync(user, permission);
+            }
+        }
+
+        /// <summary>
+        /// Prohibits all permissions for a user.
+        /// </summary>
+        /// <param name="user">User</param>
+        public async Task ProhibitAllPermissionsAsync(TUser user)
+        {
+            foreach (var permission in _permissionManager.GetAllPermissions())
+            {
+                await ProhibitPermissionAsync(user, permission);
+            }
+        }
+
+        /// <summary>
+        /// Resets all permission settings for a user.
+        /// It removes all permission settings for the user.
+        /// User will have permissions according to his roles.
+        /// This method does not prohibit all permissions.
+        /// For that, use <see cref="ProhibitAllPermissionsAsync"/>.
+        /// </summary>
+        /// <param name="user">User</param>
+        public async Task ResetAllPermissionsAsync(TUser user)
+        {
+            await UserPermissionStore.RemoveAllPermissionSettingsAsync(user);
+        }
+
+        /// <summary>
+        /// Grants a permission for a user if not already granted.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="permission">Permission</param>
+        public virtual async Task GrantPermissionAsync(TUser user, Permission permission)
+        {
+            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, false));                
+
+            if (await IsGrantedAsync(user, permission))
+            {
+                return;
+            }
+
+            await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
+        }
+
+        /// <summary>
+        /// Prohibits a permission for a user if it's granted.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="permission">Permission</param>
+        public virtual async Task ProhibitPermissionAsync(TUser user, Permission permission)
+        {
+            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
+
+            if (!await IsGrantedAsync(user, permission))
+            {
+                return;
+            }
+
+            await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
+        }
+
+        public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
             return await _abpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
         }
 
-        public async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
+        public virtual async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
         {
             //TODO: Email confirmation check? (optional)
 
@@ -139,6 +289,17 @@ namespace Abp.Authorization.Users
             }
 
             return new AbpLoginResult(user, identity);
+        }
+
+        private async Task<TUser> GetUser(long userId)
+        {
+            var user = await FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new AbpException("There is no user with id = " + userId);
+            }
+
+            return user;
         }
 
         public class AbpLoginResult
