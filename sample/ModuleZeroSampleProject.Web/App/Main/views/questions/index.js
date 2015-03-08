@@ -20,7 +20,6 @@
                 abp.ui.setBusy(
                     null,
                     questionService.getQuestions({
-                        maxResultCount: 10,
                         skipCount: skipCount,
                         sorting: vm.sorting
                     }).success(function (data) {

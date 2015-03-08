@@ -8,18 +8,13 @@ namespace ModuleZeroSampleProject.Questions.Dto
 {
     public class GetQuestionsInput : IInputDto, IPagedResultRequest, ISortedResultRequest, ICustomValidate
     {
-        [Range(1, 1000)]
+        [Range(0, 1000)]
         public int MaxResultCount { get; set; }
 
         public int SkipCount { get; set; }
 
         public string Sorting { get; set; }
-
-        public GetQuestionsInput()
-        {
-            MaxResultCount = 10;
-        }
-
+        
         public void AddValidationErrors(List<ValidationResult> results)
         {
             var validSortingValues = new[] { "CreationTime DESC", "VoteCount DESC", "ViewCount DESC", "AnswerCount DESC" };

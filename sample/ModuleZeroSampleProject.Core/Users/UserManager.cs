@@ -1,4 +1,5 @@
-﻿using Abp.Authorization.Users;
+﻿using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Zero.Configuration;
 using ModuleZeroSampleProject.Authorization;
@@ -8,8 +9,18 @@ namespace ModuleZeroSampleProject.Users
 {
     public class UserManager : AbpUserManager<Tenant, Role, User>
     {
-        public UserManager(UserStore store, RoleManager roleManager, IRepository<Tenant> tenantRepository, MultiTenancyConfig multiTenancyConfig)
-            : base(store, roleManager, tenantRepository, multiTenancyConfig)
+        public UserManager(
+            UserStore store,
+            RoleManager roleManager,
+            IRepository<Tenant> tenantRepository,
+            MultiTenancyConfig multiTenancyConfig,
+            IPermissionManager permissionManager)
+            : base(
+                store,
+                roleManager,
+                tenantRepository,
+                multiTenancyConfig, 
+                permissionManager)
         {
         }
     }

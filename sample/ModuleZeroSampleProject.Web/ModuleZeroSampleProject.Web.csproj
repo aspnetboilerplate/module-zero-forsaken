@@ -57,13 +57,13 @@
     <Reference Include="Abp.Web.Mvc">
       <HintPath>..\packages\Abp.Web.Mvc.0.5.5.0\lib\net451\Abp.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Zero, Version=0.5.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.Zero, Version=0.5.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.Zero.0.5.6.0\lib\net451\Abp.Zero.dll</HintPath>
+      <HintPath>..\packages\Abp.Zero.0.5.7.0\lib\net451\Abp.Zero.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Zero.EntityFramework, Version=0.5.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp.Zero.EntityFramework, Version=0.5.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Abp.Zero.EntityFramework.0.5.6.0\lib\net451\Abp.Zero.EntityFramework.dll</HintPath>
+      <HintPath>..\packages\Abp.Zero.EntityFramework.0.5.7.0\lib\net451\Abp.Zero.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>

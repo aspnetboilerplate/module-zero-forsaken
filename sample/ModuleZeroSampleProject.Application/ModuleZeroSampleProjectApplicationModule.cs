@@ -2,6 +2,7 @@
 using Abp.AutoMapper;
 using Abp.Modules;
 using ModuleZeroSampleProject.Authorization;
+using ModuleZeroSampleProject.Configuration;
 
 namespace ModuleZeroSampleProject
 {
@@ -12,6 +13,7 @@ namespace ModuleZeroSampleProject
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             Configuration.Authorization.Providers.Add<ModuleZeroSampleProjectAuthorizationProvider>();
+            Configuration.Settings.Providers.Add<MySettingProvider>();
         }
     }
 }
