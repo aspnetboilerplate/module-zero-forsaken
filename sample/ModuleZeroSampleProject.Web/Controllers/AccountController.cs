@@ -1,18 +1,11 @@
-﻿using System;
-using System.Globalization;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using Abp.Runtime.Security;
+using Abp.Authorization.Users;
 using Abp.UI;
 using Abp.Web.Mvc.Models;
-using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using ModuleZeroSampleProject.MultiTenancy;
 using ModuleZeroSampleProject.Users;
 using ModuleZeroSampleProject.Web.Models.Account;
 
@@ -22,10 +15,6 @@ namespace ModuleZeroSampleProject.Web.Controllers
     {
         private readonly UserManager _userManager;
 
-        private readonly IRepository<User, long> _userRepository;
-        private readonly IRepository<Tenant> _tenantRepository;
-        private readonly MultiTenancyConfig _multiTenancy;
-
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -34,12 +23,9 @@ namespace ModuleZeroSampleProject.Web.Controllers
             }
         }
 
-        public AccountController(UserManager userManager, IRepository<User, long> userRepository, IRepository<Tenant> tenantRepository, MultiTenancyConfig multiTenancy)
+        public AccountController(UserManager userManager)
         {
             _userManager = userManager;
-            _userRepository = userRepository;
-            _tenantRepository = tenantRepository;
-            _multiTenancy = multiTenancy;
         }
 
         public ActionResult Login(string returnUrl = "")
@@ -50,71 +36,43 @@ namespace ModuleZeroSampleProject.Web.Controllers
             }
 
             ViewBag.ReturnUrl = returnUrl;
-            
+
             return View();
         }
 
-        [UnitOfWork]
         [HttpPost]
-        public virtual async Task<JsonResult> Login(LoginViewModel loginModel, string returnUrl = "")
+        public async Task<JsonResult> Login(LoginViewModel loginModel, string returnUrl = "")
         {
             if (!ModelState.IsValid)
             {
                 throw new UserFriendlyException("Your form is invalid!");
             }
 
-            User user;
+            var loginResult = await _userManager.LoginAsync(
+                loginModel.UsernameOrEmailAddress,
+                loginModel.Password,
+                loginModel.TenancyName
+                );
 
-            if (!_multiTenancy.IsEnabled)
+            switch (loginResult.Result)
             {
-                user = await _userManager.FindAsync(loginModel.UsernameOrEmailAddress, loginModel.Password);
-                if (user == null)
-                {
+                case AbpLoginResultType.Success:
+                    break;
+                case AbpLoginResultType.InvalidUserNameOrEmailAddress:
+                case AbpLoginResultType.InvalidPassword:
                     throw new UserFriendlyException("Invalid user name or password!");
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(loginModel.TenancyName))
-            {
-                var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == loginModel.TenancyName);
-                if (tenant == null)
-                {
+                case AbpLoginResultType.InvalidTenancyName:
                     throw new UserFriendlyException("No tenant with name: " + loginModel.TenancyName);
-                }
-
-                user = await _userRepository.FirstOrDefaultAsync(
-                    u =>
-                        (u.UserName == loginModel.UsernameOrEmailAddress ||
-                         u.EmailAddress == loginModel.UsernameOrEmailAddress)
-                        && u.TenantId == tenant.Id
-                    );
-
-                if (user == null)
-                {
-                    throw new UserFriendlyException("Invalid user name or password!");
-                }
-
-                var verificationResult = new PasswordHasher().VerifyHashedPassword(user.Password, loginModel.Password);
-                if (verificationResult != PasswordVerificationResult.Success)
-                {
-                    throw new UserFriendlyException("Invalid user name or password!");
-                }
-            }
-            else
-            {
-                throw new Exception("Tenant is not set!");
+                case AbpLoginResultType.TenantIsNotActive:
+                    throw new UserFriendlyException("Tenant is not active: " + loginModel.TenancyName);
+                case AbpLoginResultType.UserIsNotActive:
+                    throw new UserFriendlyException("User is not active: " + loginModel.UsernameOrEmailAddress);
+                default: //Can not fall to default for now. But other result types can be added in the future and we may forget to handle it
+                    throw new UserFriendlyException("Unknown problem with login: " + loginResult.Result);
             }
 
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-
-            var identity = await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            if (user.TenantId.HasValue)
-            {
-                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
-            }
-
-            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = loginModel.RememberMe }, identity);
-
-            user.LastLoginTime = DateTime.Now;
+            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = loginModel.RememberMe }, loginResult.Identity);
 
             if (string.IsNullOrWhiteSpace(returnUrl))
             {

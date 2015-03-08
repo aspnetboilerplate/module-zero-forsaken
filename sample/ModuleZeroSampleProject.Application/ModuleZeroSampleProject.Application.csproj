@@ -41,8 +41,9 @@
     <Reference Include="Abp.EntityFramework">
       <HintPath>..\packages\Abp.EntityFramework.0.5.5.0\lib\net451\Abp.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Abp.Zero">
-      <HintPath>..\packages\Abp.Zero.0.5.5.0\lib\net451\Abp.Zero.dll</HintPath>
+    <Reference Include="Abp.Zero, Version=0.5.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Abp.Zero.0.5.6.0\lib\net451\Abp.Zero.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
