@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
@@ -14,8 +16,6 @@ namespace Abp.Runtime.Session
     /// </summary>
     public class AbpSession : IAbpSession, ISingletonDependency
     {
-        private readonly MultiTenancyConfig _multiTenancy;
-
         public long? UserId
         {
             get
@@ -36,7 +36,7 @@ namespace Abp.Runtime.Session
             {
                 if (!_multiTenancy.IsEnabled)
                 {
-                    return 1; //TODO: This assumption is not good!
+                    return 1; //TODO@hikalkan: This assumption may not be good?
                 }
 
                 var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
@@ -55,10 +55,22 @@ namespace Abp.Runtime.Session
             }
         }
 
+        public MultiTenancySide MultiTenancySide
+        {
+            get
+            {
+                return _multiTenancy.IsEnabled && !TenantId.HasValue
+                    ? MultiTenancySide.Host
+                    : MultiTenancySide.Tenant;
+            }
+        }
+
+        private readonly IMultiTenancyConfig _multiTenancy;
+
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpSession(MultiTenancyConfig multiTenancy)
+        public AbpSession(IMultiTenancyConfig multiTenancy)
         {
             _multiTenancy = multiTenancy;
         }

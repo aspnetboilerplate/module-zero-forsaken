@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.Authorization.Users;
+using Abp.Configuration.Startup;
 using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
@@ -50,7 +51,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Should_Login_With_Correct_Values_Without_MultiTenancy()
         {
-            Resolve<MultiTenancyConfig>().IsEnabled = false;
+            Resolve<IMultiTenancyConfig>().IsEnabled = false;
             AbpSession.TenantId = 1; //TODO: We should not need to set this and implement AbpSession instead of TestSession.
 
             var loginResult = await _userManager.LoginAsync("user1", "123qwe");
@@ -62,7 +63,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Should_Not_Login_With_Invalid_UserName_Without_MultiTenancy()
         {
-            Resolve<MultiTenancyConfig>().IsEnabled = false;
+            Resolve<IMultiTenancyConfig>().IsEnabled = false;
             AbpSession.TenantId = 1; //TODO: We should not need to set this and implement AbpSession instead of TestSession.
 
             var loginResult = await _userManager.LoginAsync("wrongUserName", "asdfgh");
@@ -74,7 +75,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Should_Login_With_Correct_Values_With_MultiTenancy()
         {
-            Resolve<MultiTenancyConfig>().IsEnabled = true;
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
 
             var loginResult = await _userManager.LoginAsync("user1", "123qwe", "tenant1");
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
@@ -85,7 +86,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Should_Login_TenancyOwner_With_Correct_Values()
         {
-            Resolve<MultiTenancyConfig>().IsEnabled = true;
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
 
             var loginResult = await _userManager.LoginAsync("userOwner", "123qwe");
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);

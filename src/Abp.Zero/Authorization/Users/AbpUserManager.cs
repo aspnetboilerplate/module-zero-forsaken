@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -39,14 +40,14 @@ namespace Abp.Authorization.Users
         private readonly IPermissionManager _permissionManager;
         private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
         private readonly IRepository<TTenant> _tenantRepository;
-        private readonly MultiTenancyConfig _multiTenancyConfig;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
         private readonly AbpUserStore<TTenant, TRole, TUser> _abpUserStore;
         
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
             AbpRoleManager<TTenant, TRole, TUser> roleManager,
             IRepository<TTenant> tenantRepository,
-            MultiTenancyConfig multiTenancyConfig, 
+            IMultiTenancyConfig multiTenancyConfig, 
             IPermissionManager permissionManager)
             : base(userStore)
         {
