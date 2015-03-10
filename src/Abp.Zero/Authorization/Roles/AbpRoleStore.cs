@@ -45,7 +45,6 @@ namespace Abp.Authorization.Roles
 
         public async Task CreateAsync(TRole role)
         {
-            role.TenantId = _session.TenantId; //TODO: Should set automatically when ABP implements it
             await _roleRepository.InsertAsync(role);
         }
 

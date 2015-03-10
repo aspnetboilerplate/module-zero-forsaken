@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.MultiTenancy;
+using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -17,6 +18,8 @@ namespace Abp.Authorization.Roles
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
+        public IAbpSession AbpSession { get; set; }
+
         private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
         {
             get
@@ -41,6 +44,7 @@ namespace Abp.Authorization.Roles
             : base(store)
         {
             _permissionManager = permissionManager;
+            AbpSession = NullAbpSession.Instance;
         }
 
         /// <summary>
@@ -169,7 +173,7 @@ namespace Abp.Authorization.Roles
             }
             else
             {
-                await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));                
+                await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
             }
         }
 
@@ -194,7 +198,7 @@ namespace Abp.Authorization.Roles
                 await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
             }
         }
-        
+
         /// <summary>
         /// Prohibits all permissions for a role.
         /// </summary>
@@ -219,10 +223,23 @@ namespace Abp.Authorization.Roles
         }
 
         /// <summary>
+        /// Creates a role.
+        /// </summary>
+        /// <param name="role">Role</param>
+        public override Task<IdentityResult> CreateAsync(TRole role)
+        {
+            if (AbpSession.TenantId.HasValue)
+            {
+                role.TenantId = AbpSession.TenantId.Value;
+            }
+
+            return base.CreateAsync(role);
+        }
+
+        /// <summary>
         /// Deletes a role.
         /// </summary>
         /// <param name="role">Role</param>
-        /// <returns></returns>
         public override Task<IdentityResult> DeleteAsync(TRole role)
         {
             if (role.IsStatic)
