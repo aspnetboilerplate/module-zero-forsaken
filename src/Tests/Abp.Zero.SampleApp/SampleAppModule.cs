@@ -13,6 +13,7 @@ namespace Abp.Zero.SampleApp
         {
             Configuration.Authorization.Providers.Add<AppAuthorizationProvider>();
             Configuration.Settings.Providers.Add<AppSettingProvider>();
+            Configuration.MultiTenancy.IsEnabled = true;
         }
 
         public override void Initialize()

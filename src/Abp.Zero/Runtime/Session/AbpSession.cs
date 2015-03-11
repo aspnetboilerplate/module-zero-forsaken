@@ -6,7 +6,6 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
-using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Runtime.Session
@@ -55,13 +54,13 @@ namespace Abp.Runtime.Session
             }
         }
 
-        public MultiTenancySide MultiTenancySide
+        public MultiTenancySides MultiTenancySides //TODO: Rename to MultiTenancySide in ABP framework!
         {
             get
             {
                 return _multiTenancy.IsEnabled && !TenantId.HasValue
-                    ? MultiTenancySide.Host
-                    : MultiTenancySide.Tenant;
+                    ? MultiTenancySides.Host
+                    : MultiTenancySides.Tenant;
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Authorization.Users;
 using Abp.Configuration;
@@ -16,14 +17,28 @@ namespace Abp.MultiTenancy
         where TTenant : AbpTenant<TTenant, TUser>
     {
         /// <summary>
+        /// Max length of the <see cref="TenancyName"/> property.
+        /// </summary>
+        public const int MaxTenancyNameLength = 64;
+
+        /// <summary>
+        /// Max length of the <see cref="Name"/> property.
+        /// </summary>
+        public const int MaxNameLength = 128;
+        
+        /// <summary>
         /// Tenancy name. This property is the UNIQUE name of this Tenant.
         /// It can be used as subdomain name in a web application.
         /// </summary>
+        [Required]
+        [StringLength(MaxTenancyNameLength)]
         public virtual string TenancyName { get; set; }
 
         /// <summary>
         /// Display name of the Tenant.
         /// </summary>
+        [Required]
+        [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         /// <summary>

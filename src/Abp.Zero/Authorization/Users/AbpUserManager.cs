@@ -66,7 +66,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
             return await IsGrantedAsync(
-                await GetUser(userId),
+                await GetUserByIdAsync(userId),
                 _permissionManager.GetPermission(permissionName)
                 );
         }
@@ -292,12 +292,19 @@ namespace Abp.Authorization.Users
             return new AbpLoginResult(user, identity);
         }
 
-        private async Task<TUser> GetUser(long userId)
+        /// <summary>
+        /// Gets a user by given id.
+        /// Throws exception if no user found with given id.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>User</returns>
+        /// <exception cref="AbpException">Throws exception if no user found with given id</exception>
+        public virtual async Task<TUser> GetUserByIdAsync(long userId)
         {
             var user = await FindByIdAsync(userId);
             if (user == null)
             {
-                throw new AbpException("There is no user with id = " + userId);
+                throw new AbpException("There is no user with id: " + userId);
             }
 
             return user;
