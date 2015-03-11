@@ -228,7 +228,11 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public override Task<IdentityResult> CreateAsync(TRole role)
         {
-            role.TenantId = AbpSession.TenantId;
+            if (AbpSession.TenantId.HasValue)
+            {
+                role.TenantId = AbpSession.TenantId.Value;
+            }
+
             return base.CreateAsync(role);
         }
 
