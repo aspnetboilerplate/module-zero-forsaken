@@ -12,7 +12,7 @@ namespace Abp.MultiTenancy
     /// Represents a Tenant of the application.
     /// </summary>
     [Table("AbpTenants")]
-    public class AbpTenant<TTenant, TUser> : AuditedEntity<int, TUser>, IPassivable
+    public class AbpTenant<TTenant, TUser> : FullAuditedEntity<int, TUser>, IPassivable
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
