@@ -11,7 +11,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
-using Abp.Zero.Configuration;
+using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -36,6 +36,8 @@ namespace Abp.Authorization.Users
                 return Store as IUserPermissionStore<TTenant, TUser>;
             }
         }
+
+        public IAbpSession AbpSession { get; set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
@@ -78,6 +80,12 @@ namespace Abp.Authorization.Users
         /// <param name="permission">Permission</param>
         public virtual async Task<bool> IsGrantedAsync(TUser user, Permission permission)
         {
+            //Check for multi-tenancy side
+            if (!permission.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+            {
+                return false;
+            }
+
             //Check for user-specific value
             if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, false)))
             {

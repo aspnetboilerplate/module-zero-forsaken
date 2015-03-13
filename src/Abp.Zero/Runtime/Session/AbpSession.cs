@@ -54,7 +54,7 @@ namespace Abp.Runtime.Session
             }
         }
 
-        public MultiTenancySides MultiTenancySides //TODO: Rename to MultiTenancySide in ABP framework!
+        public MultiTenancySides MultiTenancySide
         {
             get
             {
