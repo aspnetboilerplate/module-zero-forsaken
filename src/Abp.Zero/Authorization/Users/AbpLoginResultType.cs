@@ -9,6 +9,7 @@ namespace Abp.Authorization.Users
         UserIsNotActive,
 
         InvalidTenancyName,
-        TenantIsNotActive
+        TenantIsNotActive,
+        UserEmailIsNotConfirmed
     }
 }

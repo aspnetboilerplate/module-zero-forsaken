@@ -1,4 +1,5 @@
-﻿using Abp.Configuration;
+﻿using System.Linq;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Shouldly;
 using Xunit;
@@ -20,7 +21,8 @@ namespace Abp.Zero.SampleApp.Tests.Configuration
         public void Should_Get_All_Settings()
         {
             var allValues = _settingManager.GetAllSettingValues();
-            allValues.Count.ShouldBe(2);
+            allValues.Any(v => v.Name == "Setting1").ShouldBe(true);
+            allValues.Any(v => v.Name == "Setting2").ShouldBe(true);
         }
 
         [Fact]

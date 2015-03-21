@@ -12,11 +12,11 @@ namespace Abp.Zero.Configuration
         /// </summary>
         /// <param name="moduleConfigurations"></param>
         /// <returns></returns>
-        public static ZeroConfig Zero(this IModuleConfigurations moduleConfigurations)
+        public static IAbpZeroConfig Zero(this IModuleConfigurations moduleConfigurations)
         {
             return moduleConfigurations.AbpConfiguration
-                .GetOrCreate("ZeroConfig",
-                    () => moduleConfigurations.AbpConfiguration.IocManager.Resolve<ZeroConfig>()
+                .GetOrCreate("AbpZeroConfig",
+                    () => moduleConfigurations.AbpConfiguration.IocManager.Resolve<IAbpZeroConfig>()
                 );
         }
     }

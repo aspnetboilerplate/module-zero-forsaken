@@ -12,6 +12,7 @@ using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
+using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -37,6 +38,21 @@ namespace Abp.Authorization.Users
             }
         }
 
+        public IUserManagementConfig UserManagementConfig
+        {
+            private get
+            {
+                if (_userManagementConfig == null)
+                {
+                    throw new AbpException("Should set UserManagementConfig before use it!");
+                }
+
+                return _userManagementConfig;
+            }
+            set { _userManagementConfig = value; }
+        }
+        private IUserManagementConfig _userManagementConfig;
+
         public IAbpSession AbpSession { get; set; }
 
         private readonly IPermissionManager _permissionManager;
@@ -44,7 +60,8 @@ namespace Abp.Authorization.Users
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
         private readonly AbpUserStore<TTenant, TRole, TUser> _abpUserStore;
-        
+
+        //TODO: Non-generic parameters may be converted to property-injection
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
             AbpRoleManager<TTenant, TRole, TUser> roleManager,
@@ -87,14 +104,14 @@ namespace Abp.Authorization.Users
             }
 
             //Check for user-specific value
-            if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, false)))
-            {
-                return false;
-            }
-
             if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, true)))
             {
                 return true;
+            }
+
+            if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, false)))
+            {
+                return false;
             }
 
             //Check for roles
@@ -223,8 +240,6 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
         {
-            //TODO: Email confirmation check? (optional)
-
             if (userNameOrEmailAddress.IsNullOrEmpty())
             {
                 throw new ArgumentNullException("userNameOrEmailAddress");
@@ -285,6 +300,11 @@ namespace Abp.Authorization.Users
             if (!user.IsActive)
             {
                 return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
+            }
+
+            if (UserManagementConfig.IsEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
+            {
+                return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
             }
 
             user.LastLoginTime = DateTime.Now;

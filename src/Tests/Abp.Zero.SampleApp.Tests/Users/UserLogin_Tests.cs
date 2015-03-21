@@ -40,7 +40,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                             Name = "User",
                             Surname = "One",
                             EmailAddress = "user-one@aspnetboilerplate.com",
-                            IsEmailConfirmed = true,
+                            IsEmailConfirmed = false,
                             Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
                         });
                 });
@@ -81,6 +81,16 @@ namespace Abp.Zero.SampleApp.Tests.Users
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
             loginResult.User.Name.ShouldBe("User");
             loginResult.Identity.ShouldNotBe(null);
+        }
+
+        [Fact]
+        public async Task Should_Not_Login_If_Email_Confirmation_Is_Enabled_And_User_Has_Not_Confirmed()
+        {
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
+            Resolve<IUserManagementConfig>().IsEmailConfirmationRequiredForLogin = true;
+
+            var loginResult = await _userManager.LoginAsync("user1", "123qwe", "tenant1");
+            loginResult.Result.ShouldBe(AbpLoginResultType.UserEmailIsNotConfirmed);
         }
 
         [Fact]

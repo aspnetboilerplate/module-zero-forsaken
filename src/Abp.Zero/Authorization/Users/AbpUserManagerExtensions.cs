@@ -28,5 +28,18 @@ namespace Abp.Authorization.Users
 
             return AsyncHelper.RunSync(() => manager.IsGrantedAsync(userId, permissionName));
         }
+
+        public static AbpUserManager<TTenant, TRole, TUser>.AbpLoginResult Login<TTenant, TRole, TUser>(AbpUserManager<TTenant, TRole, TUser> manager, string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
+            where TTenant : AbpTenant<TTenant, TUser>
+            where TRole : AbpRole<TTenant, TUser>
+            where TUser : AbpUser<TTenant, TUser>
+        {
+            if (manager == null)
+            {
+                throw new ArgumentNullException("manager");
+            }
+
+            return AsyncHelper.RunSync(() => manager.LoginAsync(userNameOrEmailAddress, plainPassword, tenancyName));
+        }
     }
 }

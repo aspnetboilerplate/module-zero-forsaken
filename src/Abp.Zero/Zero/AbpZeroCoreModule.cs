@@ -12,11 +12,12 @@ namespace Abp.Zero
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.5.10.1";
+        public const string CurrentVersion = "0.5.11.0";
 
         public override void PreInitialize()
         {
-            IocManager.Register<ZeroConfig>();
+            IocManager.Register<IUserManagementConfig, UserManagementConfig>();
+            IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
         }
 
         public override void Initialize()
