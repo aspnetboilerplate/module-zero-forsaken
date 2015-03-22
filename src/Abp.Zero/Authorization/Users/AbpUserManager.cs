@@ -311,13 +311,7 @@ namespace Abp.Authorization.Users
 
             await Store.UpdateAsync(user);
 
-            var identity = await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            if (user.TenantId.HasValue)
-            {
-                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
-            }
-
-            return new AbpLoginResult(user, identity);
+            return new AbpLoginResult(user, await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie));
         }
 
         /// <summary>
@@ -336,6 +330,17 @@ namespace Abp.Authorization.Users
             }
 
             return user;
+        }
+
+        public async override Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
+        {
+            var identity = await base.CreateIdentityAsync(user, authenticationType);
+            if (user.TenantId.HasValue)
+            {
+                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
+            }
+
+            return identity;
         }
 
         public class AbpLoginResult
