@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
+using Abp.Extensions;
 
 namespace Abp.Auditing
 {
     /// <summary>
     /// Used to store audit logs.
     /// </summary>
+    [Table("AbpAuditLogs")]
     public class AuditLog : Entity<long>
     {
         /// <summary>
@@ -119,7 +122,7 @@ namespace Abp.Auditing
                        UserId = auditInfo.UserId,
                        ServiceName = auditInfo.ServiceName,
                        MethodName = auditInfo.MethodName,
-                       Parameters = auditInfo.Parameters, //TODO: truncate
+                       Parameters = auditInfo.Parameters.Truncate(MaxParametersLength),
                        ExecutionTime = auditInfo.ExecutionTime,
                        ExecutionDuration = auditInfo.ExecutionDuration,
                        ClientIpAddress = auditInfo.ClientIpAddress,
