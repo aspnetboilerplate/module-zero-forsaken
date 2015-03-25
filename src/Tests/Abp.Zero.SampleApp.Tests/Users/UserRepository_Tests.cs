@@ -10,11 +10,11 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public void Should_Insert_And_Retrieve_User()
         {
-            var useRepository = LocalIocManager.Resolve<IRepository<User, long>>();
+            var userRepository = LocalIocManager.Resolve<IRepository<User, long>>();
 
-            useRepository.FirstOrDefault(u => u.EmailAddress == "admin@aspnetboilerplate.com").ShouldBe(null);
+            userRepository.FirstOrDefault(u => u.EmailAddress == "admin@aspnetboilerplate.com").ShouldBe(null);
 
-            useRepository.Insert(new User
+            userRepository.Insert(new User
             {
                 TenantId = null,
                 UserName = "admin",
@@ -25,7 +25,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
             });
 
-            useRepository.FirstOrDefault(u => u.EmailAddress == "admin@aspnetboilerplate.com").ShouldNotBe(null);
+            userRepository.FirstOrDefault(u => u.EmailAddress == "admin@aspnetboilerplate.com").ShouldNotBe(null);
         }
     }
 }

@@ -80,6 +80,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auditing\AuditingStore.cs" />
+    <Compile Include="Auditing\AuditLog.cs" />
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PermissionGrantInfo.cs" />
     <Compile Include="Authorization\Users\IUserPermissionStore.cs" />

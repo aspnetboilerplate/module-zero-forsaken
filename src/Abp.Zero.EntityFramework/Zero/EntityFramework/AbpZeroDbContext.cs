@@ -1,5 +1,6 @@
 using System.Data.Common;
 using System.Data.Entity;
+using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
@@ -61,6 +62,11 @@ namespace Abp.Zero.EntityFramework
         /// Settings.
         /// </summary>
         public virtual IDbSet<Setting> Settings { get; set; }
+
+        /// <summary>
+        /// Audit logs.
+        /// </summary>
+        public virtual IDbSet<AuditLog> AuditLogs { get; set; }
 
         /// <summary>
         /// Default constructor.

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using System.Threading.Tasks;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
 using Shouldly;

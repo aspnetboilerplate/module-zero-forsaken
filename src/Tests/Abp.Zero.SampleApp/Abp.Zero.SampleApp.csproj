@@ -99,7 +99,10 @@
     <Compile Include="Roles\RoleStore.cs" />
     <Compile Include="SampleAppModule.cs" />
     <Compile Include="Authorization\AppAuthorizationProvider.cs" />
+    <Compile Include="Users\Dto\CreateUserInput.cs" />
+    <Compile Include="Users\IUserAppService.cs" />
     <Compile Include="Users\User.cs" />
+    <Compile Include="Users\UserAppService.cs" />
     <Compile Include="Users\UserManager.cs" />
     <Compile Include="Users\UserStore.cs" />
   </ItemGroup>
