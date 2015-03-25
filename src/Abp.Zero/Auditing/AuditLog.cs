@@ -120,14 +120,14 @@ namespace Abp.Auditing
                    {
                        TenantId = auditInfo.TenantId,
                        UserId = auditInfo.UserId,
-                       ServiceName = auditInfo.ServiceName,
-                       MethodName = auditInfo.MethodName,
+                       ServiceName = auditInfo.ServiceName.Truncate(MaxServiceNameLength),
+                       MethodName = auditInfo.MethodName.Truncate(MaxMethodNameLength),
                        Parameters = auditInfo.Parameters.Truncate(MaxParametersLength),
                        ExecutionTime = auditInfo.ExecutionTime,
                        ExecutionDuration = auditInfo.ExecutionDuration,
-                       ClientIpAddress = auditInfo.ClientIpAddress,
-                       ClientName = auditInfo.ClientName,
-                       BrowserInfo = auditInfo.BrowserInfo
+                       ClientIpAddress = auditInfo.ClientIpAddress.Truncate(MaxClientIpAddressLength),
+                       ClientName = auditInfo.ClientName.Truncate(MaxClientNameLength),
+                       BrowserInfo = auditInfo.BrowserInfo.Truncate(MaxBrowserInfoLength)
                    };
         }
 
