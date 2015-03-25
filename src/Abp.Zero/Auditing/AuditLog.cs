@@ -116,18 +116,20 @@ namespace Abp.Auditing
         /// <returns>The <see cref="AuditLog"/> object that is created using <see cref="auditInfo"/></returns>
         public static AuditLog CreateFromAuditInfo(AuditInfo auditInfo)
         {
+            //TODO: Truncate should return null if argument is null. Implement this in Abp then change here.
+
             return new AuditLog
                    {
                        TenantId = auditInfo.TenantId,
                        UserId = auditInfo.UserId,
-                       ServiceName = auditInfo.ServiceName.Truncate(MaxServiceNameLength),
-                       MethodName = auditInfo.MethodName.Truncate(MaxMethodNameLength),
-                       Parameters = auditInfo.Parameters.Truncate(MaxParametersLength),
+                       ServiceName = (auditInfo.ServiceName ?? "").Truncate(MaxServiceNameLength),
+                       MethodName = (auditInfo.MethodName ?? "").Truncate(MaxMethodNameLength),
+                       Parameters = (auditInfo.Parameters ?? "").Truncate(MaxParametersLength),
                        ExecutionTime = auditInfo.ExecutionTime,
                        ExecutionDuration = auditInfo.ExecutionDuration,
-                       ClientIpAddress = auditInfo.ClientIpAddress.Truncate(MaxClientIpAddressLength),
-                       ClientName = auditInfo.ClientName.Truncate(MaxClientNameLength),
-                       BrowserInfo = auditInfo.BrowserInfo.Truncate(MaxBrowserInfoLength)
+                       ClientIpAddress = (auditInfo.ClientIpAddress ?? "").Truncate(MaxClientIpAddressLength),
+                       ClientName = (auditInfo.ClientName ?? "").Truncate(MaxClientNameLength),
+                       BrowserInfo = (auditInfo.BrowserInfo ?? "").Truncate(MaxBrowserInfoLength)
                    };
         }
 
