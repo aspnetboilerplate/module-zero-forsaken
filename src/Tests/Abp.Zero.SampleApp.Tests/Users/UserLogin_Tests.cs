@@ -76,6 +76,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         public async Task Should_Login_With_Correct_Values_With_MultiTenancy()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
+            AbpSession.TenantId = 1; //TODO: We should not need to set this and implement AbpSession instead of TestSession.
 
             var loginResult = await _userManager.LoginAsync("user1", "123qwe", "tenant1");
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);

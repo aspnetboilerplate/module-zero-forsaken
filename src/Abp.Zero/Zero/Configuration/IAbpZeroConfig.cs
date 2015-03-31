@@ -11,5 +11,10 @@ namespace Abp.Zero.Configuration
         /// Gets user management config.
         /// </summary>
         IUserManagementConfig UserManagement { get; }
+        
+        /// <summary>
+        /// Gets role management config.
+        /// </summary>
+        IRoleManagementConfig RoleManagement { get; }
     }
 }

@@ -15,11 +15,11 @@ namespace Abp.Authorization
     /// <typeparam name="TRole"></typeparam>
     /// <typeparam name="TUser"></typeparam>
     public abstract class PermissionChecker<TTenant, TRole, TUser> : IPermissionChecker, ITransientDependency
-        where TRole : AbpRole<TTenant, TUser> 
-        where TUser : AbpUser<TTenant, TUser> 
+        where TRole : AbpRole<TTenant, TUser>, new()
+        where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
-        private readonly AbpUserManager<TTenant,TRole, TUser> _userManager;
+        private readonly AbpUserManager<TTenant, TRole, TUser> _userManager;
 
         public ILogger Logger { get; set; }
 
@@ -31,7 +31,7 @@ namespace Abp.Authorization
         protected PermissionChecker(AbpUserManager<TTenant, TRole, TUser> userManager)
         {
             _userManager = userManager;
-    
+
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
         }
@@ -43,7 +43,7 @@ namespace Abp.Authorization
 
         public async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
-            return await _userManager.IsGrantedAsync(userId,permissionName);
+            return await _userManager.IsGrantedAsync(userId, permissionName);
         }
     }
 }

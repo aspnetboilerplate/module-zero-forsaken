@@ -6,7 +6,7 @@ namespace Abp.Zero.SampleApp.Roles
 {
     public class Role : AbpRole<Tenant, User>
     {
-        protected Role()
+        public Role()
         {
 
         }

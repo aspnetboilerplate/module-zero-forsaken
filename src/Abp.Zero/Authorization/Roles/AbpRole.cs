@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Authorization.Users;
@@ -76,9 +77,21 @@ namespace Abp.Authorization.Roles
         /// </summary>
         public AbpRole()
         {
-            
+            Name = Guid.NewGuid().ToString("N");
         }
-        
+
+        /// <summary>
+        /// Creates a new <see cref="AbpRole{TTenant,TUser}"/> object.
+        /// </summary>
+        /// <param name="tenantId">TenantId or null (if this is not a tenant-level role)</param>
+        /// <param name="displayName">Display name of the role</param>
+        public AbpRole(int? tenantId, string displayName)
+            : this()
+        {
+            TenantId = tenantId;
+            DisplayName = displayName;
+        }
+
         /// <summary>
         /// Creates a new <see cref="AbpRole{TTenant,TUser}"/> object.
         /// </summary>
@@ -86,10 +99,9 @@ namespace Abp.Authorization.Roles
         /// <param name="name">Unique role name</param>
         /// <param name="displayName">Display name of the role</param>
         public AbpRole(int? tenantId, string name, string displayName)
+            : this(tenantId, displayName)
         {
-            TenantId = tenantId;
             Name = name;
-            DisplayName = displayName;
         }
 
         public override string ToString()

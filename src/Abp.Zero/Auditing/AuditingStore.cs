@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Repositories;
 
 namespace Abp.Auditing
@@ -18,9 +19,9 @@ namespace Abp.Auditing
             _auditLogRepository = auditLogRepository;
         }
 
-        public void Save(AuditInfo auditInfo)
+        public async Task SaveAsync(AuditInfo auditInfo)
         {
-            _auditLogRepository.Insert(AuditLog.CreateFromAuditInfo(auditInfo));
+            await _auditLogRepository.InsertAsync(AuditLog.CreateFromAuditInfo(auditInfo));
         }
     }
 }

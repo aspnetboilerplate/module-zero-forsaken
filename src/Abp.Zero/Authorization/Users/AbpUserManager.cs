@@ -12,6 +12,7 @@ using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
+using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
@@ -22,8 +23,7 @@ namespace Abp.Authorization.Users
     /// </summary>
     public abstract class AbpUserManager<TTenant, TRole, TUser> : UserManager<TUser, long>, ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TRole : AbpRole<TTenant, TUser>, new() where TUser : AbpUser<TTenant, TUser>
     {
         private IUserPermissionStore<TTenant, TUser> UserPermissionStore
         {
@@ -75,6 +75,52 @@ namespace Abp.Authorization.Users
             _tenantRepository = tenantRepository;
             _multiTenancyConfig = multiTenancyConfig;
             _permissionManager = permissionManager;
+        }
+
+        public override async Task<IdentityResult> CreateAsync(TUser user)
+        {
+            if (AbpSession.MultiTenancySide == MultiTenancySides.Host && user.TenantId.HasValue)
+            {
+                return await CreateForTenantAsync(user.TenantId.Value, user);
+            }
+
+            if (AbpSession.TenantId.HasValue)
+            {
+                user.TenantId = AbpSession.TenantId.Value;
+            }
+
+            return await base.CreateAsync(user);
+        }
+
+        public async Task<IdentityResult> CreateForTenantAsync(int tenantId, TUser user)
+        {
+            //TODO: Tenancy filter?
+
+            if (Users.Any(u => u.TenantId == tenantId && u.UserName == user.UserName))
+            {
+                return IdentityResult.Failed("There is already a user with user name: " + user.UserName);                                    
+            }
+
+            if (Users.Any(u => u.TenantId == tenantId && u.EmailAddress == user.EmailAddress))
+            {
+                return IdentityResult.Failed("There is already a user with email address: " + user.EmailAddress);
+            }
+
+            user.TenantId = tenantId;
+
+            //TODO: User name and other constraints?
+
+            await Store.CreateAsync(user);
+            return IdentityResult.Success;
+        }
+
+
+        public async Task<IdentityResult> AddToRoleAsync(int tenantId, long userId, string roleName)
+        {
+            //TODO: Check if already in roles etc.
+
+            await _abpUserStore.AddToRoleAsync(tenantId, userId, roleName);
+            return IdentityResult.Success;
         }
 
         /// <summary>

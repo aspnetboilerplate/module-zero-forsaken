@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
@@ -31,6 +32,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IAbpSession _session;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
@@ -41,13 +43,15 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
-            IAbpSession session)
+            IAbpSession session,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
             _session = session;
+            _unitOfWorkManager = unitOfWorkManager;
             _userPermissionSettingRepository = userPermissionSettingRepository;
         }
 
@@ -101,13 +105,17 @@ namespace Abp.Authorization.Users
         /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNameOrEmailAddress">User name or email address</param>
         /// <returns>User or null</returns>
-        public async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
+        [UnitOfWork]
+        public virtual async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
         {
-            return await _userRepository.FirstOrDefaultAsync(
-                user =>
-                    user.TenantId == tenantId &&
-                    (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
-                );
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return await _userRepository.FirstOrDefaultAsync(
+                    user =>
+                        user.TenantId == tenantId &&
+                        (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
+                    );
+            }
         }
 
         public Task SetPasswordHashAsync(TUser user, string passwordHash)
@@ -195,6 +203,17 @@ namespace Abp.Authorization.Users
                 new UserRole
                 {
                     UserId = user.Id,
+                    RoleId = role.Id
+                });
+        }
+
+        public async Task AddToRoleAsync(int tenantId, long userId, string roleName)
+        {
+            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == tenantId);
+            await _userRoleRepository.InsertAsync(
+                new UserRole
+                {
+                    UserId = userId,
                     RoleId = role.Id
                 });
         }

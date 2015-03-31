@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
+using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -15,10 +18,13 @@ namespace Abp.Authorization.Roles
     /// </summary>
     public abstract class AbpRoleManager<TTenant, TRole, TUser> : RoleManager<TRole, int>, ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>
+        where TRole : AbpRole<TTenant, TUser>, new()
         where TUser : AbpUser<TTenant, TUser>
     {
+
         public IAbpSession AbpSession { get; set; }
+        
+        public IRoleManagementConfig RoleManagementConfig { get; private set; }
 
         private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
         {
@@ -34,16 +40,25 @@ namespace Abp.Authorization.Roles
         }
 
         private readonly IPermissionManager _permissionManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="store">Role store</param>
         /// <param name="permissionManager">Permission manager</param>
-        protected AbpRoleManager(AbpRoleStore<TTenant, TRole, TUser> store, IPermissionManager permissionManager)
+        /// <param name="unitOfWorkManager"></param>
+        protected AbpRoleManager(
+            AbpRoleStore<TTenant, TRole, TUser> store, 
+            IPermissionManager permissionManager, 
+            IRoleManagementConfig roleManagementConfig,
+            IUnitOfWorkManager unitOfWorkManager
+            )
             : base(store)
         {
+            RoleManagementConfig = roleManagementConfig;
             _permissionManager = permissionManager;
+            _unitOfWorkManager = unitOfWorkManager;
             AbpSession = NullAbpSession.Instance;
         }
 
@@ -226,14 +241,37 @@ namespace Abp.Authorization.Roles
         /// Creates a role.
         /// </summary>
         /// <param name="role">Role</param>
-        public override Task<IdentityResult> CreateAsync(TRole role)
+        public override async Task<IdentityResult> CreateAsync(TRole role)
         {
+            if (AbpSession.MultiTenancySide == MultiTenancySides.Host && role.TenantId.HasValue)
+            {
+                return await CreateForTenantAsync(role.TenantId.Value, role);
+            }
+            
             if (AbpSession.TenantId.HasValue)
             {
                 role.TenantId = AbpSession.TenantId.Value;
             }
+            
+            return await base.CreateAsync(role);
+        }
 
-            return base.CreateAsync(role);
+        public async Task<IdentityResult> CreateForTenantAsync(int tenantId, TRole role)
+        {
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                if (Roles.Any(r => r.Name == role.Name && r.TenantId == tenantId))
+                {
+                    return IdentityResult.Failed("There is already a role with name: " + role.Name);                    
+                }
+
+                role.TenantId = tenantId;
+
+                //TODO: Role name constraints and other business
+
+                await Store.CreateAsync(role);
+                return IdentityResult.Success;
+            }
         }
 
         /// <summary>
@@ -284,6 +322,30 @@ namespace Abp.Authorization.Roles
             }
 
             return role;
+        }
+
+        public virtual async Task<IdentityResult> CreateStaticRolesForTenant(int tenantId)
+        {
+            var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
+
+            foreach (var staticRoleDefinition in staticRoleDefinitions)
+            {
+                var role = new TRole
+                {
+                    TenantId = tenantId,
+                    Name = staticRoleDefinition.RoleName,
+                    DisplayName = staticRoleDefinition.RoleName,
+                    IsStatic = true
+                };
+
+                var identityResult = await CreateAsync(role);
+                if (!identityResult.Succeeded)
+                {
+                    return identityResult;
+                }
+            }
+
+            return IdentityResult.Success;
         }
     }
 }
