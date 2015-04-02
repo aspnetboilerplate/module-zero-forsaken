@@ -45,7 +45,7 @@ namespace Abp.Auditing
         /// <summary>
         /// Maximum length of <see cref="Exception"/> property.
         /// </summary>
-        public const int MaxExceptionLength = 2048;
+        public const int MaxExceptionLength = 2000;
 
         /// <summary>
         /// TenantId.
@@ -116,20 +116,18 @@ namespace Abp.Auditing
         /// <returns>The <see cref="AuditLog"/> object that is created using <see cref="auditInfo"/></returns>
         public static AuditLog CreateFromAuditInfo(AuditInfo auditInfo)
         {
-            //TODO: Truncate should return null if argument is null. Implement this in Abp then change here.
-
             return new AuditLog
                    {
                        TenantId = auditInfo.TenantId,
                        UserId = auditInfo.UserId,
-                       ServiceName = (auditInfo.ServiceName ?? "").Truncate(MaxServiceNameLength),
-                       MethodName = (auditInfo.MethodName ?? "").Truncate(MaxMethodNameLength),
-                       Parameters = (auditInfo.Parameters ?? "").Truncate(MaxParametersLength),
+                       ServiceName = auditInfo.ServiceName.TruncateWithPostfix(MaxServiceNameLength),
+                       MethodName = auditInfo.MethodName.TruncateWithPostfix(MaxMethodNameLength),
+                       Parameters = auditInfo.Parameters.TruncateWithPostfix(MaxParametersLength),
                        ExecutionTime = auditInfo.ExecutionTime,
                        ExecutionDuration = auditInfo.ExecutionDuration,
-                       ClientIpAddress = (auditInfo.ClientIpAddress ?? "").Truncate(MaxClientIpAddressLength),
-                       ClientName = (auditInfo.ClientName ?? "").Truncate(MaxClientNameLength),
-                       BrowserInfo = (auditInfo.BrowserInfo ?? "").Truncate(MaxBrowserInfoLength)
+                       ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
+                       ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
+                       BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength)
                    };
         }
 
