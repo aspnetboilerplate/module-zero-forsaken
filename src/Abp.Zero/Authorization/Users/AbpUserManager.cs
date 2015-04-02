@@ -265,7 +265,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentNullException("plainPassword");
             }
 
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant)) //TODO: No need to filter settings after ABP 0.5.10.3. Test it.
             {
                 TUser user;
 
