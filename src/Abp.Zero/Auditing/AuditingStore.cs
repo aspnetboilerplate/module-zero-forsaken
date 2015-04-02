@@ -1,5 +1,6 @@
 ﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
+using System.Threading.Tasks;
 
 namespace Abp.Auditing
 {
@@ -18,9 +19,13 @@ namespace Abp.Auditing
             _auditLogRepository = auditLogRepository;
         }
 
-        public void Save(AuditInfo auditInfo)
+        /// <summary>
+        /// Should save audits to a persistent store.
+        /// </summary>
+        /// <param name="auditInfo">Audit informations</param>
+        public Task SaveAsync(AuditInfo auditInfo)
         {
-            _auditLogRepository.Insert(AuditLog.CreateFromAuditInfo(auditInfo));
+            return _auditLogRepository.InsertAsync(AuditLog.CreateFromAuditInfo(auditInfo));
         }
     }
 }
