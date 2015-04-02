@@ -116,6 +116,7 @@ namespace Abp.Auditing
         /// <returns>The <see cref="AuditLog"/> object that is created using <see cref="auditInfo"/></returns>
         public static AuditLog CreateFromAuditInfo(AuditInfo auditInfo)
         {
+            var exceptionMessage = auditInfo.Exception != null ? auditInfo.Exception.ToString() : null;
             return new AuditLog
                    {
                        TenantId = auditInfo.TenantId,
@@ -127,7 +128,8 @@ namespace Abp.Auditing
                        ExecutionDuration = auditInfo.ExecutionDuration,
                        ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
                        ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
-                       BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength)
+                       BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
+                       Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength)
                    };
         }
 
