@@ -66,9 +66,7 @@ namespace Abp.Authorization.Roles
         public async Task<TRole> FindByNameAsync(string roleName)
         {
             return await _roleRepository.FirstOrDefaultAsync(
-                role =>
-                    role.Name == roleName &&
-                    role.TenantId == _session.TenantId //TODO: Should filter automatically when ABP implements it
+                role => role.Name == roleName
                 );
         }
 

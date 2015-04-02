@@ -78,14 +78,14 @@ namespace Abp.Authorization.Users
         public async Task<TUser> FindByNameAsync(string userName)
         {
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.TenantId == _session.TenantId && user.UserName == userName
+                user => user.UserName == userName
                 );
         }
 
         public async Task<TUser> FindByEmailAsync(string email)
         {
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.EmailAddress == email && user.TenantId == _session.TenantId
+                user => user.EmailAddress == email
                 );
         }
 
@@ -96,7 +96,9 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            return await FindByNameOrEmailAsync(_session.TenantId, userNameOrEmailAddress);
+            return await _userRepository.FirstOrDefaultAsync(
+                user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
+                );
         }
 
         /// <summary>
@@ -193,12 +195,12 @@ namespace Abp.Authorization.Users
                 return null;
             }
 
-            return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId && u.TenantId == _session.TenantId);
+            return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId);
         }
 
         public async Task AddToRoleAsync(TUser user, string roleName)
         {
-            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);
+            var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
             await _userRoleRepository.InsertAsync(
                 new UserRole
                 {
@@ -209,7 +211,7 @@ namespace Abp.Authorization.Users
 
         public async Task RemoveFromRoleAsync(TUser user, string roleName)
         {
-            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);
+            var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
             var userRole = await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
             if (userRole == null)
             {
@@ -232,7 +234,7 @@ namespace Abp.Authorization.Users
 
         public async Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
-            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);
+            var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
             return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
         }
 

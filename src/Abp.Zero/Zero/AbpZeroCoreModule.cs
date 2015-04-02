@@ -12,7 +12,7 @@ namespace Abp.Zero
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.5.12.5";
+        public const string CurrentVersion = "0.5.12.8";
 
         public override void PreInitialize()
         {

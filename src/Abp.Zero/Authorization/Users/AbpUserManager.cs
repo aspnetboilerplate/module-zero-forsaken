@@ -8,6 +8,7 @@ using Abp.Authorization.Roles;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
@@ -22,7 +23,8 @@ namespace Abp.Authorization.Users
     /// </summary>
     public abstract class AbpUserManager<TTenant, TRole, TUser> : UserManager<TUser, long>, ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>, new() where TUser : AbpUser<TTenant, TUser>
+        where TRole : AbpRole<TTenant, TUser>, new()
+        where TUser : AbpUser<TTenant, TUser>
     {
         private IUserPermissionStore<TTenant, TUser> UserPermissionStore
         {
@@ -55,6 +57,7 @@ namespace Abp.Authorization.Users
         public IAbpSession AbpSession { get; set; }
 
         private readonly IPermissionManager _permissionManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
@@ -65,8 +68,9 @@ namespace Abp.Authorization.Users
             AbpUserStore<TTenant, TRole, TUser> userStore,
             AbpRoleManager<TTenant, TRole, TUser> roleManager,
             IRepository<TTenant> tenantRepository,
-            IMultiTenancyConfig multiTenancyConfig, 
-            IPermissionManager permissionManager)
+            IMultiTenancyConfig multiTenancyConfig,
+            IPermissionManager permissionManager,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(userStore)
         {
             _abpUserStore = userStore;
@@ -74,6 +78,7 @@ namespace Abp.Authorization.Users
             _tenantRepository = tenantRepository;
             _multiTenancyConfig = multiTenancyConfig;
             _permissionManager = permissionManager;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -85,7 +90,7 @@ namespace Abp.Authorization.Users
 
             return await base.CreateAsync(user);
         }
-        
+
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
@@ -160,7 +165,7 @@ namespace Abp.Authorization.Users
 
             return permissionList;
         }
-        
+
         /// <summary>
         /// Sets all granted permissions of a user at once.
         /// Prohibits all other permissions.
@@ -215,7 +220,7 @@ namespace Abp.Authorization.Users
         /// <param name="permission">Permission</param>
         public virtual async Task GrantPermissionAsync(TUser user, Permission permission)
         {
-            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, false));                
+            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
 
             if (await IsGrantedAsync(user, permission))
             {
@@ -247,10 +252,9 @@ namespace Abp.Authorization.Users
             return await _abpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
         }
 
+        [UnitOfWork]
         public virtual async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
         {
-            //TODO: Disable tenancy filter?
-
             if (userNameOrEmailAddress.IsNullOrEmpty())
             {
                 throw new ArgumentNullException("userNameOrEmailAddress");
@@ -258,71 +262,77 @@ namespace Abp.Authorization.Users
 
             if (plainPassword.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("plainPassword");                
+                throw new ArgumentNullException("plainPassword");
             }
 
-            TUser user;
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                TUser user;
 
-            if (!_multiTenancyConfig.IsEnabled)
-            {
-                //Log in with default denant
-                user = await FindByNameOrEmailAsync(userNameOrEmailAddress);
-                if (user == null)
+                if (!_multiTenancyConfig.IsEnabled)
                 {
-                    return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
-                }
-            }
-            else
-            {
-                if (string.IsNullOrWhiteSpace(tenancyName))
-                {
-                    //Log in as tenancy owner user
-                    user = await _abpUserStore.FindByNameOrEmailAsync(null, userNameOrEmailAddress);
+                    using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        //Log in with default denant
+                        user = await FindByNameOrEmailAsync(userNameOrEmailAddress);
+                        if (user == null)
+                        {
+                            return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
+                        }
+                    }
                 }
                 else
                 {
-                    //Log in as tenant user
-                    var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
-                    if (tenant == null)
+                    if (string.IsNullOrWhiteSpace(tenancyName))
                     {
-                        return new AbpLoginResult(AbpLoginResultType.InvalidTenancyName);
+                        //Log in as host user
+                        user = await _abpUserStore.FindByNameOrEmailAsync(null, userNameOrEmailAddress);
+                    }
+                    else
+                    {
+                        //Log in as tenant user
+                        var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+                        if (tenant == null)
+                        {
+                            return new AbpLoginResult(AbpLoginResultType.InvalidTenancyName);
+                        }
+
+                        if (!tenant.IsActive)
+                        {
+                            return new AbpLoginResult(AbpLoginResultType.TenantIsNotActive);
+                        }
+
+                        user = await _abpUserStore.FindByNameOrEmailAsync(tenant.Id, userNameOrEmailAddress);
                     }
 
-                    if (!tenant.IsActive)
+                    if (user == null)
                     {
-                        return new AbpLoginResult(AbpLoginResultType.TenantIsNotActive);
+                        return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
                     }
-
-                    user = await _abpUserStore.FindByNameOrEmailAsync(tenant.Id, userNameOrEmailAddress);
                 }
-                
-                if (user == null)
+
+                var verificationResult = new PasswordHasher().VerifyHashedPassword(user.Password, plainPassword);
+                if (verificationResult != PasswordVerificationResult.Success)
                 {
-                    return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
+                    return new AbpLoginResult(AbpLoginResultType.InvalidPassword);
                 }
+
+                if (!user.IsActive)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
+                }
+
+                if (UserManagementConfig.IsEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
+                }
+
+                user.LastLoginTime = DateTime.Now;
+
+                await Store.UpdateAsync(user);
+
+                return new AbpLoginResult(user, await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie));
             }
-
-            var verificationResult = new PasswordHasher().VerifyHashedPassword(user.Password, plainPassword);
-            if (verificationResult != PasswordVerificationResult.Success)
-            {
-                return new AbpLoginResult(AbpLoginResultType.InvalidPassword);
-            }
-
-            if (!user.IsActive)
-            {
-                return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
-            }
-
-            if (UserManagementConfig.IsEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
-            {
-                return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
-            }
-
-            user.LastLoginTime = DateTime.Now;
-
-            await Store.UpdateAsync(user);
-
-            return new AbpLoginResult(user, await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie));
         }
 
         /// <summary>
@@ -368,7 +378,7 @@ namespace Abp.Authorization.Users
             }
 
             public AbpLoginResult(TUser user, ClaimsIdentity identity)
-                :this(AbpLoginResultType.Success)
+                : this(AbpLoginResultType.Success)
             {
                 User = user;
                 Identity = identity;

@@ -2,6 +2,7 @@
 using Abp.Authorization.Users;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 
@@ -14,13 +15,15 @@ namespace Abp.Zero.SampleApp.Users
             RoleManager roleManager,
             IRepository<Tenant> tenantRepository,
             IMultiTenancyConfig multiTenancyConfig,
-            IPermissionManager permissionManager)
+            IPermissionManager permissionManager,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(
             userStore,
             roleManager,
             tenantRepository,
             multiTenancyConfig,
-            permissionManager)
+            permissionManager,
+            unitOfWorkManager)
         {
         }
     }
