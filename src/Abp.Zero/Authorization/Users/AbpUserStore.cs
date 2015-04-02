@@ -207,17 +207,6 @@ namespace Abp.Authorization.Users
                 });
         }
 
-        public async Task AddToRoleAsync(int tenantId, long userId, string roleName)
-        {
-            var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == tenantId);
-            await _userRoleRepository.InsertAsync(
-                new UserRole
-                {
-                    UserId = userId,
-                    RoleId = role.Id
-                });
-        }
-
         public async Task RemoveFromRoleAsync(TUser user, string roleName)
         {
             var role = await _roleRepository.SingleAsync(r => r.Name == roleName && r.TenantId == _session.TenantId);

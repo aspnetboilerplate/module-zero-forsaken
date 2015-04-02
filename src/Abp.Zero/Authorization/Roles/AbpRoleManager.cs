@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -243,35 +242,12 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public override async Task<IdentityResult> CreateAsync(TRole role)
         {
-            if (AbpSession.MultiTenancySide == MultiTenancySides.Host && role.TenantId.HasValue)
-            {
-                return await CreateForTenantAsync(role.TenantId.Value, role);
-            }
-            
-            if (AbpSession.TenantId.HasValue)
+            if (AbpSession.TenantId.HasValue) //TODO: Is needed?
             {
                 role.TenantId = AbpSession.TenantId.Value;
             }
             
             return await base.CreateAsync(role);
-        }
-
-        public async Task<IdentityResult> CreateForTenantAsync(int tenantId, TRole role)
-        {
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
-            {
-                if (Roles.Any(r => r.Name == role.Name && r.TenantId == tenantId))
-                {
-                    return IdentityResult.Failed("There is already a role with name: " + role.Name);                    
-                }
-
-                role.TenantId = tenantId;
-
-                //TODO: Role name constraints and other business
-
-                await Store.CreateAsync(role);
-                return IdentityResult.Success;
-            }
         }
 
         /// <summary>
@@ -324,7 +300,7 @@ namespace Abp.Authorization.Roles
             return role;
         }
 
-        public virtual async Task<IdentityResult> CreateStaticRolesForTenant(int tenantId)
+        public virtual async Task<IdentityResult> CreateStaticRoles(int tenantId)
         {
             var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
 
