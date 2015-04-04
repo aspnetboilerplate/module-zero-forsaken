@@ -67,6 +67,8 @@ namespace ModuleZeroSampleProject.Web.Controllers
                     throw new UserFriendlyException("Tenant is not active: " + loginModel.TenancyName);
                 case AbpLoginResultType.UserIsNotActive:
                     throw new UserFriendlyException("User is not active: " + loginModel.UsernameOrEmailAddress);
+                case AbpLoginResultType.UserEmailIsNotConfirmed:
+                    throw new UserFriendlyException("Your email address is not confirmed!");
                 default: //Can not fall to default for now. But other result types can be added in the future and we may forget to handle it
                     throw new UserFriendlyException("Unknown problem with login: " + loginResult.Result);
             }

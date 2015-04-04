@@ -40,15 +40,15 @@ namespace ModuleZeroSampleProject.Web
 
                         "~/Scripts/modernizr-2.8.3.js",
 
-                        "~/Scripts/jquery-2.1.1.min.js",
-                        "~/Scripts/jquery-ui-1.11.2.min.js",
+                        "~/Scripts/jquery-2.1.3.min.js",
+                        "~/Scripts/jquery-ui-1.11.4.min.js",
 
                         "~/Scripts/bootstrap.min.js",
                         "~/bower_components/bootstrap-material-design/dist/css/ripples.min.js",
                         "~/bower_components/bootstrap-material-design/dist/css/material.min.js",
 
                         "~/Scripts/moment-with-locales.min.js",
-                        "~/Scripts/jquery.blockUI.min.js",
+                        "~/Scripts/jquery.blockUI.js",
                         "~/Scripts/toastr.min.js",
                         "~/bower_components/spin.js/spin.js",
                         "~/bower_components/spin.js/jquery.spin.js",
@@ -127,8 +127,8 @@ namespace ModuleZeroSampleProject.Web
                     .Include(
                         "~/Scripts/json2.min.js",
 
-                        "~/Scripts/jquery-2.1.1.min.js",
-                        "~/Scripts/jquery-ui-1.11.2.min.js",
+                        "~/Scripts/jquery-2.1.3.min.js",
+                        "~/Scripts/jquery-ui-1.11.4.min.js",
 
                         "~/Scripts/bootstrap.min.js",
                         "~/bower_components/bootstrap-material-design/dist/css/ripples.min.js",
@@ -136,7 +136,7 @@ namespace ModuleZeroSampleProject.Web
 
                         "~/Scripts/moment-with-locales.min.js",
                         "~/Scripts/jquery.validate.min.js",
-                        "~/Scripts/jquery.blockUI.min.js",
+                        "~/Scripts/jquery.blockUI.js",
                         "~/Scripts/toastr.min.js",
                         "~/bower_components/spin.js/spin.js",
                         "~/bower_components/spin.js/jquery.spin.js",

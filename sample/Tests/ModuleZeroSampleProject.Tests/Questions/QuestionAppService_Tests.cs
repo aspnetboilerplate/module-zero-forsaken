@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using ModuleZeroSampleProject.Questions;
@@ -49,11 +50,11 @@ namespace ModuleZeroSampleProject.Tests.Questions
         }
 
         [Fact]
-        public void Should_Not_Add_Question_Without_Login()
+        public async Task Should_Not_Add_Question_Without_Login()
         {
             AbpSession.UserId = null; //not logged in
 
-            Assert.Throws<AbpAuthorizationException>(
+            await Assert.ThrowsAsync<AbpAuthorizationException>(
                 () => _questionAppService.CreateQuestion(
                     new CreateQuestionInput
                     {
