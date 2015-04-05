@@ -16,9 +16,10 @@ namespace Abp.Zero
 
         public override void PreInitialize()
         {
-            IocManager.Register<IUserManagementConfig, UserManagementConfig>();
             IocManager.Register<IRoleManagementConfig, RoleManagementConfig>();
             IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
+
+            Configuration.Settings.Providers.Add<AbpZeroSettingProvider>();
         }
 
         public override void Initialize()

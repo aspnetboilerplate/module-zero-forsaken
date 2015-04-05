@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Abp.Authorization.Users;
+using Abp.Configuration;
 using Abp.Configuration.Startup;
+using Abp.Runtime.Session;
 using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
@@ -88,10 +90,19 @@ namespace Abp.Zero.SampleApp.Tests.Users
         public async Task Should_Not_Login_If_Email_Confirmation_Is_Enabled_And_User_Has_Not_Confirmed()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
-            Resolve<IUserManagementConfig>().IsEmailConfirmationRequiredForLogin = true;
 
-            var loginResult = await _userManager.LoginAsync("user1", "123qwe", "tenant1");
-            loginResult.Result.ShouldBe(AbpLoginResultType.UserEmailIsNotConfirmed);
+            //Set session
+            AbpSession.TenantId = 1;
+            AbpSession.UserId = 1;
+
+            //Email confirmation is disabled as default
+            (await _userManager.LoginAsync("user1", "123qwe", "tenant1")).Result.ShouldBe(AbpLoginResultType.Success);
+
+            //Change configuration
+            await Resolve<ISettingManager>().ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, "true");
+
+            //Email confirmation is enabled now
+            (await _userManager.LoginAsync("user1", "123qwe", "tenant1")).Result.ShouldBe(AbpLoginResultType.UserEmailIsNotConfirmed);
         }
 
         [Fact]

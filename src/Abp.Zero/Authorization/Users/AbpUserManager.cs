@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
+using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -39,24 +40,26 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public IUserManagementConfig UserManagementConfig //TODO: Add to constructor?
+        public IUserManagementConfiguration UserManagementConfiguration //TODO: Add to constructor?
         {
             private get
             {
-                if (_userManagementConfig == null)
+                if (_userManagementConfiguration == null)
                 {
                     throw new AbpException("Should set UserManagementConfig before use it!");
                 }
 
-                return _userManagementConfig;
+                return _userManagementConfiguration;
             }
-            set { _userManagementConfig = value; }
+            set { _userManagementConfiguration = value; }
         }
-        private IUserManagementConfig _userManagementConfig;
+        private IUserManagementConfiguration _userManagementConfiguration;
 
         public IAbpSession AbpSession { get; set; }
 
         protected AbpRoleManager<TTenant, TRole, TUser> RoleManager { get; private set; }
+        protected ISettingManager SettingManager { get; private set; }
+        
         protected AbpUserStore<TTenant, TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
@@ -328,8 +331,8 @@ namespace Abp.Authorization.Users
                 {
                     return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
                 }
-
-                if (UserManagementConfig.IsEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
+                
+                if (UserManagementConfiguration.IsEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
                 {
                     return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
                 }
