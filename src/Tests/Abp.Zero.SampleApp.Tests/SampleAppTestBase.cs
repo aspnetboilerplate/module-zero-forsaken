@@ -66,7 +66,12 @@ namespace Abp.Zero.SampleApp.Tests
         
         protected async Task<Role> CreateRole(string name)
         {
-            var role = new Role(null, name, name);
+            return await CreateRole(name, name);
+        }
+
+        protected async Task<Role> CreateRole(string name, string displayName)
+        {
+            var role = new Role(null, name, displayName);
 
             (await RoleManager.CreateAsync(role)).Succeeded.ShouldBe(true);
 

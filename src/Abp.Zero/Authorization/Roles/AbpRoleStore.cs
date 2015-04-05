@@ -23,19 +23,16 @@ namespace Abp.Authorization.Roles
     {
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
-        private readonly IAbpSession _session;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpRoleStore(
             IRepository<TRole> roleRepository, 
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository, 
-            IAbpSession session) //TODO: Make prop injection?
+            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
         {
             _roleRepository = roleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
-            _session = session;
         }
 
         public IQueryable<TRole> Roles
@@ -67,6 +64,13 @@ namespace Abp.Authorization.Roles
         {
             return await _roleRepository.FirstOrDefaultAsync(
                 role => role.Name == roleName
+                );
+        }
+
+        public async Task<TRole> FindByDisplayNameAsync(string displayName)
+        {
+            return await _roleRepository.FirstOrDefaultAsync(
+                role => role.DisplayName == displayName
                 );
         }
 

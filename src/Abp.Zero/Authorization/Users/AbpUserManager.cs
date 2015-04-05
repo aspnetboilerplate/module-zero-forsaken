@@ -56,12 +56,13 @@ namespace Abp.Authorization.Users
 
         public IAbpSession AbpSession { get; set; }
 
+        protected AbpRoleManager<TTenant, TRole, TUser> RoleManager { get; private set; }
+        protected AbpUserStore<TTenant, TRole, TUser> AbpStore { get; private set; }
+
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly AbpRoleManager<TTenant, TRole, TUser> _roleManager;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
-        private readonly AbpUserStore<TTenant, TRole, TUser> _abpUserStore;
 
         //TODO: Non-generic parameters may be converted to property-injection
         protected AbpUserManager(
@@ -73,8 +74,8 @@ namespace Abp.Authorization.Users
             IUnitOfWorkManager unitOfWorkManager)
             : base(userStore)
         {
-            _abpUserStore = userStore;
-            _roleManager = roleManager;
+            AbpStore = userStore;
+            RoleManager = roleManager;
             _tenantRepository = tenantRepository;
             _multiTenancyConfig = multiTenancyConfig;
             _permissionManager = permissionManager;
@@ -83,6 +84,12 @@ namespace Abp.Authorization.Users
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
+            var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+
             if (AbpSession.TenantId.HasValue)
             {
                 user.TenantId = AbpSession.TenantId.Value;
@@ -129,15 +136,15 @@ namespace Abp.Authorization.Users
             }
 
             //Check for roles
-            var roles = await GetRolesAsync(user.Id);
-            if (!roles.Any())
+            var roleNames = await GetRolesAsync(user.Id);
+            if (!roleNames.Any())
             {
                 return permission.IsGrantedByDefault;
             }
 
-            foreach (var role in roles)
+            foreach (var roleName in roleNames)
             {
-                if (await _roleManager.HasPermissionAsync(role, permission.Name))
+                if (await RoleManager.HasPermissionAsync(roleName, permission.Name))
                 {
                     return true;
                 }
@@ -249,7 +256,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            return await _abpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
+            return await AbpStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
         }
 
         [UnitOfWork]
@@ -286,7 +293,7 @@ namespace Abp.Authorization.Users
                     if (string.IsNullOrWhiteSpace(tenancyName))
                     {
                         //Log in as host user
-                        user = await _abpUserStore.FindByNameOrEmailAsync(null, userNameOrEmailAddress);
+                        user = await AbpStore.FindByNameOrEmailAsync(null, userNameOrEmailAddress);
                     }
                     else
                     {
@@ -302,7 +309,7 @@ namespace Abp.Authorization.Users
                             return new AbpLoginResult(AbpLoginResultType.TenantIsNotActive);
                         }
 
-                        user = await _abpUserStore.FindByNameOrEmailAsync(tenant.Id, userNameOrEmailAddress);
+                        user = await AbpStore.FindByNameOrEmailAsync(tenant.Id, userNameOrEmailAddress);
                     }
 
                     if (user == null)
@@ -362,6 +369,95 @@ namespace Abp.Authorization.Users
             }
 
             return identity;
+        }
+
+        public async override Task<IdentityResult> UpdateAsync(TUser user)
+        {
+            var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+
+            var oldUserName = Users.Where(u => u.Id == user.Id).Select(u => u.UserName).Single();
+            if (oldUserName == AbpUser<TTenant, TUser>.AdminUserName && user.UserName != AbpUser<TTenant, TUser>.AdminUserName)
+            {
+                return IdentityResult.Failed("Can not rename user name of the " + AbpUser<TTenant, TUser>.AdminUserName + " since this is the default admin user!");
+            }
+
+            return await base.UpdateAsync(user);
+        }
+
+        public override Task<IdentityResult> DeleteAsync(TUser user)
+        {
+            if (user.UserName == AbpUser<TTenant, TUser>.AdminUserName)
+            {
+                return Task.FromResult(IdentityResult.Failed("Can not delete " + AbpUser<TTenant, TUser>.AdminUserName + " since this is the default admin user!"));
+            }
+
+            return base.DeleteAsync(user);
+        }
+
+        public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string newPassword)
+        {
+            var result = await PasswordValidator.ValidateAsync(newPassword);
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+
+            await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(newPassword));
+            return IdentityResult.Success;
+        }
+
+        public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId, string userName, string emailAddress)
+        {
+            var user = (await FindByNameAsync(userName));
+            if (user != null && user.Id != expectedUserId)
+            {
+                return new IdentityResult("There is already a user with user name: " + userName);
+            }
+
+            user = (await FindByEmailAsync(emailAddress));
+            if (user != null && user.Id != expectedUserId)
+            {
+                return new IdentityResult("There is already a user with email address: " + emailAddress);
+            }
+
+            return IdentityResult.Success;
+        }
+
+        public virtual async Task<IdentityResult> SetRoles(TUser user, string[] roleNames)
+        {
+            //Remove from removed roles
+            foreach (var userRole in user.Roles.ToList())
+            {
+                var role = await RoleManager.FindByIdAsync(userRole.RoleId);
+                if (roleNames.All(roleName => role.Name != roleName))
+                {
+                    var result = await RemoveFromRoleAsync(user.Id, role.Name);
+                    if (!result.Succeeded)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            //Add to added roles
+            foreach (var roleName in roleNames)
+            {
+                var role = await RoleManager.GetRoleByNameAsync(roleName);
+                if (user.Roles.All(ur => ur.RoleId != role.Id))
+                {
+                    var result = await AddToRoleAsync(user.Id, roleName);
+                    if (!result.Succeeded)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            return IdentityResult.Success;
         }
 
         public class AbpLoginResult

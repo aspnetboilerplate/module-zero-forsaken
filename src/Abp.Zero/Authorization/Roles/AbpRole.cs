@@ -20,7 +20,7 @@ namespace Abp.Authorization.Roles
     /// A user can have multiple roles. Thus, user will have all permissions of all assigned roles.
     /// </remarks>
     [Table("AbpRoles")]
-    public class AbpRole<TTenant, TUser> : AuditedEntity<int, TUser>, IRole<int>, IMayHaveTenant<TTenant, TUser>
+    public class AbpRole<TTenant, TUser> : FullAuditedEntity<int, TUser>, IRole<int>, IMayHaveTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
@@ -65,6 +65,11 @@ namespace Abp.Authorization.Roles
         /// They can be used programmatically.
         /// </summary>
         public virtual bool IsStatic { get; set; }
+
+        /// <summary>
+        /// Is this role will be assigned to new users as default?
+        /// </summary>
+        public virtual bool IsDefault { get; set; }
 
         /// <summary>
         /// List of permissions of the role.

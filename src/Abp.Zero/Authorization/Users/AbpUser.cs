@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 
@@ -18,6 +19,12 @@ namespace Abp.Authorization.Users
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
+        /// <summary>
+        /// UserName of the admin.
+        /// admin can not be deleted and UserName of the admin can not be changed.
+        /// </summary>
+        public const string AdminUserName = "admin";
+        
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
@@ -37,6 +44,11 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="Password"/> property.
         /// </summary>
         public const int MaxPasswordLength = 128;
+
+        /// <summary>
+        /// Maximum length of the <see cref="Password"/> without hashed.
+        /// </summary>
+        public const int MaxPlainPasswordLength = 32;
 
         /// <summary>
         /// Maximum length of the <see cref="EmailAddress"/> property.
@@ -158,6 +170,21 @@ namespace Abp.Authorization.Users
         public AbpUser()
         {
             IsActive = true;
+        }
+
+        public virtual void SetNewPasswordResetCode()
+        {
+            PasswordResetCode = Guid.NewGuid().ToString("N").Truncate(MaxPasswordResetCodeLength);
+        }
+
+        public virtual void SetNewEmailConfirmationCode()
+        {
+            EmailConfirmationCode = Guid.NewGuid().ToString("N").Truncate(MaxEmailConfirmationCodeLength);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[User {0}] {1}", Id, UserName);
         }
     }
 }

@@ -6,15 +6,12 @@ namespace Abp.Zero.Configuration
     {
         public string RoleName { get; private set; }
 
-        public bool IsDefault { get; private set; }
-
         public MultiTenancySides Side { get; private set; }
 
-        public StaticRoleDefinition(string roleName, MultiTenancySides side, bool isDefault = false)
+        public StaticRoleDefinition(string roleName, MultiTenancySides side)
         {
             RoleName = roleName;
             Side = side;
-            IsDefault = isDefault;
         }
     }
 }

@@ -20,7 +20,6 @@ namespace Abp.Authorization.Roles
         where TRole : AbpRole<TTenant, TUser>, new()
         where TUser : AbpUser<TTenant, TUser>
     {
-
         public IAbpSession AbpSession { get; set; }
         
         public IRoleManagementConfig RoleManagementConfig { get; private set; }
@@ -38,27 +37,26 @@ namespace Abp.Authorization.Roles
             }
         }
 
+        protected AbpRoleStore<TTenant, TRole, TUser> AbpStore { get; private set; }
+
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="store">Role store</param>
-        /// <param name="permissionManager">Permission manager</param>
-        /// <param name="unitOfWorkManager"></param>
         protected AbpRoleManager(
             AbpRoleStore<TTenant, TRole, TUser> store, 
             IPermissionManager permissionManager, 
             IRoleManagementConfig roleManagementConfig,
-            IUnitOfWorkManager unitOfWorkManager
-            )
+            IUnitOfWorkManager unitOfWorkManager)
             : base(store)
         {
             RoleManagementConfig = roleManagementConfig;
             _permissionManager = permissionManager;
             _unitOfWorkManager = unitOfWorkManager;
             AbpSession = NullAbpSession.Instance;
+            AbpStore = store;
         }
 
         /// <summary>
@@ -242,12 +240,29 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public override async Task<IdentityResult> CreateAsync(TRole role)
         {
-            if (AbpSession.TenantId.HasValue) //TODO: Is needed?
+            var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+
+            if (AbpSession.TenantId.HasValue)
             {
                 role.TenantId = AbpSession.TenantId.Value;
             }
             
             return await base.CreateAsync(role);
+        }
+
+        public override async Task<IdentityResult> UpdateAsync(TRole role)
+        {
+            var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+
+            return await base.UpdateAsync(role);
         }
 
         /// <summary>
@@ -299,7 +314,7 @@ namespace Abp.Authorization.Roles
 
             return role;
         }
-
+        
         public virtual async Task<IdentityResult> CreateStaticRoles(int tenantId)
         {
             var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
@@ -322,6 +337,28 @@ namespace Abp.Authorization.Roles
             }
 
             return IdentityResult.Success;
+        }
+
+        public virtual async Task<IdentityResult> CheckDuplicateRoleNameAsync(int? expectedRoleId, string name, string displayName)
+        {
+            var role = await FindByNameAsync(name);
+            if (role != null && role.Id != expectedRoleId)
+            {
+                return new IdentityResult("There is already a role with name: " + name);
+            }
+
+            role = await FindByDisplayNameAsync(displayName);
+            if (role != null && role.Id != expectedRoleId)
+            {
+                return new IdentityResult("There is already a role with display name: " + displayName);
+            }
+
+            return IdentityResult.Success;
+        }
+
+        private Task<TRole> FindByDisplayNameAsync(string displayName)
+        {
+            return AbpStore.FindByDisplayNameAsync(displayName);
         }
     }
 }

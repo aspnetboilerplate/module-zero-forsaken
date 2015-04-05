@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Zero.SampleApp.Roles;
 using Shouldly;
 using Xunit;
 
@@ -19,13 +20,25 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         }
 
         [Fact]
+        public async Task Should_Not_Create_For_Duplicate_Name_Or_DisplayName()
+        {
+            //Create a role and check
+            await CreateRole("Role1", "Role One");
+            (await RoleManager.FindByNameAsync("Role1")).ShouldNotBe(null);
+
+            //Create with same name
+            (await RoleManager.CreateAsync(new Role(null, "Role1", "Role Uno"))).Succeeded.ShouldBe(false);
+            (await RoleManager.CreateAsync(new Role(null, "Role2", "Role One"))).Succeeded.ShouldBe(false);
+        }
+
+        [Fact]
         public async Task PermissionTests()
         {
             var role1 = await CreateRole("Role1");
 
             (await RoleManager.HasPermissionAsync(role1, PermissionManager.GetPermission("Permission1"))).ShouldBe(false);
             (await RoleManager.HasPermissionAsync(role1, PermissionManager.GetPermission("Permission3"))).ShouldBe(true);
-            
+
             await GrantPermissionAsync(role1, "Permission1");
             await ProhibitPermissionAsync(role1, "Permission1");
 
@@ -50,7 +63,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             await RoleManager.SetGrantedPermissionsAsync(role1, newPermissionList);
 
             grantedPermissions = await RoleManager.GetGrantedPermissionsAsync(role1);
-            
+
             grantedPermissions.Count.ShouldBe(3);
             grantedPermissions.ShouldContain(p => p.Name == "Permission1");
             grantedPermissions.ShouldContain(p => p.Name == "Permission2");
