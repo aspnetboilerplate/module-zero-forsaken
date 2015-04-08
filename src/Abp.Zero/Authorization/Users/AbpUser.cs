@@ -69,7 +69,7 @@ namespace Abp.Authorization.Users
         /// Tenant of this user.
         /// </summary>
         [ForeignKey("TenantId")]
-        public TTenant Tenant { get; set; }
+        public virtual TTenant Tenant { get; set; }
 
         /// <summary>
         /// Tenant Id of this user.
