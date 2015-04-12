@@ -314,6 +314,12 @@ namespace Abp.Authorization.Roles
 
             return role;
         }
+
+        public async Task GrantAllPermissionsAsync(TRole role)
+        {
+            var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide());
+            await SetGrantedPermissionsAsync(role, permissions);
+        }
         
         public virtual async Task<IdentityResult> CreateStaticRoles(int tenantId)
         {

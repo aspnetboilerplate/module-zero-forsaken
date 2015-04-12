@@ -17,6 +17,11 @@ namespace Abp.MultiTenancy
         where TTenant : AbpTenant<TTenant, TUser>
     {
         /// <summary>
+        /// "Default".
+        /// </summary>
+        public const string DefaultTenantName = "Default";
+
+        /// <summary>
         /// Max length of the <see cref="TenancyName"/> property.
         /// </summary>
         public const int MaxTenancyNameLength = 64;
