@@ -22,6 +22,11 @@ namespace Abp.MultiTenancy
         public const string DefaultTenantName = "Default";
 
         /// <summary>
+        /// "^[a-zA-Z][a-zA-Z0-9_-]{1,}$".
+        /// </summary>
+        public const string TenancyNameRegex = "^[a-zA-Z][a-zA-Z0-9_-]{1,}$";
+
+        /// <summary>
         /// Max length of the <see cref="TenancyName"/> property.
         /// </summary>
         public const int MaxTenancyNameLength = 64;

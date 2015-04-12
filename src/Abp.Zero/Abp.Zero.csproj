@@ -92,7 +92,7 @@
     <Compile Include="Authorization\Users\UserPermissionSetting.cs" />
     <Compile Include="Configuration\Setting.cs" />
     <Compile Include="Configuration\SettingExtensions.cs" />
-    <Compile Include="MultiTenancy\IFilterByTenant.cs" />
+    <Compile Include="MultiTenancy\AbpTenantManager.cs" />
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="Authorization\Roles\AbpRoleManager.cs" />
