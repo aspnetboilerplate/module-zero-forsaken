@@ -35,9 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.5.12.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Abp, Version=0.5.12.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Abp.0.5.12.0\lib\net451\Abp.dll</HintPath>
+      <HintPath>..\..\packages\Abp.0.5.12.1\lib\net451\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Abp.EntityFramework, Version=0.5.12.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Settings_Tests.cs" />
+    <Compile Include="IdentityFramework\IdentityResultHelper_Tests.cs" />
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
     <Compile Include="Users\UserAppService_Tests.cs" />

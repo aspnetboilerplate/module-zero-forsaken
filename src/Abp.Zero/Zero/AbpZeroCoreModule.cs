@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Abp.Localization.Sources;
+using Abp.Localization.Sources.Xml;
 using Abp.Modules;
 using Abp.Zero.Configuration;
 
@@ -20,6 +22,13 @@ namespace Abp.Zero
             IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
 
             Configuration.Settings.Providers.Add<AbpZeroSettingProvider>();
+
+            Configuration.Localization.Sources.Add(
+                new DictionaryBasedLocalizationSource(
+                    "AbpZero",
+                    new XmlEmbeddedFileLocalizationDictionaryProvider(
+                        Assembly.GetExecutingAssembly(), "Abp.Zero.Localization.Source"
+                        )));
         }
 
         public override void Initialize()
