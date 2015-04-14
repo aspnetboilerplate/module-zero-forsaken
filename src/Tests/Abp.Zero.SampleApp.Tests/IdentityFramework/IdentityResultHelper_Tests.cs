@@ -13,11 +13,11 @@ namespace Abp.Zero.SampleApp.Tests.IdentityFramework
         {
             var localizationManager = Resolve<ILocalizationManager>();
 
-            IdentityResultHelper
+            IdentityResultExtensions
                 .LocalizeErrors(IdentityResult.Failed("Incorrect password."), localizationManager)
                 .ShouldBe("Incorrect password.");
 
-            IdentityResultHelper
+            IdentityResultExtensions
                 .LocalizeErrors(IdentityResult.Failed("Passwords must be at least 6 characters."), localizationManager)
                 .ShouldBe("Passwords must be at least 6 characters.");
         }

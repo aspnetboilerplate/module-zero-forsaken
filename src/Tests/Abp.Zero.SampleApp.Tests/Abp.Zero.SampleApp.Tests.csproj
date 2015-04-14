@@ -127,6 +127,7 @@
   <ItemGroup>
     <Compile Include="Configuration\Settings_Tests.cs" />
     <Compile Include="IdentityFramework\IdentityResultHelper_Tests.cs" />
+    <Compile Include="MultiTenancy\TenantManager_Tests.cs" />
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
     <Compile Include="Users\UserAppService_Tests.cs" />
