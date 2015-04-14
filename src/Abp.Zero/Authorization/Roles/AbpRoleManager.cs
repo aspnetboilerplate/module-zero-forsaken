@@ -362,7 +362,7 @@ namespace Abp.Authorization.Roles
             role = await FindByDisplayNameAsync(displayName);
             if (role != null && role.Id != expectedRoleId)
             {
-                return AbpIdentityResult.Failed(string.Format(L("RoleDisplayNameIsAlreadyTaken"), name));
+                return AbpIdentityResult.Failed(string.Format(L("RoleDisplayNameIsAlreadyTaken"), displayName));
             }
 
             return IdentityResult.Success;
