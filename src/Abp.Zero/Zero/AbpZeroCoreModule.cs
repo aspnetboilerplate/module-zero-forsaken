@@ -25,7 +25,7 @@ namespace Abp.Zero
 
             Configuration.Localization.Sources.Add(
                 new DictionaryBasedLocalizationSource(
-                    "AbpZero",
+                    AbpZeroConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(), "Abp.Zero.Localization.Source"
                         )));
@@ -35,5 +35,13 @@ namespace Abp.Zero
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
+    }
+
+    public class AbpZeroConsts
+    {
+        /// <summary>
+        /// "AbpZero"
+        /// </summary>
+        public const string LocalizationSourceName = "AbpZero";
     }
 }

@@ -6,6 +6,7 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.IdentityFramework;
 using Abp.Localization;
+using Abp.Zero;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.MultiTenancy
@@ -111,7 +112,7 @@ namespace Abp.MultiTenancy
 
         private string L(string name)
         {
-            return LocalizationManager.GetString("AbpZero", name);
+            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
         }
     }
 }

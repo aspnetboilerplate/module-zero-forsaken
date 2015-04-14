@@ -11,9 +11,12 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
+using Abp.IdentityFramework;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
+using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
@@ -55,6 +58,8 @@ namespace Abp.Authorization.Users
         }
         private IUserManagementConfiguration _userManagementConfiguration;
 
+        public ILocalizationManager LocalizationManager { get; set; }
+
         public IAbpSession AbpSession { get; set; }
 
         protected AbpRoleManager<TTenant, TRole, TUser> RoleManager { get; private set; }
@@ -83,6 +88,7 @@ namespace Abp.Authorization.Users
             _multiTenancyConfig = multiTenancyConfig;
             _permissionManager = permissionManager;
             _unitOfWorkManager = unitOfWorkManager;
+            LocalizationManager = NullLocalizationManager.Instance;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -275,7 +281,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentNullException("plainPassword");
             }
 
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant)) //TODO: No need to filter settings after ABP 0.5.10.3. Test it.
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
                 TUser user;
 
@@ -385,20 +391,20 @@ namespace Abp.Authorization.Users
             var oldUserName = Users.Where(u => u.Id == user.Id).Select(u => u.UserName).Single();
             if (oldUserName == AbpUser<TTenant, TUser>.AdminUserName && user.UserName != AbpUser<TTenant, TUser>.AdminUserName)
             {
-                return IdentityResult.Failed("Can not rename user name of the " + AbpUser<TTenant, TUser>.AdminUserName + " since this is the default admin user!");
+                return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"), AbpUser<TTenant, TUser>.AdminUserName));
             }
 
             return await base.UpdateAsync(user);
         }
 
-        public override Task<IdentityResult> DeleteAsync(TUser user)
+        public async override Task<IdentityResult> DeleteAsync(TUser user)
         {
             if (user.UserName == AbpUser<TTenant, TUser>.AdminUserName)
             {
-                return Task.FromResult(IdentityResult.Failed("Can not delete " + AbpUser<TTenant, TUser>.AdminUserName + " since this is the default admin user!"));
+                return AbpIdentityResult.Failed(string.Format(L("CanNotDeleteAdminUser"), AbpUser<TTenant, TUser>.AdminUserName));
             }
 
-            return base.DeleteAsync(user);
+            return await base.DeleteAsync(user);
         }
 
         public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string newPassword)
@@ -418,13 +424,13 @@ namespace Abp.Authorization.Users
             var user = (await FindByNameAsync(userName));
             if (user != null && user.Id != expectedUserId)
             {
-                return new IdentityResult("There is already a user with user name: " + userName);
+                return AbpIdentityResult.Failed(string.Format(L("Identity.DuplicateName"), userName));
             }
 
             user = (await FindByEmailAsync(emailAddress));
             if (user != null && user.Id != expectedUserId)
             {
-                return new IdentityResult("There is already a user with email address: " + emailAddress);
+                return AbpIdentityResult.Failed(string.Format(L("Identity.DuplicateEmail"), emailAddress));
             }
 
             return IdentityResult.Success;
@@ -461,6 +467,11 @@ namespace Abp.Authorization.Users
             }
 
             return IdentityResult.Success;
+        }
+
+        private string L(string name)
+        {
+            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
         }
 
         public class AbpLoginResult

@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.IdentityFramework;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
+using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
@@ -20,6 +23,8 @@ namespace Abp.Authorization.Roles
         where TRole : AbpRole<TTenant, TUser>, new()
         where TUser : AbpUser<TTenant, TUser>
     {
+        public ILocalizationManager LocalizationManager { get; set; }
+
         public IAbpSession AbpSession { get; set; }
         
         public IRoleManagementConfig RoleManagementConfig { get; private set; }
@@ -55,8 +60,9 @@ namespace Abp.Authorization.Roles
             RoleManagementConfig = roleManagementConfig;
             _permissionManager = permissionManager;
             _unitOfWorkManager = unitOfWorkManager;
-            AbpSession = NullAbpSession.Instance;
             AbpStore = store;
+            AbpSession = NullAbpSession.Instance;
+            LocalizationManager = NullLocalizationManager.Instance;
         }
 
         /// <summary>
@@ -269,14 +275,14 @@ namespace Abp.Authorization.Roles
         /// Deletes a role.
         /// </summary>
         /// <param name="role">Role</param>
-        public override Task<IdentityResult> DeleteAsync(TRole role)
+        public async override Task<IdentityResult> DeleteAsync(TRole role)
         {
             if (role.IsStatic)
             {
-                throw new AbpException("Can not delete a static role: " + role);
+                return AbpIdentityResult.Failed(string.Format(L("CanNotDeleteStaticRole"), role.Name));
             }
 
-            return base.DeleteAsync(role);
+            return await base.DeleteAsync(role);
         }
 
         /// <summary>
@@ -350,13 +356,13 @@ namespace Abp.Authorization.Roles
             var role = await FindByNameAsync(name);
             if (role != null && role.Id != expectedRoleId)
             {
-                return new IdentityResult("There is already a role with name: " + name);
+                return AbpIdentityResult.Failed(string.Format(L("RoleNameIsAlreadyTaken"), name));
             }
 
             role = await FindByDisplayNameAsync(displayName);
             if (role != null && role.Id != expectedRoleId)
             {
-                return new IdentityResult("There is already a role with display name: " + displayName);
+                return AbpIdentityResult.Failed(string.Format(L("RoleDisplayNameIsAlreadyTaken"), name));
             }
 
             return IdentityResult.Success;
@@ -365,6 +371,11 @@ namespace Abp.Authorization.Roles
         private Task<TRole> FindByDisplayNameAsync(string displayName)
         {
             return AbpStore.FindByDisplayNameAsync(displayName);
+        }
+
+        private string L(string name)
+        {
+            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
         }
     }
 }

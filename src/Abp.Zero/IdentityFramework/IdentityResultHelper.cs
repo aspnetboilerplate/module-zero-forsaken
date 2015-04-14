@@ -6,6 +6,7 @@ using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Text;
 using Abp.UI;
+using Abp.Zero;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.IdentityFramework
@@ -45,11 +46,10 @@ namespace Abp.IdentityFramework
                 return;
             }
 
-            var localizedMessage = LocalizeErrors(identityResult, localizationManager);
-            throw new UserFriendlyException(localizedMessage);
+            throw new UserFriendlyException(identityResult.LocalizeErrors(localizationManager));
         }
 
-        public static string LocalizeErrors(IdentityResult identityResult, ILocalizationManager localizationManager)
+        public static string LocalizeErrors(this IdentityResult identityResult, ILocalizationManager localizationManager)
         {
             if (identityResult.Succeeded)
             {
@@ -71,7 +71,7 @@ namespace Abp.IdentityFramework
 
         private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationManager localizationManager)
         {
-            var localizationSource = localizationManager.GetSource("AbpZero");
+            var localizationSource = localizationManager.GetSource(AbpZeroConsts.LocalizationSourceName);
 
             foreach (var identityLocalization in IdentityLocalizations)
             {
@@ -82,7 +82,7 @@ namespace Abp.IdentityFramework
                 }
             }
 
-            return identityErrorMessage;
+            return localizationSource.GetString("Identity.DefaultError");
         }
     }
 }
