@@ -1,5 +1,6 @@
 ﻿using Abp.IdentityFramework;
 using Abp.Localization;
+using Microsoft.AspNet.Identity;
 using Shouldly;
 using Xunit;
 
@@ -13,11 +14,11 @@ namespace Abp.Zero.SampleApp.Tests.IdentityFramework
             var localizationManager = Resolve<ILocalizationManager>();
 
             IdentityResultHelper
-                .LocalizeErrorMessage("Incorrect password.", localizationManager)
+                .LocalizeErrors(IdentityResult.Failed("Incorrect password."), localizationManager)
                 .ShouldBe("Incorrect password.");
 
             IdentityResultHelper
-                .LocalizeErrorMessage("Passwords must be at least 6 characters.", localizationManager)
+                .LocalizeErrors(IdentityResult.Failed("Passwords must be at least 6 characters."), localizationManager)
                 .ShouldBe("Passwords must be at least 6 characters.");
         }
     }
