@@ -4,6 +4,8 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.IdentityFramework;
+using Abp.Localization;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.MultiTenancy
@@ -15,21 +17,28 @@ namespace Abp.MultiTenancy
     /// <typeparam name="TTenant">Type of the application Tenant</typeparam>
     /// <typeparam name="TRole">Type of the application Role</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
-    public abstract class AbpTenantManager<TTenant, TRole, TUser> : AbpServiceBase, ITransientDependency
+    public abstract class AbpTenantManager<TTenant, TRole, TUser> : ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
+        public ILocalizationManager LocalizationManager { get; set; }
+
         private readonly IRepository<TTenant> _tenantRepository;
 
         protected AbpTenantManager(IRepository<TTenant> tenantRepository)
         {
             _tenantRepository = tenantRepository;
+
+            LocalizationManager = NullLocalizationManager.Instance;
         }
 
         public virtual async Task<IdentityResult> CreateAsync(TTenant tenant)
         {
-            //TODO: Check duplicate TenancyName
+            if (await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName) != null)
+            {
+                return AbpIdentityResult.Failed(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+            }
 
             var validationResult = await ValidateTenantAsync(tenant);
             if (!validationResult.Succeeded)
@@ -43,7 +52,10 @@ namespace Abp.MultiTenancy
 
         public async Task<IdentityResult> UpdateAsync(TTenant tenant)
         {
-            //TODO: Check duplicate TenancyName
+            if (await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
+            {
+                return AbpIdentityResult.Failed(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+            }
 
             await _tenantRepository.UpdateAsync(tenant);
             return IdentityResult.Success;
@@ -84,11 +96,6 @@ namespace Abp.MultiTenancy
                 return nameValidationResult;
             }
 
-            if (await _tenantRepository.CountAsync(t => t.Id != tenant.Id && t.TenancyName == tenant.TenancyName) > 0)
-            {
-                return new IdentityResult("There is already a tenant with given tenancy name: " + tenant.TenancyName);
-            }
-
             return IdentityResult.Success;
         }
 
@@ -96,10 +103,15 @@ namespace Abp.MultiTenancy
         {
             if (!Regex.IsMatch(tenancyName, AbpTenant<TTenant, TUser>.TenancyNameRegex))
             {
-                return IdentityResult.Failed("TenancyName is invalid.");
+                return AbpIdentityResult.Failed(L("InvalidTenancyName"));
             }
 
             return IdentityResult.Success;
+        }
+
+        private string L(string name)
+        {
+            return LocalizationManager.GetString("AbpZero", name);
         }
     }
 }

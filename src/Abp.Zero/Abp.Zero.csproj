@@ -94,6 +94,7 @@
     <Compile Include="Configuration\SettingExtensions.cs" />
     <Compile Include="IdentityFramework\IdentityResultExtensions.cs" />
     <Compile Include="IdentityFramework\IdentityResultHelper.cs" />
+    <Compile Include="IdentityFramework\AbpIdentityResult.cs" />
     <Compile Include="MultiTenancy\AbpTenantManager.cs" />
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />

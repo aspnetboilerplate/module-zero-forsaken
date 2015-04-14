@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Text;
+using Abp.UI;
+using Microsoft.AspNet.Identity;
 
 namespace Abp.IdentityFramework
 {
@@ -34,20 +38,51 @@ namespace Abp.IdentityFramework
                   {"An unknown failure has occured.", "Identity.DefaultError"}
               };
 
-        public static string Localize(string identityMessage, ILocalizationManager localizationManager)
+        public static void CheckErrors(this IdentityResult identityResult, ILocalizationManager localizationManager)
+        {
+            if (identityResult.Succeeded)
+            {
+                return;
+            }
+
+            var localizedMessage = LocalizeErrors(identityResult, localizationManager);
+            throw new UserFriendlyException(localizedMessage);
+        }
+
+        public static string LocalizeErrors(IdentityResult identityResult, ILocalizationManager localizationManager)
+        {
+            if (identityResult.Succeeded)
+            {
+                throw new ArgumentException("identityResult.Succeeded should be false in order to localize errors.");
+            }
+
+            if (identityResult.Errors == null)
+            {
+                throw new ArgumentException("identityResult.Errors should not be null.");
+            }
+
+            if (identityResult is AbpIdentityResult)
+            {
+                return identityResult.Errors.JoinAsString(" ");
+            }
+
+            return identityResult.Errors.Select(err => LocalizeErrorMessage(err, localizationManager)).JoinAsString(" ");
+        }
+
+        private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationManager localizationManager)
         {
             var localizationSource = localizationManager.GetSource("AbpZero");
-            
+
             foreach (var identityLocalization in IdentityLocalizations)
             {
                 string[] values;
-                if (FormattedStringValueExtracter.IsMatch(identityMessage, identityLocalization.Key, out values))
+                if (FormattedStringValueExtracter.IsMatch(identityErrorMessage, identityLocalization.Key, out values))
                 {
                     return localizationSource.GetString(identityLocalization.Value, values.Cast<object>().ToArray());
                 }
             }
 
-            return identityMessage;
+            return identityErrorMessage;
         }
     }
 }

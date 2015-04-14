@@ -22,5 +22,7 @@
     <text name="Identity.DuplicateEmail" value="Email '{0}' is already taken." />
     <text name="Identity.ExternalLoginExists" value="A user with that external login already exists." />
     <text name="Identity.DefaultError" value="An unknown failure has occured." />
+    <text name="InvalidTenancyName" value="Tenancy name is not valid!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Tenancy name {0} is already taken." />
   </texts>
 </localizationDictionary>
