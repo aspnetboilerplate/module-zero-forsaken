@@ -5,7 +5,6 @@ using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.MultiTenancy;
-using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -22,6 +21,7 @@ namespace Abp.Authorization.Roles
         where TTenant : AbpTenant<TTenant, TUser>
     {
         private readonly IRepository<TRole> _roleRepository;
+        private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
 
         /// <summary>
@@ -29,9 +29,11 @@ namespace Abp.Authorization.Roles
         /// </summary>
         protected AbpRoleStore(
             IRepository<TRole> roleRepository, 
+            IRepository<UserRole, long> userRoleRepository,
             IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
         {
             _roleRepository = roleRepository;
+            _userRoleRepository = userRoleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
         }
 
@@ -52,7 +54,8 @@ namespace Abp.Authorization.Roles
 
         public async Task DeleteAsync(TRole role)
         {
-            await _roleRepository.DeleteAsync(role.Id);
+            await _userRoleRepository.DeleteAsync(ur => ur.RoleId == role.Id);
+            await _roleRepository.DeleteAsync(role);
         }
 
         public async Task<TRole> FindByIdAsync(int roleId)

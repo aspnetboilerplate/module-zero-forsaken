@@ -39,6 +39,25 @@ namespace Abp.IdentityFramework
                   {"An unknown failure has occured.", "Identity.DefaultError"}
               };
 
+        /// <summary>
+        /// Checks errors of given <see cref="IdentityResult"/> and throws <see cref="UserFriendlyException"/> if it's not succeeded.
+        /// </summary>
+        /// <param name="identityResult">Identity result to check</param>
+        public static void CheckErrors(this IdentityResult identityResult)
+        {
+            if (identityResult.Succeeded)
+            {
+                return;
+            }
+
+            throw new UserFriendlyException(identityResult.Errors.JoinAsString(" "));
+        }
+
+        /// <summary>
+        /// Checks errors of given <see cref="IdentityResult"/> and throws <see cref="UserFriendlyException"/> if it's not succeeded.
+        /// </summary>
+        /// <param name="identityResult">Identity result to check</param>
+        /// <param name="localizationManager">Localization manager to localize error messages</param>
         public static void CheckErrors(this IdentityResult identityResult, ILocalizationManager localizationManager)
         {
             if (identityResult.Succeeded)

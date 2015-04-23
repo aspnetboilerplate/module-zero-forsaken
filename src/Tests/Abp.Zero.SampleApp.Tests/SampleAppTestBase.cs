@@ -4,12 +4,14 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections;
+using Abp.IdentityFramework;
 using Abp.Modules;
 using Abp.TestBase;
 using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
 using Castle.MicroKernel.Registration;
+using EntityFramework.DynamicFilters;
 using Shouldly;
 
 namespace Abp.Zero.SampleApp.Tests
@@ -46,6 +48,7 @@ namespace Abp.Zero.SampleApp.Tests
         {
             using (var context = LocalIocManager.Resolve<AppDbContext>())
             {
+                context.DisableAllFilters();
                 action(context);
                 context.SaveChanges();
             }
@@ -57,6 +60,7 @@ namespace Abp.Zero.SampleApp.Tests
 
             using (var context = LocalIocManager.Resolve<AppDbContext>())
             {
+                context.DisableAllFilters();
                 result = func(context);
                 context.SaveChanges();
             }
@@ -97,7 +101,7 @@ namespace Abp.Zero.SampleApp.Tests
                            Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
                        };
 
-            (await UserManager.CreateAsync(user)).Succeeded.ShouldBe(true);
+            (await UserManager.CreateAsync(user)).CheckErrors();
 
             await UsingDbContext(async context =>
             {

@@ -388,7 +388,7 @@ namespace Abp.Authorization.Users
                 return result;
             }
 
-            var oldUserName = Users.Where(u => u.Id == user.Id).Select(u => u.UserName).Single();
+            var oldUserName = (await GetUserByIdAsync(user.Id)).UserName;
             if (oldUserName == AbpUser<TTenant, TUser>.AdminUserName && user.UserName != AbpUser<TTenant, TUser>.AdminUserName)
             {
                 return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"), AbpUser<TTenant, TUser>.AdminUserName));
