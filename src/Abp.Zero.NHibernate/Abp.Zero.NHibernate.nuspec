@@ -6,7 +6,7 @@
     <title>Abp.Zero.NHibernate</title>
     <authors>Halil İbrahim Kalkan</authors>
     <owners>Halil İbrahim Kalkan</owners>
-    <description>ASP.NET Boilerplate - Module Zero - NHibernate Integration. This project is not proper for usage yet.</description>
+    <description>ASP.NET Boilerplate - Module Zero - NHibernate Integration.</description>
     <projectUrl>http://www.aspnetboilerplate.com</projectUrl>
     <iconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</iconUrl>
     <tags>asp.net boilerplate mvc application web framework domain driven design dependency injection nhibernate fluentmigrator</tags>
