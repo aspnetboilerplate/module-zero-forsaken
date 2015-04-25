@@ -55,7 +55,6 @@ namespace Abp.Authorization.Users
 
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly ISettingManager _settingManager;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
 
@@ -330,11 +329,11 @@ namespace Abp.Authorization.Users
                 bool isEmailConfirmationRequiredForLogin;
                 if (user.TenantId.HasValue)
                 {
-                    isEmailConfirmationRequiredForLogin = await _settingManager.GetSettingValueForTenantAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, user.TenantId.Value);
+                    isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueForTenantAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, user.TenantId.Value);
                 }
                 else
                 {
-                    isEmailConfirmationRequiredForLogin = await _settingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+                    isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
                 }
 
                 if (isEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
