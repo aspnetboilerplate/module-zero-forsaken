@@ -10,9 +10,6 @@ What is 'module zero'
 * Provides a Role and Permission based authorization system.
 * Provides infrastructure to develop multi-tenant applications.
 * Implements Setting system of ASP.NET Boilerplate to store Tenant, Application and User level settings in the database.
-* And much more...
- 
-__IMPORTANT NOTE__: This project is not production ready yet and not released. But you can try it early.
 
 Sample Project
 -------------------
