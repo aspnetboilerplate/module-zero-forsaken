@@ -43,32 +43,19 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public IUserManagementConfiguration UserManagementConfiguration //TODO: Add to constructor?
-        {
-            private get
-            {
-                if (_userManagementConfiguration == null)
-                {
-                    throw new AbpException("Should set UserManagementConfig before use it!");
-                }
-
-                return _userManagementConfiguration;
-            }
-            set { _userManagementConfiguration = value; }
-        }
-        private IUserManagementConfiguration _userManagementConfiguration;
-
         public ILocalizationManager LocalizationManager { get; set; }
 
         public IAbpSession AbpSession { get; set; }
 
         protected AbpRoleManager<TTenant, TRole, TUser> RoleManager { get; private set; }
+        
         protected ISettingManager SettingManager { get; private set; }
         
         protected AbpUserStore<TTenant, TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ISettingManager _settingManager;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
 
@@ -79,11 +66,13 @@ namespace Abp.Authorization.Users
             IRepository<TTenant> tenantRepository,
             IMultiTenancyConfig multiTenancyConfig,
             IPermissionManager permissionManager,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            ISettingManager settingManager)
             : base(userStore)
         {
             AbpStore = userStore;
             RoleManager = roleManager;
+            SettingManager = settingManager;
             _tenantRepository = tenantRepository;
             _multiTenancyConfig = multiTenancyConfig;
             _permissionManager = permissionManager;
@@ -337,8 +326,18 @@ namespace Abp.Authorization.Users
                 {
                     return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
                 }
-                
-                if (UserManagementConfiguration.IsEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
+
+                bool isEmailConfirmationRequiredForLogin;
+                if (user.TenantId.HasValue)
+                {
+                    isEmailConfirmationRequiredForLogin = await _settingManager.GetSettingValueForTenantAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, user.TenantId.Value);
+                }
+                else
+                {
+                    isEmailConfirmationRequiredForLogin = await _settingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+                }
+
+                if (isEmailConfirmationRequiredForLogin && !user.IsEmailConfirmed)
                 {
                     return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
                 }

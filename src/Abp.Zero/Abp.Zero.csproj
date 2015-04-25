@@ -116,12 +116,10 @@
     <Compile Include="Zero\Configuration\AbpZeroSettingProvider.cs" />
     <Compile Include="Zero\Configuration\IAbpZeroConfig.cs" />
     <Compile Include="Zero\Configuration\IRoleManagementConfig.cs" />
-    <Compile Include="Zero\Configuration\IUserManagementConfiguration.cs" />
     <Compile Include="Zero\Configuration\ModuleZeroConfigurationExtensions.cs" />
     <Compile Include="Zero\Configuration\AbpZeroConfig.cs" />
     <Compile Include="Zero\Configuration\RoleManagementConfig.cs" />
     <Compile Include="Zero\Configuration\StaticRoleDefinition.cs" />
-    <Compile Include="Zero\Configuration\UserManagementConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Zero.nuspec" />
