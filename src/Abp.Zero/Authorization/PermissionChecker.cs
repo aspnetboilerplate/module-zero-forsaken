@@ -36,12 +36,12 @@ namespace Abp.Authorization
             AbpSession = NullAbpSession.Instance;
         }
 
-        public async Task<bool> IsGrantedAsync(string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(string permissionName)
         {
             return AbpSession.UserId.HasValue && await _userManager.IsGrantedAsync(AbpSession.UserId.Value, permissionName);
         }
 
-        public async Task<bool> IsGrantedAsync(long userId, string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
             return await _userManager.IsGrantedAsync(userId, permissionName);
         }
