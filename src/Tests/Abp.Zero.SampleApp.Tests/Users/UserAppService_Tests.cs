@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Abp.Auditing;
 using Abp.Zero.SampleApp.Users;
 using Abp.Zero.SampleApp.Users.Dto;
 using Shouldly;
@@ -13,6 +14,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         public UserAppService_Tests()
         {
             _userAppService = Resolve<IUserAppService>();
+            Resolve<IAuditingConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
         [Fact]
