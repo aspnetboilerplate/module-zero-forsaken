@@ -3,7 +3,7 @@ using Abp.Web.Mvc.Authorization;
 
 namespace ModuleZeroSampleProject.Web.Controllers
 {
-    [AbpAuthorize]
+    [AbpMvcAuthorize]
     public class HomeController : ModuleZeroSampleProjectControllerBase
     {
         public ActionResult Index()
