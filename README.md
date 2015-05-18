@@ -11,6 +11,23 @@ What is 'module zero'
 * Provides infrastructure to develop multi-tenant applications.
 * Implements Setting system of ASP.NET Boilerplate to store Tenant, Application and User level settings in the database.
 
+Setting system
+----------
+Every application need to store some settings and use these settings in somewhere in the application. ASP.NET Boilerplate provides a strong infrastructure to store/retrieve application, tenant and user level settings usable both in server and client sides.
+
+A setting is a name-value string pair that is generally stored in a database (or another source). We can store non-string values by converting to string.
+
+**Check the full documentation:** http://aspnetboilerplate.com/Pages/Documents/Setting-Management
+
+Authorization
+----------
+Almost all enterprise applications use authorization in some level. Authorization is used to check if a user is allowed to perform some specific operation in the application. ASP.NET Boilerplate defines a permission based infrastructure to implement authorization.
+
+**Check the full documentation:** http://aspnetboilerplate.com/Pages/Documents/Authorization
+
+
+
+
 Sample Project
 -------------------
 
