@@ -19,6 +19,7 @@ using Abp.Runtime.Session;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
+using Abp.Timing;
 
 namespace Abp.Authorization.Users
 {
@@ -341,7 +342,7 @@ namespace Abp.Authorization.Users
                     return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
                 }
 
-                user.LastLoginTime = DateTime.Now;
+                user.LastLoginTime = Clock.Now;
 
                 await Store.UpdateAsync(user);
 
