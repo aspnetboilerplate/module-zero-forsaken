@@ -4,12 +4,14 @@ ASP.NET Boilerplate - Module Zero
 What is 'module zero'
 ----------
 
-'Module zero' is the first module for ASP.NET Boilerplate that includes following features:
+Module-Zero is the module that implements abstract concepts of ASP.NET Boilerplate framework, also adds some useful stuff for enterprise web applications:
 
 * Implements ASP.NET Identity framework for User and Role management.
 * Provides a Role and Permission based authorization system.
 * Provides infrastructure to develop multi-tenant applications.
 * Implements Setting system of ASP.NET Boilerplate to store Tenant, Application and User level settings in the database.
+* Implements audit logging.
+* Implements session management.
 
 Sample Project
 -------------------
@@ -32,5 +34,3 @@ Password: 123qwe
 After login, a question list is shown:
 
 ![alt login form](https://raw.githubusercontent.com/aspnetboilerplate/module-zero/master/doc/question-list.png)
-
-This sample is still being developed. A CodeProject article will be written when it's finished.
