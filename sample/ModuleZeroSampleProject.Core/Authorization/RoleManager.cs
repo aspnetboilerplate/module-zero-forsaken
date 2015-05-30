@@ -9,8 +9,16 @@ namespace ModuleZeroSampleProject.Authorization
 {
     public class RoleManager : AbpRoleManager<Tenant, Role, User>
     {
-        public RoleManager(RoleStore store, IPermissionManager permissionManager, IRoleManagementConfig roleManagementConfig, IUnitOfWorkManager unitOfWorkManager)
-            : base(store, permissionManager, roleManagementConfig, unitOfWorkManager)
+        public RoleManager(
+            RoleStore store, 
+            IPermissionManager permissionManager, 
+            IRoleManagementConfig roleManagementConfig, 
+            IUnitOfWorkManager unitOfWorkManager)
+            : base(
+                store,
+                permissionManager,
+                roleManagementConfig,
+                unitOfWorkManager)
         {
         }
     }
