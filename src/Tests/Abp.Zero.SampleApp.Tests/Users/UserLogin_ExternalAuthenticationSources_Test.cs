@@ -33,14 +33,15 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Should_Login_From_Fake_Authentication_Source()
         {
-            var result = await _userManager.LoginAsync("fakeuser@mydomain.com", "123qwe", Tenant.DefaultTenantName);
-            result.Result.ShouldBe(AbpLoginResultType.Success);
+            var loginResult = await _userManager.LoginAsync("fakeuser@mydomain.com", "123qwe", Tenant.DefaultTenantName);
+            loginResult.Result.ShouldBe(AbpLoginResultType.Success);
+            loginResult.User.AuthorizationSource.ShouldBe("FakeSource");
         }
 
         public async Task Should_Fallback_To_Default_Login_Users()
         {
-            var result = await _userManager.LoginAsync("owner@aspnetboilerplate.com", "123qwe");
-            result.Result.ShouldBe(AbpLoginResultType.Success);
+            var loginResult = await _userManager.LoginAsync("owner@aspnetboilerplate.com", "123qwe");
+            loginResult.Result.ShouldBe(AbpLoginResultType.Success);
         }
 
         [DependsOn(typeof(AbpZeroCoreModule))]

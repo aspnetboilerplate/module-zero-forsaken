@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.SampleApp", "Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.SampleApp.Tests", "Tests\Abp.Zero.SampleApp.Tests\Abp.Zero.SampleApp.Tests.csproj", "{3C90D572-EA4E-499C-AF95-407BFA8A36B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.Ldap", "Abp.Zero.Ldap\Abp.Zero.Ldap.csproj", "{587409A2-2470-4CC4-8F81-DB0A2B3E57A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{3C90D572-EA4E-499C-AF95-407BFA8A36B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C90D572-EA4E-499C-AF95-407BFA8A36B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C90D572-EA4E-499C-AF95-407BFA8A36B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{587409A2-2470-4CC4-8F81-DB0A2B3E57A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{587409A2-2470-4CC4-8F81-DB0A2B3E57A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{587409A2-2470-4CC4-8F81-DB0A2B3E57A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{587409A2-2470-4CC4-8F81-DB0A2B3E57A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

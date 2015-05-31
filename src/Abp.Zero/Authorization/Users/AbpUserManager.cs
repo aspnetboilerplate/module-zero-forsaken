@@ -357,7 +357,9 @@ namespace Abp.Authorization.Users
                         if (user == null)
                         {
                             user = await source.Object.CreateUserAsync(userNameOrEmailAddress, tenant);
+
                             user.Tenant = tenant;
+                            user.AuthorizationSource = source.Object.Name;
                             user.Password = new PasswordHasher().HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 
                             user.Roles = new List<UserRole>();
@@ -367,13 +369,17 @@ namespace Abp.Authorization.Users
                             }
 
                             (await CreateAsync(user)).CheckErrors(LocalizationManager);
-                            await _unitOfWorkManager.Current.SaveChangesAsync();
                         }
                         else
                         {
                             await source.Object.UpdateUser(user, tenant);
+                            
+                            user.AuthorizationSource = source.Object.Name;
+                            
                             (await UpdateAsync(user)).CheckErrors(LocalizationManager);
                         }
+
+                        await _unitOfWorkManager.Current.SaveChangesAsync();
 
                         return true;
                     }
