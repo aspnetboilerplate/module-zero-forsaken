@@ -5,6 +5,9 @@ using Abp.Localization;
 
 namespace Abp.Zero.Ldap.Configuration
 {
+    /// <summary>
+    /// Defines LDAP settings.
+    /// </summary>
     public class LdapSettingProvider : SettingProvider
     {
         public override IEnumerable<SettingDefinition> GetSettingDefinitions(SettingDefinitionProviderContext context)

@@ -66,6 +66,8 @@ namespace Abp.Zero.Ldap.Authentication
 
         public async override Task UpdateUser(TUser user, TTenant tenant)
         {
+            CheckIsEnabled();
+
             await base.UpdateUser(user, tenant);
 
             using (var principalContext = CreatePrincipalContext())

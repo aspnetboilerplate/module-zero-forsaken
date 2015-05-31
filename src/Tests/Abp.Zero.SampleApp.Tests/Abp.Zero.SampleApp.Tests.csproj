@@ -127,6 +127,7 @@
   <ItemGroup>
     <Compile Include="Configuration\Settings_Tests.cs" />
     <Compile Include="IdentityFramework\IdentityResultHelper_Tests.cs" />
+    <Compile Include="Ldap\LdapAuthenticationSource_Tests.cs" />
     <Compile Include="MultiTenancy\TenantManager_Tests.cs" />
     <Compile Include="Roles\RoleManager_Delete_Tests.cs" />
     <Compile Include="Roles\RoleManager_Tests.cs" />
@@ -150,6 +151,10 @@
     <ProjectReference Include="..\..\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj">
       <Project>{B728E703-345B-4553-A8B0-B28BB6738688}</Project>
       <Name>Abp.Zero.EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj">
+      <Project>{587409A2-2470-4CC4-8F81-DB0A2B3E57A5}</Project>
+      <Name>Abp.Zero.Ldap</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Abp.Zero\Abp.Zero.csproj">
       <Project>{70D916F2-9BFF-43DA-B3F7-3E0655114D48}</Project>

@@ -1,5 +1,8 @@
 namespace Abp.Zero.Ldap.Configuration
 {
+    /// <summary>
+    /// Contains consts for LDAP setting names.
+    /// </summary>
     public static class LdapSettingNames
     {
         /// <summary>

@@ -1,14 +1,11 @@
-using System;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Collections;
 using Abp.Dependency;
-using Abp.Extensions;
 using Abp.Modules;
 using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
-using Microsoft.AspNet.Identity;
 using Shouldly;
 using Xunit;
 

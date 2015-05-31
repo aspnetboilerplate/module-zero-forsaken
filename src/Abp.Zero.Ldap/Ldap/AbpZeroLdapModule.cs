@@ -2,9 +2,13 @@
 using Abp.Localization.Sources;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
+using Abp.Zero.Ldap.Configuration;
 
 namespace Abp.Zero.Ldap
 {
+    /// <summary>
+    /// This module extends module zero to add LDAP authentication.
+    /// </summary>
     [DependsOn(typeof (AbpZeroCoreModule))]
     public class AbpZeroLdapModule : AbpModule
     {
@@ -18,6 +22,8 @@ namespace Abp.Zero.Ldap
                         "Abp.Zero.Ldap.Localization.Source")
                     )
                 );
+
+            Configuration.Settings.Providers.Add<LdapSettingProvider>();
         }
 
         public override void Initialize()

@@ -1,37 +1,50 @@
 using System.DirectoryServices.AccountManagement;
+using Abp.Configuration;
+using Abp.Dependency;
+using Abp.Extensions;
 
 namespace Abp.Zero.Ldap.Configuration
 {
-    public class LdapConfiguration : ILdapConfiguration
+    /// <summary>
+    /// Implements <see cref="ILdapConfiguration"/> to get settings from <see cref="ISettingManager"/>.
+    /// </summary>
+    public class LdapConfiguration : ILdapConfiguration, ITransientDependency
     {
+        private readonly ISettingManager _settingManager;
+
+        public LdapConfiguration(ISettingManager settingManager)
+        {
+            _settingManager = settingManager;
+        }
+
         public bool IsEnabled
         {
-            get { throw new System.NotImplementedException(); }
+            get { return _settingManager.GetSettingValue<bool>(LdapSettingNames.IsEnabled); }
         }
 
         public ContextType ContextType
         {
-            get { throw new System.NotImplementedException(); }
+            get { return _settingManager.GetSettingValue(LdapSettingNames.ContextType).ToEnum<ContextType>(); }
         }
 
         public string Container
         {
-            get { throw new System.NotImplementedException(); }
+            get { return _settingManager.GetSettingValue(LdapSettingNames.Container); }
         }
 
         public string Domain
         {
-            get { throw new System.NotImplementedException(); }
+            get { return _settingManager.GetSettingValue(LdapSettingNames.Domain); }
         }
 
         public string UserName
         {
-            get { throw new System.NotImplementedException(); }
+            get { return _settingManager.GetSettingValue(LdapSettingNames.UserName); }
         }
 
         public string Password
         {
-            get { throw new System.NotImplementedException(); }
+            get { return _settingManager.GetSettingValue(LdapSettingNames.Password); }
         }
     }
 }
