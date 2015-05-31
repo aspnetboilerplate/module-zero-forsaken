@@ -1,9 +1,14 @@
 using System.DirectoryServices.AccountManagement;
 
-namespace Abp.Zero.Ldap.Authentication
+namespace Abp.Zero.Ldap.Configuration
 {
     public class LdapConfiguration : ILdapConfiguration
     {
+        public bool IsEnabled
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
         public ContextType ContextType
         {
             get { throw new System.NotImplementedException(); }
