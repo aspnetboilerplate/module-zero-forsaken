@@ -8,6 +8,7 @@ using Abp.IdentityFramework;
 using Abp.Modules;
 using Abp.TestBase;
 using Abp.Zero.SampleApp.EntityFramework;
+using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
 using Castle.MicroKernel.Registration;
@@ -32,10 +33,20 @@ namespace Abp.Zero.SampleApp.Tests
                     .LifestyleSingleton()
                 );
 
+            CreateInitialData();
+
             RoleManager = Resolve<RoleManager>();
             UserManager = Resolve<UserManager>();
             PermissionManager = Resolve<IPermissionManager>();
             PermissionChecker = Resolve<IPermissionChecker>();
+        }
+
+        private void CreateInitialData()
+        {
+            UsingDbContext(context =>
+                           {
+                               context.Tenants.Add(new Tenant(Tenant.DefaultTenantName, Tenant.DefaultTenantName));
+                           });
         }
 
         protected override void AddModules(ITypeList<AbpModule> modules)

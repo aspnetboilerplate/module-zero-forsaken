@@ -84,6 +84,8 @@
     <Compile Include="Auditing\AuditLog.cs" />
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PermissionGrantInfo.cs" />
+    <Compile Include="Authorization\Users\DefaultExternalAuthenticationSource.cs" />
+    <Compile Include="Authorization\Users\IExternalAuthenticationSource.cs" />
     <Compile Include="Authorization\Users\IUserPermissionStore.cs" />
     <Compile Include="Authorization\Roles\RolePermissionSetting.cs" />
     <Compile Include="Authorization\Roles\IRolePermissionStore.cs" />
@@ -118,10 +120,12 @@
     <Compile Include="Zero\Configuration\AbpZeroSettingProvider.cs" />
     <Compile Include="Zero\Configuration\IAbpZeroConfig.cs" />
     <Compile Include="Zero\Configuration\IRoleManagementConfig.cs" />
+    <Compile Include="Zero\Configuration\IUserManagementConfig.cs" />
     <Compile Include="Zero\Configuration\ModuleZeroConfigurationExtensions.cs" />
     <Compile Include="Zero\Configuration\AbpZeroConfig.cs" />
     <Compile Include="Zero\Configuration\RoleManagementConfig.cs" />
     <Compile Include="Zero\Configuration\StaticRoleDefinition.cs" />
+    <Compile Include="Zero\Configuration\UserManagementConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Zero.nuspec" />

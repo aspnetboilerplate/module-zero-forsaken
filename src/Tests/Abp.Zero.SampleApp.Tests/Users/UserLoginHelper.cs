@@ -1,4 +1,5 @@
-﻿using Abp.Zero.SampleApp.EntityFramework;
+﻿using System.Linq;
+using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
 
@@ -8,7 +9,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
     {
         public static void CreateTestUsers(AppDbContext context)
         {
-            var tenant1 = context.Tenants.Add(new Tenant("tenant1", "Tenant one"));
+            var defaultTenant = context.Tenants.Single(t => t.TenancyName == Tenant.DefaultTenantName);
 
             context.Users.Add(
                 new User
@@ -25,7 +26,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             context.Users.Add(
                 new User
                 {
-                    Tenant = tenant1, //A user of tenant1
+                    Tenant = defaultTenant, //A user of tenant1
                     UserName = "user1",
                     Name = "User",
                     Surname = "One",
