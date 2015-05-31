@@ -132,6 +132,8 @@
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
     <Compile Include="Users\UserAppService_Tests.cs" />
+    <Compile Include="Users\UserLoginHelper.cs" />
+    <Compile Include="Users\UserLogin_ExternalAuthenticationSources_Test.cs" />
     <Compile Include="Users\UserLogin_Tests.cs" />
     <Compile Include="Users\UserManager_Permission_Tests.cs" />
     <Compile Include="Users\UserRepository_Tests.cs" />

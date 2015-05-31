@@ -4,7 +4,6 @@ using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Runtime.Session;
 using Abp.Zero.Configuration;
-using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
 using Shouldly;
 using Xunit;
@@ -17,36 +16,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
         public UserLogin_Tests()
         {
-            UsingDbContext(
-                context =>
-                {
-                    var tenant1 = context.Tenants.Add(new Tenant("tenant1", "Tenant one"));
-
-                    context.Users.Add(
-                        new User
-                        {
-                            Tenant = null, //Tenancy owner
-                            UserName = "userOwner",
-                            Name = "Owner",
-                            Surname = "One",
-                            EmailAddress = "owner@aspnetboilerplate.com",
-                            IsEmailConfirmed = true,
-                            Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-                        });
-
-                    context.Users.Add(
-                        new User
-                        {
-                            Tenant = tenant1, //A user of tenant1
-                            UserName = "user1",
-                            Name = "User",
-                            Surname = "One",
-                            EmailAddress = "user-one@aspnetboilerplate.com",
-                            IsEmailConfirmed = false,
-                            Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-                        });
-                });
-
+            UsingDbContext(UserLoginHelper.CreateTestUsers);
             _userManager = LocalIocManager.Resolve<UserManager>();
         }
 
