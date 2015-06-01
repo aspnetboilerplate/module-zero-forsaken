@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Abp.Authorization.Users;
 using Abp.Collections;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Zero.Configuration;
@@ -8,6 +11,7 @@ using Abp.Zero.Ldap.Authentication;
 using Abp.Zero.Ldap.Configuration;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
+using Shouldly;
 using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Ldap
@@ -18,7 +22,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 
         public LdapAuthenticationSource_Tests()
         {
-            _userManager = LocalIocManager.Resolve<UserManager>();            
+            _userManager = LocalIocManager.Resolve<UserManager>();
         }
 
         protected override void AddModules(ITypeList<AbpModule> modules)
@@ -28,9 +32,49 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
         }
 
         //[Fact]
-        public async Task Should_Login_From_Ldap()
+        public async Task Should_Login_From_Ldap_Without_Any_Configuration()
         {
-            //TODO: TEST!
+            var result = await _userManager.LoginAsync("-","-", Tenant.DefaultTenantName);
+            result.Result.ShouldBe(AbpLoginResultType.Success);
+        }
+
+        //[Fact]
+        public async Task Should_Not_Login_From_Ldap_If_Disabled()
+        {
+            var settingManager = Resolve<ISettingManager>();
+            var defaultTenant = GetDefaultTenant();
+
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.IsEnabled, "false");
+
+            var result = await _userManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
+            result.Result.ShouldBe(AbpLoginResultType.InvalidUserNameOrEmailAddress);
+        }
+
+        //[Fact]
+        public async Task Should_Login_From_Ldap_With_Properly_Configured()
+        {
+            var settingManager = Resolve<ISettingManager>();
+            var defaultTenant = GetDefaultTenant();
+
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Domain, "-");
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.UserName, "-");
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password, "-");
+
+            var result = await _userManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
+            result.Result.ShouldBe(AbpLoginResultType.Success);
+        }
+
+        //[Fact]
+        public async Task Should_Not_Login_From_Ldap_With_Wrong_Configuration()
+        {
+            var settingManager = Resolve<ISettingManager>();
+            var defaultTenant = GetDefaultTenant();
+
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Domain, "InvalidDomain");
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.UserName, "NoUserName");
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password, "123123123123");
+
+            await Assert.ThrowsAnyAsync<Exception>(() => _userManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
         }
 
         [DependsOn(typeof(AbpZeroLdapModule))]

@@ -8,6 +8,8 @@ namespace Abp.Zero.Ldap.Configuration
     /// <summary>
     /// Implements <see cref="ILdapConfiguration"/> to get settings from <see cref="ISettingManager"/>.
     /// </summary>
+    
+    //TODO: Make properties as methods since it should get nullable TenantId!
     public class LdapConfiguration : ILdapConfiguration, ITransientDependency
     {
         private readonly ISettingManager _settingManager;

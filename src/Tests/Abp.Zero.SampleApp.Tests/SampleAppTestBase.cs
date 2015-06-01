@@ -1,6 +1,7 @@
 using System;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections;
@@ -77,6 +78,15 @@ namespace Abp.Zero.SampleApp.Tests
             }
 
             return result;
+        }
+
+        protected Tenant GetDefaultTenant()
+        {
+            return UsingDbContext(
+                context =>
+                {
+                    return context.Tenants.Single(t => t.TenancyName == Tenant.DefaultTenantName);
+                });
         }
         
         protected async Task<Role> CreateRole(string name)
