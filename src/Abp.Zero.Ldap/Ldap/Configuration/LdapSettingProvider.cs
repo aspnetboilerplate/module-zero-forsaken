@@ -14,7 +14,7 @@ namespace Abp.Zero.Ldap.Configuration
         {
             return new[]
                    {
-                       new SettingDefinition(LdapSettingNames.IsEnabled, "true", L("Ldap_IsEnabled"), scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false),
+                       new SettingDefinition(LdapSettingNames.IsEnabled, "false", L("Ldap_IsEnabled"), scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false),
                        new SettingDefinition(LdapSettingNames.ContextType, ContextType.Domain.ToString(), L("Ldap_ContextType"), scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false),
                        new SettingDefinition(LdapSettingNames.Container, null, L("Ldap_Container"), scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false),
                        new SettingDefinition(LdapSettingNames.Domain, null, L("Ldap_Domain"), scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false),

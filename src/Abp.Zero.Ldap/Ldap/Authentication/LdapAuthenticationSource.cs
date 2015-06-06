@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Zero.Ldap.Configuration;
 
@@ -111,13 +112,13 @@ namespace Abp.Zero.Ldap.Authentication
         protected virtual async Task<PrincipalContext> CreatePrincipalContext(TTenant tenant)
         {
             var tenantId = GetIdOrNull(tenant);
-
+            
             return new PrincipalContext(
                 await _settings.GetContextType(tenantId),
-                await _settings.GetContainer(tenantId),
-                await _settings.GetDomain(tenantId),
-                await _settings.GetUserName(tenantId),
-                await _settings.GetPassword(tenantId)
+                ConvertToNullIfEmpty(await _settings.GetContainer(tenantId)),
+                ConvertToNullIfEmpty(await _settings.GetDomain(tenantId)),
+                ConvertToNullIfEmpty(await _settings.GetUserName(tenantId)),
+                ConvertToNullIfEmpty(await _settings.GetPassword(tenantId))
                 );
         }
 
@@ -140,6 +141,13 @@ namespace Abp.Zero.Ldap.Authentication
             return tenant == null
                 ? (int?)null
                 : tenant.Id;
+        }
+
+        private static string ConvertToNullIfEmpty(string str)
+        {
+            return str.IsNullOrWhiteSpace()
+                ? null
+                : str;
         }
     }
 }
