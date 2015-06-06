@@ -22,7 +22,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 
         public LdapAuthenticationSource_Tests()
         {
-            _userManager = LocalIocManager.Resolve<UserManager>();
+            _userManager = Resolve<UserManager>();
         }
 
         protected override void AddModules(ITypeList<AbpModule> modules)
