@@ -1,4 +1,5 @@
 using System.DirectoryServices.AccountManagement;
+using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Extensions;
@@ -9,7 +10,6 @@ namespace Abp.Zero.Ldap.Configuration
     /// Implements <see cref="ILdapConfiguration"/> to get settings from <see cref="ISettingManager"/>.
     /// </summary>
     
-    //TODO: Make properties as methods since it should get nullable TenantId!
     public class LdapConfiguration : ILdapConfiguration, ITransientDependency
     {
         private readonly ISettingManager _settingManager;
@@ -19,34 +19,46 @@ namespace Abp.Zero.Ldap.Configuration
             _settingManager = settingManager;
         }
 
-        public bool IsEnabled
+        public Task<bool> GetIsEnabled(int? tenantId)
         {
-            get { return _settingManager.GetSettingValue<bool>(LdapSettingNames.IsEnabled); }
+            return tenantId.HasValue
+                ? _settingManager.GetSettingValueForTenantAsync<bool>(LdapSettingNames.IsEnabled, tenantId.Value)
+                : _settingManager.GetSettingValueForApplicationAsync<bool>(LdapSettingNames.IsEnabled);
         }
 
-        public ContextType ContextType
+        public async Task<ContextType> GetContextType(int? tenantId)
         {
-            get { return _settingManager.GetSettingValue(LdapSettingNames.ContextType).ToEnum<ContextType>(); }
+            return tenantId.HasValue
+                ? (await _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.ContextType, tenantId.Value)).ToEnum<ContextType>()
+                : (await _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.ContextType)).ToEnum<ContextType>();
         }
 
-        public string Container
+        public Task<string> GetContainer(int? tenantId)
         {
-            get { return _settingManager.GetSettingValue(LdapSettingNames.Container); }
+            return tenantId.HasValue
+                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.Container, tenantId.Value)
+                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Container);
         }
 
-        public string Domain
+        public Task<string> GetDomain(int? tenantId)
         {
-            get { return _settingManager.GetSettingValue(LdapSettingNames.Domain); }
+            return tenantId.HasValue
+                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.Domain, tenantId.Value)
+                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Domain);
         }
 
-        public string UserName
+        public Task<string> GetUserName(int? tenantId)
         {
-            get { return _settingManager.GetSettingValue(LdapSettingNames.UserName); }
+            return tenantId.HasValue
+                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.UserName, tenantId.Value)
+                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.UserName);
         }
 
-        public string Password
+        public Task<string> GetPassword(int? tenantId)
         {
-            get { return _settingManager.GetSettingValue(LdapSettingNames.Password); }
+            return tenantId.HasValue
+                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.Password, tenantId.Value)
+                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Password);
         }
     }
 }

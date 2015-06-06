@@ -16,12 +16,10 @@ using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
-using Abp.Timing;
-using Abp.Zero.SampleApp.Tests.Users;
-using Castle.Core.Internal;
 
 namespace Abp.Authorization.Users
 {
@@ -359,7 +357,7 @@ namespace Abp.Authorization.Users
                             user = await source.Object.CreateUserAsync(userNameOrEmailAddress, tenant);
 
                             user.Tenant = tenant;
-                            user.AuthorizationSource = source.Object.Name;
+                            user.AuthenticationSource = source.Object.Name;
                             user.Password = new PasswordHasher().HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 
                             user.Roles = new List<UserRole>();
@@ -372,9 +370,9 @@ namespace Abp.Authorization.Users
                         }
                         else
                         {
-                            await source.Object.UpdateUser(user, tenant);
+                            await source.Object.UpdateUserAsync(user, tenant);
                             
-                            user.AuthorizationSource = source.Object.Name;
+                            user.AuthenticationSource = source.Object.Name;
                             
                             (await UpdateAsync(user)).CheckErrors(LocalizationManager);
                         }

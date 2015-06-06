@@ -1,22 +1,24 @@
 using System.DirectoryServices.AccountManagement;
+using System.Threading.Tasks;
 
 namespace Abp.Zero.Ldap.Configuration
 {
     /// <summary>
     /// Used to obtain current values of LDAP settings.
+    /// This abstraction allows to define a different source for settings than SettingManager (see default implementation: <see cref="LdapConfiguration"/>).
     /// </summary>
     public interface ILdapConfiguration
     {
-        bool IsEnabled { get; }
+        Task<bool> GetIsEnabled(int? tenantId);
 
-        ContextType ContextType { get; }
+        Task<ContextType> GetContextType(int? tenantId);
 
-        string Container { get; }
+        Task<string> GetContainer(int? tenantId);
 
-        string Domain { get; }
+        Task<string> GetDomain(int? tenantId);
 
-        string UserName { get; }
+        Task<string> GetUserName(int? tenantId);
 
-        string Password { get; }
+        Task<string> GetPassword(int? tenantId);
     }
 }

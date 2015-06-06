@@ -32,7 +32,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         {
             var loginResult = await _userManager.LoginAsync("fakeuser@mydomain.com", "123qwe", Tenant.DefaultTenantName);
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
-            loginResult.User.AuthorizationSource.ShouldBe("FakeSource");
+            loginResult.User.AuthenticationSource.ShouldBe("FakeSource");
         }
 
         public async Task Should_Fallback_To_Default_Login_Users()

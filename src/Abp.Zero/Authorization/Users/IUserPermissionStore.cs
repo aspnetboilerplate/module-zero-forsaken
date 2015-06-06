@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Authorization.Users;
 using Abp.MultiTenancy;
 
-namespace Abp.Authorization.Roles
+namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Used to perform permission database operations for a user.
