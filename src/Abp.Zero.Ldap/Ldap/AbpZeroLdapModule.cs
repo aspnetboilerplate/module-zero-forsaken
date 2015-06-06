@@ -14,6 +14,8 @@ namespace Abp.Zero.Ldap
     {
         public override void PreInitialize()
         {
+            IocManager.Register<IAbpZeroLdapModuleConfig, AbpZeroLdapModuleConfig>();
+
             Configuration.Localization.Sources.Extensions.Add(
                 new LocalizationSourceExtensionInfo(
                     AbpZeroConsts.LocalizationSourceName,

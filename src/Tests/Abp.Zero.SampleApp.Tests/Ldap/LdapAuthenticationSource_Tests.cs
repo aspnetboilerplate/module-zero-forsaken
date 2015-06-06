@@ -5,7 +5,6 @@ using Abp.Collections;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Zero.Configuration;
 using Abp.Zero.Ldap;
 using Abp.Zero.Ldap.Authentication;
 using Abp.Zero.Ldap.Configuration;
@@ -82,7 +81,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
         {
             public override void PreInitialize()
             {
-                Configuration.Modules.Zero().UserManagement.ExternalAuthenticationSources.Add<MyLdapAuthenticationSource>();  //TODO: Is it possible to escape this?
+                Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
             }
 
             public override void Initialize()
@@ -92,10 +91,10 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             }
         }
 
-        public class MyLdapAuthenticationSource : LdapAuthenticationSource<Tenant, User> //TODO: Is it possible to escape this class?
+        public class MyLdapAuthenticationSource : LdapAuthenticationSource<Tenant, User>
         {
-            public MyLdapAuthenticationSource(ILdapConfiguration configuration)
-                : base(configuration)
+            public MyLdapAuthenticationSource(ILdapSettings settings, IAbpZeroLdapModuleConfig ldapModuleConfig)
+                : base(settings, ldapModuleConfig)
             {
 
             }

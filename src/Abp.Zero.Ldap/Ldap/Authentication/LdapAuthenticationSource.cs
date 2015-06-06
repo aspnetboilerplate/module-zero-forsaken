@@ -28,17 +28,19 @@ namespace Abp.Zero.Ldap.Authentication
             get { return SourceName; }
         }
 
-        private readonly ILdapConfiguration _configuration;
+        private readonly ILdapSettings _settings;
+        private readonly IAbpZeroLdapModuleConfig _ldapModuleConfig;
 
-        protected LdapAuthenticationSource(ILdapConfiguration configuration)
+        protected LdapAuthenticationSource(ILdapSettings settings, IAbpZeroLdapModuleConfig ldapModuleConfig)
         {
-            _configuration = configuration;
+            _settings = settings;
+            _ldapModuleConfig = ldapModuleConfig;
         }
 
         /// <inheritdoc/>
         public override async Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
         {
-            if (!(await _configuration.GetIsEnabled(GetIdOrNull(tenant))))
+            if (!_ldapModuleConfig.IsEnabled || !(await _settings.GetIsEnabled(GetIdOrNull(tenant))))
             {
                 return false;
             }
@@ -111,19 +113,25 @@ namespace Abp.Zero.Ldap.Authentication
             var tenantId = GetIdOrNull(tenant);
 
             return new PrincipalContext(
-                await _configuration.GetContextType(tenantId),
-                await _configuration.GetContainer(tenantId),
-                await _configuration.GetDomain(tenantId),
-                await _configuration.GetUserName(tenantId),
-                await _configuration.GetPassword(tenantId)
+                await _settings.GetContextType(tenantId),
+                await _settings.GetContainer(tenantId),
+                await _settings.GetDomain(tenantId),
+                await _settings.GetUserName(tenantId),
+                await _settings.GetPassword(tenantId)
                 );
         }
 
         private async Task CheckIsEnabled(TTenant tenant)
         {
-            if (!await _configuration.GetIsEnabled(GetIdOrNull(tenant)))
+            if (!_ldapModuleConfig.IsEnabled)
             {
-                throw new AbpException("Ldap Authentication is disabled! You can enable it by setting '" + LdapSettingNames.IsEnabled + "' to true");
+                throw new AbpException("Ldap Authentication module is disabled globally!");                
+            }
+
+            var tenantId = GetIdOrNull(tenant);
+            if (!await _settings.GetIsEnabled(tenantId))
+            {
+                throw new AbpException("Ldap Authentication is disabled for given tenant (id:" + tenantId + ")! You can enable it by setting '" + LdapSettingNames.IsEnabled + "' to true");
             }
         }
 

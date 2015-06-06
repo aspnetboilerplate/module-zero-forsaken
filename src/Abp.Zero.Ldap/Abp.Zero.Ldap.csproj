@@ -84,9 +84,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ldap\AbpZeroLdapModule.cs" />
-    <Compile Include="Ldap\Configuration\ILdapConfiguration.cs" />
+    <Compile Include="Ldap\Configuration\AbpZeroLdapModuleConfig.cs" />
+    <Compile Include="Ldap\Configuration\IAbpZeroLdapModuleConfig.cs" />
+    <Compile Include="Ldap\Configuration\ModuleZeroLdapConfigurationExtensions.cs" />
+    <Compile Include="Ldap\Configuration\ILdapSettings.cs" />
     <Compile Include="Ldap\Authentication\LdapAuthenticationSource.cs" />
-    <Compile Include="Ldap\Configuration\LdapConfiguration.cs" />
+    <Compile Include="Ldap\Configuration\LdapSettings.cs" />
     <Compile Include="Ldap\Configuration\LdapSettingNames.cs" />
     <Compile Include="Ldap\Configuration\LdapSettingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,14 +7,14 @@ using Abp.Extensions;
 namespace Abp.Zero.Ldap.Configuration
 {
     /// <summary>
-    /// Implements <see cref="ILdapConfiguration"/> to get settings from <see cref="ISettingManager"/>.
+    /// Implements <see cref="ILdapSettings"/> to get settings from <see cref="ISettingManager"/>.
     /// </summary>
     
-    public class LdapConfiguration : ILdapConfiguration, ITransientDependency
+    public class LdapSettings : ILdapSettings, ITransientDependency
     {
         private readonly ISettingManager _settingManager;
 
-        public LdapConfiguration(ISettingManager settingManager)
+        public LdapSettings(ISettingManager settingManager)
         {
             _settingManager = settingManager;
         }
