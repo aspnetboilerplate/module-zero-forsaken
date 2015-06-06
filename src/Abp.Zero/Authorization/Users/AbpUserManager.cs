@@ -351,7 +351,9 @@ namespace Abp.Authorization.Users
                 {
                     if (await source.Object.TryAuthenticateAsync(userNameOrEmailAddress, plainPassword, tenant))
                     {
-                        var user = await AbpStore.FindByNameOrEmailAsync(tenant == null ? (int?)null : tenant.Id, userNameOrEmailAddress);
+                        var tenantId = tenant == null ? (int?) null : tenant.Id;
+
+                        var user = await AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
                         if (user == null)
                         {
                             user = await source.Object.CreateUserAsync(userNameOrEmailAddress, tenant);
@@ -361,20 +363,20 @@ namespace Abp.Authorization.Users
                             user.Password = new PasswordHasher().HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 
                             user.Roles = new List<UserRole>();
-                            foreach (var defaultRole in RoleManager.Roles.Where(r => r.IsDefault).ToList())
+                            foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
                             {
                                 user.Roles.Add(new UserRole { RoleId = defaultRole.Id });
                             }
 
-                            (await CreateAsync(user)).CheckErrors(LocalizationManager);
+                            await Store.CreateAsync(user);
                         }
                         else
                         {
                             await source.Object.UpdateUserAsync(user, tenant);
                             
                             user.AuthenticationSource = source.Object.Name;
-                            
-                            (await UpdateAsync(user)).CheckErrors(LocalizationManager);
+
+                            await Store.UpdateAsync(user);
                         }
 
                         await _unitOfWorkManager.Current.SaveChangesAsync();
