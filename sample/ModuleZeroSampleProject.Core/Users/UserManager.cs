@@ -2,8 +2,10 @@
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Zero.Configuration;
 using ModuleZeroSampleProject.Authorization;
 using ModuleZeroSampleProject.MultiTenancy;
 
@@ -18,7 +20,9 @@ namespace ModuleZeroSampleProject.Users
             IMultiTenancyConfig multiTenancyConfig,
             IPermissionManager permissionManager,
             IUnitOfWorkManager unitOfWorkManager,
-            ISettingManager settingManager)
+            ISettingManager settingManager,
+            IUserManagementConfig userManagementConfig,
+            IIocResolver iocResolver)
             : base(
                 store,
                 roleManager,
@@ -26,7 +30,9 @@ namespace ModuleZeroSampleProject.Users
                 multiTenancyConfig,
                 permissionManager,
                 unitOfWorkManager,
-                settingManager)
+                settingManager,
+                userManagementConfig,
+                iocResolver)
         {
         }
     }
