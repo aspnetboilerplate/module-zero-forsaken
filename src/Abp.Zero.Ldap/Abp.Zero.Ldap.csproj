@@ -111,7 +111,7 @@
     <EmbeddedResource Include="Ldap\Localization\Source\AbpZero.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Ldap\Localization\Source\AbpZero-zh-CN.xml" />
+    <EmbeddedResource Include="Ldap\Localization\Source\AbpZero-zh-CN.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
