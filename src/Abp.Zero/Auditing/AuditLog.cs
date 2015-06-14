@@ -10,7 +10,7 @@ namespace Abp.Auditing
     /// Used to store audit logs.
     /// </summary>
     [Table("AbpAuditLogs")]
-    public class AuditLog : Entity<long>
+    public class AuditLog : Entity<long>, IMayHaveTenant
     {
         /// <summary>
         /// Maximum length of <see cref="ServiceName"/> property.
@@ -50,64 +50,64 @@ namespace Abp.Auditing
         /// <summary>
         /// TenantId.
         /// </summary>
-        public int? TenantId { get; set; }
+        public virtual int? TenantId { get; set; }
 
         /// <summary>
         /// UserId.
         /// </summary>
-        public long? UserId { get; set; }
+        public virtual long? UserId { get; set; }
 
         /// <summary>
         /// Service (class/interface) name.
         /// </summary>
         [MaxLength(MaxServiceNameLength)]
-        public string ServiceName { get; set; }
+        public virtual string ServiceName { get; set; }
 
         /// <summary>
         /// Executed method name.
         /// </summary>
         [MaxLength(MaxMethodNameLength)]
-        public string MethodName { get; set; }
+        public virtual string MethodName { get; set; }
 
         /// <summary>
         /// Calling parameters.
         /// </summary>
         [MaxLength(MaxParametersLength)]
-        public string Parameters { get; set; }
+        public virtual string Parameters { get; set; }
 
         /// <summary>
         /// Start time of the method execution.
         /// </summary>
-        public DateTime ExecutionTime { get; set; }
+        public virtual DateTime ExecutionTime { get; set; }
 
         /// <summary>
         /// Total duration of the method call as milliseconds.
         /// </summary>
-        public int ExecutionDuration { get; set; }
+        public virtual int ExecutionDuration { get; set; }
 
         /// <summary>
         /// IP address of the client.
         /// </summary>
         [MaxLength(MaxClientIpAddressLength)]
-        public string ClientIpAddress { get; set; }
+        public virtual string ClientIpAddress { get; set; }
 
         /// <summary>
         /// Name (generally computer name) of the client.
         /// </summary>
         [MaxLength(MaxClientNameLength)]
-        public string ClientName { get; set; }
+        public virtual string ClientName { get; set; }
 
         /// <summary>
         /// Browser information if this method is called in a web request.
         /// </summary>
         [MaxLength(MaxBrowserInfoLength)]
-        public string BrowserInfo { get; set; }
+        public virtual string BrowserInfo { get; set; }
 
         /// <summary>
         /// Exception object, if an exception occured during execution of the method.
         /// </summary>
         [MaxLength(MaxExceptionLength)]
-        public string Exception { get; set; }
+        public virtual string Exception { get; set; }
 
         /// <summary>
         /// Creates a new CreateFromAuditInfo from given <see cref="auditInfo"/>.
