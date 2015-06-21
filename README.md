@@ -13,6 +13,10 @@ Module-Zero is the module that implements abstract concepts of ASP.NET Boilerpla
 * Implements audit logging.
 * Implements session management.
 
+How to start?
+-------------------
+Follow the documentation to start with module-zero: http://www.aspnetboilerplate.com/Pages/Documents/Zero/Installation
+
 Sample Project
 -------------------
 
