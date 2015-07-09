@@ -81,7 +81,7 @@ namespace Abp.MultiTenancy
             return tenant;
         }
 
-        public Task<TTenant> FindByTenancyNameAsync(string tenancyName)
+        public virtual Task<TTenant> FindByTenancyNameAsync(string tenancyName)
         {
             return _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
         }

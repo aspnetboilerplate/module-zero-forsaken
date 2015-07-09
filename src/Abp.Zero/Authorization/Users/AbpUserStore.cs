@@ -55,34 +55,34 @@ namespace Abp.Authorization.Users
             _userPermissionSettingRepository = userPermissionSettingRepository;
         }
 
-        public async Task CreateAsync(TUser user)
+        public virtual async Task CreateAsync(TUser user)
         {
             await _userRepository.InsertAsync(user);
         }
 
-        public async Task UpdateAsync(TUser user)
+        public virtual async Task UpdateAsync(TUser user)
         {
             await _userRepository.UpdateAsync(user);
         }
 
-        public async Task DeleteAsync(TUser user)
+        public virtual async Task DeleteAsync(TUser user)
         {
             await _userRepository.DeleteAsync(user.Id);
         }
 
-        public async Task<TUser> FindByIdAsync(long userId)
+        public virtual async Task<TUser> FindByIdAsync(long userId)
         {
             return await _userRepository.FirstOrDefaultAsync(userId);
         }
 
-        public async Task<TUser> FindByNameAsync(string userName)
+        public virtual async Task<TUser> FindByNameAsync(string userName)
         {
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.UserName == userName
                 );
         }
 
-        public async Task<TUser> FindByEmailAsync(string email)
+        public virtual async Task<TUser> FindByEmailAsync(string email)
         {
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.EmailAddress == email
@@ -94,7 +94,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userNameOrEmailAddress">User name or email address</param>
         /// <returns>User or null</returns>
-        public async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
             return await _userRepository.FirstOrDefaultAsync(
                 user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
@@ -120,45 +120,45 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public Task SetPasswordHashAsync(TUser user, string passwordHash)
+        public virtual Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
             user.Password = passwordHash;
             return Task.FromResult(0);
         }
 
-        public Task<string> GetPasswordHashAsync(TUser user)
+        public virtual Task<string> GetPasswordHashAsync(TUser user)
         {
             return Task.FromResult(user.Password);
         }
 
-        public Task<bool> HasPasswordAsync(TUser user)
+        public virtual Task<bool> HasPasswordAsync(TUser user)
         {
             return Task.FromResult(!string.IsNullOrEmpty(user.Password));
         }
 
-        public Task SetEmailAsync(TUser user, string email)
+        public virtual Task SetEmailAsync(TUser user, string email)
         {
             user.EmailAddress = email;
             return Task.FromResult(0);
         }
 
-        public Task<string> GetEmailAsync(TUser user)
+        public virtual Task<string> GetEmailAsync(TUser user)
         {
             return Task.FromResult(user.EmailAddress);
         }
 
-        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        public virtual Task<bool> GetEmailConfirmedAsync(TUser user)
         {
             return Task.FromResult(user.IsEmailConfirmed);
         }
 
-        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        public virtual Task SetEmailConfirmedAsync(TUser user, bool confirmed)
         {
             user.IsEmailConfirmed = confirmed;
             return Task.FromResult(0);
         }
 
-        public async Task AddLoginAsync(TUser user, UserLoginInfo login)
+        public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login)
         {
             await _userLoginRepository.InsertAsync(
                 new UserLogin
@@ -169,7 +169,7 @@ namespace Abp.Authorization.Users
                 });
         }
 
-        public async Task RemoveLoginAsync(TUser user, UserLoginInfo login)
+        public virtual async Task RemoveLoginAsync(TUser user, UserLoginInfo login)
         {
             await _userLoginRepository.DeleteAsync(
                 ul => ul.UserId == user.Id &&
@@ -178,14 +178,14 @@ namespace Abp.Authorization.Users
                 );
         }
 
-        public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
+        public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
         {
             return (await _userLoginRepository.GetAllListAsync(ul => ul.UserId == user.Id))
                 .Select(ul => new UserLoginInfo(ul.LoginProvider, ul.ProviderKey))
                 .ToList();
         }
 
-        public async Task<TUser> FindAsync(UserLoginInfo login)
+        public virtual async Task<TUser> FindAsync(UserLoginInfo login)
         {
             var userLogin = await _userLoginRepository.FirstOrDefaultAsync(
                 ul => ul.LoginProvider == login.LoginProvider && ul.ProviderKey == login.ProviderKey
@@ -198,7 +198,7 @@ namespace Abp.Authorization.Users
             return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId);
         }
 
-        public async Task AddToRoleAsync(TUser user, string roleName)
+        public virtual async Task AddToRoleAsync(TUser user, string roleName)
         {
             var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
             await _userRoleRepository.InsertAsync(
@@ -209,7 +209,7 @@ namespace Abp.Authorization.Users
                 });
         }
 
-        public async Task RemoveFromRoleAsync(TUser user, string roleName)
+        public virtual async Task RemoveFromRoleAsync(TUser user, string roleName)
         {
             var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
             var userRole = await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
@@ -221,7 +221,7 @@ namespace Abp.Authorization.Users
             await _userRoleRepository.DeleteAsync(userRole);
         }
 
-        public Task<IList<string>> GetRolesAsync(TUser user)
+        public virtual Task<IList<string>> GetRolesAsync(TUser user)
         {
             //TODO: This is not implemented as async.
             var roleNames = _userRoleRepository.Query(userRoles => (from userRole in userRoles
@@ -232,18 +232,18 @@ namespace Abp.Authorization.Users
             return Task.FromResult<IList<string>>(roleNames);
         }
 
-        public async Task<bool> IsInRoleAsync(TUser user, string roleName)
+        public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
             var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
             return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
         }
 
-        public IQueryable<TUser> Users
+        public virtual IQueryable<TUser> Users
         {
             get { return _userRepository.GetAll(); }
         }
 
-        public async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        public virtual async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
             if (await HasPermissionAsync(user, permissionGrant))
             {
@@ -259,7 +259,7 @@ namespace Abp.Authorization.Users
                 });
         }
 
-        public async Task RemovePermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        public virtual async Task RemovePermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
             await _userPermissionSettingRepository.DeleteAsync(
                 permissionSetting => permissionSetting.UserId == user.Id &&
@@ -268,14 +268,14 @@ namespace Abp.Authorization.Users
                 );
         }
 
-        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TUser user)
+        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TUser user)
         {
             return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == user.Id))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
 
-        public async Task<bool> HasPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        public virtual async Task<bool> HasPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
                 p => p.UserId == user.Id &&
@@ -284,12 +284,12 @@ namespace Abp.Authorization.Users
                 ) != null;
         }
 
-        public async Task RemoveAllPermissionSettingsAsync(TUser user)
+        public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
         {
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             //No need to dispose since using IOC.
         }

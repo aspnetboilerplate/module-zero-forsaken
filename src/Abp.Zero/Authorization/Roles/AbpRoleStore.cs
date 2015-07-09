@@ -37,40 +37,40 @@ namespace Abp.Authorization.Roles
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
         }
 
-        public IQueryable<TRole> Roles
+        public virtual IQueryable<TRole> Roles
         {
             get { return _roleRepository.GetAll(); }
         }
 
-        public async Task CreateAsync(TRole role)
+        public virtual async Task CreateAsync(TRole role)
         {
             await _roleRepository.InsertAsync(role);
         }
 
-        public async Task UpdateAsync(TRole role)
+        public virtual async Task UpdateAsync(TRole role)
         {
             await _roleRepository.UpdateAsync(role);
         }
 
-        public async Task DeleteAsync(TRole role)
+        public virtual async Task DeleteAsync(TRole role)
         {
             await _userRoleRepository.DeleteAsync(ur => ur.RoleId == role.Id);
             await _roleRepository.DeleteAsync(role);
         }
 
-        public async Task<TRole> FindByIdAsync(int roleId)
+        public virtual async Task<TRole> FindByIdAsync(int roleId)
         {
             return await _roleRepository.FirstOrDefaultAsync(roleId);
         }
 
-        public async Task<TRole> FindByNameAsync(string roleName)
+        public virtual async Task<TRole> FindByNameAsync(string roleName)
         {
             return await _roleRepository.FirstOrDefaultAsync(
                 role => role.Name == roleName
                 );
         }
 
-        public async Task<TRole> FindByDisplayNameAsync(string displayName)
+        public virtual async Task<TRole> FindByDisplayNameAsync(string displayName)
         {
             return await _roleRepository.FirstOrDefaultAsync(
                 role => role.DisplayName == displayName
@@ -78,7 +78,7 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public async Task AddPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+        public virtual async Task AddPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
             if (await HasPermissionAsync(role, permissionGrant))
             {
@@ -95,7 +95,7 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+        public virtual async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
             await _rolePermissionSettingRepository.DeleteAsync(
                 permissionSetting => permissionSetting.RoleId == role.Id &&
@@ -105,7 +105,7 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
+        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
         {
             return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == role.Id))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
@@ -113,7 +113,7 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public async Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+        public virtual async Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
             return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
                 p => p.RoleId == role.Id &&
@@ -123,12 +123,12 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public async Task RemoveAllPermissionSettingsAsync(TRole role)
+        public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
             await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             //No need to dispose since using IOC.
         }
