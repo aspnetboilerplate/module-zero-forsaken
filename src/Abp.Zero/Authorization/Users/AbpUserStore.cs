@@ -190,12 +190,34 @@ namespace Abp.Authorization.Users
             var userLogin = await _userLoginRepository.FirstOrDefaultAsync(
                 ul => ul.LoginProvider == login.LoginProvider && ul.ProviderKey == login.ProviderKey
                 );
+
             if (userLogin == null)
             {
                 return null;
             }
 
             return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId);
+        }
+
+        [UnitOfWork]
+        public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
+        {
+            var query = from userLogin in _userLoginRepository.GetAll()
+                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                        where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                        select user;
+
+            return Task.FromResult(query.ToList());
+        }
+
+        public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
+        {
+            var query = from userLogin in _userLoginRepository.GetAll()
+                join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                where user.TenantId == tenantId && userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                select user;
+
+            return Task.FromResult(query.FirstOrDefault());
         }
 
         public virtual async Task AddToRoleAsync(TUser user, string roleName)

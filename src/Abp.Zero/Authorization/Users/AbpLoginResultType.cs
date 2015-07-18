@@ -5,11 +5,17 @@ namespace Abp.Authorization.Users
         Success = 1,
 
         InvalidUserNameOrEmailAddress,
+        
         InvalidPassword,
+        
         UserIsNotActive,
 
         InvalidTenancyName,
+        
         TenantIsNotActive,
-        UserEmailIsNotConfirmed
+
+        UserEmailIsNotConfirmed,
+
+        UnknownExternalLogin
     }
 }

@@ -263,6 +263,51 @@ namespace Abp.Authorization.Users
             return await AbpStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
         }
 
+        public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
+        {
+            return AbpStore.FindAllAsync(login);
+        }
+
+        [UnitOfWork]
+        public virtual async Task<AbpLoginResult> LoginAsync(UserLoginInfo login, string tenancyName = null)
+        {
+            if (login == null || login.LoginProvider.IsNullOrEmpty() || login.ProviderKey.IsNullOrEmpty())
+            {
+                throw new ArgumentException("login");                
+            }
+
+            //Get and check tenant
+            TTenant tenant = null;
+            if (!_multiTenancyConfig.IsEnabled)
+            {
+                tenant = await GetDefaultTenantAsync();
+            }
+            else if (!string.IsNullOrWhiteSpace(tenancyName))
+            {
+                tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+                if (tenant == null)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.InvalidTenancyName);
+                }
+
+                if (!tenant.IsActive)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.TenantIsNotActive);
+                }
+            }
+
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                var user = await AbpStore.FindAsync(tenant == null ? (int?)null : tenant.Id, login);
+                if (user == null)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.UnknownExternalLogin);
+                }
+
+                return await CreateLoginResultAsync(user);
+            }
+        }
+
         [UnitOfWork]
         public virtual async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
         {
@@ -298,19 +343,16 @@ namespace Abp.Authorization.Users
 
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                TUser user;
-                if (await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant))
-                {
-                    user = await AbpStore.FindByNameOrEmailAsync(tenant == null ? (int?)null : tenant.Id, userNameOrEmailAddress);                    
-                }
-                else
-                {
-                    user = await AbpStore.FindByNameOrEmailAsync(tenant == null ? (int?)null : tenant.Id, userNameOrEmailAddress);
-                    if (user == null)
-                    {
-                        return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
-                    }
+                var loggedInFromExternalSource = await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant);
 
+                var user = await AbpStore.FindByNameOrEmailAsync(tenant == null ? (int?)null : tenant.Id, userNameOrEmailAddress);
+                if (user == null)
+                {
+                    return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress);
+                }
+
+                if (!loggedInFromExternalSource)
+                {
                     var verificationResult = new PasswordHasher().VerifyHashedPassword(user.Password, plainPassword);
                     if (verificationResult != PasswordVerificationResult.Success)
                     {
@@ -318,24 +360,29 @@ namespace Abp.Authorization.Users
                     }
                 }
 
-                if (!user.IsActive)
-                {
-                    return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
-                }
-
-                if (await IsEmailConfirmationRequiredForLoginAsync(user.TenantId) && !user.IsEmailConfirmed)
-                {
-                    return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
-                }
-
-                user.LastLoginTime = Clock.Now;
-
-                await Store.UpdateAsync(user);
-
-                await _unitOfWorkManager.Current.SaveChangesAsync();
-
-                return new AbpLoginResult(user, await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie));
+                return await CreateLoginResultAsync(user);
             }
+        }
+        
+        private async Task<AbpLoginResult> CreateLoginResultAsync(TUser user)
+        {
+            if (!user.IsActive)
+            {
+                return new AbpLoginResult(AbpLoginResultType.UserIsNotActive);
+            }
+
+            if (await IsEmailConfirmationRequiredForLoginAsync(user.TenantId) && !user.IsEmailConfirmed)
+            {
+                return new AbpLoginResult(AbpLoginResultType.UserEmailIsNotConfirmed);
+            }
+
+            user.LastLoginTime = Clock.Now;
+
+            await Store.UpdateAsync(user);
+
+            await _unitOfWorkManager.Current.SaveChangesAsync();
+
+            return new AbpLoginResult(user, await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie));
         }
 
         private async Task<bool> TryLoginFromExternalAuthenticationSources(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
