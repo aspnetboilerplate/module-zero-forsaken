@@ -21,9 +21,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.Password);
             Map(x => x.PasswordResetCode);
             Map(x => x.LastLoginTime);
-            Map(x => x.IsDeleted);
-            Map(x => x.DeleterUserId);
-            Map(x => x.DeletionTime);
+            Map(x => x.IsActive);
 
             this.MapFullAudited();
 

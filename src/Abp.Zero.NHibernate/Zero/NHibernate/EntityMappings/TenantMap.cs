@@ -21,7 +21,8 @@ namespace Abp.Zero.NHibernate.EntityMappings
         {
             Map(x => x.TenancyName);
             Map(x => x.Name);
-            
+
+            this.MapDeletionAudited();
             this.MapAudited();
 
             Polymorphism.Explicit();
