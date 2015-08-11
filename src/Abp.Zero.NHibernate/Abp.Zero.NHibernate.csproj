@@ -111,6 +111,8 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20140323_07_CreateAbpSettingsTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20150301_01_Add_IsSuspended_To_AbpUsers_And_AbpTenants_Tables - Copy.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20150312_01_Add_DeleteAuidit_To_AbpTenants_Tables.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20150811_01_Add_AuditColumns_To_AbpUsers.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20150811_02_CreateAbpAuditLogsTable.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
