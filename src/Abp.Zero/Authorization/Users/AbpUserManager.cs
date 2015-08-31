@@ -110,7 +110,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
             return await IsGrantedAsync(
-                await GetUserByIdAsync(userId),
+                userId,
                 _permissionManager.GetPermission(permissionName)
                 );
         }
@@ -120,7 +120,17 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task<bool> IsGrantedAsync(TUser user, Permission permission)
+        public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission)
+        {
+            return IsGrantedAsync(user.Id, permission);
+        }
+
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="permission">Permission</param>
+        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
         {
             //Check for multi-tenancy side
             if (!permission.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
@@ -129,18 +139,18 @@ namespace Abp.Authorization.Users
             }
 
             //Check for user-specific value
-            if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, true)))
+            if (await UserPermissionStore.HasPermissionAsync(userId, new PermissionGrantInfo(permission.Name, true)))
             {
                 return true;
             }
 
-            if (await UserPermissionStore.HasPermissionAsync(user, new PermissionGrantInfo(permission.Name, false)))
+            if (await UserPermissionStore.HasPermissionAsync(userId, new PermissionGrantInfo(permission.Name, false)))
             {
                 return false;
             }
 
             //Check for roles
-            var roleNames = await GetRolesAsync(user.Id);
+            var roleNames = await GetRolesAsync(userId);
             if (!roleNames.Any())
             {
                 return permission.IsGrantedByDefault;
@@ -168,7 +178,7 @@ namespace Abp.Authorization.Users
 
             foreach (var permission in _permissionManager.GetAllPermissions())
             {
-                if (await IsGrantedAsync(user, permission))
+                if (await IsGrantedAsync(user.Id, permission))
                 {
                     permissionList.Add(permission);
                 }
@@ -233,7 +243,7 @@ namespace Abp.Authorization.Users
         {
             await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
 
-            if (await IsGrantedAsync(user, permission))
+            if (await IsGrantedAsync(user.Id, permission))
             {
                 return;
             }
@@ -250,7 +260,7 @@ namespace Abp.Authorization.Users
         {
             await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
 
-            if (!await IsGrantedAsync(user, permission))
+            if (!await IsGrantedAsync(user.Id, permission))
             {
                 return;
             }

@@ -267,7 +267,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
-            if (await HasPermissionAsync(user, permissionGrant))
+            if (await HasPermissionAsync(user.Id, permissionGrant))
             {
                 return;
             }
@@ -290,17 +290,17 @@ namespace Abp.Authorization.Users
                 );
         }
 
-        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TUser user)
+        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId)
         {
-            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == user.Id))
+            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == userId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
 
-        public virtual async Task<bool> HasPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
         {
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
-                p => p.UserId == user.Id &&
+                p => p.UserId == userId &&
                      p.Name == permissionGrant.Name &&
                      p.IsGranted == permissionGrant.IsGranted
                 ) != null;
