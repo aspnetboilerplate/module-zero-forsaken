@@ -37,10 +37,10 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Checks whether a role has a permission grant setting info.
         /// </summary>
-        /// <param name="role">Role</param>
+        /// <param name="roleId">Role id</param>
         /// <param name="permissionGrant">Permission grant setting info</param>
         /// <returns></returns>
-        Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant);
+        Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant);
 
         /// <summary>
         /// Deleted all permission settings for a role.

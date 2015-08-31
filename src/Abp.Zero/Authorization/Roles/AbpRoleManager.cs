@@ -73,7 +73,7 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> HasPermissionAsync(string roleName, string permissionName)
         {
-            return await HasPermissionAsync(await GetRoleByNameAsync(roleName), _permissionManager.GetPermission(permissionName));
+            return await HasPermissionAsync((await GetRoleByNameAsync(roleName)).Id, _permissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
@@ -84,20 +84,31 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> HasPermissionAsync(int roleId, string permissionName)
         {
-            return await HasPermissionAsync(await GetRoleByIdAsync(roleId), _permissionManager.GetPermission(permissionName));
+            return await HasPermissionAsync(roleId, _permissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
         /// Checks if a role has a permission.
         /// </summary>
-        /// <param name="role">The rolepermission</param>
+        /// <param name="role">The role</param>
         /// <param name="permission">The permission</param>
         /// <returns>True, if the role has the permission</returns>
-        public async Task<bool> HasPermissionAsync(TRole role, Permission permission)
+        public Task<bool> HasPermissionAsync(TRole role, Permission permission)
+        {
+            return HasPermissionAsync(role.Id, permission);
+        }
+
+        /// <summary>
+        /// Checks if a role has a permission.
+        /// </summary>
+        /// <param name="roleId">role id</param>
+        /// <param name="permission">The permission</param>
+        /// <returns>True, if the role has the permission</returns>
+        public async Task<bool> HasPermissionAsync(int roleId, Permission permission)
         {
             return permission.IsGrantedByDefault
-                ? !(await RolePermissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, false)))
-                : (await RolePermissionStore.HasPermissionAsync(role, new PermissionGrantInfo(permission.Name, true)));
+                ? !(await RolePermissionStore.HasPermissionAsync(roleId, new PermissionGrantInfo(permission.Name, false)))
+                : (await RolePermissionStore.HasPermissionAsync(roleId, new PermissionGrantInfo(permission.Name, true)));
         }
 
         /// <summary>
@@ -131,7 +142,7 @@ namespace Abp.Authorization.Roles
 
             foreach (var permission in _permissionManager.GetAllPermissions())
             {
-                if (await HasPermissionAsync(role, permission))
+                if (await HasPermissionAsync(role.Id, permission))
                 {
                     permissionList.Add(permission);
                 }
@@ -180,7 +191,7 @@ namespace Abp.Authorization.Roles
         /// <param name="permission">Permission</param>
         public async Task GrantPermissionAsync(TRole role, Permission permission)
         {
-            if (await HasPermissionAsync(role, permission))
+            if (await HasPermissionAsync(role.Id, permission))
             {
                 return;
             }
@@ -202,7 +213,7 @@ namespace Abp.Authorization.Roles
         /// <param name="permission">Permission</param>
         public async Task ProhibitPermissionAsync(TRole role, Permission permission)
         {
-            if (!await HasPermissionAsync(role, permission))
+            if (!await HasPermissionAsync(role.Id, permission))
             {
                 return;
             }

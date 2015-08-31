@@ -80,7 +80,7 @@ namespace Abp.Authorization.Roles
         /// <inheritdoc/>
         public virtual async Task AddPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
-            if (await HasPermissionAsync(role, permissionGrant))
+            if (await HasPermissionAsync(role.Id, permissionGrant))
             {
                 return;
             }
@@ -113,10 +113,10 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> HasPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+        public virtual async Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant)
         {
             return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
-                p => p.RoleId == role.Id &&
+                p => p.RoleId == roleId &&
                      p.Name == permissionGrant.Name &&
                      p.IsGranted == permissionGrant.IsGranted
                 ) != null;
