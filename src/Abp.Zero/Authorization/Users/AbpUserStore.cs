@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Events.Bus.Entities;
+using Abp.Events.Bus.Handlers;
 using Abp.MultiTenancy;
-using Abp.Runtime.Session;
+using Abp.Runtime.Caching;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -21,7 +24,13 @@ namespace Abp.Authorization.Users
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
         IUserPermissionStore<TTenant, TUser>,
+
+        IEventHandler<EntityChangedEventData<UserPermissionSetting>>,
+        IEventHandler<EntityChangedEventData<UserRole>>,
+        IEventHandler<EntityDeletedEventData<TUser>>,
+        
         ITransientDependency
+
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
@@ -31,8 +40,8 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
-        private readonly IAbpSession _session;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ICacheManager _cacheManager;
 
         /// <summary>
         /// Constructor.
@@ -43,15 +52,15 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
-            IAbpSession session,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            ICacheManager cacheManager)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
-            _session = session;
             _unitOfWorkManager = unitOfWorkManager;
+            _cacheManager = cacheManager;
             _userPermissionSettingRepository = userPermissionSettingRepository;
         }
 
@@ -309,6 +318,21 @@ namespace Abp.Authorization.Users
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
         {
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
+        }
+
+        public void HandleEvent(EntityChangedEventData<UserPermissionSetting> eventData)
+        {
+            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.UserId);
+        }
+
+        public void HandleEvent(EntityChangedEventData<UserRole> eventData)
+        {
+            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.UserId);
+        }
+
+        public void HandleEvent(EntityDeletedEventData<TUser> eventData)
+        {
+            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.Id);
         }
 
         public virtual void Dispose()

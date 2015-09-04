@@ -4,7 +4,10 @@ using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Events.Bus.Entities;
+using Abp.Events.Bus.Handlers;
 using Abp.MultiTenancy;
+using Abp.Runtime.Caching;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -15,7 +18,12 @@ namespace Abp.Authorization.Roles
     public abstract class AbpRoleStore<TTenant, TRole, TUser> :
         IQueryableRoleStore<TRole, int>,
         IRolePermissionStore<TTenant, TRole, TUser>,
+
+        IEventHandler<EntityChangedEventData<RolePermissionSetting>>,
+        IEventHandler<EntityDeletedEventData<TRole>>,
+
         ITransientDependency
+        
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
@@ -23,6 +31,7 @@ namespace Abp.Authorization.Roles
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
+        private readonly ICacheManager _cacheManager;
 
         /// <summary>
         /// Constructor.
@@ -30,11 +39,13 @@ namespace Abp.Authorization.Roles
         protected AbpRoleStore(
             IRepository<TRole> roleRepository, 
             IRepository<UserRole, long> userRoleRepository,
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
+            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository,
+            ICacheManager cacheManager)
         {
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
+            _cacheManager = cacheManager;
         }
 
         public virtual IQueryable<TRole> Roles
@@ -105,9 +116,14 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
+        public virtual Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
         {
-            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == role.Id))
+            return GetPermissionsAsync(role.Id);
+        }
+
+        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
+        {
+            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
@@ -126,6 +142,19 @@ namespace Abp.Authorization.Roles
         public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
             await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+        }
+
+        public void HandleEvent(EntityChangedEventData<RolePermissionSetting> eventData)
+        {
+            _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.RoleId);
+        }
+
+        public void HandleEvent(EntityDeletedEventData<TRole> eventData)
+        {
+            _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.Id);
+
+            //TODO: Clear only in the current tenant, or don't clear!
+            _cacheManager.GetUserPermissionCache().Clear();
         }
 
         public virtual void Dispose()

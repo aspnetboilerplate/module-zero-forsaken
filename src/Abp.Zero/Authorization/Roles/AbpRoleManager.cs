@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.MultiTenancy;
+using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.Zero;
 using Abp.Zero.Configuration;
@@ -26,7 +27,7 @@ namespace Abp.Authorization.Roles
         public ILocalizationManager LocalizationManager { get; set; }
 
         public IAbpSession AbpSession { get; set; }
-        
+
         public IRoleManagementConfig RoleManagementConfig { get; private set; }
 
         private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
@@ -45,22 +46,25 @@ namespace Abp.Authorization.Roles
         protected AbpRoleStore<TTenant, TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ITypedCache<int, RolePermissionCacheItem> _rolePermissionCache;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpRoleManager(
-            AbpRoleStore<TTenant, TRole, TUser> store, 
-            IPermissionManager permissionManager, 
+            AbpRoleStore<TTenant, TRole, TUser> store,
+            IPermissionManager permissionManager,
             IRoleManagementConfig roleManagementConfig,
-            IUnitOfWorkManager unitOfWorkManager)
+            ICacheManager cacheManager)
             : base(store)
         {
-            RoleManagementConfig = roleManagementConfig;
             _permissionManager = permissionManager;
-            _unitOfWorkManager = unitOfWorkManager;
+            RoleManagementConfig = roleManagementConfig;
+
+            _rolePermissionCache = cacheManager.GetRolePermissionCache();
+
             AbpStore = store;
+
             AbpSession = NullAbpSession.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
         }
@@ -106,9 +110,13 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public async Task<bool> HasPermissionAsync(int roleId, Permission permission)
         {
+            //Get cached role permissions
+            var cacheItem = await GetRolePermissionCacheItemAsync(roleId);
+
+            //Check the permission
             return permission.IsGrantedByDefault
-                ? !(await RolePermissionStore.HasPermissionAsync(roleId, new PermissionGrantInfo(permission.Name, false)))
-                : (await RolePermissionStore.HasPermissionAsync(roleId, new PermissionGrantInfo(permission.Name, true)));
+                ? !(cacheItem.ProhibitedPermissions.Contains(permission.Name))
+                : (cacheItem.GrantedPermissions.Contains(permission.Name));
         }
 
         /// <summary>
@@ -267,7 +275,7 @@ namespace Abp.Authorization.Roles
             {
                 role.TenantId = AbpSession.TenantId.Value;
             }
-            
+
             return await base.CreateAsync(role);
         }
 
@@ -337,7 +345,7 @@ namespace Abp.Authorization.Roles
             var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide());
             await SetGrantedPermissionsAsync(role, permissions);
         }
-        
+
         public virtual async Task<IdentityResult> CreateStaticRoles(int tenantId)
         {
             var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
@@ -382,6 +390,28 @@ namespace Abp.Authorization.Roles
         private Task<TRole> FindByDisplayNameAsync(string displayName)
         {
             return AbpStore.FindByDisplayNameAsync(displayName);
+        }
+
+        private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(int roleId)
+        {
+            return await _rolePermissionCache.GetAsync(roleId, async () =>
+            {
+                var newCacheItem = new RolePermissionCacheItem(roleId);
+
+                foreach (var permissionInfo in await RolePermissionStore.GetPermissionsAsync(roleId))
+                {
+                    if (permissionInfo.IsGranted)
+                    {
+                        newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
+                    }
+                    else
+                    {
+                        newCacheItem.ProhibitedPermissions.Add(permissionInfo.Name);
+                    }
+                }
+
+                return newCacheItem;
+            });
         }
 
         private string L(string name)

@@ -14,6 +14,7 @@ using Abp.Extensions;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.MultiTenancy;
+using Abp.Runtime.Caching;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -26,7 +27,9 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Extends <see cref="UserManager{TUser,TKey}"/> of ASP.NET Identity Framework.
     /// </summary>
-    public abstract class AbpUserManager<TTenant, TRole, TUser> : UserManager<TUser, long>, ITransientDependency
+    public abstract class AbpUserManager<TTenant, TRole, TUser>
+        : UserManager<TUser, long>,
+        ITransientDependency
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>, new()
         where TUser : AbpUser<TTenant, TUser>
@@ -60,8 +63,8 @@ namespace Abp.Authorization.Users
         private readonly IIocResolver _iocResolver;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
+        private readonly ITypedCache<long, UserPermissionCacheItem> _userPermissionCache;
 
-        //TODO: Non-generic parameters may be converted to property-injection
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
             AbpRoleManager<TTenant, TRole, TUser> roleManager,
@@ -71,7 +74,8 @@ namespace Abp.Authorization.Users
             IUnitOfWorkManager unitOfWorkManager,
             ISettingManager settingManager,
             IUserManagementConfig userManagementConfig,
-            IIocResolver iocResolver)
+            IIocResolver iocResolver,
+            ICacheManager cacheManager)
             : base(userStore)
         {
             AbpStore = userStore;
@@ -83,6 +87,9 @@ namespace Abp.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
             _userManagementConfig = userManagementConfig;
             _iocResolver = iocResolver;
+
+            _userPermissionCache = cacheManager.GetUserPermissionCache();
+
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
@@ -138,27 +145,24 @@ namespace Abp.Authorization.Users
                 return false;
             }
 
+            //Get cached user permissions
+            var cacheItem = await GetUserPermissionCacheItemAsync(userId);
+
             //Check for user-specific value
-            if (await UserPermissionStore.HasPermissionAsync(userId, new PermissionGrantInfo(permission.Name, true)))
+            if (cacheItem.GrantedPermissions.Contains(permission.Name))
             {
                 return true;
             }
 
-            if (await UserPermissionStore.HasPermissionAsync(userId, new PermissionGrantInfo(permission.Name, false)))
+            if (cacheItem.ProhibitedPermissions.Contains(permission.Name))
             {
                 return false;
             }
 
             //Check for roles
-            var roleNames = await GetRolesAsync(userId);
-            if (!roleNames.Any())
+            foreach (var roleId in cacheItem.RoleIds)
             {
-                return permission.IsGrantedByDefault;
-            }
-
-            foreach (var roleName in roleNames)
-            {
-                if (await RoleManager.HasPermissionAsync(roleName, permission.Name))
+                if (await RoleManager.HasPermissionAsync(roleId, permission))
                 {
                     return true;
                 }
@@ -283,7 +287,7 @@ namespace Abp.Authorization.Users
         {
             if (login == null || login.LoginProvider.IsNullOrEmpty() || login.ProviderKey.IsNullOrEmpty())
             {
-                throw new ArgumentException("login");                
+                throw new ArgumentException("login");
             }
 
             //Get and check tenant
@@ -373,7 +377,7 @@ namespace Abp.Authorization.Users
                 return await CreateLoginResultAsync(user);
             }
         }
-        
+
         private async Task<AbpLoginResult> CreateLoginResultAsync(TUser user)
         {
             if (!user.IsActive)
@@ -408,7 +412,7 @@ namespace Abp.Authorization.Users
                 {
                     if (await source.Object.TryAuthenticateAsync(userNameOrEmailAddress, plainPassword, tenant))
                     {
-                        var tenantId = tenant == null ? (int?) null : tenant.Id;
+                        var tenantId = tenant == null ? (int?)null : tenant.Id;
 
                         var user = await AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
                         if (user == null)
@@ -430,7 +434,7 @@ namespace Abp.Authorization.Users
                         else
                         {
                             await source.Object.UpdateUserAsync(user, tenant);
-                            
+
                             user.AuthenticationSource = source.Object.Name;
 
                             await Store.UpdateAsync(user);
@@ -583,6 +587,33 @@ namespace Abp.Authorization.Users
             }
 
             return tenant;
+        }
+        
+        private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
+        {
+            return await _userPermissionCache.GetAsync(userId, async () =>
+            {
+                var newCacheItem = new UserPermissionCacheItem(userId);
+
+                foreach (var roleName in await GetRolesAsync(userId))
+                {
+                    newCacheItem.RoleIds.Add((await RoleManager.GetRoleByNameAsync(roleName)).Id);
+                }
+
+                foreach (var permissionInfo in await UserPermissionStore.GetPermissionsAsync(userId))
+                {
+                    if (permissionInfo.IsGranted)
+                    {
+                        newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
+                    }
+                    else
+                    {
+                        newCacheItem.ProhibitedPermissions.Add(permissionInfo.Name);
+                    }
+                }
+
+                return newCacheItem;
+            });
         }
 
         private string L(string name)

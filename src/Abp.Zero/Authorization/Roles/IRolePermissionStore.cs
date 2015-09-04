@@ -35,6 +35,13 @@ namespace Abp.Authorization.Roles
         Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role);
 
         /// <summary>
+        /// Gets permission grant setting informations for a role.
+        /// </summary>
+        /// <param name="roleId">Role id</param>
+        /// <returns>List of permission setting informations</returns>
+        Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId);
+
+        /// <summary>
         /// Checks whether a role has a permission grant setting info.
         /// </summary>
         /// <param name="roleId">Role id</param>
