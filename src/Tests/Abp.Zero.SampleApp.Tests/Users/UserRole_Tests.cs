@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Authorization.Users;
 using Abp.Domain.Uow;
+using Abp.IdentityFramework;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
@@ -47,7 +47,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         public async Task Should_Change_Roles()
         {
             var unitOfWorkManager = LocalIocManager.Resolve<IUnitOfWorkManager>();
-            using (var uow = unitOfWorkManager.Begin(new UnitOfWorkOptions { AsyncFlowOption = TransactionScopeAsyncFlowOption.Enabled }))
+            using (var uow = unitOfWorkManager.Begin())
             {
                 var user = await UserManager.FindByNameAsync("user1");
 
@@ -57,7 +57,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 roles.ShouldNotContain("role2");
 
                 //Delete all role assignments
-                await UserManager.RemoveFromRolesAsync(user.Id, "role1");
+                (await UserManager.RemoveFromRolesAsync(user.Id, "role1")).CheckErrors();
                 await unitOfWorkManager.Current.SaveChangesAsync();
 
                 //Check role assignments again
@@ -66,7 +66,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 roles.ShouldNotContain("role2");
 
                 //Add to roles
-                await UserManager.AddToRolesAsync(user.Id, "role1", "role2");
+                (await UserManager.AddToRolesAsync(user.Id, "role1", "role2")).CheckErrors();
                 await unitOfWorkManager.Current.SaveChangesAsync();
 
                 //Check role assignments again

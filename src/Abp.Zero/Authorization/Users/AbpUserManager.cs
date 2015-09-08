@@ -162,7 +162,7 @@ namespace Abp.Authorization.Users
             //Check for roles
             foreach (var roleId in cacheItem.RoleIds)
             {
-                if (await RoleManager.HasPermissionAsync(roleId, permission))
+                if (await RoleManager.IsGrantedAsync(roleId, permission))
                 {
                     return true;
                 }

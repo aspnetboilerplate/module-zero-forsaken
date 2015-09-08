@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Abp.IdentityFramework;
+using Abp.Threading;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
 using Shouldly;
@@ -17,7 +19,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             _role1 = CreateRole("Role1").Result;
             _role2 = CreateRole("Role2").Result;
             _testUser = CreateUser("TestUser").Result;
-            UserManager.AddToRolesAsync(_testUser.Id, _role1.Name, _role2.Name);
+            AsyncHelper.RunSync(() => UserManager.AddToRolesAsync(_testUser.Id, _role1.Name, _role2.Name)).CheckErrors();
         }
 
         [Fact]
@@ -37,6 +39,25 @@ namespace Abp.Zero.SampleApp.Tests.Users
         {
             await GrantPermissionAsync(_role1, "Permission1");
             (await IsGrantedAsync("Permission1")).ShouldBe(true);
+        }
+
+        [Fact]
+        public async Task Should_Not_Be_Granted_After_Granted_Role_Is_Deleted()
+        {
+            //Not granted initially
+            (await IsGrantedAsync("Permission1")).ShouldBe(false);
+
+            //Grant one role of the user
+            await GrantPermissionAsync(_role1, "Permission1");
+
+            //Now, should be granted
+            (await IsGrantedAsync("Permission1")).ShouldBe(true);
+
+            //Delete the role
+            await RoleManager.DeleteAsync(_role1);
+
+            //Now, should not be granted
+            (await IsGrantedAsync("Permission1")).ShouldBe(false);
         }
 
         [Fact]

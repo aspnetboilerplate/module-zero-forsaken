@@ -152,9 +152,6 @@ namespace Abp.Authorization.Roles
         public void HandleEvent(EntityDeletedEventData<TRole> eventData)
         {
             _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.Id);
-
-            //TODO: Clear only in the current tenant, or don't clear!
-            _cacheManager.GetUserPermissionCache().Clear();
         }
 
         public virtual void Dispose()
