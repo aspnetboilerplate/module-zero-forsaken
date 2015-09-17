@@ -8,6 +8,6 @@
         /// <summary>
         /// Role id.
         /// </summary>
-        public virtual int RoleId { get; set; }
+        public virtual long RoleId { get; set; }
     }
 }

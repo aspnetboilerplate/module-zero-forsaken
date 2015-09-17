@@ -16,7 +16,7 @@ namespace Abp.Authorization.Roles
     /// Implements 'Role Store' of ASP.NET Identity Framework.
     /// </summary>
     public abstract class AbpRoleStore<TTenant, TRole, TUser> :
-        IQueryableRoleStore<TRole, int>,
+        IQueryableRoleStore<TRole, long>,
         IRolePermissionStore<TTenant, TRole, TUser>,
 
         IEventHandler<EntityChangedEventData<RolePermissionSetting>>,
@@ -28,7 +28,7 @@ namespace Abp.Authorization.Roles
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
-        private readonly IRepository<TRole> _roleRepository;
+        private readonly IRepository<TRole, long> _roleRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
         private readonly ICacheManager _cacheManager;
@@ -37,7 +37,7 @@ namespace Abp.Authorization.Roles
         /// Constructor.
         /// </summary>
         protected AbpRoleStore(
-            IRepository<TRole> roleRepository, 
+            IRepository<TRole, long> roleRepository, 
             IRepository<UserRole, long> userRoleRepository,
             IRepository<RolePermissionSetting, long> rolePermissionSettingRepository,
             ICacheManager cacheManager)
@@ -69,7 +69,7 @@ namespace Abp.Authorization.Roles
             await _roleRepository.DeleteAsync(role);
         }
 
-        public virtual async Task<TRole> FindByIdAsync(int roleId)
+        public virtual async Task<TRole> FindByIdAsync(long roleId)
         {
             return await _roleRepository.FirstOrDefaultAsync(roleId);
         }
@@ -121,7 +121,7 @@ namespace Abp.Authorization.Roles
             return GetPermissionsAsync(role.Id);
         }
 
-        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
+        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long roleId)
         {
             return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
@@ -129,7 +129,7 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant)
+        public virtual async Task<bool> HasPermissionAsync(long roleId, PermissionGrantInfo permissionGrant)
         {
             return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
                 p => p.RoleId == roleId &&

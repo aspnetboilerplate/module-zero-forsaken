@@ -17,7 +17,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Role id.
         /// </summary>
-        public virtual int RoleId { get; set; }
+        public virtual long RoleId { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="UserRole"/> object.
@@ -32,7 +32,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="roleId">Role id</param>
-        public UserRole(long userId, int roleId)
+        public UserRole(long userId, long roleId)
         {
             UserId = userId;
             RoleId = roleId;

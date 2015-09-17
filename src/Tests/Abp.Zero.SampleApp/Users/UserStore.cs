@@ -13,7 +13,7 @@ namespace Abp.Zero.SampleApp.Users
             IRepository<User, long> userRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
-            IRepository<Role> roleRepository,
+            IRepository<Role, long> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IUnitOfWorkManager unitOfWorkManager,
             ICacheManager cacheManager)

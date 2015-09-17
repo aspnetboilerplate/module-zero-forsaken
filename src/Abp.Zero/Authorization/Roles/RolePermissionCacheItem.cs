@@ -34,7 +34,7 @@ namespace Abp.Authorization.Roles
             ProhibitedPermissions = new HashSet<string>();
         }
 
-        public RolePermissionCacheItem(int roleId)
+        public RolePermissionCacheItem(long roleId)
             : this()
         {
             RoleId = roleId;

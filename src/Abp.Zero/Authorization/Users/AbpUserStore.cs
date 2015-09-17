@@ -37,7 +37,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<TUser, long> _userRepository;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
-        private readonly IRepository<TRole> _roleRepository;
+        private readonly IRepository<TRole, long> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly ICacheManager _cacheManager;
@@ -49,7 +49,7 @@ namespace Abp.Authorization.Users
             IRepository<TUser, long> userRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
-            IRepository<TRole> roleRepository,
+            IRepository<TRole, long> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IUnitOfWorkManager unitOfWorkManager,
             ICacheManager cacheManager)
