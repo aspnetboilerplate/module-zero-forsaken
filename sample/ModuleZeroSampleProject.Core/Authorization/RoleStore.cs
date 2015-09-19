@@ -9,13 +9,15 @@ namespace ModuleZeroSampleProject.Authorization
     public class RoleStore : AbpRoleStore<Tenant, Role, User>
     {
         public RoleStore(
-            IRepository<Role> roleRepository,
-            IRepository<UserRole, long> userRoleRepository,
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
+            IRepository<Role> roleRepository, 
+            IRepository<UserRole, long> userRoleRepository, 
+            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository,
+            ICacheManager cacheManager)
             : base(
-                roleRepository,
-                userRoleRepository,
-                rolePermissionSettingRepository)
+                roleRepository, 
+                userRoleRepository, 
+                rolePermissionSettingRepository,
+                cacheManager)
         {
         }
     }
