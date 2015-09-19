@@ -14,25 +14,27 @@ namespace ModuleZeroSampleProject.Users
     public class UserManager : AbpUserManager<Tenant, Role, User>
     {
         public UserManager(
-            UserStore store,
-            RoleManager roleManager,
-            IRepository<Tenant> tenantRepository,
-            IMultiTenancyConfig multiTenancyConfig,
-            IPermissionManager permissionManager,
-            IUnitOfWorkManager unitOfWorkManager,
-            ISettingManager settingManager,
-            IUserManagementConfig userManagementConfig,
-            IIocResolver iocResolver)
+            UserStore userStore, 
+            RoleManager roleManager, 
+            IRepository<Tenant> tenantRepository, 
+            IMultiTenancyConfig multiTenancyConfig, 
+            IPermissionManager permissionManager, 
+            IUnitOfWorkManager unitOfWorkManager, 
+            ISettingManager settingManager, 
+            IUserManagementConfig userManagementConfig, 
+            IIocResolver iocResolver,
+            Abp.Runtime.Caching.ICacheManager cacheManager)
             : base(
-                store,
-                roleManager,
-                tenantRepository,
-                multiTenancyConfig,
-                permissionManager,
-                unitOfWorkManager,
-                settingManager,
-                userManagementConfig,
-                iocResolver)
+                userStore, 
+                roleManager, 
+                tenantRepository, 
+                multiTenancyConfig, 
+                permissionManager, 
+                unitOfWorkManager, 
+                settingManager, 
+                userManagementConfig, 
+                iocResolver,
+            cacheManager)
         {
         }
     }
