@@ -46,7 +46,8 @@ namespace Abp.Authorization.Roles
         protected AbpRoleStore<TTenant, TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
-        private readonly ITypedCache<int, RolePermissionCacheItem> _rolePermissionCache;
+        //private readonly ITypedCache<int, RolePermissionCacheItem> _rolePermissionCache;
+        private readonly ICacheManager _cacheManager;//20150921Andrew
 
         /// <summary>
         /// Constructor.
@@ -61,7 +62,8 @@ namespace Abp.Authorization.Roles
             _permissionManager = permissionManager;
             RoleManagementConfig = roleManagementConfig;
 
-            _rolePermissionCache = cacheManager.GetRolePermissionCache();
+            //_rolePermissionCache = cacheManager.GetRolePermissionCache();
+            _cacheManager = cacheManager;
 
             AbpStore = store;
 
@@ -446,7 +448,7 @@ namespace Abp.Authorization.Roles
 
         private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(int roleId)
         {
-            return await _rolePermissionCache.GetAsync(roleId, async () =>
+            return await _cacheManager.GetRolePermissionCache().GetAsync(roleId, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 
