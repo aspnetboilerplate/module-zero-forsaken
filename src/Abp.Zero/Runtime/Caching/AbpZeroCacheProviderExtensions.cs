@@ -10,9 +10,9 @@ namespace Abp.Runtime.Caching
             return cacheManager.GetCache(UserPermissionCacheItem.CacheStoreName).AsTyped<long, UserPermissionCacheItem>();
         }
 
-        public static ITypedCache<int, RolePermissionCacheItem> GetRolePermissionCache(this ICacheManager cacheManager)
+        public static ITypedCache<long, RolePermissionCacheItem> GetRolePermissionCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache(RolePermissionCacheItem.CacheStoreName).AsTyped<int, RolePermissionCacheItem>();
+            return cacheManager.GetCache(RolePermissionCacheItem.CacheStoreName).AsTyped<long, RolePermissionCacheItem>();
         }
     }
 }

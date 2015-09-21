@@ -20,7 +20,7 @@ namespace Abp.Authorization.Roles
     /// A user can have multiple roles. Thus, user will have all permissions of all assigned roles.
     /// </remarks>
     [Table("AbpRoles")]
-    public class AbpRole<TTenant, TUser> : FullAuditedEntity<int, TUser>, IRole<int>, IMayHaveTenant<TTenant, TUser>
+    public class AbpRole<TTenant, TUser> : FullAuditedEntity<long, TUser>, IRole<long>, IMayHaveTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
