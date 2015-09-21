@@ -63,7 +63,8 @@ namespace Abp.Authorization.Users
         private readonly IIocResolver _iocResolver;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
-        private readonly ITypedCache<long, UserPermissionCacheItem> _userPermissionCache;
+        //private readonly ITypedCache<long, UserPermissionCacheItem> _userPermissionCache;
+        private readonly ICacheManager _cacheManager;//20150921Andrew
 
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
@@ -88,7 +89,8 @@ namespace Abp.Authorization.Users
             _userManagementConfig = userManagementConfig;
             _iocResolver = iocResolver;
 
-            _userPermissionCache = cacheManager.GetUserPermissionCache();
+            //_userPermissionCache = cacheManager.GetUserPermissionCache();
+            _cacheManager = cacheManager;
 
             LocalizationManager = NullLocalizationManager.Instance;
         }
@@ -591,7 +593,7 @@ namespace Abp.Authorization.Users
         
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
         {
-            return await _userPermissionCache.GetAsync(userId, async () =>
+            return await _cacheManager.GetUserPermissionCache().GetAsync(userId, async () =>
             {
                 var newCacheItem = new UserPermissionCacheItem(userId);
 
