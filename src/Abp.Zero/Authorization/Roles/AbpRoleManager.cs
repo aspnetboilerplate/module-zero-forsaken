@@ -60,13 +60,10 @@ namespace Abp.Authorization.Roles
             : base(store)
         {
             _permissionManager = permissionManager;
-            RoleManagementConfig = roleManagementConfig;
-
-            //_rolePermissionCache = cacheManager.GetRolePermissionCache();
             _cacheManager = cacheManager;
-
+            
+            RoleManagementConfig = roleManagementConfig;
             AbpStore = store;
-
             AbpSession = NullAbpSession.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
         }

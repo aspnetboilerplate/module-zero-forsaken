@@ -88,8 +88,6 @@ namespace Abp.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
             _userManagementConfig = userManagementConfig;
             _iocResolver = iocResolver;
-
-            //_userPermissionCache = cacheManager.GetUserPermissionCache();
             _cacheManager = cacheManager;
 
             LocalizationManager = NullLocalizationManager.Instance;
