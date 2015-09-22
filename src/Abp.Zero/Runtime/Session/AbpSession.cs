@@ -15,6 +15,8 @@ namespace Abp.Runtime.Session
     /// </summary>
     public class AbpSession : IAbpSession, ISingletonDependency
     {
+        private const int DefaultTenantId = 1;
+
         public long? UserId
         {
             get
@@ -35,7 +37,7 @@ namespace Abp.Runtime.Session
             {
                 if (!_multiTenancy.IsEnabled)
                 {
-                    return 1; //TODO@hikalkan: This assumption may not be good?
+                    return DefaultTenantId;
                 }
 
                 var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
@@ -61,6 +63,51 @@ namespace Abp.Runtime.Session
                 return _multiTenancy.IsEnabled && !TenantId.HasValue
                     ? MultiTenancySides.Host
                     : MultiTenancySides.Tenant;
+            }
+        }
+
+        public long? ImpersonatorUserId
+        {
+            get
+            {
+                var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
+                if (claimsPrincipal == null)
+                {
+                    return null;
+                }
+
+                var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
+                if (claim == null || string.IsNullOrEmpty(claim.Value))
+                {
+                    return null;
+                }
+
+                return Convert.ToInt64(claim.Value);
+            }
+        }
+
+        public int? ImpersonatorTenantId
+        {
+            get
+            {
+                if (!_multiTenancy.IsEnabled)
+                {
+                    return DefaultTenantId;
+                }
+
+                var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
+                if (claimsPrincipal == null)
+                {
+                    return null;
+                }
+
+                var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
+                if (claim == null || string.IsNullOrEmpty(claim.Value))
+                {
+                    return null;
+                }
+
+                return Convert.ToInt32(claim.Value);
             }
         }
 
