@@ -63,8 +63,7 @@ namespace Abp.Authorization.Users
         private readonly IIocResolver _iocResolver;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
-        //private readonly ITypedCache<long, UserPermissionCacheItem> _userPermissionCache;
-        private readonly ICacheManager _cacheManager;//20150921Andrew
+        private readonly ICacheManager _cacheManager;
 
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,

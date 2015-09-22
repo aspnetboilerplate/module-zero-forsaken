@@ -46,8 +46,7 @@ namespace Abp.Authorization.Roles
         protected AbpRoleStore<TTenant, TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
-        //private readonly ITypedCache<int, RolePermissionCacheItem> _rolePermissionCache;
-        private readonly ICacheManager _cacheManager;//20150921Andrew
+        private readonly ICacheManager _cacheManager;
 
         /// <summary>
         /// Constructor.
