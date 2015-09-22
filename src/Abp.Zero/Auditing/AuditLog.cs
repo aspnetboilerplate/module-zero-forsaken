@@ -48,6 +48,11 @@ namespace Abp.Auditing
         public const int MaxExceptionLength = 2000;
 
         /// <summary>
+        /// Maximum length of <see cref="CustomData"/> property.
+        /// </summary>
+        public const int MaxCustomDataLength = 2000;
+
+        /// <summary>
         /// TenantId.
         /// </summary>
         public virtual int? TenantId { get; set; }
@@ -110,6 +115,21 @@ namespace Abp.Auditing
         public virtual string Exception { get; set; }
 
         /// <summary>
+        /// <see cref="AuditInfo.ImpersonatorUserId"/>.
+        /// </summary>
+        public virtual long? ImpersonatorUserId { get; set; }
+
+        /// <summary>
+        /// <see cref="AuditInfo.ImpersonatorTenantId"/>.
+        /// </summary>
+        public virtual int? ImpersonatorTenantId { get; set; }
+
+        /// <summary>
+        /// <see cref="AuditInfo.CustomData"/>.
+        /// </summary>
+        public virtual string CustomData { get; set; }
+
+        /// <summary>
         /// Creates a new CreateFromAuditInfo from given <see cref="auditInfo"/>.
         /// </summary>
         /// <param name="auditInfo">Source <see cref="AuditInfo"/> object</param>
@@ -129,7 +149,10 @@ namespace Abp.Auditing
                        ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
                        ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
                        BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
-                       Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength)
+                       Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
+                       ImpersonatorUserId = auditInfo.ImpersonatorUserId,
+                       ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
+                       CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)
                    };
         }
 
