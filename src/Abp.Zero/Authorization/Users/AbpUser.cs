@@ -63,7 +63,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="PasswordResetCode"/> property.
         /// </summary>
-        public const int MaxPasswordResetCodeLength = 128;
+        public const int MaxPasswordResetCodeLength = 328;
 
         /// <summary>
         /// Maximum length of the <see cref="AuthenticationSource"/> property.

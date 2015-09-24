@@ -28,17 +28,17 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Gets permission grant setting informations for a user.
         /// </summary>
-        /// <param name="user">User</param>
+        /// <param name="userId">User id</param>
         /// <returns>List of permission setting informations</returns>
-        Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TUser user);
+        Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId);
 
         /// <summary>
         /// Checks whether a role has a permission grant setting info.
         /// </summary>
-        /// <param name="user">User</param>
+        /// <param name="userId">User id</param>
         /// <param name="permissionGrant">Permission grant setting info</param>
         /// <returns></returns>
-        Task<bool> HasPermissionAsync(TUser user, PermissionGrantInfo permissionGrant);
+        Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant);
 
         /// <summary>
         /// Deleted all permission settings for a role.

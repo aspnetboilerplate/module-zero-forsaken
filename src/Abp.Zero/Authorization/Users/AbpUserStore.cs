@@ -5,8 +5,10 @@ using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Events.Bus.Entities;
+using Abp.Events.Bus.Handlers;
 using Abp.MultiTenancy;
-using Abp.Runtime.Session;
+using Abp.Runtime.Caching;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -21,7 +23,13 @@ namespace Abp.Authorization.Users
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
         IUserPermissionStore<TTenant, TUser>,
+
+        IEventHandler<EntityChangedEventData<UserPermissionSetting>>,
+        IEventHandler<EntityChangedEventData<UserRole>>,
+        IEventHandler<EntityDeletedEventData<TUser>>,
+        
         ITransientDependency
+
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
@@ -31,8 +39,8 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
-        private readonly IAbpSession _session;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ICacheManager _cacheManager;
 
         /// <summary>
         /// Constructor.
@@ -43,15 +51,15 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
-            IAbpSession session,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            ICacheManager cacheManager)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
-            _session = session;
             _unitOfWorkManager = unitOfWorkManager;
+            _cacheManager = cacheManager;
             _userPermissionSettingRepository = userPermissionSettingRepository;
         }
 
@@ -267,7 +275,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
-            if (await HasPermissionAsync(user, permissionGrant))
+            if (await HasPermissionAsync(user.Id, permissionGrant))
             {
                 return;
             }
@@ -290,17 +298,17 @@ namespace Abp.Authorization.Users
                 );
         }
 
-        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TUser user)
+        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId)
         {
-            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == user.Id))
+            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == userId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
 
-        public virtual async Task<bool> HasPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
         {
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
-                p => p.UserId == user.Id &&
+                p => p.UserId == userId &&
                      p.Name == permissionGrant.Name &&
                      p.IsGranted == permissionGrant.IsGranted
                 ) != null;
@@ -309,6 +317,21 @@ namespace Abp.Authorization.Users
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
         {
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
+        }
+
+        public void HandleEvent(EntityChangedEventData<UserPermissionSetting> eventData)
+        {
+            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.UserId);
+        }
+
+        public void HandleEvent(EntityChangedEventData<UserRole> eventData)
+        {
+            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.UserId);
+        }
+
+        public void HandleEvent(EntityDeletedEventData<TUser> eventData)
+        {
+            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.Id);
         }
 
         public virtual void Dispose()

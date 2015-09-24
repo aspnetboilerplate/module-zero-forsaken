@@ -136,13 +136,13 @@ namespace Abp.Zero.SampleApp.Tests
         protected async Task ProhibitPermissionAsync(Role role, string permissionName)
         {
             await RoleManager.ProhibitPermissionAsync(role, PermissionManager.GetPermission(permissionName));
-            (await RoleManager.HasPermissionAsync(role, PermissionManager.GetPermission(permissionName))).ShouldBe(false);
+            (await RoleManager.IsGrantedAsync(role.Id, PermissionManager.GetPermission(permissionName))).ShouldBe(false);
         }
 
         protected async Task GrantPermissionAsync(Role role, string permissionName)
         {
             await RoleManager.GrantPermissionAsync(role, PermissionManager.GetPermission(permissionName));
-            (await RoleManager.HasPermissionAsync(role, PermissionManager.GetPermission(permissionName))).ShouldBe(true);
+            (await RoleManager.IsGrantedAsync(role.Id, PermissionManager.GetPermission(permissionName))).ShouldBe(true);
         }
 
         protected async Task GrantPermissionAsync(User user, string permissionName)

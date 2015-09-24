@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Abp.Localization.Dictionaries;
+using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Localization.Sources.Xml;
 using Abp.Modules;
@@ -14,7 +16,7 @@ namespace Abp.Zero
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.6.5.0";
+        public const string CurrentVersion = "0.7.1.0";
 
         public override void PreInitialize()
         {

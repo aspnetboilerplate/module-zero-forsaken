@@ -36,8 +36,8 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         {
             var role1 = await CreateRole("Role1");
 
-            (await RoleManager.HasPermissionAsync(role1, PermissionManager.GetPermission("Permission1"))).ShouldBe(false);
-            (await RoleManager.HasPermissionAsync(role1, PermissionManager.GetPermission("Permission3"))).ShouldBe(true);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission1"))).ShouldBe(false);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission3"))).ShouldBe(true);
 
             await GrantPermissionAsync(role1, "Permission1");
             await ProhibitPermissionAsync(role1, "Permission1");

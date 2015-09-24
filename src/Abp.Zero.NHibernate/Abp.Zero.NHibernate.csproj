@@ -34,16 +34,16 @@
     <DocumentationFile>bin\Release\Abp.Zero.NHibernate.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abp, Version=0.6.4.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Abp.0.6.4.1\lib\net451\Abp.dll</HintPath>
+    <Reference Include="Abp, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.0.7.1.0\lib\net451\Abp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Abp.FluentMigrator, Version=0.6.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Abp.FluentMigrator.0.6.4.0\lib\net451\Abp.FluentMigrator.dll</HintPath>
+    <Reference Include="Abp.FluentMigrator, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.FluentMigrator.0.7.1.0\lib\net451\Abp.FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Abp.NHibernate, Version=0.6.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Abp.NHibernate.0.6.4.0\lib\net451\Abp.NHibernate.dll</HintPath>
+    <Reference Include="Abp.NHibernate, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.NHibernate.0.7.1.0\lib\net451\Abp.NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -77,17 +77,20 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
+      <HintPath>..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Nito.AsyncEx">
-      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.dll</HintPath>
+    <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Nito.AsyncEx.Concurrent">
-      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+    <Reference Include="Nito.AsyncEx.Concurrent, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Nito.AsyncEx.Enlightenment">
-      <HintPath>..\packages\Nito.AsyncEx.3.0.0\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+    <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable">
@@ -115,6 +118,7 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20150811_02_CreateAbpAuditLogsTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20150811_03_Add_Columns_To_AbpRoles.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20150812_01_Add_Discriminator_To_AbpPermissions.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20150922_01_Add_Columns_To_AbpAuditLogs.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
