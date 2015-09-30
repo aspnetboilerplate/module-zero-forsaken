@@ -180,6 +180,10 @@ namespace Abp.Authorization.Users
         [ForeignKey("UserId")]
         public virtual ICollection<Setting> Settings { get; set; }
 
+        public virtual DateTime? LockoutEndDateUtc { get; set; }
+        public virtual int AccessFailedCount { get; set; }
+        public virtual bool LockoutEnabled { get; set; }
+
         public AbpUser()
         {
             IsActive = true;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
@@ -23,6 +24,7 @@ namespace Abp.Authorization.Users
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
         IUserPermissionStore<TTenant, TUser>,
+        IUserLockoutStore<TUser, long>,
 
         IEventHandler<EntityChangedEventData<UserPermissionSetting>>,
         IEventHandler<EntityChangedEventData<UserRole>>,
@@ -41,6 +43,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly ICacheManager _cacheManager;
+        private bool _disposing;
 
         /// <summary>
         /// Constructor.
@@ -336,7 +339,86 @@ namespace Abp.Authorization.Users
 
         public virtual void Dispose()
         {
+            if (_disposing)
+                return;
+
+            _disposing = true;
             //No need to dispose since using IOC.
+        }
+
+        public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.LockoutEndDateUtc = lockoutEnd == DateTimeOffset.MinValue ? (DateTime?)null : lockoutEnd.UtcDateTime;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> IncrementAccessFailedCountAsync(TUser user)
+        {
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.AccessFailedCount++;
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+
+        public Task ResetAccessFailedCountAsync(TUser user)
+        {
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.AccessFailedCount = 0;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> GetAccessFailedCountAsync(TUser user)
+        {
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+        public Task<bool> GetLockoutEnabledAsync(TUser user)
+        {
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.LockoutEnabled);
+        }
+
+        public Task SetLockoutEnabledAsync(TUser user, bool enabled)
+        {
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.LockoutEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (_disposing)
+                throw new ObjectDisposedException("The AbpUserStore has already been disposed");
         }
     }
 }
