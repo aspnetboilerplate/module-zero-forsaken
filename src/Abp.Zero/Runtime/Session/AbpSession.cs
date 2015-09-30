@@ -25,7 +25,10 @@ namespace Abp.Runtime.Session
                     return null;
                 }
 
-                return Convert.ToInt64(userId);
+                long id;
+                if (long.TryParse(userId, out id))
+                    return id;
+                return null;
             }
         }
 
