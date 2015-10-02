@@ -5,18 +5,17 @@ namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Used to cache roles and permissions of a user.
-    /// It's invalidated on;
-    /// + User delete
-    /// + Role delete
-    /// + User-Role changes
-    /// + User-Permission changes
-    /// + External cache clear for <see cref="CacheStoreName"/>
     /// </summary>
     [Serializable]
     internal class UserPermissionCacheItem
     {
         public const string CacheStoreName = "Abp.Zero.UserPermissions";
 
+        /// <summary>
+        /// Gets/sets expire time for cache items.
+        /// Default: 20 minutes.
+        /// TODO: This is not used!
+        /// </summary>
         public static TimeSpan CacheExpireTime { get; private set; }
 
         public long UserId { get; set; }
