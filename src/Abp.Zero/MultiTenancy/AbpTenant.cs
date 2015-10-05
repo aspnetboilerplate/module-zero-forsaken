@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Application.Editions;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Domain.Entities;
@@ -43,6 +44,12 @@ namespace Abp.MultiTenancy
         [Required]
         [StringLength(MaxTenancyNameLength)]
         public virtual string TenancyName { get; set; }
+
+        /// <summary>
+        /// Current <see cref="Edition"/> of the Tenant.
+        /// </summary>
+        public virtual Edition Edition { get; set; }
+        public virtual int? EditionId { get; set; }
 
         /// <summary>
         /// Display name of the Tenant.

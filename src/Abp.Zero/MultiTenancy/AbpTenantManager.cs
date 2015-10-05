@@ -1,12 +1,15 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Abp.Application.Editions;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
-using Abp.Dependency;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Domain.Services;
 using Abp.IdentityFramework;
 using Abp.Localization;
+using Abp.Runtime.Caching;
 using Abp.Zero;
 using Microsoft.AspNet.Identity;
 
@@ -19,27 +22,32 @@ namespace Abp.MultiTenancy
     /// <typeparam name="TTenant">Type of the application Tenant</typeparam>
     /// <typeparam name="TRole">Type of the application Role</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
-    public abstract class AbpTenantManager<TTenant, TRole, TUser> : ITransientDependency
+    public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
+        public AbpEditionManager EditionManager { get; set; }
         public ILocalizationManager LocalizationManager { get; set; }
 
-        private readonly IRepository<TTenant> _tenantRepository;
+        public ICacheManager CacheManager { get; set; }
 
-        protected AbpTenantManager(IRepository<TTenant> tenantRepository)
+        public IRepository<TTenant> TenantRepository { get; set; }
+
+        public IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
+
+
+        protected AbpTenantManager(AbpEditionManager editionManager)
         {
-            _tenantRepository = tenantRepository;
-
+            EditionManager = editionManager;
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
-        public virtual IQueryable<TTenant> Tenants { get { return _tenantRepository.GetAll(); } }
+        public virtual IQueryable<TTenant> Tenants { get { return TenantRepository.GetAll(); } }
 
         public virtual async Task<IdentityResult> CreateAsync(TTenant tenant)
         {
-            if (await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName) != null)
+            if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName) != null)
             {
                 return AbpIdentityResult.Failed(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
             }
@@ -50,24 +58,24 @@ namespace Abp.MultiTenancy
                 return validationResult;
             }
 
-            await _tenantRepository.InsertAsync(tenant);
+            await TenantRepository.InsertAsync(tenant);
             return IdentityResult.Success;
         }
 
         public async Task<IdentityResult> UpdateAsync(TTenant tenant)
         {
-            if (await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
+            if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
             {
                 return AbpIdentityResult.Failed(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
             }
 
-            await _tenantRepository.UpdateAsync(tenant);
+            await TenantRepository.UpdateAsync(tenant);
             return IdentityResult.Success;
         }
 
         public virtual async Task<TTenant> FindByIdAsync(int id)
         {
-            return await _tenantRepository.FirstOrDefaultAsync(id);
+            return await TenantRepository.FirstOrDefaultAsync(id);
         }
 
         public virtual async Task<TTenant> GetByIdAsync(int id)
@@ -83,14 +91,58 @@ namespace Abp.MultiTenancy
 
         public virtual Task<TTenant> FindByTenancyNameAsync(string tenancyName)
         {
-            return _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+            return TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
         }
 
         public virtual async Task<IdentityResult> DeleteAsync(TTenant tenant)
         {
-            await _tenantRepository.DeleteAsync(tenant);
+            await TenantRepository.DeleteAsync(tenant);
             return IdentityResult.Success;
         }
+
+
+        #region Features
+
+        public async Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
+        {
+            var cacheItem = await GetTenantFeatureCacheItemAsync(tenantId);
+            var value = cacheItem.FeatureValues.GetOrDefault(featureName);
+            if (value != null)
+            {
+                return value;
+            }
+
+            if (cacheItem.EditionId.HasValue)
+            {
+                value = await EditionManager.GetFeatureValueOrNullAsync(cacheItem.EditionId.Value, featureName);
+                if (value != null)
+                {
+                    return value;
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
+        {
+            return await CacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
+            {
+                var tenant = await GetByIdAsync(tenantId);
+
+                var newCacheItem = new TenantFeatureCacheItem {EditionId = tenant.EditionId};
+
+                var featureSettings = await TenantFeatureRepository.GetAllListAsync(f => f.TenantId == tenantId);
+                foreach (var featureSetting in featureSettings)
+                {
+                    newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
+                }
+
+                return newCacheItem;
+            });
+        }
+
+        #endregion
 
         protected virtual async Task<IdentityResult> ValidateTenantAsync(TTenant tenant)
         {

@@ -9,6 +9,7 @@ using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.IdentityFramework;
@@ -29,7 +30,7 @@ namespace Abp.Authorization.Users
     /// </summary>
     public abstract class AbpUserManager<TTenant, TRole, TUser>
         : UserManager<TUser, long>,
-        ITransientDependency
+        IDomainService
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>, new()
         where TUser : AbpUser<TTenant, TUser>

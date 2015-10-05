@@ -33,8 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Abp, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Abp.0.7.1.0\lib\net451\Abp.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\aspnetboilerplate\src\Abp\bin\Debug\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Abp.EntityFramework, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Abp.EntityFramework.0.7.1.0\lib\net451\Abp.EntityFramework.dll</HintPath>
@@ -99,6 +99,9 @@
     <Compile Include="Configuration\AppSettingProvider.cs" />
     <Compile Include="EntityFramework\AppDbContext.cs" />
     <Compile Include="EntityFramework\AppEfRepositoryBase.cs" />
+    <Compile Include="Features\AppFeatureProvider.cs" />
+    <Compile Include="Editions\EditionManager.cs" />
+    <Compile Include="Features\FeatureValueStore.cs" />
     <Compile Include="MultiTenancy\Tenant.cs" />
     <Compile Include="MultiTenancy\TenantManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

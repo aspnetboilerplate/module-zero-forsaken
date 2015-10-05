@@ -9,7 +9,7 @@ namespace Abp.Authorization.Roles
     [Serializable]
     internal class RolePermissionCacheItem
     {
-        public const string CacheStoreName = "Abp.Zero.RolePermissions";
+        public const string CacheStoreName = "AbpZeroRolePermissions";
 
         /// <summary>
         /// Gets/sets expire time for cache items.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
-using Abp.Dependency;
+using Abp.Domain.Services;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -19,7 +19,9 @@ namespace Abp.Authorization.Roles
     /// Extends <see cref="RoleManager{TRole,TKey}"/> of ASP.NET Identity Framework.
     /// Applications should derive this class with appropriate generic arguments.
     /// </summary>
-    public abstract class AbpRoleManager<TTenant, TRole, TUser> : RoleManager<TRole, int>, ITransientDependency
+    public abstract class AbpRoleManager<TTenant, TRole, TUser> 
+        : RoleManager<TRole, int>, 
+        IDomainService
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>, new()
         where TUser : AbpUser<TTenant, TUser>
