@@ -7,7 +7,8 @@ namespace Abp.Zero.SampleApp.MultiTenancy
 {
     public class TenantManager : AbpTenantManager<Tenant, Role, User>
     {
-        public TenantManager(EditionManager editionManager) : base(editionManager)
+        public TenantManager(EditionManager editionManager) : 
+            base(editionManager)
         {
         }
     }

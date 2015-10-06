@@ -85,8 +85,6 @@
   <ItemGroup>
     <Compile Include="Application\Editions\EditionfeatureCacheItem.cs" />
     <Compile Include="Application\Editions\AbpEditionManager.cs" />
-    <Compile Include="Application\Editions\EditionFeatureCacheItemInvalidator.cs" />
-    <Compile Include="MultiTenancy\TenantFeatureCacheItemInvalidator.cs" />
     <Compile Include="MultiTenancy\TenantFeatureCacheItem.cs" />
     <Compile Include="Auditing\AuditingStore.cs" />
     <Compile Include="Auditing\AuditLog.cs" />
@@ -115,6 +113,7 @@
     <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
     <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="Authorization\Roles\AbpRoleManager.cs" />
+    <Compile Include="MultiTenancy\TenantFeatureCacheItemInvalidator.cs" />
     <Compile Include="MultiTenancy\TenantFeatureSetting.cs" />
     <Compile Include="Runtime\Caching\AbpZeroCacheManagerExtensions.cs" />
     <Compile Include="Runtime\Session\AbpSession.cs" />

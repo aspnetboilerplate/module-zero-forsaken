@@ -69,8 +69,8 @@ namespace Abp.Zero.SampleApp.Tests.Application.Editions
             (await _featureChecker.GetValueAsync(AppFeatureProvider.MyNumericFeature)).ShouldBe("42");
 
             //Set edition values
-            await _editionManager.SetFeatureValue(standardEdition.Id, AppFeatureProvider.MyBoolFeature, "true");
-            await _editionManager.SetFeatureValue(standardEdition.Id, AppFeatureProvider.MyNumericFeature, "43");
+            await _editionManager.SetFeatureValueAsync(standardEdition.Id, AppFeatureProvider.MyBoolFeature, "true");
+            await _editionManager.SetFeatureValueAsync(standardEdition.Id, AppFeatureProvider.MyNumericFeature, "43");
 
             //Should get edition values
             (await _featureChecker.GetValueAsync(AppFeatureProvider.MyNumericFeature)).ShouldBe("43");

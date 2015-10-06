@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
@@ -33,5 +34,16 @@ namespace Abp.Application.Editions
         [Required]
         [StringLength(MaxDisplayNameLength)]
         public virtual string DisplayName { get; set; }
+
+        public Edition()
+        {
+            Name = Guid.NewGuid().ToString("N");
+        }
+
+        public Edition(string displayName)
+            : this()
+        {
+            DisplayName = displayName;
+        }
     }
 }

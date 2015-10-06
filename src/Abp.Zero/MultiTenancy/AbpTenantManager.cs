@@ -7,6 +7,8 @@ using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
+using Abp.Events.Bus.Entities;
+using Abp.Events.Bus.Handlers;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.Runtime.Caching;
@@ -22,7 +24,8 @@ namespace Abp.MultiTenancy
     /// <typeparam name="TTenant">Type of the application Tenant</typeparam>
     /// <typeparam name="TRole">Type of the application Role</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
-    public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService
+    public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService, 
+        IEventHandler<EntityChangedEventData<TTenant>>
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
@@ -35,7 +38,6 @@ namespace Abp.MultiTenancy
         public IRepository<TTenant> TenantRepository { get; set; }
 
         public IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
-
 
         protected AbpTenantManager(AbpEditionManager editionManager)
         {
@@ -99,8 +101,7 @@ namespace Abp.MultiTenancy
             await TenantRepository.DeleteAsync(tenant);
             return IdentityResult.Success;
         }
-
-
+        
         #region Features
 
         public async Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
@@ -168,6 +169,16 @@ namespace Abp.MultiTenancy
         private string L(string name)
         {
             return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+        }
+
+        public void HandleEvent(EntityChangedEventData<TTenant> eventData)
+        {
+            if (eventData.Entity.IsTransient())
+            {
+                return;
+            }
+
+            CacheManager.GetTenantFeatureCache().Remove(eventData.Entity.Id);
         }
     }
 }

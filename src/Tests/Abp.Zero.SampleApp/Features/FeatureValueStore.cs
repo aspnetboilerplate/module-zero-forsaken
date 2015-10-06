@@ -10,6 +10,7 @@ namespace Abp.Zero.SampleApp.Features
         public FeatureValueStore(TenantManager tenantManager)
             : base(tenantManager)
         {
+
         }
     }
 }
