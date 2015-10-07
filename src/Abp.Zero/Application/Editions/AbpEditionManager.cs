@@ -102,12 +102,12 @@ namespace Abp.Application.Editions
             return EditionRepository.DeleteAsync(edition);
         }
 
-        public void HandleEvent(EntityChangedEventData<EditionFeatureSetting> eventData)
+        public virtual void HandleEvent(EntityChangedEventData<EditionFeatureSetting> eventData)
         {
             CacheManager.GetEditionFeatureCache().Remove(eventData.Entity.EditionId);
         }
 
-        public void HandleEvent(EntityChangedEventData<Edition> eventData)
+        public virtual void HandleEvent(EntityChangedEventData<Edition> eventData)
         {
             if (eventData.Entity.IsTransient())
             {

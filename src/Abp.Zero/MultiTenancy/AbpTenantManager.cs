@@ -7,6 +7,7 @@ using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
+using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.IdentityFramework;
@@ -25,12 +26,14 @@ namespace Abp.MultiTenancy
     /// <typeparam name="TRole">Type of the application Role</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
     public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService, 
-        IEventHandler<EntityChangedEventData<TTenant>>
+        IEventHandler<EntityChangedEventData<TTenant>>,
+        IEventHandler<EntityDeletedEventData<Edition>>
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
         public AbpEditionManager EditionManager { get; set; }
+
         public ILocalizationManager LocalizationManager { get; set; }
 
         public ICacheManager CacheManager { get; set; }
@@ -179,6 +182,16 @@ namespace Abp.MultiTenancy
             }
 
             CacheManager.GetTenantFeatureCache().Remove(eventData.Entity.Id);
+        }
+
+        [UnitOfWork]
+        public virtual void HandleEvent(EntityDeletedEventData<Edition> eventData)
+        {
+            var relatedTenants = TenantRepository.GetAllList(t => t.EditionId == eventData.Entity.Id);
+            foreach (var relatedTenant in relatedTenants)
+            {
+                relatedTenant.EditionId = null;
+            }
         }
     }
 }
