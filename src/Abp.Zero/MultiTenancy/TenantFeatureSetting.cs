@@ -11,5 +11,16 @@ namespace Abp.MultiTenancy
         /// Tenant's Id.
         /// </summary>
         public virtual int TenantId { get; set; }
+
+        public TenantFeatureSetting()
+        {
+            
+        }
+
+        public TenantFeatureSetting(int tenantId, string name, string value)
+            :base(name, value)
+        {
+            TenantId = tenantId;
+        }
     }
 }

@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp.Application.Editions;
+using Abp.Application.Features;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
@@ -25,7 +27,7 @@ namespace Abp.MultiTenancy
     /// <typeparam name="TTenant">Type of the application Tenant</typeparam>
     /// <typeparam name="TRole">Type of the application Role</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
-    public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService, 
+    public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService,
         IEventHandler<EntityChangedEventData<TTenant>>,
         IEventHandler<EntityDeletedEventData<Edition>>
         where TTenant : AbpTenant<TTenant, TUser>
@@ -41,6 +43,8 @@ namespace Abp.MultiTenancy
         public IRepository<TTenant> TenantRepository { get; set; }
 
         public IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
+
+        public IFeatureManager FeatureManager { get; set; }
 
         protected AbpTenantManager(AbpEditionManager editionManager)
         {
@@ -104,8 +108,6 @@ namespace Abp.MultiTenancy
             await TenantRepository.DeleteAsync(tenant);
             return IdentityResult.Success;
         }
-        
-        #region Features
 
         public async Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
         {
@@ -128,13 +130,105 @@ namespace Abp.MultiTenancy
             return null;
         }
 
+        public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int tenantId)
+        {
+            var values = new List<NameValue>();
+
+            foreach (var feature in FeatureManager.GetAll())
+            {
+                values.Add(new NameValue(feature.Name, await GetFeatureValueOrNullAsync(tenantId, feature.Name) ?? feature.DefaultValue));
+            }
+
+            return values;
+        }
+
+        public virtual async Task SetFeatureValuesAsync(int tenantId, params NameValue[] values)
+        {
+            if (values.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            foreach (var value in values)
+            {
+                await SetFeatureValueAsync(tenantId, value.Name, value.Value);
+            }
+        }
+
+        [UnitOfWork]
+        public virtual async Task SetFeatureValueAsync(int tenantId, string featureName, string value)
+        {
+            await SetFeatureValueAsync(await GetByIdAsync(tenantId), featureName, value);
+        }
+
+        [UnitOfWork]
+        public virtual async Task SetFeatureValueAsync(TTenant tenant, string featureName, string value)
+        {
+            //No need to change if it's already equals to the current value
+            if (await GetFeatureValueOrNullAsync(tenant.Id, featureName) == value)
+            {
+                return;
+            }
+
+            //Get the current feature setting
+            var currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.TenantId == tenant.Id && f.Name == featureName);
+
+            //Get the feature
+            var feature = FeatureManager.GetOrNull(featureName);
+            if (feature == null)
+            {
+                if (currentSetting != null)
+                {
+                    await TenantFeatureRepository.DeleteAsync(currentSetting);
+                }
+
+                return;
+            }
+
+            //Determine default value
+            var defaultValue = tenant.EditionId.HasValue
+                ? (await EditionManager.GetFeatureValueOrNullAsync(tenant.EditionId.Value, featureName) ?? feature.DefaultValue)
+                : feature.DefaultValue;
+
+            //No need to store value if it's default
+            if (value == defaultValue)
+            {
+                if (currentSetting != null)
+                {
+                    await TenantFeatureRepository.DeleteAsync(currentSetting);
+                }
+
+                return;
+            }
+
+            //Insert/update the feature value
+            if (currentSetting == null)
+            {
+                await TenantFeatureRepository.InsertAsync(new TenantFeatureSetting(tenant.Id, featureName, value));
+            }
+            else
+            {
+                currentSetting.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Resets all custom feature settings for a tenant.
+        /// Tenant will have features according to it's edition.
+        /// </summary>
+        /// <param name="tenantId">Tenant Id</param>
+        public async Task ResetAllFeaturesAsync(int tenantId)
+        {
+            await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
+        }
+
         private async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
         {
             return await CacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {
                 var tenant = await GetByIdAsync(tenantId);
 
-                var newCacheItem = new TenantFeatureCacheItem {EditionId = tenant.EditionId};
+                var newCacheItem = new TenantFeatureCacheItem { EditionId = tenant.EditionId };
 
                 var featureSettings = await TenantFeatureRepository.GetAllListAsync(f => f.TenantId == tenantId);
                 foreach (var featureSetting in featureSettings)
@@ -145,8 +239,6 @@ namespace Abp.MultiTenancy
                 return newCacheItem;
             });
         }
-
-        #endregion
 
         protected virtual async Task<IdentityResult> ValidateTenantAsync(TTenant tenant)
         {

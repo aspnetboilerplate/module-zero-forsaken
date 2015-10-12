@@ -42,6 +42,18 @@ namespace Abp.Application.Editions
             }
 
             var currentSetting = await EditionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
+
+            var feature = FeatureManager.GetOrNull(featureName);
+            if (feature == null || feature.DefaultValue == value)
+            {
+                if (currentSetting != null)
+                {
+                    await EditionFeatureRepository.DeleteAsync(currentSetting);
+                }
+
+                return;
+            }
+
             if (currentSetting == null)
             {
                 await EditionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
