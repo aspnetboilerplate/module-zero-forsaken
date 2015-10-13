@@ -34,11 +34,19 @@ namespace Abp.Application.Features
         [MaxLength(MaxValueLength)]
         public virtual string Value { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeatureSetting"/> class.
+        /// </summary>
         protected FeatureSetting()
         {
             
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeatureSetting"/> class.
+        /// </summary>
+        /// <param name="name">Feature name.</param>
+        /// <param name="value">Feature value.</param>
         protected FeatureSetting(string name, string value)
         {
             Name = name;

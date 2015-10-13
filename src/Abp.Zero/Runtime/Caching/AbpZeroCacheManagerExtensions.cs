@@ -5,7 +5,7 @@ using Abp.MultiTenancy;
 
 namespace Abp.Runtime.Caching
 {
-    internal static class AbpZeroCacheManagerExtensions
+    public static class AbpZeroCacheManagerExtensions
     {
         public static ITypedCache<long, UserPermissionCacheItem> GetUserPermissionCache(this ICacheManager cacheManager)
         {
