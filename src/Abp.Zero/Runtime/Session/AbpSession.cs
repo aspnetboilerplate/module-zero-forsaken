@@ -43,13 +43,13 @@ namespace Abp.Runtime.Session
                 var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
                 if (claimsPrincipal == null)
                 {
-                    return null;
+                    return TenantIdResolver.TenantId;
                 }
 
                 var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
                 if (claim == null || string.IsNullOrEmpty(claim.Value))
                 {
-                    return null;
+                    return TenantIdResolver.TenantId;
                 }
                 
                 return Convert.ToInt32(claim.Value);
@@ -111,6 +111,8 @@ namespace Abp.Runtime.Session
             }
         }
 
+        public ITenantIdResolver TenantIdResolver { get; set; }
+
         private readonly IMultiTenancyConfig _multiTenancy;
 
         /// <summary>
@@ -119,6 +121,7 @@ namespace Abp.Runtime.Session
         public AbpSession(IMultiTenancyConfig multiTenancy)
         {
             _multiTenancy = multiTenancy;
+            TenantIdResolver = NullTenantIdResolver.Instance;
         }
     }
 }
