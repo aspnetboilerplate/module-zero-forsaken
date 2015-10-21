@@ -1,5 +1,7 @@
 using System.Data.Common;
 using System.Data.Entity;
+using Abp.Application.Editions;
+using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
@@ -67,6 +69,26 @@ namespace Abp.Zero.EntityFramework
         /// Audit logs.
         /// </summary>
         public virtual IDbSet<AuditLog> AuditLogs { get; set; }
+
+        /// <summary>
+        /// Editions.
+        /// </summary>
+        public virtual IDbSet<Edition> Editions { get; set; }
+
+        /// <summary>
+        /// FeatureSettings.
+        /// </summary>
+        public virtual IDbSet<FeatureSetting> FeatureSettings { get; set; }
+
+        /// <summary>
+        /// TenantFeatureSetting.
+        /// </summary>
+        public virtual IDbSet<TenantFeatureSetting> TenantFeatureSettings { get; set; }
+
+        /// <summary>
+        /// EditionFeatureSettings.
+        /// </summary>
+        public virtual IDbSet<EditionFeatureSetting> EditionFeatureSettings { get; set; }
 
         /// <summary>
         /// Default constructor.

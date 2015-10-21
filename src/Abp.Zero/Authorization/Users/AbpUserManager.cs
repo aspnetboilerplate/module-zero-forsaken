@@ -4,11 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Authorization.Roles;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.IdentityFramework;
@@ -29,7 +31,7 @@ namespace Abp.Authorization.Users
     /// </summary>
     public abstract class AbpUserManager<TTenant, TRole, TUser>
         : UserManager<TUser, long>,
-        ITransientDependency
+        IDomainService
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>, new()
         where TUser : AbpUser<TTenant, TUser>
@@ -50,6 +52,8 @@ namespace Abp.Authorization.Users
         public ILocalizationManager LocalizationManager { get; set; }
 
         public IAbpSession AbpSession { get; set; }
+
+        public FeatureDependencyContext FeatureDependencyContext { get; set; }
 
         protected AbpRoleManager<TTenant, TRole, TUser> RoleManager { get; private set; }
 
@@ -142,6 +146,15 @@ namespace Abp.Authorization.Users
             if (!permission.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
             {
                 return false;
+            }
+
+            //Check for depended features
+            if (permission.DependedFeature != null && AbpSession.MultiTenancySide == MultiTenancySides.Tenant)
+            {
+                if (!await permission.DependedFeature.IsSatisfiedAsync(FeatureDependencyContext))
+                {
+                    return false;
+                }
             }
 
             //Get cached user permissions
