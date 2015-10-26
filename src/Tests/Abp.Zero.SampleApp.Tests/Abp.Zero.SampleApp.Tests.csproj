@@ -36,8 +36,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Abp, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Abp.0.7.3.0\lib\net451\Abp.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\aspnetboilerplate\src\Abp\bin\Debug\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Abp.EntityFramework, Version=0.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Abp.EntityFramework.0.7.2.0\lib\net451\Abp.EntityFramework.dll</HintPath>
@@ -138,6 +138,9 @@
     <Compile Include="Configuration\Settings_Tests.cs" />
     <Compile Include="IdentityFramework\IdentityResultHelper_Tests.cs" />
     <Compile Include="Ldap\LdapAuthenticationSource_Tests.cs" />
+    <Compile Include="Localization\ApplicationLanguageManager_Tests.cs" />
+    <Compile Include="Localization\ApplicationLanguageProvider_Tests.cs" />
+    <Compile Include="Localization\InitialTestLanguagesBuilder.cs" />
     <Compile Include="MultiTenancy\TenantManager_Tests.cs" />
     <Compile Include="Roles\RoleManager_Delete_Tests.cs" />
     <Compile Include="Roles\RoleManager_Tests.cs" />
