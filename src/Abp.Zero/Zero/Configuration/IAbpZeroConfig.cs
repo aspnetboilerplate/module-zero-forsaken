@@ -14,5 +14,7 @@
         /// Gets user management config.
         /// </summary>
         IUserManagementConfig UserManagement { get; }
+
+        ILanguageManagementConfig LanguageManagement { get; }
     }
 }

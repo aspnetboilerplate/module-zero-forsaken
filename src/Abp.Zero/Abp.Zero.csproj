@@ -138,8 +138,10 @@
     <Compile Include="Zero\Configuration\AbpZeroSettingNames.cs" />
     <Compile Include="Zero\Configuration\AbpZeroSettingProvider.cs" />
     <Compile Include="Zero\Configuration\IAbpZeroConfig.cs" />
+    <Compile Include="Zero\Configuration\ILanguageManagementConfig.cs" />
     <Compile Include="Zero\Configuration\IRoleManagementConfig.cs" />
     <Compile Include="Zero\Configuration\IUserManagementConfig.cs" />
+    <Compile Include="Zero\Configuration\LanguageManagementConfig.cs" />
     <Compile Include="Zero\Configuration\ModuleZeroConfigurationExtensions.cs" />
     <Compile Include="Zero\Configuration\AbpZeroConfig.cs" />
     <Compile Include="Zero\Configuration\RoleManagementConfig.cs" />

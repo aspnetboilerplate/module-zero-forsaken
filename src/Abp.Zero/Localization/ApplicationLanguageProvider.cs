@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Configuration;
-using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Threading;
@@ -11,7 +10,7 @@ namespace Abp.Localization
     /// <summary>
     /// Implements <see cref="ILanguageProvider"/> to get languages from <see cref="IApplicationLanguageManager"/>.
     /// </summary>
-    public class ApplicationLanguageProvider : ILanguageProvider, ITransientDependency
+    public class ApplicationLanguageProvider : ILanguageProvider
     {
         /// <summary>
         /// Reference to the session.
@@ -40,6 +39,7 @@ namespace Abp.Localization
         {
             var languages = AsyncHelper.RunSync(() => _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId))
                     .Where(l => l.IsActive)
+                    .OrderBy(l => l.DisplayName)
                     .Select(l => l.ToLanguageInfo())
                     .ToList();
             

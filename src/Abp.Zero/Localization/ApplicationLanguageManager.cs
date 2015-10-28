@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -89,14 +88,20 @@ namespace Abp.Localization
         [UnitOfWork]
         public virtual async Task RemoveAsync(int? tenantId, string languageName)
         {
-            if ((await GetLanguagesAsync(tenantId)).All(l => l.Name != languageName))
+            var currentLanguage = (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == languageName);
+            if (currentLanguage == null)
             {
                 return;
             }
 
+            if (currentLanguage.TenantId == null && tenantId != null)
+            {
+                throw new AbpException("Can not delete a host language from tenant. Try to make is passive!");
+            }
+
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                await _languageRepository.DeleteAsync(l => l.TenantId == tenantId && l.Name == languageName);
+                await _languageRepository.DeleteAsync(currentLanguage.Id);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
