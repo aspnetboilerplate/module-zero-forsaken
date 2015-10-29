@@ -1,12 +1,15 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
+using Abp.UI;
 
 namespace Abp.Localization
 {
@@ -31,6 +34,7 @@ namespace Abp.Localization
         private readonly IRepository<ApplicationLanguage> _languageRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ISettingManager _settingManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationLanguageManager"/> class.
@@ -38,11 +42,13 @@ namespace Abp.Localization
         public ApplicationLanguageManager(
             IRepository<ApplicationLanguage> languageRepository,
             ICacheManager cacheManager,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            ISettingManager settingManager)
         {
             _languageRepository = languageRepository;
             _cacheManager = cacheManager;
             _unitOfWorkManager = unitOfWorkManager;
+            _settingManager = settingManager;
         }
 
         public async Task<IReadOnlyList<ApplicationLanguage>> GetLanguagesAsync(int? tenantId)
@@ -75,7 +81,7 @@ namespace Abp.Localization
         {
             if ((await GetLanguagesAsync(language.TenantId)).Any(l => l.Name == language.Name))
             {
-                throw new AbpException("There is already a language with name = " + language.Name);
+                throw new AbpException("There is already a language with name = " + language.Name); //TODO: LOCALIZE
             }
 
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
@@ -96,13 +102,59 @@ namespace Abp.Localization
 
             if (currentLanguage.TenantId == null && tenantId != null)
             {
-                throw new AbpException("Can not delete a host language from tenant. Try to make is passive!");
+                throw new AbpException("Can not delete a host language from tenant!"); //TODO: LOCALIZE
             }
 
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
                 await _languageRepository.DeleteAsync(currentLanguage.Id);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
+            }
+        }
+
+        [UnitOfWork]
+        public virtual async Task UpdateAsync(int? tenantId, ApplicationLanguage language)
+        {
+            var existingLanguageWithSameName = (await GetLanguagesAsync(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
+            if (existingLanguageWithSameName != null)
+            {
+                if (existingLanguageWithSameName.Id != language.Id)
+                {
+                    throw new AbpException("There is already a language with name = " + language.Name); //TODO: LOCALIZE
+                }
+            }
+
+            if (language.TenantId == null && tenantId != null)
+            {
+                throw new AbpException("Can not update a host language from tenant"); //TODO: LOCALIZE
+            }
+
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                await _languageRepository.UpdateAsync(language);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+            }
+        }
+
+        public async Task<ApplicationLanguage> GetDefaultLanguageOrNullAsync(int? tenantId)
+        {
+            var defaultLanguageName = tenantId.HasValue
+                ? await _settingManager.GetSettingValueForTenantAsync(LocalizationSettingNames.DefaultLanguage, tenantId.Value)
+                : await _settingManager.GetSettingValueForApplicationAsync(LocalizationSettingNames.DefaultLanguage);
+
+            return (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == defaultLanguageName);
+        }
+
+        public async Task SetDefaultLanguage(int? tenantId, string languageName)
+        {
+            var cultureInfo = CultureInfo.GetCultureInfo(languageName);
+            if (tenantId.HasValue)
+            {
+                await _settingManager.ChangeSettingForTenantAsync(tenantId.Value, LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
+            }
+            else
+            {
+                await _settingManager.ChangeSettingForApplicationAsync(LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
             }
         }
 

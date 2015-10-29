@@ -37,23 +37,23 @@ namespace Abp.Localization
         /// </summary>
         public IReadOnlyList<LanguageInfo> GetLanguages()
         {
-            var languages = AsyncHelper.RunSync(() => _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId))
+            var languageInfos = AsyncHelper.RunSync(() => _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId))
                     .Where(l => l.IsActive)
                     .OrderBy(l => l.DisplayName)
                     .Select(l => l.ToLanguageInfo())
                     .ToList();
-            
-            var defaultLanguageName = _settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
-            if (!defaultLanguageName.IsNullOrWhiteSpace())
+
+            var defaultLanguage = AsyncHelper.RunSync(() => _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId));
+            if (defaultLanguage != null)
             {
-                var defaultLanguage = languages.FirstOrDefault(l => l.Name == defaultLanguageName);
-                if (defaultLanguage != null)
+                var languageInfo = languageInfos.FirstOrDefault(l => l.Name == defaultLanguage.Name);
+                if (languageInfo != null)
                 {
-                    defaultLanguage.IsDefault = true;
+                    languageInfo.IsDefault = true;
                 }
             }
 
-            return languages;
+            return languageInfos;
         }
     }
 }
