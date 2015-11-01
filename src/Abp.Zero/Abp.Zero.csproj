@@ -88,7 +88,16 @@
     <Compile Include="Localization\ApplicationLanguage.cs" />
     <Compile Include="Localization\ApplicationLanguageManager.cs" />
     <Compile Include="Localization\ApplicationLanguageProvider.cs" />
+    <Compile Include="Localization\ApplicationLanguageText.cs" />
+    <Compile Include="Localization\ApplicationLanguageTextManager.cs" />
+    <Compile Include="Localization\IApplicationLanguageTextManager.cs" />
+    <Compile Include="Localization\MultiTenantLocalizationDictionary.cs" />
+    <Compile Include="Localization\MultiTenantLocalizationDictionaryProvider.cs" />
+    <Compile Include="Localization\EmptyDictionary.cs" />
     <Compile Include="Localization\IApplicationLanguageManager.cs" />
+    <Compile Include="Localization\IMultiTenantLocalizationDictionary.cs" />
+    <Compile Include="Localization\IMultiTenantLocalizationSource.cs" />
+    <Compile Include="Localization\MultiTenantLocalizationSource.cs" />
     <Compile Include="MultiTenancy\TenantFeatureCacheItem.cs" />
     <Compile Include="Auditing\AuditingStore.cs" />
     <Compile Include="Auditing\AuditLog.cs" />

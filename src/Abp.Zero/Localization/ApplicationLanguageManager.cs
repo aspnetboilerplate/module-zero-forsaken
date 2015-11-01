@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -26,9 +29,9 @@ namespace Abp.Localization
         /// </summary>
         public const string CacheName = "AbpZeroLanguages";
 
-        private ITypedCache<int, List<ApplicationLanguage>> LanguageListCache
+        private ITypedCache<int, Dictionary<string, ApplicationLanguage>> LanguageListCache
         {
-            get { return _cacheManager.GetCache<int, List<ApplicationLanguage>>(CacheName); }
+            get { return _cacheManager.GetCache<int, Dictionary<string, ApplicationLanguage>>(CacheName); }
         }
 
         private readonly IRepository<ApplicationLanguage> _languageRepository;
@@ -53,27 +56,7 @@ namespace Abp.Localization
 
         public async Task<IReadOnlyList<ApplicationLanguage>> GetLanguagesAsync(int? tenantId)
         {
-            var languageList = (await GetLanguagesFromCacheAsync(null)).ToList(); //Creates a copy of the list, so .ToList() is important.
-
-            if (tenantId == null)
-            {
-                return languageList;
-            }
-
-            foreach (var tenantLanguage in await GetLanguagesFromCacheAsync(tenantId.Value))
-            {
-                var hostLanguage = languageList.FirstOrDefault(l => l.Name == tenantLanguage.Name);
-                if (hostLanguage == null)
-                {
-                    languageList.Add(tenantLanguage);                    
-                }
-                else
-                {
-                    hostLanguage.IsActive = tenantLanguage.IsActive;
-                }
-            }
-
-            return languageList;
+            return (await GetLanguageDictionary(tenantId)).Values.ToImmutableList();
         }
 
         [UnitOfWork]
@@ -145,7 +128,7 @@ namespace Abp.Localization
             return (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == defaultLanguageName);
         }
 
-        public async Task SetDefaultLanguage(int? tenantId, string languageName)
+        public async Task SetDefaultLanguageAsync(int? tenantId, string languageName)
         {
             var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
@@ -166,17 +149,48 @@ namespace Abp.Localization
             _cacheManager.GetCache("AbpLocalizationScripts").Clear(); //TODO: OPTIMIZATION???
         }
 
-        private Task<List<ApplicationLanguage>> GetLanguagesFromCacheAsync(int? tenantId)
+        private async Task<ApplicationLanguage> GetLanguageAsync(int? tenantId, string languageName)
+        {
+            var language = (await GetLanguageDictionaryFromCacheAsync(tenantId)).GetOrDefault(languageName);
+
+            if (tenantId == null || language != null)
+            {
+                return language;
+            }
+
+            return (await GetLanguageDictionaryFromCacheAsync(null)).GetOrDefault(languageName);
+        }
+
+        private async Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionary(int? tenantId)
+        {
+            //Creates a copy of the cached dictionary (to not modify it)
+            var languageDictionary = new Dictionary<string, ApplicationLanguage>(await GetLanguageDictionaryFromCacheAsync(null));
+
+            if (tenantId == null)
+            {
+                return languageDictionary;
+            }
+
+            //Override tenant languages
+            foreach (var tenantLanguage in await GetLanguageDictionaryFromCacheAsync(tenantId.Value))
+            {
+                languageDictionary[tenantLanguage.Key] = tenantLanguage.Value;
+            }
+
+            return languageDictionary;
+        }
+
+        private Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionaryFromCacheAsync(int? tenantId)
         {
             return LanguageListCache.GetAsync(tenantId ?? 0, () => GetLanguagesFromDatabaseAsync(tenantId));
         }
 
         [UnitOfWork]
-        protected virtual async Task<List<ApplicationLanguage>> GetLanguagesFromDatabaseAsync(int? tenantId)
+        protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguagesFromDatabaseAsync(int? tenantId)
         {
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _languageRepository.GetAllListAsync(l => l.TenantId == tenantId);
+                return (await _languageRepository.GetAllListAsync(l => l.TenantId == tenantId)).ToDictionary(l => l.Name);
             }
         }
     }

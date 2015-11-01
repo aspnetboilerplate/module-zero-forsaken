@@ -92,6 +92,8 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<EditionFeatureSetting> EditionFeatureSettings { get; set; }
 
         public virtual IDbSet<ApplicationLanguage> Languages { get; set; }
+        
+        public virtual IDbSet<ApplicationLanguageText> LanguageTexts { get; set; }
 
         /// <summary>
         /// Default constructor.

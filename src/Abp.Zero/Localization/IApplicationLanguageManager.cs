@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Abp.Localization
@@ -15,6 +16,6 @@ namespace Abp.Localization
 
         Task<ApplicationLanguage> GetDefaultLanguageOrNullAsync(int? tenantId);
 
-        Task SetDefaultLanguage(int? tenantId, string languageName);
+        Task SetDefaultLanguageAsync(int? tenantId, string languageName);
     }
 }

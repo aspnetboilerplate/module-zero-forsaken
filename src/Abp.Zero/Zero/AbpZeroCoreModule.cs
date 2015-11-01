@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
