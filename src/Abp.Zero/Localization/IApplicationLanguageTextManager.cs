@@ -6,5 +6,7 @@ namespace Abp.Localization
     public interface IApplicationLanguageTextManager
     {
         string GetStringOrNull(int? tenantId, string sourceName, CultureInfo culture, string key, bool tryDefaults = true);
+
+        Task UpdateTextAsync(int? tenantId, string sourceName, CultureInfo culture, string key, string value);
     }
 }

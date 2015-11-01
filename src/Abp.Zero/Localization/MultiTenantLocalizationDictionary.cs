@@ -3,10 +3,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using Abp.Collections.Extensions;
-using Abp.Dependency;
 using Abp.Domain.Repositories;
-using Abp.Events.Bus.Entities;
-using Abp.Events.Bus.Handlers;
 using Abp.Localization.Dictionaries;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
@@ -14,15 +11,13 @@ using Abp.Runtime.Session;
 namespace Abp.Localization
 {
     public class MultiTenantLocalizationDictionary :
-        IMultiTenantLocalizationDictionary,
-        ITransientDependency,
-        IEventHandler<EntityChangedEventData<ApplicationLanguageText>>
+        IMultiTenantLocalizationDictionary
     {
         private readonly string _sourceName;
         private readonly ILocalizationDictionary _internalDictionary;
         private readonly IRepository<ApplicationLanguageText, long> _customLocalizationRepository;
+        private readonly ICacheManager _cacheManager;
         private readonly IAbpSession _session;
-        private readonly ITypedCache<string, Dictionary<string, string>> _cache;
 
         public MultiTenantLocalizationDictionary(
             string sourceName,
@@ -34,8 +29,8 @@ namespace Abp.Localization
             _sourceName = sourceName;
             _internalDictionary = internalDictionary;
             _customLocalizationRepository = customLocalizationRepository;
+            _cacheManager = cacheManager;
             _session = session;
-            _cache = cacheManager.GetCache("CustomLocalizationCache").AsTyped<string, Dictionary<string, string>>();
         }
 
         public CultureInfo CultureInfo { get { return _internalDictionary.CultureInfo; } }
@@ -53,8 +48,11 @@ namespace Abp.Localization
 
         public LocalizedString GetOrNull(int? tenantId, string name)
         {
+            //Get cache
+            var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
+
             //Get for current tenant
-            var dictionary = _cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
+            var dictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
             var value = dictionary.GetOrDefault(name);
             if (value != null)
             {
@@ -64,7 +62,7 @@ namespace Abp.Localization
             //Fall back to host
             if (tenantId != null)
             {
-                dictionary = _cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
+                dictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
                 value = dictionary.GetOrDefault(name);
                 if (value != null)
                 {
@@ -92,6 +90,9 @@ namespace Abp.Localization
 
         public IReadOnlyList<LocalizedString> GetAllStrings(int? tenantId)
         {
+            //Get cache
+            var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
+
             //Create a temp dictionary to build (by underlying dictionary)
             var dictionary = new Dictionary<string, LocalizedString>();
 
@@ -103,7 +104,7 @@ namespace Abp.Localization
             //Override by host
             if (tenantId != null)
             {
-                var defaultDictionary = _cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
+                var defaultDictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
                 foreach (var keyValue in defaultDictionary)
                 {
                     dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
@@ -111,7 +112,7 @@ namespace Abp.Localization
             }
 
             //Override by tenant
-            var tenantDictionary = _cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
+            var tenantDictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
             foreach (var keyValue in tenantDictionary)
             {
                 dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
@@ -120,17 +121,9 @@ namespace Abp.Localization
             return dictionary.Values.ToImmutableList();
         }
 
-        public void HandleEvent(EntityChangedEventData<ApplicationLanguageText> eventData)
-        {
-            if (eventData.Entity.LanguageName == CultureInfo.Name)
-            {
-                _cache.Remove(CalculateCacheKey(eventData.Entity.TenantId));
-            }
-        }
-
         private string CalculateCacheKey(int? tenantId)
         {
-            return _sourceName + "#" + CultureInfo.Name + "#" + (tenantId ?? 0);
+            return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(tenantId, _sourceName, CultureInfo.Name);
         }
 
         private Dictionary<string, string> GetAllValuesFromDatabase(int? tenantId)

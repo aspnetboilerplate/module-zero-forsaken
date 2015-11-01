@@ -67,13 +67,13 @@ namespace Abp.Localization
             return _dictionaries.GetOrAdd(defaultLanguage.Name, s => CreateLocalizationDictionary(defaultLanguage));
         }
 
-        private MultiTenantLocalizationDictionary CreateLocalizationDictionary(LanguageInfo language)
+        private IMultiTenantLocalizationDictionary CreateLocalizationDictionary(LanguageInfo language)
         {
             var internalDictionary =
                 _internalProvider.Dictionaries.GetOrDefault(language.Name) ??
-                (ILocalizationDictionary)new EmptyDictionary(CultureInfo.GetCultureInfo(language.Name));
+                new EmptyDictionary(CultureInfo.GetCultureInfo(language.Name));
 
-            return _iocManager.Resolve<MultiTenantLocalizationDictionary>(new
+            return _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
             {
                 sourceName = _sourceName,
                 internalDictionary = internalDictionary

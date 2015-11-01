@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
@@ -37,6 +38,7 @@ namespace Abp.Zero
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
         }
     }
 }

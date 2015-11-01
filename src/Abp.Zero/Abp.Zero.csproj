@@ -92,6 +92,8 @@
     <Compile Include="Localization\ApplicationLanguageTextManager.cs" />
     <Compile Include="Localization\IApplicationLanguageTextManager.cs" />
     <Compile Include="Localization\MultiTenantLocalizationDictionary.cs" />
+    <Compile Include="Localization\MultiTenantLocalizationDictionaryCacheCleaner.cs" />
+    <Compile Include="Localization\MultiTenantLocalizationDictionaryCacheHelper.cs" />
     <Compile Include="Localization\MultiTenantLocalizationDictionaryProvider.cs" />
     <Compile Include="Localization\EmptyDictionary.cs" />
     <Compile Include="Localization\IApplicationLanguageManager.cs" />
