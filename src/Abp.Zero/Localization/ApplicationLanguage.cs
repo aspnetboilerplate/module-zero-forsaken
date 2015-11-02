@@ -11,7 +11,7 @@ namespace Abp.Localization
     /// </summary>
     [Serializable]
     [Table("AbpLanguages")]
-    public class ApplicationLanguage : FullAuditedEntity, IMayHaveTenant, IPassivable
+    public class ApplicationLanguage : FullAuditedEntity, IMayHaveTenant
     {
         public const int MaxNameLength = 10;
         public const int MaxDisplayNameLength = 64;
@@ -43,26 +43,18 @@ namespace Abp.Localization
         public virtual string Icon { get; set; }
 
         /// <summary>
-        /// True: This entity is active.
-        /// False: This entity is not active.
-        /// </summary>
-        public virtual bool IsActive { get; set; }
-
-        /// <summary>
         /// Creates a new <see cref="ApplicationLanguage"/> object.
         /// </summary>
         public ApplicationLanguage()
         {
-            IsActive = true;
         }
 
-        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null, bool isActive = true)
+        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null)
         {
             TenantId = tenantId;
             Name = name;
             DisplayName = displayName;
             Icon = icon;
-            IsActive = isActive;
         }
 
         public LanguageInfo ToLanguageInfo()

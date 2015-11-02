@@ -24,14 +24,14 @@ namespace Abp.Zero.SampleApp.Tests.Localization
         public async Task Should_Get_All_Host_Languages()
         {
             var languages = await _languageManager.GetLanguagesAsync(null);
-            languages.Count.ShouldBe(4);
+            languages.Count.ShouldBe(3);
         }
 
         [Fact]
         public async Task Should_Get_All_Tenant_Languages()
         {
             var languages = await _languageManager.GetLanguagesAsync(_defaultTenant.Id);
-            languages.Count.ShouldBe(5);
+            languages.Count.ShouldBe(4);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Abp.Zero.SampleApp.Tests.Localization
             await _languageManager.AddAsync(new ApplicationLanguage(null, "fr", "French"));
 
             var languages = await _languageManager.GetLanguagesAsync(null);
-            languages.Count.ShouldBe(5);
+            languages.Count.ShouldBe(4);
             languages.FirstOrDefault(l => l.Name == "fr").ShouldNotBeNull();
         }
 
@@ -50,7 +50,7 @@ namespace Abp.Zero.SampleApp.Tests.Localization
             await _languageManager.AddAsync(new ApplicationLanguage(_defaultTenant.Id, "fr", "French"));
 
             var languages = await _languageManager.GetLanguagesAsync(_defaultTenant.Id);
-            languages.Count.ShouldBe(6);
+            languages.Count.ShouldBe(5);
             languages.FirstOrDefault(l => l.Name == "fr").ShouldNotBeNull();
         }
 
@@ -60,7 +60,7 @@ namespace Abp.Zero.SampleApp.Tests.Localization
             await _languageManager.RemoveAsync(null, "tr");
 
             var languages = await _languageManager.GetLanguagesAsync(null);
-            languages.Count.ShouldBe(3);
+            languages.Count.ShouldBe(2);
             languages.FirstOrDefault(l => l.Name == "tr").ShouldBeNull();
         }
 
@@ -70,7 +70,7 @@ namespace Abp.Zero.SampleApp.Tests.Localization
             await _languageManager.RemoveAsync(null, "tr");
 
             var languages = await _languageManager.GetLanguagesAsync(null);
-            languages.Count.ShouldBe(3);
+            languages.Count.ShouldBe(2);
             languages.FirstOrDefault(l => l.Name == "tr").ShouldBeNull();
         }
     }

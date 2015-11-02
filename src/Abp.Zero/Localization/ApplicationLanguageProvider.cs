@@ -38,7 +38,6 @@ namespace Abp.Localization
         public IReadOnlyList<LanguageInfo> GetLanguages()
         {
             var languageInfos = AsyncHelper.RunSync(() => _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId))
-                    .Where(l => l.IsActive)
                     .OrderBy(l => l.DisplayName)
                     .Select(l => l.ToLanguageInfo())
                     .ToList();

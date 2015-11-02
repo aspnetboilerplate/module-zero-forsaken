@@ -45,9 +45,10 @@ namespace Abp.Zero.SampleApp.Tests.Localization
             var languages = _languageProvider.GetLanguages();
 
             //Assert
-            languages.Count.ShouldBe(3);
+            languages.Count.ShouldBe(4);
             languages.FirstOrDefault(l => l.Name == "en").ShouldNotBeNull();
             languages.FirstOrDefault(l => l.Name == "tr").ShouldNotBeNull();
+            languages.FirstOrDefault(l => l.Name == "de").ShouldNotBeNull();
             languages.FirstOrDefault(l => l.Name == "zh-CN").ShouldNotBeNull();
         }
     }
