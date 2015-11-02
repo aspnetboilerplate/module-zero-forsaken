@@ -51,6 +51,10 @@ namespace Abp.Localization
                     languageInfo.IsDefault = true;
                 }
             }
+            else if (languageInfos.Count > 0)
+            {
+                languageInfos[0].IsDefault = true;
+            }
 
             return languageInfos;
         }

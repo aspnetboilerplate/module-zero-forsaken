@@ -14,8 +14,6 @@ namespace Abp.Zero.SampleApp.Tests.Localization
 
         public ApplicationLanguageManager_Tests()
         {
-            UsingDbContext(context => new InitialTestLanguagesBuilder(context).Build());
-
             _defaultTenant = GetDefaultTenant();
             _languageManager = Resolve<IApplicationLanguageManager>();
         }

@@ -129,7 +129,7 @@ namespace Abp.Localization
         private Dictionary<string, string> GetAllValuesFromDatabase(int? tenantId)
         {
             return _customLocalizationRepository
-                .GetAllList(l => l.LanguageName == CultureInfo.Name && l.TenantId == tenantId)
+                .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name && l.TenantId == tenantId)
                 .ToDictionary(l => l.Key, l => l.Value);
         }
     }

@@ -13,8 +13,6 @@ namespace Abp.Zero.SampleApp.Tests.Localization
 
         public ApplicationLanguageProvider_Tests()
         {
-            UsingDbContext(context => new InitialTestLanguagesBuilder(context).Build());
-
             _defaultTenant = GetDefaultTenant();
             _languageProvider = Resolve<ApplicationLanguageProvider>();
         }

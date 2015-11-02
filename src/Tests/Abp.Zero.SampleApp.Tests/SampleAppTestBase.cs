@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections;
 using Abp.IdentityFramework;
+using Abp.Localization;
 using Abp.Modules;
 using Abp.TestBase;
 using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
+using Abp.Zero.SampleApp.Tests.Localization;
 using Abp.Zero.SampleApp.Users;
 using Castle.MicroKernel.Registration;
 using EntityFramework.DynamicFilters;
@@ -27,13 +29,6 @@ namespace Abp.Zero.SampleApp.Tests
 
         protected SampleAppTestBase()
         {
-            //Fake DbConnection using Effort!
-            LocalIocManager.IocContainer.Register(
-                Component.For<DbConnection>()
-                    .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
-                    .LifestyleSingleton()
-                );
-
             CreateInitialData();
 
             RoleManager = Resolve<RoleManager>();
@@ -42,12 +37,25 @@ namespace Abp.Zero.SampleApp.Tests
             PermissionChecker = Resolve<IPermissionChecker>();
         }
 
+        protected override void PreInitialize()
+        {
+            base.PreInitialize();
+
+            //Fake DbConnection using Effort!
+            LocalIocManager.IocContainer.Register(
+                Component.For<DbConnection>()
+                    .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
+                    .LifestyleSingleton()
+                );
+        }
+
         private void CreateInitialData()
         {
             UsingDbContext(context =>
                            {
                                context.Tenants.Add(new Tenant(Tenant.DefaultTenantName, Tenant.DefaultTenantName));
                            });
+            UsingDbContext(context => new InitialTestLanguagesBuilder(context).Build());
         }
 
         protected override void AddModules(ITypeList<AbpModule> modules)
