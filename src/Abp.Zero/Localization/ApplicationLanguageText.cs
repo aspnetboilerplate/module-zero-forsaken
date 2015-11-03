@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Localization
 {
+    [Table("AbpLanguageTexts")]
     public class ApplicationLanguageText : AuditedEntity<long>, IMayHaveTenant
     {
         public const int MaxSourceNameLength = 128;
