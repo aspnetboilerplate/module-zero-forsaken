@@ -14,6 +14,17 @@ namespace Abp.Zero.FluentMigrator
         #region Create table
 
         /// <summary>
+        /// Adds full auditing columns to a table. See <see cref="IAudited"/>.
+        /// </summary>
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithFullAuditColumns(this ICreateTableWithColumnSyntax table)
+        {
+            return table
+                .WithCreationAuditColumns()
+                .WithModificationAuditColumns()
+                .WithDeletionAuditColumns();
+        }
+
+        /// <summary>
         /// Adds auditing columns to a table. See <see cref="IAudited"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithAuditColumns(this ICreateTableWithColumnSyntax table)
@@ -41,6 +52,17 @@ namespace Abp.Zero.FluentMigrator
             return table
                 .WithColumn("LastModificationTime").AsDateTime().Nullable()
                 .WithColumn("LastModifierUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
+        }
+
+        /// <summary>
+        /// Adds deletion auditing columns to a table. See <see cref="IModificationAudited"/>.
+        /// </summary>
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithDeletionAuditColumns(this ICreateTableWithColumnSyntax table)
+        {
+            return table
+                .WithIsDeletedColumn()
+                .WithColumn("DeletionTime").AsDateTime().Nullable()
+                .WithColumn("DeleterUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
         }
 
         /// <summary>
