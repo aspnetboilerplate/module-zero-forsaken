@@ -115,8 +115,8 @@ namespace Abp.Zero.Ldap.Authentication
             
             return new PrincipalContext(
                 await _settings.GetContextType(tenantId),
-                ConvertToNullIfEmpty(await _settings.GetContainer(tenantId)),
                 ConvertToNullIfEmpty(await _settings.GetDomain(tenantId)),
+                ConvertToNullIfEmpty(await _settings.GetContainer(tenantId)),
                 ConvertToNullIfEmpty(await _settings.GetUserName(tenantId)),
                 ConvertToNullIfEmpty(await _settings.GetPassword(tenantId))
                 );
