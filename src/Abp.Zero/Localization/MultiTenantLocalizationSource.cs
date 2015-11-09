@@ -6,7 +6,7 @@ using Abp.Extensions;
 using Abp.Localization.Dictionaries;
 using Castle.Core.Logging;
 
-//TODO: No need to inherit from DictionaryBasedLocalizationSource
+//TODO: No need to inherit from DictionaryBasedLocalizationSource?
 
 namespace Abp.Localization
 {

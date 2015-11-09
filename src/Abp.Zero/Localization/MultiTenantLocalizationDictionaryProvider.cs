@@ -9,6 +9,9 @@ using Abp.Localization.Dictionaries;
 
 namespace Abp.Localization
 {
+    /// <summary>
+    /// Extends <see cref="ILocalizationDictionaryProvider"/> to add tenant and database based localization.
+    /// </summary>
     public class MultiTenantLocalizationDictionaryProvider : ILocalizationDictionaryProvider
     {
         public ILocalizationDictionary DefaultDictionary
@@ -30,6 +33,9 @@ namespace Abp.Localization
         private readonly IIocManager _iocManager;
         private ILanguageManager _languageManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultiTenantLocalizationDictionaryProvider"/> class.
+        /// </summary>
         public MultiTenantLocalizationDictionaryProvider(ILocalizationDictionaryProvider internalProvider, IIocManager iocManager)
         {
             _internalProvider = internalProvider;

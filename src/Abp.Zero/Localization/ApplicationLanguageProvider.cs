@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Configuration;
-using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Threading;
 
@@ -18,17 +16,14 @@ namespace Abp.Localization
         public IAbpSession AbpSession { get; set; }
 
         private readonly IApplicationLanguageManager _applicationLanguageManager;
-        private readonly ISettingManager _settingManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ApplicationLanguageProvider(
-            IApplicationLanguageManager applicationLanguageManager, 
-            ISettingManager settingManager)
+        public ApplicationLanguageProvider(IApplicationLanguageManager applicationLanguageManager)
         {
             _applicationLanguageManager = applicationLanguageManager;
-            _settingManager = settingManager;
+
             AbpSession = NullAbpSession.Instance;
         }
 

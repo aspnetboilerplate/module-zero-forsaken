@@ -10,6 +10,9 @@ using Abp.Runtime.Session;
 
 namespace Abp.Localization
 {
+    /// <summary>
+    /// Implements <see cref="IMultiTenantLocalizationDictionary"/>.
+    /// </summary>
     public class MultiTenantLocalizationDictionary :
         IMultiTenantLocalizationDictionary
     {
@@ -19,6 +22,9 @@ namespace Abp.Localization
         private readonly ICacheManager _cacheManager;
         private readonly IAbpSession _session;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultiTenantLocalizationDictionary"/> class.
+        /// </summary>
         public MultiTenantLocalizationDictionary(
             string sourceName,
             ILocalizationDictionary internalDictionary,

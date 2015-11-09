@@ -13,8 +13,19 @@ namespace Abp.Localization
     [Table("AbpLanguages")]
     public class ApplicationLanguage : FullAuditedEntity, IMayHaveTenant
     {
+        /// <summary>
+        /// The maximum name length.
+        /// </summary>
         public const int MaxNameLength = 10;
+
+        /// <summary>
+        /// The maximum display name length.
+        /// </summary>
         public const int MaxDisplayNameLength = 64;
+
+        /// <summary>
+        /// The maximum icon length.
+        /// </summary>
         public const int MaxIconLength = 128;
 
         /// <summary>
