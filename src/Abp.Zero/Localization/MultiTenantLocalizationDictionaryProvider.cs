@@ -44,7 +44,7 @@ namespace Abp.Localization
             _internalProvider.Initialize(_sourceName);
         }
 
-        private IDictionary<string, ILocalizationDictionary> GetDictionaries()
+        protected virtual IDictionary<string, ILocalizationDictionary> GetDictionaries()
         {
             var languages = _languageManager.GetLanguages();
 
@@ -56,7 +56,7 @@ namespace Abp.Localization
             return _dictionaries;
         }
 
-        private ILocalizationDictionary GetDefaultDictionary()
+        protected virtual ILocalizationDictionary GetDefaultDictionary()
         {
             var defaultLanguage = _languageManager.GetLanguages().FirstOrDefault(l => l.IsDefault);
             if (defaultLanguage == null)
@@ -67,17 +67,37 @@ namespace Abp.Localization
             return _dictionaries.GetOrAdd(defaultLanguage.Name, s => CreateLocalizationDictionary(defaultLanguage));
         }
 
-        private IMultiTenantLocalizationDictionary CreateLocalizationDictionary(LanguageInfo language)
+        protected virtual IMultiTenantLocalizationDictionary CreateLocalizationDictionary(LanguageInfo language)
         {
             var internalDictionary =
                 _internalProvider.Dictionaries.GetOrDefault(language.Name) ??
                 new EmptyDictionary(CultureInfo.GetCultureInfo(language.Name));
 
-            return _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
+            var dictionary =  _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
             {
                 sourceName = _sourceName,
                 internalDictionary = internalDictionary
             });
+
+            return dictionary;
+        }
+
+        public virtual void Extend(ILocalizationDictionary dictionary)
+        {
+            //Add
+            ILocalizationDictionary existingDictionary;
+            if (!_internalProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
+            {
+                _internalProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
+                return;
+            }
+
+            //Override
+            var localizedStrings = dictionary.GetAllStrings();
+            foreach (var localizedString in localizedStrings)
+            {
+                existingDictionary[localizedString.Name] = localizedString.Value;
+            }
         }
     }
 }

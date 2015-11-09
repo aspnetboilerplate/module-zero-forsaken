@@ -3,11 +3,14 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
+using Castle.Core.Logging;
 
 namespace Abp.Zero.Configuration
 {
     internal class LanguageManagementConfig : ILanguageManagementConfig
     {
+        public ILogger Logger { get; set; }
+
         private readonly IIocManager _iocManager;
         private readonly IAbpStartupConfiguration _configuration;
 
@@ -15,6 +18,8 @@ namespace Abp.Zero.Configuration
         {
             _iocManager = iocManager;
             _configuration = configuration;
+
+            Logger = NullLogger.Instance;
         }
 
         public void EnableDbLocalization()
@@ -40,6 +45,8 @@ namespace Abp.Zero.Configuration
                             )
                         )
                     );
+
+                Logger.DebugFormat("Converted {0} ({1}) to MultiTenantLocalizationSource", source.Name, source.GetType());
             }
         }
     }
