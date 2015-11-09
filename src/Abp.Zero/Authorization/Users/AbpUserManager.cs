@@ -149,9 +149,9 @@ namespace Abp.Authorization.Users
             }
 
             //Check for depended features
-            if (permission.DependedFeature != null && AbpSession.MultiTenancySide == MultiTenancySides.Tenant)
+            if (permission.FeatureDependency != null && AbpSession.MultiTenancySide == MultiTenancySides.Tenant)
             {
-                if (!await permission.DependedFeature.IsSatisfiedAsync(FeatureDependencyContext))
+                if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
                     return false;
                 }
