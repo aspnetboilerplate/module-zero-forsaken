@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Localization.Dictionaries;
-using Abp.Logging;
 using Castle.Core.Logging;
 
 //TODO: No need to inherit from DictionaryBasedLocalizationSource
@@ -53,7 +50,10 @@ namespace Abp.Localization
             ILocalizationDictionary originalDictionary;
             if (dictionaries.TryGetValue(cultureCode, out originalDictionary))
             {
-                var strOriginal = originalDictionary.As<IMultiTenantLocalizationDictionary>().GetOrNull(tenantId, name);
+                var strOriginal = originalDictionary
+                    .As<IMultiTenantLocalizationDictionary>()
+                    .GetOrNull(tenantId, name);
+
                 if (strOriginal != null)
                 {
                     return strOriginal.Value;
@@ -95,53 +95,5 @@ namespace Abp.Localization
 
             return strDefault.Value;
         }
-
-        //public IReadOnlyList<LocalizedString> GetAllStrings(int? tenantId, CultureInfo culture, bool includeDefaults = true)
-        //{
-        //    //TODO: Can be optimized (example: if it's already default dictionary, skip overriding)
-
-        //    var dictionaries = DictionaryProvider.Dictionaries;
-
-        //    //Create a temp dictionary to build
-        //    var allStrings = new Dictionary<string, LocalizedString>();
-
-        //    if (includeDefaults)
-        //    {
-        //        //Fill all strings from default dictionary
-        //        var defaultDictionary = DictionaryProvider.DefaultDictionary;
-        //        if (defaultDictionary != null)
-        //        {
-        //            foreach (var defaultDictString in defaultDictionary.As<IMultiTenantLocalizationDictionary>().GetAllStrings(tenantId))
-        //            {
-        //                allStrings[defaultDictString.Name] = defaultDictString;
-        //            }
-        //        }
-
-        //        //Overwrite all strings from the language based on country culture
-        //        if (culture.Name.Length == 5)
-        //        {
-        //            ILocalizationDictionary langDictionary;
-        //            if (dictionaries.TryGetValue(culture.Name.Substring(0, 2), out langDictionary))
-        //            {
-        //                foreach (var langString in langDictionary.As<IMultiTenantLocalizationDictionary>().GetAllStrings(tenantId))
-        //                {
-        //                    allStrings[langString.Name] = langString;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    //Overwrite all strings from the original dictionary
-        //    ILocalizationDictionary originalDictionary;
-        //    if (dictionaries.TryGetValue(culture.Name, out originalDictionary))
-        //    {
-        //        foreach (var originalLangString in originalDictionary.As<IMultiTenantLocalizationDictionary>().GetAllStrings())
-        //        {
-        //            allStrings[originalLangString.Name] = originalLangString;
-        //        }
-        //    }
-
-        //    return allStrings.Values.ToImmutableList();
-        //}
     }
 }
