@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Abp.Localization
@@ -31,6 +30,7 @@ namespace Abp.Localization
         /// <summary>
         /// Updates a language.
         /// </summary>
+        /// <param name="tenantId">Tenant Id or null for host.</param>
         /// <param name="language">The language to be updated</param>
         Task UpdateAsync(int? tenantId, ApplicationLanguage language);
 
