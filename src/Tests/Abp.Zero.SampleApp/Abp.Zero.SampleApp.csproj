@@ -107,11 +107,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\Role.cs" />
     <Compile Include="Roles\RoleManager.cs" />
+    <Compile Include="Roles\RolePermissionCacheItemInvalidator.cs" />
     <Compile Include="Roles\RoleStore.cs" />
     <Compile Include="SampleAppModule.cs" />
     <Compile Include="Authorization\AppAuthorizationProvider.cs" />
     <Compile Include="Users\Dto\CreateUserInput.cs" />
     <Compile Include="Users\IUserAppService.cs" />
+    <Compile Include="Users\RolePermissionCacheItemInvalidator.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="Users\UserAppService.cs" />
     <Compile Include="Users\UserManager.cs" />

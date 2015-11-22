@@ -4,10 +4,7 @@ using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
-using Abp.Events.Bus.Entities;
-using Abp.Events.Bus.Handlers;
 using Abp.MultiTenancy;
-using Abp.Runtime.Caching;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -19,11 +16,8 @@ namespace Abp.Authorization.Roles
         IQueryableRoleStore<TRole, int>,
         IRolePermissionStore<TTenant, TRole, TUser>,
 
-        IEventHandler<EntityChangedEventData<RolePermissionSetting>>,
-        IEventHandler<EntityDeletedEventData<TRole>>,
-
         ITransientDependency
-        
+
         where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
@@ -31,21 +25,18 @@ namespace Abp.Authorization.Roles
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
-        private readonly ICacheManager _cacheManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpRoleStore(
-            IRepository<TRole> roleRepository, 
+            IRepository<TRole> roleRepository,
             IRepository<UserRole, long> userRoleRepository,
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository,
-            ICacheManager cacheManager)
+            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
         {
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
-            _cacheManager = cacheManager;
         }
 
         public virtual IQueryable<TRole> Roles
@@ -142,16 +133,6 @@ namespace Abp.Authorization.Roles
         public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
             await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
-        }
-
-        public void HandleEvent(EntityChangedEventData<RolePermissionSetting> eventData)
-        {
-            _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.RoleId);
-        }
-
-        public void HandleEvent(EntityDeletedEventData<TRole> eventData)
-        {
-            _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.Id);
         }
 
         public virtual void Dispose()
