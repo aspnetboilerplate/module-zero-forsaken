@@ -145,7 +145,6 @@
     <Compile Include="Authorization\Users\UserLogin.cs" />
     <Compile Include="Zero\AbpZeroConsts.cs" />
     <Compile Include="Zero\AbpZeroCoreModule.cs" />
-    <Compile Include="Utils\Helpers\RandomHelper.cs" />
     <Compile Include="Zero\Configuration\AbpZeroSettingNames.cs" />
     <Compile Include="Zero\Configuration\AbpZeroSettingProvider.cs" />
     <Compile Include="Zero\Configuration\IAbpZeroConfig.cs" />
