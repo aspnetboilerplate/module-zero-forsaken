@@ -40,14 +40,19 @@ namespace Abp.MultiTenancy
 
         public ICacheManager CacheManager { get; set; }
 
-        public IRepository<TTenant> TenantRepository { get; set; }
+        protected IRepository<TTenant> TenantRepository { get; set; }
 
-        public IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
+        protected IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
 
         public IFeatureManager FeatureManager { get; set; }
 
-        protected AbpTenantManager(AbpEditionManager editionManager)
+        protected AbpTenantManager(
+            IRepository<TTenant> tenantRepository, 
+            IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
+            AbpEditionManager editionManager)
         {
+            TenantRepository = tenantRepository;
+            TenantFeatureRepository = tenantFeatureRepository;
             EditionManager = editionManager;
             LocalizationManager = NullLocalizationManager.Instance;
         }

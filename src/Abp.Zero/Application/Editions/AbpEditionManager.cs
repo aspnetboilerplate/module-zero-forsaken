@@ -21,12 +21,21 @@ namespace Abp.Application.Editions
 
         public ICacheManager CacheManager { get; set; }
 
-        public IRepository<Edition> EditionRepository { get; set; }
-
-        public IRepository<EditionFeatureSetting, long>  EditionFeatureRepository { get; set; }
-
         public IFeatureManager FeatureManager { get; set; }
-        
+
+        protected IRepository<Edition> EditionRepository { get; set; }
+
+        protected IRepository<EditionFeatureSetting, long> EditionFeatureRepository { get; set; }
+
+        protected AbpEditionManager(
+            IRepository<Edition> editionRepository,
+            IRepository<EditionFeatureSetting, long> editionFeatureRepository
+            )
+        {
+            EditionRepository = editionRepository;
+            EditionFeatureRepository = editionFeatureRepository;
+        }
+
         public virtual async Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)
         {
             var cacheItem = await GetEditionFeatureCacheItemAsync(editionId);
