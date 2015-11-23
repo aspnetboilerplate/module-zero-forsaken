@@ -11,6 +11,7 @@ namespace Abp.Zero
     /// <summary>
     /// ABP zero core module.
     /// </summary>
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpZeroCoreModule : AbpModule
     {
         /// <summary>
