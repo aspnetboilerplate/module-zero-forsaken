@@ -1,24 +1,20 @@
 using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
-using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 
 namespace Abp.Authorization.Users
 {
-    public abstract class AbpUserPermissionCacheItemInvalidator<TTenant, TUser> :
+    public class AbpUserPermissionCacheItemInvalidator :
         IEventHandler<EntityChangedEventData<UserPermissionSetting>>,
         IEventHandler<EntityChangedEventData<UserRole>>,
-        IEventHandler<EntityDeletedEventData<TUser>>,
+        IEventHandler<EntityDeletedEventData<AbpUserBase>>,
 
         ITransientDependency
-
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
     {
         private readonly ICacheManager _cacheManager;
 
-        protected AbpUserPermissionCacheItemInvalidator(ICacheManager cacheManager)
+        public AbpUserPermissionCacheItemInvalidator(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
         }
@@ -33,7 +29,7 @@ namespace Abp.Authorization.Users
             _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.UserId);
         }
 
-        public void HandleEvent(EntityDeletedEventData<TUser> eventData)
+        public void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
             _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.Id);
         }

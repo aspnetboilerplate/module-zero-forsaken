@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Authorization.Users;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
-using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
 {
@@ -19,18 +18,12 @@ namespace Abp.Authorization.Roles
     /// Non-static (dynamic) roles can be added/removed by users and we can not know their name while coding.
     /// A user can have multiple roles. Thus, user will have all permissions of all assigned roles.
     /// </remarks>
-    [Table("AbpRoles")]
-    public class AbpRole<TTenant, TUser> : FullAuditedEntity<int, TUser>, IRole<int>, IMayHaveTenant<TTenant, TUser>
+    public class AbpRole<TTenant, TUser> : AbpRoleBase, IFullAudited<TUser>, IAudited<TUser>, IMayHaveTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
         /// <summary>
-        /// Maximum length of the <see cref="Name"/> property.
-        /// </summary>
-        public const int MaxNameLength = 32;
-
-        /// <summary>
-        /// Maximum length of the <see cref="Name"/> property.
+        /// Maximum length of the <see cref="DisplayName"/> property.
         /// </summary>
         public const int MaxDisplayNameLength = 64;
 
@@ -39,18 +32,6 @@ namespace Abp.Authorization.Roles
         /// </summary>
         [ForeignKey("TenantId")]
         public virtual TTenant Tenant { get; set; }
-
-        /// <summary>
-        /// Tenant's Id, if this role is a tenant-level role. Null, if not.
-        /// </summary>
-        public virtual int? TenantId { get; set; }
-
-        /// <summary>
-        /// Unique name of this role.
-        /// </summary>
-        [Required]
-        [StringLength(MaxNameLength)]
-        public virtual string Name { get; set; }
 
         /// <summary>
         /// Display name of this role.
@@ -76,6 +57,12 @@ namespace Abp.Authorization.Roles
         /// </summary>
         [ForeignKey("RoleId")]
         public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
+
+        public virtual TUser DeleterUser { get; set; }
+
+        public virtual TUser CreatorUser { get; set; }
+
+        public virtual TUser LastModifierUser { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="AbpRole{TTenant,TUser}"/> object.

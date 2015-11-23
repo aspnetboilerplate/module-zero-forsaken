@@ -7,15 +7,13 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
 using Abp.MultiTenancy;
-using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Represents a user.
     /// </summary>
-    [Table("AbpUsers")]
-    public class AbpUser<TTenant, TUser> : FullAuditedEntity<long, TUser>, IUser<long>, IMayHaveTenant<TTenant, TUser>, IPassivable
+    public class AbpUser<TTenant, TUser> : AbpUserBase, IFullAudited<TUser>, IAudited<TUser>, IMayHaveTenant<TTenant, TUser>, IPassivable
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
@@ -24,7 +22,7 @@ namespace Abp.Authorization.Users
         /// admin can not be deleted and UserName of the admin can not be changed.
         /// </summary>
         public const string AdminUserName = "admin";
-        
+
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
@@ -34,11 +32,6 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="Surname"/> property.
         /// </summary>
         public const int MaxSurnameLength = 32;
-
-        /// <summary>
-        /// Maximum length of the <see cref="UserName"/> property.
-        /// </summary>
-        public const int MaxUserNameLength = 32;
 
         /// <summary>
         /// Maximum length of the <see cref="Password"/> property.
@@ -77,11 +70,6 @@ namespace Abp.Authorization.Users
         public virtual TTenant Tenant { get; set; }
 
         /// <summary>
-        /// Tenant Id of this user.
-        /// </summary>
-        public virtual int? TenantId { get; set; }
-        
-        /// <summary>
         /// Authorization source name.
         /// It's set to external authentication source name if created by an external source.
         /// Default: null.
@@ -102,14 +90,6 @@ namespace Abp.Authorization.Users
         [Required]
         [StringLength(MaxSurnameLength)]
         public virtual string Surname { get; set; }
-
-        /// <summary>
-        /// User name.
-        /// User name must be unique for it's tenant.
-        /// </summary>
-        [Required]
-        [StringLength(MaxUserNameLength)]
-        public virtual string UserName { get; set; }
 
         /// <summary>
         /// Password of the user.
@@ -179,6 +159,12 @@ namespace Abp.Authorization.Users
         /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<Setting> Settings { get; set; }
+
+        public virtual TUser DeleterUser { get; set; }
+
+        public virtual TUser CreatorUser { get; set; }
+
+        public virtual TUser LastModifierUser { get; set; }
 
         public AbpUser()
         {

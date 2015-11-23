@@ -1,25 +1,19 @@
-using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
-using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 
 namespace Abp.Authorization.Roles
 {
-    public abstract class AbpRolePermissionCacheItemInvalidator<TTenant, TRole, TUser> :
+    public class AbpRolePermissionCacheItemInvalidator :
         IEventHandler<EntityChangedEventData<RolePermissionSetting>>,
-        IEventHandler<EntityDeletedEventData<TRole>>,
+        IEventHandler<EntityDeletedEventData<AbpRoleBase>>,
 
         ITransientDependency
-
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
     {
         private readonly ICacheManager _cacheManager;
 
-        protected AbpRolePermissionCacheItemInvalidator(ICacheManager cacheManager)
+        public AbpRolePermissionCacheItemInvalidator(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
         }
@@ -29,7 +23,7 @@ namespace Abp.Authorization.Roles
             _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.RoleId);
         }
 
-        public void HandleEvent(EntityDeletedEventData<TRole> eventData)
+        public void HandleEvent(EntityDeletedEventData<AbpRoleBase> eventData)
         {
             _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.Id);
         }
