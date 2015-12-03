@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -15,13 +14,19 @@ namespace Abp.Runtime.Session
         {
             get
             {
-                var userId = Thread.CurrentPrincipal.Identity.GetUserId();
-                if (string.IsNullOrEmpty(userId))
+                var userIdAsString = Thread.CurrentPrincipal.Identity.GetUserId();
+                if (string.IsNullOrEmpty(userIdAsString))
                 {
                     return null;
                 }
 
-                return Convert.ToInt64(userId);
+                long userId;
+                if (!long.TryParse(userIdAsString, out userId))
+                {
+                    return null;
+                }
+
+                return userId;
             }
         }
 
