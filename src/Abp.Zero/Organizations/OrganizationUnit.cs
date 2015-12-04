@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
 
 namespace Abp.Organizations
 {
@@ -82,6 +84,39 @@ namespace Abp.Organizations
             TenantId = tenantId;
             DisplayName = displayName;
             ParentId = parentId;
+        }
+
+        public static string CreateUnitCode(int number)
+        {
+            return number.ToString(new string('0', CodeUnitLength));
+        }
+
+        /// <summary>
+        /// Appends a child unit code to a parent code.
+        /// </summary>
+        /// <param name="parentCode">The parent code. Can be null or empty.</param>
+        /// <param name="childCode">The child code.</param>
+        /// <returns></returns>
+        public static string AppendUnitCode(string parentCode, string childCode)
+        {
+            if (parentCode.IsNullOrEmpty())
+            {
+                return childCode;
+            }
+
+            return parentCode + "." + childCode;
+        }
+
+        public static string CalculateNextCode(string code)
+        {
+            var lastUnitCode = GetLastUnitCode(code);
+            return CreateUnitCode(Convert.ToInt32(lastUnitCode) + 1);
+        }
+
+        public static string GetLastUnitCode(string code)
+        {
+            var splittedCode = code.Split('.');
+            return splittedCode[splittedCode.Length - 1];
         }
     }
 }
