@@ -143,7 +143,7 @@
     <Compile Include="Ldap\LdapAuthenticationSource_Tests.cs" />
     <Compile Include="Localization\ApplicationLanguageManager_Tests.cs" />
     <Compile Include="Localization\ApplicationLanguageProvider_Tests.cs" />
-    <Compile Include="Localization\InitialTestLanguagesBuilder.cs" />
+    <Compile Include="TestDatas\InitialTestLanguagesBuilder.cs" />
     <Compile Include="Localization\SimpleLocalization_Tests.cs" />
     <Compile Include="MultiTenancy\TenantManager_Tests.cs" />
     <Compile Include="Roles\RoleManager_Delete_Tests.cs" />

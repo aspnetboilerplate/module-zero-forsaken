@@ -3,7 +3,7 @@ using Abp.Localization;
 using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.MultiTenancy;
 
-namespace Abp.Zero.SampleApp.Tests.Localization
+namespace Abp.Zero.SampleApp.Tests.TestDatas
 {
     public class InitialTestLanguagesBuilder
     {
