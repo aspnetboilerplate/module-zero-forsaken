@@ -15,12 +15,22 @@ namespace Abp.Organizations
         /// <summary>
         /// Maximum length of the <see cref="DisplayName"/> property.
         /// </summary>
-        public const int MaxDisplayNameLength = 64;
+        public const int MaxDisplayNameLength = 128;
+
+        /// <summary>
+        /// Maximum depth of an UO hierarchy.
+        /// </summary>
+        public const int MaxDepth = 16;
+
+        /// <summary>
+        /// Length of a code unit between dots.
+        /// </summary>
+        public const int CodeUnitLength = 5;
 
         /// <summary>
         /// Maximum length of the <see cref="Code"/> property.
         /// </summary>
-        public const int MaxCodeLength = 64;
+        public const int MaxCodeLength = MaxDepth * (CodeUnitLength + 1) - 1;
 
         /// <summary>
         /// TenantId of this entity.
@@ -61,5 +71,17 @@ namespace Abp.Organizations
         /// Children of this OU.
         /// </summary>
         public virtual ICollection<OrganizationUnit> Children { get; set; }
+
+        public OrganizationUnit()
+        {
+            
+        }
+
+        public OrganizationUnit(int? tenantId, string displayName, long? parentId = null)
+        {
+            TenantId = tenantId;
+            DisplayName = displayName;
+            ParentId = parentId;
+        }
     }
 }

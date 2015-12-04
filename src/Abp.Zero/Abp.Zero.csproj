@@ -137,6 +137,7 @@
     <Compile Include="MultiTenancy\TenantFeatureCacheItemInvalidator.cs" />
     <Compile Include="MultiTenancy\TenantFeatureSetting.cs" />
     <Compile Include="Organizations\OrganizationUnit.cs" />
+    <Compile Include="Organizations\OrganizationUnitManager.cs" />
     <Compile Include="Runtime\Caching\AbpZeroCacheManagerExtensions.cs" />
     <Compile Include="Runtime\Session\IdentityFrameworkClaimsAbpSession.cs" />
     <Compile Include="Configuration\SettingStore.cs" />
