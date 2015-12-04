@@ -144,12 +144,15 @@
     <Compile Include="Localization\ApplicationLanguageManager_Tests.cs" />
     <Compile Include="Localization\ApplicationLanguageProvider_Tests.cs" />
     <Compile Include="Organizations\OrganizationUnitManager_Tests.cs" />
+    <Compile Include="TestDatas\InitialTenantRoleAndUserBuilder.cs" />
+    <Compile Include="TestDatas\InitialTestDataBuilder.cs" />
     <Compile Include="TestDatas\InitialTestLanguagesBuilder.cs" />
     <Compile Include="Localization\SimpleLocalization_Tests.cs" />
     <Compile Include="MultiTenancy\TenantManager_Tests.cs" />
     <Compile Include="Roles\RoleManager_Delete_Tests.cs" />
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
+    <Compile Include="TestDatas\InitialTestOrganizationUnitsBuilder.cs" />
     <Compile Include="Users\UserAppService_Tests.cs" />
     <Compile Include="Users\UserLoginHelper.cs" />
     <Compile Include="Users\UserLogin_ExternalAuthenticationSources_Test.cs" />

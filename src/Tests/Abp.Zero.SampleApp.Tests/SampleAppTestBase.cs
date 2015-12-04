@@ -50,8 +50,7 @@ namespace Abp.Zero.SampleApp.Tests
 
         private void CreateInitialData()
         {
-            UsingDbContext(context => context.Tenants.Add(new Tenant(Tenant.DefaultTenantName, Tenant.DefaultTenantName)));
-            UsingDbContext(context => new InitialTestLanguagesBuilder(context).Build());
+            UsingDbContext(context => new InitialTestDataBuilder(context).Build());
         }
 
         protected override void AddModules(ITypeList<AbpModule> modules)
@@ -92,7 +91,7 @@ namespace Abp.Zero.SampleApp.Tests
                     return context.Tenants.Single(t => t.TenancyName == Tenant.DefaultTenantName);
                 });
         }
-        
+
         protected async Task<Role> CreateRole(string name)
         {
             return await CreateRole(name, name);

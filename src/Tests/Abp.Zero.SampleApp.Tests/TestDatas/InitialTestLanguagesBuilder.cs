@@ -7,11 +7,11 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
 {
     public class InitialTestLanguagesBuilder
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _context;
 
-        public InitialTestLanguagesBuilder(AppDbContext dbContext)
+        public InitialTestLanguagesBuilder(AppDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
         public void Build()
@@ -21,15 +21,15 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
 
         private void InitializeLanguagesOnDatabase()
         {
-            var defaultTenant = _dbContext.Tenants.Single(t => t.TenancyName == Tenant.DefaultTenantName);
+            var defaultTenant = _context.Tenants.Single(t => t.TenancyName == Tenant.DefaultTenantName);
             
             //Host languages
-            _dbContext.Languages.Add(new ApplicationLanguage { Name = "en", DisplayName = "English" });
-            _dbContext.Languages.Add(new ApplicationLanguage { Name = "tr", DisplayName = "Türkçe" });
-            _dbContext.Languages.Add(new ApplicationLanguage { Name = "de", DisplayName = "German" });
+            _context.Languages.Add(new ApplicationLanguage { Name = "en", DisplayName = "English" });
+            _context.Languages.Add(new ApplicationLanguage { Name = "tr", DisplayName = "Türkçe" });
+            _context.Languages.Add(new ApplicationLanguage { Name = "de", DisplayName = "German" });
 
             //Default tenant languages
-            _dbContext.Languages.Add(new ApplicationLanguage { Name = "zh-CN", DisplayName = "简体中文", TenantId = defaultTenant.Id });
+            _context.Languages.Add(new ApplicationLanguage { Name = "zh-CN", DisplayName = "简体中文", TenantId = defaultTenant.Id });
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
@@ -86,9 +88,14 @@ namespace Abp.Organizations
             ParentId = parentId;
         }
 
-        public static string CreateUnitCode(int number)
+        public static string CreateUnitCode(params int[] numbers)
         {
-            return number.ToString(new string('0', CodeUnitLength));
+            if (numbers.IsNullOrEmpty())
+            {
+                return "";
+            }
+
+            return numbers.Select(number => number.ToString(new string('0', CodeUnitLength))).JoinAsString(".");
         }
 
         /// <summary>
