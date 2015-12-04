@@ -144,6 +144,7 @@
     <Compile Include="Localization\ApplicationLanguageManager_Tests.cs" />
     <Compile Include="Localization\ApplicationLanguageProvider_Tests.cs" />
     <Compile Include="Organizations\OrganizationUnitManager_Tests.cs" />
+    <Compile Include="Organizations\OrganizationUnit_Tests.cs" />
     <Compile Include="TestDatas\InitialTenantRoleAndUserBuilder.cs" />
     <Compile Include="TestDatas\InitialTestDataBuilder.cs" />
     <Compile Include="TestDatas\InitialTestLanguagesBuilder.cs" />
