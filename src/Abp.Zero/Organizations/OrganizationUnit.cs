@@ -76,11 +76,20 @@ namespace Abp.Organizations
         /// </summary>
         public virtual ICollection<OrganizationUnit> Children { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrganizationUnit"/> class.
+        /// </summary>
         public OrganizationUnit()
         {
             
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrganizationUnit"/> class.
+        /// </summary>
+        /// <param name="tenantId">Tenant's Id or null for host.</param>
+        /// <param name="displayName">Display name.</param>
+        /// <param name="parentId">Parent's Id or null if OU is a root.</param>
         public OrganizationUnit(int? tenantId, string displayName, long? parentId = null)
         {
             TenantId = tenantId;
@@ -88,6 +97,11 @@ namespace Abp.Organizations
             ParentId = parentId;
         }
 
+        /// <summary>
+        /// Creates code for given numbers.
+        /// Example: if numbers are 4,2 then returns "00004.00002";
+        /// </summary>
+        /// <param name="numbers">Numbers</param>
         public static string CreateCode(params int[] numbers)
         {
             if (numbers.IsNullOrEmpty())
@@ -99,13 +113,18 @@ namespace Abp.Organizations
         }
 
         /// <summary>
-        /// Appends a child unit code to a parent code.
+        /// Appends a child code to a parent code. 
+        /// Example: if parentCode = "00001", childCode = "00042" then returns "00001.00042".
         /// </summary>
-        /// <param name="parentCode">The parent code. Can be null or empty.</param>
-        /// <param name="childCode">The child code.</param>
-        /// <returns></returns>
+        /// <param name="parentCode">Parent code. Can be null or empty if parent is a root.</param>
+        /// <param name="childCode">Child code.</param>
         public static string AppendCode(string parentCode, string childCode)
         {
+            if (childCode.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("childCode", "childCode can not be null or empty.");
+            }
+
             if (parentCode.IsNullOrEmpty())
             {
                 return childCode;
@@ -114,8 +133,19 @@ namespace Abp.Organizations
             return parentCode + "." + childCode;
         }
 
+        /// <summary>
+        /// Gets relative code to the parent.
+        /// Example: if code = "00019.00055.00001" and parentCode = "00019" then returns "00055.00001".
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <param name="parentCode">The parent code.</param>
         public static string GetRelativeCode(string code, string parentCode)
         {
+            if (code.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("code", "code can not be null or empty.");
+            }
+
             if (parentCode.IsNullOrEmpty())
             {
                 return code;
@@ -129,22 +159,52 @@ namespace Abp.Organizations
             return code.Substring(parentCode.Length + 1);
         }
 
+        /// <summary>
+        /// Calculates next code for given code.
+        /// Example: if code = "00019.00055.00001" returns "00019.00055.00002".
+        /// </summary>
+        /// <param name="code">The code.</param>
         public static string CalculateNextCode(string code)
         {
+            if (code.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("code", "code can not be null or empty.");
+            }
+
             var parentCode = GetParentCode(code);
             var lastUnitCode = GetLastUnitCode(code);
 
             return AppendCode(parentCode, CreateCode(Convert.ToInt32(lastUnitCode) + 1));
         }
 
+        /// <summary>
+        /// Gets the last unit code.
+        /// Example: if code = "00019.00055.00001" returns "00001".
+        /// </summary>
+        /// <param name="code">The code.</param>
         public static string GetLastUnitCode(string code)
         {
+            if (code.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("code", "code can not be null or empty.");
+            }
+
             var splittedCode = code.Split('.');
             return splittedCode[splittedCode.Length - 1];
         }
 
+        /// <summary>
+        /// Gets parent code.
+        /// Example: if code = "00019.00055.00001" returns "00019.00055".
+        /// </summary>
+        /// <param name="code">The code.</param>
         public static string GetParentCode(string code)
         {
+            if (code.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("code", "code can not be null or empty.");
+            }
+
             var splittedCode = code.Split('.');
             if (splittedCode.Length == 1)
             {
