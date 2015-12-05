@@ -116,8 +116,10 @@ namespace Abp.Organizations
 
         public static string CalculateNextCode(string code)
         {
+            var parentCode = GetParentCode(code);
             var lastUnitCode = GetLastUnitCode(code);
-            return GetParentUnitCode(code) + "." + CreateUnitCode(Convert.ToInt32(lastUnitCode) + 1);
+
+            return AppendUnitCode(parentCode, CreateUnitCode(Convert.ToInt32(lastUnitCode) + 1));
         }
 
         public static string GetLastUnitCode(string code)
@@ -126,7 +128,7 @@ namespace Abp.Organizations
             return splittedCode[splittedCode.Length - 1];
         }
 
-        public static string GetParentUnitCode(string code)
+        public static string GetParentCode(string code)
         {
             var splittedCode = code.Split('.');
             if (splittedCode.Length == 1)

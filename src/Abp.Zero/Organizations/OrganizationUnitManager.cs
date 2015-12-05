@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
@@ -47,6 +48,32 @@ namespace Abp.Organizations
         public virtual string GetCode(long id)
         {
             return OrganizationUnitRepository.Get(id).Code;
+        }
+
+        [UnitOfWork]
+        public virtual async Task DeleteAsync(long id)
+        {
+            var children = await FindChildrenAsync(id, true);
+
+            foreach (var child in children)
+            {
+                await OrganizationUnitRepository.DeleteAsync(child);
+            }
+
+            await OrganizationUnitRepository.DeleteAsync(id);
+        }
+
+        public async Task<List<OrganizationUnit>> FindChildrenAsync(long parentId, bool recursive = false)
+        {
+            if (recursive)
+            {
+                var code = GetCode(parentId);
+                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.Code.StartsWith(code));
+            }
+            else
+            {
+                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
+            }
         }
     }
 }
