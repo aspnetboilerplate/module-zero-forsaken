@@ -33,7 +33,7 @@ namespace Abp.Organizations
             if (lastChild == null)
             {
                 var parentCode = parentId != null ? GetCode(parentId.Value) : null;
-                return OrganizationUnit.AppendUnitCode(parentCode, OrganizationUnit.CreateUnitCode(1));
+                return OrganizationUnit.AppendCode(parentCode, OrganizationUnit.CreateCode(1));
             }
 
             return OrganizationUnit.CalculateNextCode(lastChild.Code);
@@ -63,12 +63,38 @@ namespace Abp.Organizations
             await OrganizationUnitRepository.DeleteAsync(id);
         }
 
+        [UnitOfWork]
+        public virtual async Task MoveAsync(long id, long? parentId)
+        {
+            var ou = await OrganizationUnitRepository.GetAsync(id);
+            if (ou.ParentId == parentId)
+            {
+                return;
+            }
+
+            //Should find children before Code change
+            var children = await FindChildrenAsync(id, true);
+            
+            //Store old code of OU
+            var oldCode = ou.Code;
+
+            //Move OU
+            ou.Code = await GetNextChildCodeAsync(parentId);
+            ou.ParentId = parentId;
+
+            //Update Children Codes
+            foreach (var child in children)
+            {
+                child.Code = OrganizationUnit.AppendCode(ou.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
+            }
+        }
+
         public async Task<List<OrganizationUnit>> FindChildrenAsync(long parentId, bool recursive = false)
         {
             if (recursive)
             {
                 var code = GetCode(parentId);
-                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.Code.StartsWith(code));
+                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.Code.StartsWith(code) && ou.Id != parentId);
             }
             else
             {

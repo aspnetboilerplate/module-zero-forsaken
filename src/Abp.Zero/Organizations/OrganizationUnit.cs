@@ -88,11 +88,11 @@ namespace Abp.Organizations
             ParentId = parentId;
         }
 
-        public static string CreateUnitCode(params int[] numbers)
+        public static string CreateCode(params int[] numbers)
         {
             if (numbers.IsNullOrEmpty())
             {
-                return "";
+                return null;
             }
 
             return numbers.Select(number => number.ToString(new string('0', CodeUnitLength))).JoinAsString(".");
@@ -104,7 +104,7 @@ namespace Abp.Organizations
         /// <param name="parentCode">The parent code. Can be null or empty.</param>
         /// <param name="childCode">The child code.</param>
         /// <returns></returns>
-        public static string AppendUnitCode(string parentCode, string childCode)
+        public static string AppendCode(string parentCode, string childCode)
         {
             if (parentCode.IsNullOrEmpty())
             {
@@ -114,12 +114,27 @@ namespace Abp.Organizations
             return parentCode + "." + childCode;
         }
 
+        public static string GetRelativeCode(string code, string parentCode)
+        {
+            if (parentCode.IsNullOrEmpty())
+            {
+                return code;
+            }
+
+            if (code.Length == parentCode.Length)
+            {
+                return null;
+            }
+
+            return code.Substring(parentCode.Length + 1);
+        }
+
         public static string CalculateNextCode(string code)
         {
             var parentCode = GetParentCode(code);
             var lastUnitCode = GetLastUnitCode(code);
 
-            return AppendUnitCode(parentCode, CreateUnitCode(Convert.ToInt32(lastUnitCode) + 1));
+            return AppendCode(parentCode, CreateCode(Convert.ToInt32(lastUnitCode) + 1));
         }
 
         public static string GetLastUnitCode(string code)

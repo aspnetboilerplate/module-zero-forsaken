@@ -9,7 +9,7 @@ namespace Abp.Zero.SampleApp.Tests.Organizations
         [Fact]
         public void Test_CreateUnitCode()
         {
-            OrganizationUnit.CreateUnitCode(1, 1, 3).ShouldBe("00001.00001.00003");
+            OrganizationUnit.CreateCode(1, 1, 3).ShouldBe("00001.00001.00003");
         }
     }
 }
