@@ -16,9 +16,11 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
         {
             _context.DisableAllFilters();
 
-            new InitialTenantRoleAndUserBuilder(_context).Build();
+            new InitialTenantsBuilder(_context).Build();
+            new InitialUsersBuilder(_context).Build();
             new InitialTestLanguagesBuilder(_context).Build();
             new InitialTestOrganizationUnitsBuilder(_context).Build();
+            new InitialUserOrganizationUnitsBuilder(_context).Build();
         }
     }
 }

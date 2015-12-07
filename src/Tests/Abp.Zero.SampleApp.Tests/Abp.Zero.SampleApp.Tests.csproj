@@ -145,7 +145,7 @@
     <Compile Include="Localization\ApplicationLanguageProvider_Tests.cs" />
     <Compile Include="Organizations\OrganizationUnitManager_Tests.cs" />
     <Compile Include="Organizations\OrganizationUnit_Tests.cs" />
-    <Compile Include="TestDatas\InitialTenantRoleAndUserBuilder.cs" />
+    <Compile Include="TestDatas\InitialTenantsBuilder.cs" />
     <Compile Include="TestDatas\InitialTestDataBuilder.cs" />
     <Compile Include="TestDatas\InitialTestLanguagesBuilder.cs" />
     <Compile Include="Localization\SimpleLocalization_Tests.cs" />
@@ -154,11 +154,14 @@
     <Compile Include="Roles\RoleManager_Tests.cs" />
     <Compile Include="SampleAppTestBase.cs" />
     <Compile Include="TestDatas\InitialTestOrganizationUnitsBuilder.cs" />
+    <Compile Include="TestDatas\InitialUserOrganizationUnitsBuilder.cs" />
+    <Compile Include="TestDatas\InitialUsersBuilder.cs" />
     <Compile Include="Users\UserAppService_Tests.cs" />
     <Compile Include="Users\UserLoginHelper.cs" />
     <Compile Include="Users\UserLogin_ExternalAuthenticationSources_Test.cs" />
     <Compile Include="Users\UserLogin_Tests.cs" />
     <Compile Include="Users\UserManager_Permission_Tests.cs" />
+    <Compile Include="Users\UserOrganizationUnit_Tests.cs" />
     <Compile Include="Users\UserRepository_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Users\UserRole_Tests.cs" />

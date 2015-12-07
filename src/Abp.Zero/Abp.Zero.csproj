@@ -91,6 +91,7 @@
     <Compile Include="Authorization\Roles\AbpRolePermissionCacheItemInvalidator.cs" />
     <Compile Include="Authorization\Users\AbpUserBase.cs" />
     <Compile Include="Authorization\Users\AbpUserPermissionCacheItemInvalidator.cs" />
+    <Compile Include="Authorization\Users\UserOrganizationUnit.cs" />
     <Compile Include="Localization\ApplicationLanguage.cs" />
     <Compile Include="Localization\ApplicationLanguageManager.cs" />
     <Compile Include="Localization\ApplicationLanguageProvider.cs" />

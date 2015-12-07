@@ -108,6 +108,11 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<OrganizationUnit> OrganizationUnits { get; set; }
 
         /// <summary>
+        /// UserOrganizationUnits.
+        /// </summary>
+        public virtual IDbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
+
+        /// <summary>
         /// Default constructor.
         /// Do not directly instantiate this class. Instead, use dependency injection!
         /// </summary>

@@ -3,11 +3,11 @@ using Abp.Zero.SampleApp.MultiTenancy;
 
 namespace Abp.Zero.SampleApp.Tests.TestDatas
 {
-    public class InitialTenantRoleAndUserBuilder
+    public class InitialTenantsBuilder
     {
         private readonly AppDbContext _context;
 
-        public InitialTenantRoleAndUserBuilder(AppDbContext context)
+        public InitialTenantsBuilder(AppDbContext context)
         {
             _context = context;
         }

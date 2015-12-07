@@ -92,6 +92,16 @@ namespace Abp.Zero.SampleApp.Tests
                 });
         }
 
+        protected User GetDefaultTenantAdmin()
+        {
+            var defaultTenant = GetDefaultTenant();
+            return UsingDbContext(
+                context =>
+                {
+                    return context.Users.Single(u => u.UserName == User.AdminUserName && u.TenantId == defaultTenant.Id);
+                });
+        }
+
         protected async Task<Role> CreateRole(string name)
         {
             return await CreateRole(name, name);

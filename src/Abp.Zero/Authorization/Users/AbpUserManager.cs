@@ -16,6 +16,7 @@ using Abp.Extensions;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.MultiTenancy;
+using Abp.Organizations;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
@@ -68,6 +69,8 @@ namespace Abp.Authorization.Users
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
         private readonly ICacheManager _cacheManager;
+        private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
 
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
@@ -79,7 +82,9 @@ namespace Abp.Authorization.Users
             ISettingManager settingManager,
             IUserManagementConfig userManagementConfig,
             IIocResolver iocResolver,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager, 
+            IRepository<OrganizationUnit, long> organizationUnitRepository, 
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
             : base(userStore)
         {
             AbpStore = userStore;
@@ -92,6 +97,8 @@ namespace Abp.Authorization.Users
             _userManagementConfig = userManagementConfig;
             _iocResolver = iocResolver;
             _cacheManager = cacheManager;
+            _organizationUnitRepository = organizationUnitRepository;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
 
             LocalizationManager = NullLocalizationManager.Instance;
         }
@@ -579,6 +586,106 @@ namespace Abp.Authorization.Users
 
             return IdentityResult.Success;
         }
+
+        #region OrganizationUnit methods
+
+        //public virtual async Task AddToOrganizationUnitAsync(long userId, long ouId)
+        //{
+        //    await AddToOrganizationUnitAsync(
+        //        await GetUserByIdAsync(userId),
+        //        await _organizationUnitRepository.GetAsync(ouId)
+        //        );
+        //}
+        
+        public virtual async Task<bool> IsInOrganizationUnitAsync(TUser user, OrganizationUnit ou)
+        {
+            return await _userOrganizationUnitRepository.CountAsync(uou =>
+                uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+                ) > 0;
+        }
+
+        public virtual async Task AddToOrganizationUnitAsync(TUser user, OrganizationUnit ou)
+        {
+            if (await IsInOrganizationUnitAsync(user, ou))
+            {
+                return;
+            }
+
+            await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.Id, ou.Id));
+        }
+
+        public virtual async Task RemoveFromOrganizationUnitAsync(TUser user, OrganizationUnit ou)
+        {
+            await _userOrganizationUnitRepository.DeleteAsync(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
+        }
+
+        public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
+        {
+            if (organizationUnitIds == null)
+            {
+                organizationUnitIds = new long[0];
+            }
+
+            var currentOus = await GetOrganizationUnitsAsync(user);
+
+            //Remove from removed OUs
+            foreach (var currentOu in currentOus)
+            {
+                if (!organizationUnitIds.Contains(currentOu.Id))
+                {
+                    await RemoveFromOrganizationUnitAsync(user, currentOu);
+                }
+            }
+
+            //Add to added OUs
+            foreach (var organizationUnitId in organizationUnitIds)
+            {
+                if (currentOus.All(ou => ou.Id != organizationUnitId))
+                {
+                    var newOu = await _organizationUnitRepository.GetAsync(organizationUnitId);
+                    await AddToOrganizationUnitAsync(user, newOu);
+                }
+            }
+        }
+
+        private async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
+        {
+            var ous = new List<OrganizationUnit>();
+
+            var userOus = await _userOrganizationUnitRepository.GetAllListAsync(uou => uou.UserId == user.Id);
+            foreach (var userOu in userOus)
+            {
+                ous.Add(await _organizationUnitRepository.GetAsync(userOu.OrganizationUnitId));
+            }
+
+            return ous;
+        }
+
+        [UnitOfWork]
+        public virtual Task<List<TUser>> GetUsersInOrganizationUnit(OrganizationUnit organizationUnit, bool includeChildren = false)
+        {
+            if (!includeChildren)
+            {
+                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                    join user in AbpStore.Users on uou.UserId equals user.Id
+                    where uou.OrganizationUnitId == organizationUnit.Id
+                    select user;
+
+                return Task.FromResult(query.ToList());
+            }
+            else
+            {
+                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                            join user in AbpStore.Users on uou.UserId equals user.Id
+                            join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                            where ou.Code.StartsWith(organizationUnit.Code)
+                            select user;
+
+                return Task.FromResult(query.ToList());
+            }
+        }
+
+        #endregion
 
         private async Task<bool> IsEmailConfirmationRequiredForLoginAsync(int? tenantId)
         {
