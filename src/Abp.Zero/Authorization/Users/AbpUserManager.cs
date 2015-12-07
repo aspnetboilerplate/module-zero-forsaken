@@ -587,21 +587,27 @@ namespace Abp.Authorization.Users
             return IdentityResult.Success;
         }
 
-        #region OrganizationUnit methods
+        public virtual async Task<bool> IsInOrganizationUnitAsync(long userId, long ouId)
+        {
+            return await IsInOrganizationUnitAsync(
+                await GetUserByIdAsync(userId),
+                await _organizationUnitRepository.GetAsync(ouId)
+                );
+        }
 
-        //public virtual async Task AddToOrganizationUnitAsync(long userId, long ouId)
-        //{
-        //    await AddToOrganizationUnitAsync(
-        //        await GetUserByIdAsync(userId),
-        //        await _organizationUnitRepository.GetAsync(ouId)
-        //        );
-        //}
-        
         public virtual async Task<bool> IsInOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
             return await _userOrganizationUnitRepository.CountAsync(uou =>
                 uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
                 ) > 0;
+        }
+
+        public virtual async Task AddToOrganizationUnitAsync(long userId, long ouId)
+        {
+            await AddToOrganizationUnitAsync(
+                await GetUserByIdAsync(userId),
+                await _organizationUnitRepository.GetAsync(ouId)
+                );
         }
 
         public virtual async Task AddToOrganizationUnitAsync(TUser user, OrganizationUnit ou)
@@ -614,9 +620,25 @@ namespace Abp.Authorization.Users
             await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.Id, ou.Id));
         }
 
+        public virtual async Task RemoveFromOrganizationUnitAsync(long userId, long ouId)
+        {
+            await RemoveFromOrganizationUnitAsync(
+                await GetUserByIdAsync(userId),
+                await _organizationUnitRepository.GetAsync(ouId)
+                );
+        }
+
         public virtual async Task RemoveFromOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
             await _userOrganizationUnitRepository.DeleteAsync(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
+        }
+
+        public virtual async Task SetOrganizationUnitsAsync(long userId, params long[] organizationUnitIds)
+        {
+            await SetOrganizationUnitsAsync(
+                await GetUserByIdAsync(userId),
+                organizationUnitIds
+                );
         }
 
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
@@ -642,8 +664,10 @@ namespace Abp.Authorization.Users
             {
                 if (currentOus.All(ou => ou.Id != organizationUnitId))
                 {
-                    var newOu = await _organizationUnitRepository.GetAsync(organizationUnitId);
-                    await AddToOrganizationUnitAsync(user, newOu);
+                    await AddToOrganizationUnitAsync(
+                        user,
+                        await _organizationUnitRepository.GetAsync(organizationUnitId)
+                        );
                 }
             }
         }
@@ -684,8 +708,6 @@ namespace Abp.Authorization.Users
                 return Task.FromResult(query.ToList());
             }
         }
-
-        #endregion
 
         private async Task<bool> IsEmailConfirmationRequiredForLoginAsync(int? tenantId)
         {
