@@ -1,4 +1,6 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using Abp.Organizations;
 
 namespace Abp.Authorization.Users
@@ -6,8 +8,14 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents membership of a User to an OU.
     /// </summary>
-    public class UserOrganizationUnit : CreationAuditedEntity<long>
+    [Table("AbpUserOrganizationUnits")]
+    public class UserOrganizationUnit : CreationAuditedEntity<long>, IMayHaveTenant
     {
+        /// <summary>
+        /// TenantId of this entity.
+        /// </summary>
+        public virtual int? TenantId { get; set; }
+
         /// <summary>
         /// Id of the User.
         /// </summary>
