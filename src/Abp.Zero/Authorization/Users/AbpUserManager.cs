@@ -71,6 +71,7 @@ namespace Abp.Authorization.Users
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IOrganizationUnitSettings _organizationUnitSettings;
 
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
@@ -82,9 +83,10 @@ namespace Abp.Authorization.Users
             ISettingManager settingManager,
             IUserManagementConfig userManagementConfig,
             IIocResolver iocResolver,
-            ICacheManager cacheManager, 
-            IRepository<OrganizationUnit, long> organizationUnitRepository, 
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository)
+            ICacheManager cacheManager,
+            IRepository<OrganizationUnit, long> organizationUnitRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IOrganizationUnitSettings organizationUnitSettings)
             : base(userStore)
         {
             AbpStore = userStore;
@@ -99,6 +101,7 @@ namespace Abp.Authorization.Users
             _cacheManager = cacheManager;
             _organizationUnitRepository = organizationUnitRepository;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _organizationUnitSettings = organizationUnitSettings;
 
             LocalizationManager = NullLocalizationManager.Instance;
         }
@@ -612,10 +615,14 @@ namespace Abp.Authorization.Users
 
         public virtual async Task AddToOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            if (await IsInOrganizationUnitAsync(user, ou))
+            var currentOus = await GetOrganizationUnitsAsync(user);
+
+            if (currentOus.Any(cou => cou.Id == ou.Id))
             {
                 return;
             }
+
+            await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
 
             await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.Id, ou.Id));
         }
@@ -641,12 +648,23 @@ namespace Abp.Authorization.Users
                 );
         }
 
+        private async Task CheckMaxUserOrganizationUnitMembershipCountAsync(int? tenantId, int requestedCount)
+        {
+            var maxCount = await _organizationUnitSettings.GetMaxUserMembershipCountAsync(tenantId);
+            if (requestedCount > maxCount)
+            {
+                throw new AbpException(string.Format("Can not set more than {0} organization unit for a user!", maxCount));
+            }
+        }
+
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
             {
                 organizationUnitIds = new long[0];
             }
+
+            await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, organizationUnitIds.Length);
 
             var currentOus = await GetOrganizationUnitsAsync(user);
 
@@ -691,9 +709,9 @@ namespace Abp.Authorization.Users
             if (!includeChildren)
             {
                 var query = from uou in _userOrganizationUnitRepository.GetAll()
-                    join user in AbpStore.Users on uou.UserId equals user.Id
-                    where uou.OrganizationUnitId == organizationUnit.Id
-                    select user;
+                            join user in AbpStore.Users on uou.UserId equals user.Id
+                            where uou.OrganizationUnitId == organizationUnit.Id
+                            select user;
 
                 return Task.FromResult(query.ToList());
             }
@@ -729,7 +747,7 @@ namespace Abp.Authorization.Users
 
             return tenant;
         }
-        
+
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
         {
             return await _cacheManager.GetUserPermissionCache().GetAsync(userId, async () =>

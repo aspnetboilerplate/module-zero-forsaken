@@ -141,6 +141,7 @@
     <Compile Include="Organizations\IMayHaveOrganizationUnit.cs" />
     <Compile Include="Organizations\OrganizationUnit.cs" />
     <Compile Include="Organizations\OrganizationUnitManager.cs" />
+    <Compile Include="Organizations\OrganizationUnitSettings.cs" />
     <Compile Include="Runtime\Caching\AbpZeroCacheManagerExtensions.cs" />
     <Compile Include="Runtime\Session\IdentityFrameworkClaimsAbpSession.cs" />
     <Compile Include="Configuration\SettingStore.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Zero\Configuration\AbpZeroSettingProvider.cs" />
     <Compile Include="Zero\Configuration\IAbpZeroConfig.cs" />
     <Compile Include="Zero\Configuration\ILanguageManagementConfig.cs" />
+    <Compile Include="Organizations\IOrganizationUnitSettings.cs" />
     <Compile Include="Zero\Configuration\IRoleManagementConfig.cs" />
     <Compile Include="Zero\Configuration\IUserManagementConfig.cs" />
     <Compile Include="Zero\Configuration\LanguageManagementConfig.cs" />

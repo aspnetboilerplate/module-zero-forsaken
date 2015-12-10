@@ -27,21 +27,22 @@ namespace Abp.Zero.SampleApp.Users
             IIocResolver iocResolver,
             ICacheManager cacheManager,
             IRepository<OrganizationUnit, long> organizationUnitRepository, 
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository
-            )
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IOrganizationUnitSettings organizationUnitSettings)
             : base(
-            userStore,
-            roleManager,
-            tenantRepository,
-            multiTenancyConfig,
-            permissionManager,
-            unitOfWorkManager,
-            settingManager,
-            userManagementConfig,
-            iocResolver,
-            cacheManager,
-            organizationUnitRepository,
-            userOrganizationUnitRepository)
+                userStore,
+                roleManager,
+                tenantRepository,
+                multiTenancyConfig,
+                permissionManager,
+                unitOfWorkManager,
+                settingManager,
+                userManagementConfig,
+                iocResolver,
+                cacheManager,
+                organizationUnitRepository,
+                userOrganizationUnitRepository,
+                organizationUnitSettings)
         {
         }
     }
