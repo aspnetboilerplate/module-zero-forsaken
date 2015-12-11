@@ -28,8 +28,8 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
             var ou11 = _context.OrganizationUnits.Single(ou => ou.DisplayName == "OU11");
             var ou21 = _context.OrganizationUnits.Single(ou => ou.DisplayName == "OU21");
 
-            _context.UserOrganizationUnits.Add(new UserOrganizationUnit(adminUser.Id, ou11.Id));
-            _context.UserOrganizationUnits.Add(new UserOrganizationUnit(adminUser.Id, ou21.Id));
+            _context.UserOrganizationUnits.Add(new UserOrganizationUnit(defaultTenant.Id, adminUser.Id, ou11.Id));
+            _context.UserOrganizationUnits.Add(new UserOrganizationUnit(defaultTenant.Id, adminUser.Id, ou21.Id));
         }
     }
 }

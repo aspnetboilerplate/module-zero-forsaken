@@ -624,7 +624,7 @@ namespace Abp.Authorization.Users
 
             await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
 
-            await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.Id, ou.Id));
+            await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(long userId, long ouId)
@@ -690,17 +690,15 @@ namespace Abp.Authorization.Users
             }
         }
 
-        private async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
+        [UnitOfWork]
+        public virtual Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
         {
-            var ous = new List<OrganizationUnit>();
+            var query = from uou in _userOrganizationUnitRepository.GetAll()
+                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                        where uou.UserId == user.Id
+                        select ou;
 
-            var userOus = await _userOrganizationUnitRepository.GetAllListAsync(uou => uou.UserId == user.Id);
-            foreach (var userOu in userOus)
-            {
-                ous.Add(await _organizationUnitRepository.GetAsync(userOu.OrganizationUnitId));
-            }
-
-            return ous;
+            return Task.FromResult(query.ToList());
         }
 
         [UnitOfWork]
