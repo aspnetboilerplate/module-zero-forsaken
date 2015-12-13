@@ -37,21 +37,33 @@ namespace Abp.Localization
                     .Select(l => l.ToLanguageInfo())
                     .ToList();
 
-            var defaultLanguage = AsyncHelper.RunSync(() => _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId));
-            if (defaultLanguage != null)
-            {
-                var languageInfo = languageInfos.FirstOrDefault(l => l.Name == defaultLanguage.Name);
-                if (languageInfo != null)
-                {
-                    languageInfo.IsDefault = true;
-                }
-            }
-            else if (languageInfos.Count > 0)
-            {
-                languageInfos[0].IsDefault = true;
-            }
+            SetDefaultLanguage(languageInfos);
 
             return languageInfos;
+        }
+
+        private void SetDefaultLanguage(List<LanguageInfo> languageInfos)
+        {
+            if (languageInfos.Count <= 0)
+            {
+                return;
+            }
+
+            var defaultLanguage = AsyncHelper.RunSync(() => _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId));
+            if (defaultLanguage == null)
+            {
+                languageInfos[0].IsDefault = true;
+                return;
+            }
+            
+            var languageInfo = languageInfos.FirstOrDefault(l => l.Name == defaultLanguage.Name);
+            if (languageInfo == null)
+            {
+                languageInfos[0].IsDefault = true;
+                return;
+            }
+
+            languageInfo.IsDefault = true;
         }
     }
 }
