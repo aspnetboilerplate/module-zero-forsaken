@@ -1,30 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
-using Abp.Extensions;
+using Abp.UI;
+using Abp.Zero;
 
 namespace Abp.Organizations
 {
     /// <summary>
     /// Performs domain logic for Organization Units.
     /// </summary>
-    public class OrganizationUnitManager : IDomainService
+    public class OrganizationUnitManager : DomainService
     {
         protected IRepository<OrganizationUnit, long> OrganizationUnitRepository { get; private set; }
 
         public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository)
         {
             OrganizationUnitRepository = organizationUnitRepository;
+
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         [UnitOfWork]
         public virtual async Task CreateAsync(OrganizationUnit organizationUnit)
         {
             organizationUnit.Code = await GetNextChildCodeAsync(organizationUnit.ParentId);
+            await ValidateOrganizationUnitAsync(organizationUnit);
             await OrganizationUnitRepository.InsertAsync(organizationUnit);
+        }
+
+        public virtual async Task UpdateAsync(OrganizationUnit organizationUnit)
+        {
+            await ValidateOrganizationUnitAsync(organizationUnit);
+            await OrganizationUnitRepository.UpdateAsync(organizationUnit);
         }
 
         public virtual async Task<string> GetNextChildCodeAsync(long? parentId)
@@ -74,7 +85,7 @@ namespace Abp.Organizations
 
             //Should find children before Code change
             var children = await FindChildrenAsync(id, true);
-            
+
             //Store old code of OU
             var oldCode = ou.Code;
 
@@ -89,16 +100,33 @@ namespace Abp.Organizations
             }
         }
 
-        public async Task<List<OrganizationUnit>> FindChildrenAsync(long parentId, bool recursive = false)
+        public async Task<List<OrganizationUnit>> FindChildrenAsync(long? parentId, bool recursive = false)
         {
             if (recursive)
             {
-                var code = GetCode(parentId);
-                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.Code.StartsWith(code) && ou.Id != parentId);
+                if (!parentId.HasValue)
+                {
+                    return await OrganizationUnitRepository.GetAllListAsync();
+                }
+
+                var code = GetCode(parentId.Value);
+                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.Code.StartsWith(code) && ou.Id != parentId.Value);
             }
             else
             {
                 return await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
+            }
+        }
+
+        protected virtual async Task ValidateOrganizationUnitAsync(OrganizationUnit organizationUnit)
+        {
+            var siblings = (await FindChildrenAsync(organizationUnit.ParentId))
+                .Where(ou => ou.Id != organizationUnit.Id)
+                .ToList();
+
+            if (siblings.Any(ou => ou.DisplayName == organizationUnit.DisplayName))
+            {
+                throw new UserFriendlyException(L("OrganizationUnitDuplicateDisplayNameWarning", organizationUnit.DisplayName));
             }
         }
     }

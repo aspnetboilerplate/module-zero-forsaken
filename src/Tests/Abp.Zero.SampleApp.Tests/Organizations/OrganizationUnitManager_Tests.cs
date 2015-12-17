@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Abp.Organizations;
+using Abp.UI;
 using Shouldly;
 using Xunit;
 
@@ -49,6 +50,20 @@ namespace Abp.Zero.SampleApp.Tests.Organizations
                 newChild.ParentId.ShouldBe(ou11.Id);
                 newChild.Code.ShouldBe(OrganizationUnit.CreateCode(1, 1, 3));
             });
+        }
+        
+        [Fact]
+        public async Task Should_Not_Create_OU_With_Same_Name_In_Same_Level()
+        {
+            //Arrange
+            var ou11 = GetOU("OU11");
+
+            //Act & Assert
+            await Assert.ThrowsAsync<UserFriendlyException>(
+                () => _organizationUnitManager.CreateAsync(
+                    new OrganizationUnit(AbpSession.TenantId, "OU112", ou11.Id)
+                    )
+                );
         }
 
         [Fact]
