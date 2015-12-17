@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
@@ -77,8 +76,8 @@ namespace Abp.Organizations
         [UnitOfWork]
         public virtual async Task MoveAsync(long id, long? parentId)
         {
-            var ou = await OrganizationUnitRepository.GetAsync(id);
-            if (ou.ParentId == parentId)
+            var organizationUnit = await OrganizationUnitRepository.GetAsync(id);
+            if (organizationUnit.ParentId == parentId)
             {
                 return;
             }
@@ -87,16 +86,18 @@ namespace Abp.Organizations
             var children = await FindChildrenAsync(id, true);
 
             //Store old code of OU
-            var oldCode = ou.Code;
+            var oldCode = organizationUnit.Code;
 
             //Move OU
-            ou.Code = await GetNextChildCodeAsync(parentId);
-            ou.ParentId = parentId;
+            organizationUnit.Code = await GetNextChildCodeAsync(parentId);
+            organizationUnit.ParentId = parentId;
+
+            await ValidateOrganizationUnitAsync(organizationUnit);
 
             //Update Children Codes
             foreach (var child in children)
             {
-                child.Code = OrganizationUnit.AppendCode(ou.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
+                child.Code = OrganizationUnit.AppendCode(organizationUnit.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
             }
         }
 
