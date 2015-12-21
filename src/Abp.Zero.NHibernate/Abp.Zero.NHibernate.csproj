@@ -57,8 +57,8 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.6.0.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentMigrator.1.6.0\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentNHibernate, Version=1.4.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
@@ -123,6 +123,8 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20150922_01_Add_Columns_To_AbpAuditLogs.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151103_01_Create_AbpLanguages_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151103_02_Create_AbpLanguageTexts_Table.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151221_01_Create_AbpOrganizationUnit_Table.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151221_02_Create_AbpUserOrganizationUnits_Table.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />

@@ -1,3 +1,4 @@
+using Abp.FluentMigrator.Extensions;
 using FluentMigrator;
 
 namespace Abp.Zero.FluentMigrator.Migrations
@@ -8,6 +9,7 @@ namespace Abp.Zero.FluentMigrator.Migrations
         public override void Up()
         {
             Create.Table("AbpLanguages")
+                .WithIdAsInt32()
                 .WithTenantIdAsNullable()
                 .WithColumn("Name").AsString(10).NotNullable()
                 .WithColumn("DisplayName").AsString(64).NotNullable()
