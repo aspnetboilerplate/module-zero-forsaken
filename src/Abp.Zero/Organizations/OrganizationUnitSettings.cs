@@ -42,8 +42,22 @@ namespace Abp.Organizations
             {
                 return await _settingManager.GetSettingValueForTenantAsync<int>(AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, tenantId.Value);
             }
+            else
+            {
+                return await _settingManager.GetSettingValueForApplicationAsync<int>(AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount);
+            }
+        }
 
-            return await _settingManager.GetSettingValueForApplicationAsync<int>(AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount);
+        public async Task SetMaxUserMembershipCountAsync(int? tenantId, int value)
+        {
+            if (tenantId.HasValue)
+            {
+                await _settingManager.ChangeSettingForTenantAsync(tenantId.Value, AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, value.ToString());
+            }
+            else
+            {
+                await _settingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, value.ToString());
+            }
         }
     }
 }
