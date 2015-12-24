@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Threading;
 using Abp.UI;
 using Abp.Zero;
 
@@ -42,7 +43,7 @@ namespace Abp.Organizations
             var lastChild = await GetLastChildOrNullAsync(parentId);
             if (lastChild == null)
             {
-                var parentCode = parentId != null ? GetCode(parentId.Value) : null;
+                var parentCode = parentId != null ? await GetCodeAsync(parentId.Value) : null;
                 return OrganizationUnit.AppendCode(parentCode, OrganizationUnit.CreateCode(1));
             }
 
@@ -57,7 +58,13 @@ namespace Abp.Organizations
 
         public virtual string GetCode(long id)
         {
-            return OrganizationUnitRepository.Get(id).Code;
+            //TODO: Move to an extension class
+            return AsyncHelper.RunSync(() => GetCodeAsync(id));
+        }
+
+        public virtual async Task<string> GetCodeAsync(long id)
+        {
+            return (await OrganizationUnitRepository.GetAsync(id)).Code;
         }
 
         [UnitOfWork]
@@ -110,7 +117,7 @@ namespace Abp.Organizations
                     return await OrganizationUnitRepository.GetAllListAsync();
                 }
 
-                var code = GetCode(parentId.Value);
+                var code = await GetCodeAsync(parentId.Value);
                 return await OrganizationUnitRepository.GetAllListAsync(ou => ou.Code.StartsWith(code) && ou.Id != parentId.Value);
             }
             else
