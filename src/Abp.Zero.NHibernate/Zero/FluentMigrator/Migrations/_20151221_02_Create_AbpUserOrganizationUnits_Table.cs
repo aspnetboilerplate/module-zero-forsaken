@@ -16,13 +16,13 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .WithCreationAuditColumns();
 
             Create.Index("IX_TenantId_UserId")
-                .OnTable("AbpOrganizationUnits")
+                .OnTable("AbpUserOrganizationUnits")
                 .OnColumn("TenantId").Ascending()
                 .OnColumn("UserId").Ascending()
                 .WithOptions().NonClustered();
 
             Create.Index("IX_TenantId_OrganizationUnitId")
-                .OnTable("AbpOrganizationUnits")
+                .OnTable("AbpUserOrganizationUnits")
                 .OnColumn("TenantId").Ascending()
                 .OnColumn("OrganizationUnitId").Ascending()
                 .WithOptions().NonClustered();

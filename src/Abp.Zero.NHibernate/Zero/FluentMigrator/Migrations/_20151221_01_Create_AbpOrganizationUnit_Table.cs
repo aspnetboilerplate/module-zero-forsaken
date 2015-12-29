@@ -16,6 +16,12 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .WithColumn("DisplayName").AsString(128).NotNullable()
                 .WithFullAuditColumns();
 
+            Create.Index("IX_TenantId_Code")
+                .OnTable("AbpOrganizationUnits")
+                .OnColumn("TenantId").Ascending()
+                .OnColumn("Code").Ascending()
+                .WithOptions().NonClustered();
+
             Create.Index("IX_ParentId_Code")
                 .OnTable("AbpOrganizationUnits")
                 .OnColumn("ParentId").Ascending()
