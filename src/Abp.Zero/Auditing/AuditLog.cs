@@ -127,6 +127,7 @@ namespace Abp.Auditing
         /// <summary>
         /// <see cref="AuditInfo.CustomData"/>.
         /// </summary>
+        [MaxLength(MaxCustomDataLength)]
         public virtual string CustomData { get; set; }
 
         /// <summary>
