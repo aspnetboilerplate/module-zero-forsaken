@@ -3,8 +3,7 @@ using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public abstract class AuditLogMap<TAuditLog> : EntityMap<TAuditLog, long>
-        where TAuditLog : AuditLog
+    public class AuditLogMap : EntityMap<AuditLog, long>
     {
         public AuditLogMap()
             : base("AbpAuditLogs")
@@ -20,6 +19,9 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.ClientName);
             Map(x => x.BrowserInfo);
             Map(x => x.Exception);
+            Map(x => x.ImpersonatorUserId);
+            Map(x => x.ImpersonatorTenantId);
+            Map(x => x.CustomData);
         }
     }
 }
