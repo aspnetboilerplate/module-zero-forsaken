@@ -19,11 +19,13 @@ namespace Abp.Zero.NHibernate.EntityMappings
         protected TenantMap()
             : base("AbpTenants")
         {
+            References(x => x.Edition).Column("EditionId").Nullable();
+
             Map(x => x.TenancyName);
             Map(x => x.Name);
+            Map(x => x.IsActive);
 
-            this.MapDeletionAudited();
-            this.MapAudited();
+            this.MapFullAudited();
 
             Polymorphism.Explicit();
         }
