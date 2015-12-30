@@ -126,6 +126,8 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20151221_02_Create_AbpUserOrganizationUnits_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_01_Create_Editions_And_Features_Tables.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_02_Create_Indexes_For_AuditLogs.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151230_03_Create_Indexes_For_AbpLanguages.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151230_04_Create_Indexes_For_AbpLanguages.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
