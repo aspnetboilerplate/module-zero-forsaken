@@ -140,6 +140,8 @@
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\ApplicationLanguageMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\ApplicationLanguageTextMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\AuditLogMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\EditionFeatureSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\EditionMap.cs" />
