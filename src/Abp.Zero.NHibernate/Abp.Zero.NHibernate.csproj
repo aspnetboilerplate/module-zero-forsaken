@@ -133,6 +133,10 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_07_Revise_AbpRoles.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_08_Revise_AbpSettings.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_09_Revise_AbpTenants.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151230_10_Revise_AbpUserLogins.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151230_11_Create_Indexes_For_AbpUserOrganizationUnits.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151230_12_Create_Indexes_For_AbpUserRoles.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151230_13_Revise_Users.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
