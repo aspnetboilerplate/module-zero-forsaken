@@ -1,12 +1,15 @@
 using Abp.Authorization.Roles;
+using FluentNHibernate.Mapping;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class RolePermissionSettingMap : PermissionSettingMap<RolePermissionSetting>
+    public class RolePermissionSettingMap : SubclassMap<RolePermissionSetting>
     {
         public RolePermissionSettingMap()
         {
-            Map(x => x.RoleId);
+            DiscriminatorValue("RolePermissionSetting");
+
+            Map(x => x.RoleId).Not.Nullable();
         }
     }
 }

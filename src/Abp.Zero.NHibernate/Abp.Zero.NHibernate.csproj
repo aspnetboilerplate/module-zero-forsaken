@@ -146,6 +146,7 @@
     <Compile Include="Zero\NHibernate\EntityMappings\EditionFeatureSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\EditionMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\FeatureSettingMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\OrganizationUnitMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\PermissionSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\RoleMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\RolePermissionSettingMap.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Zero\NHibernate\EntityMappings\TenantMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserLoginMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\UserOrganizationUnitMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserPermissionSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserRoleMap.cs" />
     <Compile Include="Zero\NHibernate\AbpZeroNHibernateModule.cs" />
