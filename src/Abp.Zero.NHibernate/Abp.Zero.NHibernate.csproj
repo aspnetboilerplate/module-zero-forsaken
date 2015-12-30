@@ -141,10 +141,14 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\AuditLogMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\EditionFeatureSettingMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\EditionMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\FeatureSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\PermissionSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\RoleMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\RolePermissionSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\SettingMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\TenantFeatureSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\TenantMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserLoginMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\UserMap.cs" />
