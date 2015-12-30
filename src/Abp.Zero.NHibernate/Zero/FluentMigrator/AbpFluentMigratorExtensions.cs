@@ -109,11 +109,45 @@ namespace Abp.Zero.FluentMigrator
 
         #region Alter table
 
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreatorUserIdColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("CreatorUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
+        }
+
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddCreationTimeColumn()
-                .AddColumn("CreatorUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
+                .AddCreatorUserIdColumn();
+        }
+
+        //TODO: Move to Abp.FluentMigrator
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModificationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("LastModificationTime").AsDateTime().Nullable();
+        }
+
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModifierUserIdColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddColumn("LastModifierUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
+        }
+
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddModificationAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddLastModificationTimeColumn()
+                .AddLastModifierUserIdColumn();
+        }
+
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddDeletionAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        {
+            return table
+                .AddIsDeletedColumn()
+                .AddColumn("DeletionTime").AsDateTime().Nullable()
+                .AddColumn("DeleterUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
         }
 
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddTenantIdColumnAsRequired(this IAlterTableAddColumnOrAlterColumnSyntax table)
