@@ -19,14 +19,14 @@ namespace Abp.Zero.NHibernate.EntityMappings
         protected RoleMap()
             : base("AbpRoles")
         {
-            Map(x => x.TenantId);
+            References(x => x.Tenant).Column("TenantId").Nullable();
+            
             Map(x => x.Name);
             Map(x => x.DisplayName);
             Map(x => x.IsStatic);
             Map(x => x.IsDefault);
             
-            this.MapDeletionAudited();
-            this.MapAudited();
+            this.MapFullAudited();
 
             Polymorphism.Explicit();
         }
