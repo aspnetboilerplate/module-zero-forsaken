@@ -130,6 +130,7 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_04_Create_Indexes_For_AbpLanguages.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_05_Create_Indexes_For_AbpOrganizationUnits.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_06_Create_Indexes_For_AbpPermissions.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20151230_07_Revise_AbpRoles.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
