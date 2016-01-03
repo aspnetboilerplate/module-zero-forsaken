@@ -132,11 +132,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NHibernate\Mappings\AppRoleMap.cs" />
+    <Compile Include="NHibernate\Mappings\AppUserMap.cs" />
+    <Compile Include="NHibernate\Mappings\TenantMap.cs" />
     <Compile Include="NHibernate\NHibernateTestBase.cs" />
     <Compile Include="NHibernate\Repositories\AbpProjectNameRepositoryBase.cs" />
+    <Compile Include="NHibernate\TestDatas\InitialTenantsBuilder.cs" />
+    <Compile Include="NHibernate\TestDatas\InitialTestDataBuilder.cs" />
+    <Compile Include="NHibernate\TestDatas\InitialTestLanguagesBuilder.cs" />
+    <Compile Include="NHibernate\TestDatas\InitialTestOrganizationUnitsBuilder.cs" />
+    <Compile Include="NHibernate\TestDatas\InitialUsersBuilder.cs" />
     <Compile Include="NHibernate\UserManager_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NHibernate\SampleAppNHibernateModule.cs" />
+    <Compile Include="NHibernate\TestDatas\InitialUserOrganizationUnitsBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

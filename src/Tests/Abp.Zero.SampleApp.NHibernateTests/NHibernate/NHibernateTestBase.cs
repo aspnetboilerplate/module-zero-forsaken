@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using Abp.Collections;
 using Abp.Modules;
 using Abp.TestBase;
+using Abp.Zero.SampleApp.NHibernate.TestDatas;
 using Castle.MicroKernel.Registration;
 using NHibernate;
 
@@ -12,6 +13,11 @@ namespace Abp.Zero.SampleApp.NHibernate
     public abstract class NHibernateTestBase : AbpIntegratedTestBase
     {
         private SQLiteConnection _connection;
+
+        protected NHibernateTestBase()
+        {
+            UsingSession(session => new InitialTestDataBuilder(session).Build());            
+        }
 
         protected override void PreInitialize()
         {

@@ -28,6 +28,6 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Tenant Id of this user.
         /// </summary>
-        public int? TenantId { get; set; }
+        public virtual int? TenantId { get; set; }
     }
 }

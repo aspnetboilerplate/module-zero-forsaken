@@ -15,10 +15,11 @@ namespace Abp.Zero.SampleApp.NHibernate
         }
 
         [Fact]
-        public async Task Test1()
+        public async Task Should_Find_User_By_Name()
         {
-            var admin = await _userManager.FindByNameAsync("admin");
-            admin.ShouldBe(null);
+            var admin = await _userManager.FindByNameAsync(User.AdminUserName);
+            admin.ShouldNotBeNull();
+            admin.UserName.ShouldBe(User.AdminUserName);
         }
     }
 }

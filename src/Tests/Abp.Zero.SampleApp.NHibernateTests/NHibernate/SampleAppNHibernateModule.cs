@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Data;
 using System.Reflection;
 using Abp.Configuration.Startup;
@@ -19,11 +18,6 @@ namespace Abp.Zero.SampleApp.NHibernate
                 .Database(SQLiteConfiguration.Standard.InMemory())
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
                 .ExposeConfiguration(cfg => new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<IDbConnection>(), Console.Out));
-        }
-
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
     }
 }
