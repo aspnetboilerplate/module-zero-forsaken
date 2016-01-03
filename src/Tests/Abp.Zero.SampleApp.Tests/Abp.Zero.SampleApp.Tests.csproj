@@ -184,6 +184,10 @@
       <Project>{70D916F2-9BFF-43DA-B3F7-3E0655114D48}</Project>
       <Name>Abp.Zero</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFramework\Abp.Zero.SampleApp.EntityFramework.csproj">
+      <Project>{BB02243D-42E6-4BFE-AC08-7F946DE80F3E}</Project>
+      <Name>Abp.Zero.SampleApp.EntityFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Abp.Zero.SampleApp\Abp.Zero.SampleApp.csproj">
       <Project>{59AA0119-F76E-433F-B9D1-385F51A13A17}</Project>
       <Name>Abp.Zero.SampleApp</Name>

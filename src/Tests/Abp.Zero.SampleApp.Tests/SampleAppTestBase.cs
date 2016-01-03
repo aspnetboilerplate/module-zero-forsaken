@@ -56,7 +56,8 @@ namespace Abp.Zero.SampleApp.Tests
         protected override void AddModules(ITypeList<AbpModule> modules)
         {
             base.AddModules(modules);
-            modules.Add<SampleAppModule>();
+
+            modules.Add<SampleAppEntityFrameworkModule>();
         }
 
         public void UsingDbContext(Action<AppDbContext> action)
