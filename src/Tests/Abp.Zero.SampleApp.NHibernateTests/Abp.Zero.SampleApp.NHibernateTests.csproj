@@ -143,6 +143,7 @@
     <Compile Include="NHibernate\TestDatas\InitialTestOrganizationUnitsBuilder.cs" />
     <Compile Include="NHibernate\TestDatas\InitialUsersBuilder.cs" />
     <Compile Include="NHibernate\UserManager_Tests.cs" />
+    <Compile Include="Organizations\OrganizationUnitManager_NHibernate_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NHibernate\SampleAppNHibernateModule.cs" />
     <Compile Include="NHibernate\TestDatas\InitialUserOrganizationUnitsBuilder.cs" />

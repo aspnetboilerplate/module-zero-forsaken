@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Linq;
 using Abp.Collections;
 using Abp.Modules;
 using Abp.TestBase;
+using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.NHibernate.TestDatas;
 using Castle.MicroKernel.Registration;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace Abp.Zero.SampleApp.NHibernate
 {
@@ -63,6 +66,15 @@ namespace Abp.Zero.SampleApp.NHibernate
             }
 
             return result;
+        }
+
+        protected Tenant GetDefaultTenant()
+        {
+            return UsingSession(
+                session =>
+                {
+                    return session.Query<Tenant>().Single(t => t.TenancyName == Tenant.DefaultTenantName);
+                });
         }
 
         public override void Dispose()

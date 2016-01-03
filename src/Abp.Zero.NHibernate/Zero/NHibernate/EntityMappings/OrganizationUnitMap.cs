@@ -10,6 +10,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
         {
             Map(x => x.TenantId);
             References(x => x.Parent).Column("ParentId").Nullable();
+            //Map(x => x.ParentId);
             Map(x => x.Code);
             Map(x => x.DisplayName);
             
