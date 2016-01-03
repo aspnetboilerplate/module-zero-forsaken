@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.Ldap", "Abp.Zero.L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.SampleApp.EntityFramework", "Tests\Abp.Zero.SampleApp.EntityFramework\Abp.Zero.SampleApp.EntityFramework.csproj", "{BB02243D-42E6-4BFE-AC08-7F946DE80F3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.SampleApp.NHibernateTests", "Tests\Abp.Zero.SampleApp.NHibernateTests\Abp.Zero.SampleApp.NHibernateTests.csproj", "{28D2E425-BA18-4451-9748-86A8FF596414}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{BB02243D-42E6-4BFE-AC08-7F946DE80F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB02243D-42E6-4BFE-AC08-7F946DE80F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB02243D-42E6-4BFE-AC08-7F946DE80F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28D2E425-BA18-4451-9748-86A8FF596414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28D2E425-BA18-4451-9748-86A8FF596414}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28D2E425-BA18-4451-9748-86A8FF596414}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28D2E425-BA18-4451-9748-86A8FF596414}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,5 +72,6 @@ Global
 		{59AA0119-F76E-433F-B9D1-385F51A13A17} = {34AA52E9-B75E-46EF-AEBB-460AED9A0767}
 		{3C90D572-EA4E-499C-AF95-407BFA8A36B8} = {34AA52E9-B75E-46EF-AEBB-460AED9A0767}
 		{BB02243D-42E6-4BFE-AC08-7F946DE80F3E} = {34AA52E9-B75E-46EF-AEBB-460AED9A0767}
+		{28D2E425-BA18-4451-9748-86A8FF596414} = {34AA52E9-B75E-46EF-AEBB-460AED9A0767}
 	EndGlobalSection
 EndGlobal

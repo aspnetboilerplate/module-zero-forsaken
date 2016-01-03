@@ -3,9 +3,9 @@ using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public abstract class PermissionSettingMap : EntityMap<PermissionSetting, long>
+    public class PermissionSettingMap : EntityMap<PermissionSetting, long>
     {
-        protected PermissionSettingMap()
+        public PermissionSettingMap()
             : base("AbpPermissions")
         {
             DiscriminateSubClassesOnColumn("Discriminator");

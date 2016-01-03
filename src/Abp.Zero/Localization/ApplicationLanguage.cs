@@ -68,7 +68,7 @@ namespace Abp.Localization
             Icon = icon;
         }
 
-        public LanguageInfo ToLanguageInfo()
+        public virtual LanguageInfo ToLanguageInfo()
         {
             return new LanguageInfo(Name, DisplayName, Icon);
         }

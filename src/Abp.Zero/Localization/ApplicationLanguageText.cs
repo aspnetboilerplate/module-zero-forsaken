@@ -20,7 +20,7 @@ namespace Abp.Localization
         /// <summary>
         /// TenantId of this entity. Can be null for host.
         /// </summary>
-        public int? TenantId { get; set; }
+        public virtual int? TenantId { get; set; }
 
         /// <summary>
         /// Language name (culture name). Matches to <see cref="ApplicationLanguage.Name"/>.
