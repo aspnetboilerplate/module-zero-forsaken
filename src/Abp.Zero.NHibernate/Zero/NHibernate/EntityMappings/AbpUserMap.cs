@@ -4,11 +4,11 @@ using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public abstract class UserMap<TTenant, TUser> : EntityMap<TUser, long>  //TODO: Rename UserMap to AbpUserMap
+    public abstract class AbpUserMap<TTenant, TUser> : EntityMap<TUser, long>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
-        protected UserMap()
+        protected AbpUserMap()
             : base("AbpUsers")
         {
             Map(x => x.TenantId);

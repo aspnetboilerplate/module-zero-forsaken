@@ -132,8 +132,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NHibernate\Mappings\AppRoleMap.cs" />
-    <Compile Include="NHibernate\Mappings\AppUserMap.cs" />
+    <Compile Include="NHibernate\Mappings\RoleMap.cs" />
+    <Compile Include="NHibernate\Mappings\UserMap.cs" />
     <Compile Include="NHibernate\Mappings\TenantMap.cs" />
     <Compile Include="NHibernate\NHibernateTestBase.cs" />
     <Compile Include="NHibernate\Repositories\AbpProjectNameRepositoryBase.cs" />
