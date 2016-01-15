@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lt">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Vartotojui jau yra su nustatyta rolė." />
+    <text name="Identity.UserNotInRole" value="Vartotojui nėra nustatyta rolė." />
+    <text name="Identity.RoleNotFound" value="Rolė {0} neegzistuoja." />
+    <text name="Identity.PasswordMismatch" value="Blogas slaptažodis." />
+    <text name="Identity.InvalidUserName" value="Vartotojo vardas {0} yra netinkamas, jį gali sudaryti tik raidės ar skaičiai." />
+    <text name="Identity.PasswordTooShort" value="Slaptažodžiai privalo būti bent {0} simboliai." />
+    <text name="Identity.PropertyTooShort" value="{0} negali būti nenustata ar tuščia." />
+    <text name="Identity.DuplicateName" value="Vardas {0} jau yra paimtas." />
+    <text name="Identity.UserAlreadyHasPassword" value="Vartotojas jau turi nustatytą slaptažodį." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Slaptažodžiai privalo turėti bent vieną skaičių ar simbolį (ne raidę)." />
+    <text name="Identity.UserIdNotFound" value="UserId nerastas." />
+    <text name="Identity.InvalidToken" value="Blogas požymis." />
+    <text name="Identity.InvalidEmail" value="El. paštas '{0}' yra blogas." />
+    <text name="Identity.UserNameNotFound" value="Vartotojas {0} neegzistuoja." />
+    <text name="Identity.LockoutNotEnabled" value="Užrakinimas nėra įgalintas šiam vartotojui." />
+    <text name="Identity.PasswordRequireUpper" value="Slaptažodžiai privalo turėti bent vieną didžiąją raidę ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Slaptažodžiai privalo turėti bent vieną skaičių ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Slaptažodžiai privalo turėti bent vieną mažąją raidę ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="El. paštas '{0}' jau yra paimtas." />
+    <text name="Identity.ExternalLoginExists" value="Vartotojas su šiuo išoriniu prisijungimu jau egzistuoja." />
+    <text name="Identity.DefaultError" value="Įvyko nenustatyta klaida." />
+    <text name="InvalidTenancyName" value="Valdytojo pavadinimas yra blogas!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Valdytojo pavadinimas {0} jau yra paimtas." />
+    <text name="RoleNameIsAlreadyTaken" value="Rolės pavadinimas {0} jau paimtas." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Rolės rodomas pavadinimas {0} jau paimtas." />
+    <text name="CanNotDeleteStaticRole" value="Negalima ištrinti statinės rolės: {0}" />
+    <text name="CanNotRenameAdminUser" value="Negalima pervardinti vartotojo vardo {0} kadangi tai yra administratoriaus vartotojas!" />
+    <text name="CanNotDeleteAdminUser" value="Negalima ištrinti vartotojo {0} kadangi tai yra administratorius pagal nutylėjimą!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Jau egzistuoja organizacijos vienetas su pavadinimu {0}. Du vienetai su tuo pačiu pavadinimu negali būti sukurti tame pačiame lygyje." />
+  </texts>
+</localizationDictionary>
