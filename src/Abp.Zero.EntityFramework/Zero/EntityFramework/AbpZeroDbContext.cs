@@ -1,11 +1,14 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Annotations;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.EntityFramework;
 using Abp.Localization;
@@ -56,7 +59,7 @@ namespace Abp.Zero.EntityFramework
         /// Role permissions.
         /// </summary>
         public virtual IDbSet<RolePermissionSetting> RolePermissions { get; set; }
-        
+
         /// <summary>
         /// User permissions.
         /// </summary>
@@ -96,7 +99,7 @@ namespace Abp.Zero.EntityFramework
         /// Languages.
         /// </summary>
         public virtual IDbSet<ApplicationLanguage> Languages { get; set; }
-        
+
         /// <summary>
         /// LanguageTexts.
         /// </summary>
@@ -111,6 +114,11 @@ namespace Abp.Zero.EntityFramework
         /// UserOrganizationUnits.
         /// </summary>
         public virtual IDbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
+
+        /// <summary>
+        /// Background jobs.
+        /// </summary>
+        public virtual IDbSet<BackgroundJobInfo> BackgroundJobs { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -137,7 +145,30 @@ namespace Abp.Zero.EntityFramework
         protected AbpZeroDbContext(DbConnection dbConnection, bool contextOwnsConnection)
             : base(dbConnection, contextOwnsConnection)
         {
-            
+
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            #region IX_IsAbandoned_NextTryTime
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.IsAbandoned)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_IsAbandoned_NextTryTime", 1)
+                        ));
+
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.NextTryTime)
+                .HasColumnAnnotation(
+                    IndexAnnotation.AnnotationName,
+                    new IndexAnnotation(
+                        new IndexAttribute("IX_IsAbandoned_NextTryTime", 2)
+                        ));
+            #endregion
         }
     }
 }
