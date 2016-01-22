@@ -36,8 +36,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Abp, Version=0.7.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Abp.0.7.7.0\lib\net452\Abp.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\aspnetboilerplate\src\Abp\bin\Debug\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Abp.FluentMigrator, Version=0.7.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Abp.FluentMigrator.0.7.7.0\lib\net452\Abp.FluentMigrator.dll</HintPath>
@@ -137,12 +137,14 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_11_Create_Indexes_For_AbpUserOrganizationUnits.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_12_Create_Indexes_For_AbpUserRoles.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_13_Revise_Users.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20160122_01_Create_AbpBackgroundJobs_Table.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140830_01_Add_Columns_To_AbpRoles_Table.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\ApplicationLanguageMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\ApplicationLanguageTextMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\AuditLogMap.cs" />
+    <Compile Include="Zero\NHibernate\EntityMappings\BackgroundJobInfoMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\EditionFeatureSettingMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\EditionMap.cs" />
     <Compile Include="Zero\NHibernate\EntityMappings\FeatureSettingMap.cs" />
@@ -171,11 +173,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj">
-      <Project>{70D916F2-9BFF-43DA-B3F7-3E0655114D48}</Project>
+      <Project>{70d916f2-9bff-43da-b3f7-3e0655114d48}</Project>
       <Name>Abp.Zero</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
