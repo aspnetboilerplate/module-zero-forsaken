@@ -137,6 +137,7 @@
     <Compile Include="Authorization\Roles\AbpRoleManager.cs" />
     <Compile Include="MultiTenancy\TenantFeatureCacheItemInvalidator.cs" />
     <Compile Include="MultiTenancy\TenantFeatureSetting.cs" />
+    <Compile Include="Notifications\NotificationStore.cs" />
     <Compile Include="Organizations\IMustHaveOrganizationUnit.cs" />
     <Compile Include="Organizations\IMayHaveOrganizationUnit.cs" />
     <Compile Include="Organizations\OrganizationUnit.cs" />
