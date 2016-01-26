@@ -104,6 +104,7 @@
     <Compile Include="Zero\EntityFramework\AbpZeroDbContext.cs" />
     <Compile Include="Zero\EntityFramework\AbpZeroEntityFrameworkModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EntityFramework\Extensions\EntityFrameworkModelBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Zero.EntityFramework.nuspec" />

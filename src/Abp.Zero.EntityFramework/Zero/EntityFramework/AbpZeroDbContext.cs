@@ -1,7 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure.Annotations;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
@@ -11,6 +9,7 @@ using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.EntityFramework;
+using Abp.EntityFramework.Extensions;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
@@ -170,23 +169,13 @@ namespace Abp.Zero.EntityFramework
 
             #region BackgroundJobInfo.IX_IsAbandoned_NextTryTime
 
-            //TODO: Create extension methods to create indexes
-
             modelBuilder.Entity<BackgroundJobInfo>()
                 .Property(j => j.IsAbandoned)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(
-                        new IndexAttribute("IX_IsAbandoned_NextTryTime", 1)
-                        ));
+                .CreateIndex("IX_IsAbandoned_NextTryTime", 1);
 
             modelBuilder.Entity<BackgroundJobInfo>()
                 .Property(j => j.NextTryTime)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(
-                        new IndexAttribute("IX_IsAbandoned_NextTryTime", 2)
-                        ));
+                .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
             
             #endregion
 
@@ -194,35 +183,19 @@ namespace Abp.Zero.EntityFramework
 
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.NotificationName)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(
-                        new IndexAttribute("IX_NotificationName_EntityType_EntityId_UserId", 1)
-                        ));
-
+                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 1);
+            
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.EntityTypeName)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(
-                        new IndexAttribute("IX_NotificationName_EntityType_EntityId_UserId", 2)
-                        ));
+                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 2);
 
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.EntityId)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(
-                        new IndexAttribute("IX_NotificationName_EntityType_EntityId_UserId", 3)
-                        ));
+                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 3);
 
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.UserId)
-                .HasColumnAnnotation(
-                    IndexAnnotation.AnnotationName,
-                    new IndexAnnotation(
-                        new IndexAttribute("IX_NotificationName_EntityType_EntityId_UserId", 4)
-                        ));
+                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 4);
 
             #endregion
         }
