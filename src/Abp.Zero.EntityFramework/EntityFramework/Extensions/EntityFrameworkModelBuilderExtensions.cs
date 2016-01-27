@@ -7,7 +7,7 @@ namespace Abp.EntityFramework.Extensions
     //TODO: MOVE TO ABP
     //TODO: We can create simpler extension methods to create indexes
     //TODO: Check https://github.com/mj1856/EntityFramework.IndexingExtensions for example
-    public static class EntityFrameworkModelBuilderExtensions
+    internal static class EntityFrameworkModelBuilderExtensions
     {
         public static PrimitivePropertyConfiguration CreateIndex(this PrimitivePropertyConfiguration propertyConfiguration)
         {
