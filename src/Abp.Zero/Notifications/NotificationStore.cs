@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq.Extensions;
 
 namespace Abp.Notifications
 {
@@ -115,6 +117,39 @@ namespace Abp.Notifications
         public Task DeleteAllUserNotificationsAsync(long userId)
         {
             return _userNotificationRepository.DeleteAsync(un => un.UserId == userId);
+        }
+
+        [UnitOfWork]
+        public virtual Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, int skipCount, int maxResultCount)
+        {
+            var query = from userNotificationInfo in _userNotificationRepository.GetAll()
+                join notificationInfo in _notificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
+                where userNotificationInfo.UserId == userId
+                select new {userNotificationInfo, notificationInfo};
+
+            query = query.PageBy(skipCount, maxResultCount);
+
+            var list = query.ToList();
+
+            return Task.FromResult(list.Select(
+                a => new UserNotificationInfoWithNotificationInfo(a.userNotificationInfo, a.notificationInfo)
+                ).ToList());
+        }
+
+        public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(Guid userNotificationId)
+        {
+            var query = from userNotificationInfo in _userNotificationRepository.GetAll()
+                        join notificationInfo in _notificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
+                        where userNotificationInfo.Id == userNotificationId
+                        select new { userNotificationInfo, notificationInfo };
+
+            var item = query.FirstOrDefault();
+            if (item == null)
+            {
+                return Task.FromResult((UserNotificationInfoWithNotificationInfo)null);
+            }
+
+            return Task.FromResult(new UserNotificationInfoWithNotificationInfo(item.userNotificationInfo, item.notificationInfo));
         }
     }
 }
