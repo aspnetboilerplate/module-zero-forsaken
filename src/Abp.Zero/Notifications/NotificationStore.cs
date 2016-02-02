@@ -125,6 +125,7 @@ namespace Abp.Notifications
             var query = from userNotificationInfo in _userNotificationRepository.GetAll()
                 join notificationInfo in _notificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
                 where userNotificationInfo.UserId == userId
+                orderby notificationInfo.CreationTime descending 
                 select new {userNotificationInfo, notificationInfo};
 
             query = query.PageBy(skipCount, maxResultCount);

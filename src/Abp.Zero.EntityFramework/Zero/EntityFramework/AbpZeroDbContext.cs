@@ -183,19 +183,19 @@ namespace Abp.Zero.EntityFramework
 
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.NotificationName)
-                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 1);
+                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 1);
             
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.EntityTypeName)
-                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 2);
+                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 2);
 
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.EntityId)
-                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 3);
+                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 3);
 
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.UserId)
-                .CreateIndex("IX_NotificationName_EntityType_EntityId_UserId", 4);
+                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 4);
 
             #endregion
         }
