@@ -22,7 +22,7 @@ namespace Abp.Notifications
         /// Initializes a new instance of the <see cref="NotificationStore"/> class.
         /// </summary>
         public NotificationStore(
-            IRepository<NotificationInfo, Guid> notificationRepository, 
+            IRepository<NotificationInfo, Guid> notificationRepository,
             IRepository<UserNotificationInfo, Guid> userNotificationRepository,
             IRepository<NotificationSubscriptionInfo, Guid> notificationSubscriptionRepository)
         {
@@ -105,7 +105,7 @@ namespace Abp.Notifications
 
             foreach (var userNotification in userNotifications)
             {
-                userNotification.State = state;                
+                userNotification.State = state;
             }
         }
 
@@ -120,13 +120,13 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, int skipCount, int maxResultCount)
+        public virtual Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
             var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-                join notificationInfo in _notificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
-                where userNotificationInfo.UserId == userId
-                orderby notificationInfo.CreationTime descending 
-                select new {userNotificationInfo, notificationInfo};
+                        join notificationInfo in _notificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
+                        where userNotificationInfo.UserId == userId && (state == null || userNotificationInfo.State == state.Value)
+                        orderby notificationInfo.CreationTime descending
+                        select new { userNotificationInfo, notificationInfo };
 
             query = query.PageBy(skipCount, maxResultCount);
 
@@ -135,6 +135,11 @@ namespace Abp.Notifications
             return Task.FromResult(list.Select(
                 a => new UserNotificationInfoWithNotificationInfo(a.userNotificationInfo, a.notificationInfo)
                 ).ToList());
+        }
+
+        public Task<int> GetUserNotificationCountAsync(long userId, UserNotificationState? state = null)
+        {
+            return _userNotificationRepository.CountAsync(un => un.UserId == userId && (state == null || un.State == state.Value));
         }
 
         public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(Guid userNotificationId)

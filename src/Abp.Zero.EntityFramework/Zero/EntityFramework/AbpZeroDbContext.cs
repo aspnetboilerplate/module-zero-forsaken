@@ -176,15 +176,15 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<BackgroundJobInfo>()
                 .Property(j => j.NextTryTime)
                 .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
-            
+
             #endregion
 
-            #region NotificationSubscriptionInfo.IX_NotificationName_EntityType_EntityId_UserId
+            #region NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId
 
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.NotificationName)
                 .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 1);
-            
+
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.EntityTypeName)
                 .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 2);
@@ -196,6 +196,22 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<NotificationSubscriptionInfo>()
                 .Property(ns => ns.UserId)
                 .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 4);
+
+            #endregion
+
+            #region UserNotificationInfo.IX_UserId_State_CreationTime
+
+            modelBuilder.Entity<UserNotificationInfo>()
+                .Property(un => un.UserId)
+                .CreateIndex("IX_UserId_State_CreationTime", 1);
+
+            modelBuilder.Entity<UserNotificationInfo>()
+                .Property(un => un.State)
+                .CreateIndex("IX_UserId_State_CreationTime", 2);
+
+            modelBuilder.Entity<UserNotificationInfo>()
+                .Property(un => un.CreationTime)
+                .CreateIndex("IX_UserId_State_CreationTime", 2);
 
             #endregion
         }
