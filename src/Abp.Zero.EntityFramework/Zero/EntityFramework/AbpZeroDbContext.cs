@@ -211,7 +211,7 @@ namespace Abp.Zero.EntityFramework
 
             modelBuilder.Entity<UserNotificationInfo>()
                 .Property(un => un.CreationTime)
-                .CreateIndex("IX_UserId_State_CreationTime", 2);
+                .CreateIndex("IX_UserId_State_CreationTime", 3);
 
             #endregion
         }
