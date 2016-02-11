@@ -91,6 +91,7 @@ namespace Abp.Notifications
         {
             return (await _notificationSubscriptionRepository.CountAsync(s =>
                 s.UserId == userId &&
+                s.NotificationName == notificationName &&
                 s.EntityTypeName == entityTypeName &&
                 s.EntityId == entityId
                 )) > 0;
