@@ -88,6 +88,7 @@
     <Compile Include="Application\Editions\AbpEditionManager.cs" />
     <Compile Include="Authorization\Roles\AbpRoleBase.cs" />
     <Compile Include="Authorization\Roles\AbpRolePermissionCacheItemInvalidator.cs" />
+    <Compile Include="Authorization\Roles\PermissionEqualityComparer.cs" />
     <Compile Include="Authorization\Users\AbpUserBase.cs" />
     <Compile Include="Authorization\Users\AbpUserPermissionCacheItemInvalidator.cs" />
     <Compile Include="Authorization\Users\UserOrganizationUnit.cs" />
