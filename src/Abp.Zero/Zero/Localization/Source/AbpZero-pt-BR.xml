@@ -5,7 +5,7 @@
     <text name="Identity.UserNotInRole" value="Usuário não possui essa função." />
     <text name="Identity.RoleNotFound" value="Função {0} não existe." />
     <text name="Identity.PasswordMismatch" value="Senha incorreta." />
-    <text name="Identity.InvalidUserName" value="Nome de usuário {0} é inválido, pode conter apenas letras ou dígitos." />
+    <text name="Identity.InvalidUserName" value="Nome de usuário {0} é inválido, pode conter apenas caracteres alfanuméricos." />
     <text name="Identity.PasswordTooShort" value="As senhas devem ter pelo menos {0} caracteres." />
     <text name="Identity.PropertyTooShort" value="{0} não pode ser nulo ou vazio." />
     <text name="Identity.DuplicateName" value="Nome {0} já foi usado." />
@@ -25,7 +25,7 @@
     <text name="InvalidTenancyName" value="O nome da Tenancy não é válido!" />
     <text name="TenancyNameIsAlreadyTaken" value="O nome da Tenancy {0} já foi usado." />
     <text name="RoleNameIsAlreadyTaken" value="Nome da função {0} já foi usado." />
-    <text name="RoleDisplayNameIsAlreadyTaken" value="O nome de exibição da função {0} já está tomada." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="O nome de exibição da função {0} já foi usado." />
     <text name="CanNotDeleteStaticRole" value="Não é possível excluir uma função estática: {0}" />
     <text name="CanNotRenameAdminUser" value="Não é possível renomear o nome de usuário da {0} já que este é o usuário padrão do administrador!" />
     <text name="CanNotDeleteAdminUser" value="Não é possível excluir o usuário {0} já que este é o usuário padrão admin!" />
