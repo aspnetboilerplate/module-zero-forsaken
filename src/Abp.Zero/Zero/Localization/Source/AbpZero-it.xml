@@ -30,5 +30,11 @@
     <text name="CanNotRenameAdminUser" value="Impossibile rinominare l'utente {0}  è un amministratore predefinito!" />
     <text name="CanNotDeleteAdminUser" value="Impossibile cancellare l'utente {0} è un amministratore predefinito!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Esiste già un'organizzazione con il nome {0}. Due Organizzazioni con lo stesso nome a pari livello non possono essere create." />
+    <text name="Ldap_IsEnabled" value="Abilitato" />
+    <text name="Ldap_ContextType" value="Tipo Contesto" />
+    <text name="Ldap_Container" value="Contenitore" />
+    <text name="Ldap_Domain" value="Dominio" />
+    <text name="Ldap_UserName" value="Nome Utente" />
+    <text name="Ldap_Password" value="Password" />
   </texts>
 </localizationDictionary>
