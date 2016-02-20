@@ -92,6 +92,12 @@ namespace Abp.Authorization.Users
         public virtual string Surname { get; set; }
 
         /// <summary>
+        /// Return full name (Surname Name)
+        /// </summary>
+        [NotMapped]
+        public virtual string FullName => $"{this.Surname} {this.Name}";
+
+        /// <summary>
         /// Password of the user.
         /// </summary>
         [Required]
@@ -185,9 +191,5 @@ namespace Abp.Authorization.Users
         {
             return string.Format("[User {0}] {1}", Id, UserName);
         }
-        /// <summary>
-        /// Return full name (Surname Name)
-        /// </summary>
-        public virtual string FullName => $"{this.Surname} {this.Name}";
     }
 }
