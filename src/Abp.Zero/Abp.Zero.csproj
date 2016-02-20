@@ -199,7 +199,7 @@
     <EmbeddedResource Include="Zero\Localization\Source\AbpZero-lt.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Zero\Localization\Source\AbpZero-pt-BR.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-pt-BR.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
