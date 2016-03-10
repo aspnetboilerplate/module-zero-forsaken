@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
@@ -31,6 +32,17 @@ namespace Abp.Zero.SampleApp.Tests.Users
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
             loginResult.User.Name.ShouldBe("User");
             loginResult.Identity.ShouldNotBe(null);
+
+            UsingDbContext(context =>
+            {
+                context.UserLoginAttempts.Count().ShouldBe(1);
+                context.UserLoginAttempts.FirstOrDefault(a => 
+                    a.TenantId == AbpSession.TenantId &&
+                    a.UserId == loginResult.User.Id &&
+                    a.UserNameOrEmailAddress == "user1" &&
+                    a.Result == AbpLoginResultType.Success
+                    ).ShouldNotBeNull();
+            });
         }
 
         [Fact]
@@ -43,6 +55,15 @@ namespace Abp.Zero.SampleApp.Tests.Users
             loginResult.Result.ShouldBe(AbpLoginResultType.InvalidUserNameOrEmailAddress);
             loginResult.User.ShouldBe(null);
             loginResult.Identity.ShouldBe(null);
+            
+            UsingDbContext(context =>
+            {
+                context.UserLoginAttempts.Count().ShouldBe(1);
+                context.UserLoginAttempts.FirstOrDefault(a =>
+                    a.UserNameOrEmailAddress == "wrongUserName" &&
+                    a.Result == AbpLoginResultType.InvalidUserNameOrEmailAddress
+                    ).ShouldNotBeNull();
+            });
         }
 
         [Fact]

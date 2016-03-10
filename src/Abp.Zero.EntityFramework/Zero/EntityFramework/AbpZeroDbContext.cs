@@ -46,6 +46,11 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<UserLogin> UserLogins { get; set; }
 
         /// <summary>
+        /// User login attempts.
+        /// </summary>
+        public virtual IDbSet<UserLoginAttempt> UserLoginAttempts { get; set; }
+
+        /// <summary>
         /// User roles.
         /// </summary>
         public virtual IDbSet<UserRole> UserRoles { get; set; }
@@ -212,6 +217,22 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<UserNotificationInfo>()
                 .Property(un => un.CreationTime)
                 .CreateIndex("IX_UserId_State_CreationTime", 3);
+
+            #endregion
+
+            #region UserLoginAttempt.IX_TenancyName_UserNameOrEmailAddress_Result
+
+            modelBuilder.Entity<UserLoginAttempt>()
+                .Property(ula => ula.TenancyName)
+                .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 1);
+
+            modelBuilder.Entity<UserLoginAttempt>()
+                .Property(ula => ula.UserNameOrEmailAddress)
+                .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 2);
+
+            modelBuilder.Entity<UserLoginAttempt>()
+                .Property(ula => ula.Result)
+                .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 3);
 
             #endregion
         }

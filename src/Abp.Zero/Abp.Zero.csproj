@@ -92,6 +92,7 @@
     <Compile Include="Authorization\Roles\PermissionEqualityComparer.cs" />
     <Compile Include="Authorization\Users\AbpUserBase.cs" />
     <Compile Include="Authorization\Users\AbpUserPermissionCacheItemInvalidator.cs" />
+    <Compile Include="Authorization\Users\UserLoginAttempt.cs" />
     <Compile Include="Authorization\Users\UserOrganizationUnit.cs" />
     <Compile Include="BackgroundJobs\BackgroundJobStore.cs" />
     <Compile Include="Localization\ApplicationLanguage.cs" />

@@ -35,6 +35,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             loginResult.User.AuthenticationSource.ShouldBe("FakeSource");
         }
 
+        [Fact]
         public async Task Should_Fallback_To_Default_Login_Users()
         {
             var loginResult = await _userManager.LoginAsync("owner@aspnetboilerplate.com", "123qwe");

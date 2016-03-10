@@ -1,6 +1,6 @@
 namespace Abp.Authorization.Users
 {
-    public enum AbpLoginResultType
+    public enum AbpLoginResultType : byte
     {
         Success = 1,
 
