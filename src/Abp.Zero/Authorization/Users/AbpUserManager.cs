@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization.Roles;
@@ -444,28 +445,34 @@ namespace Abp.Authorization.Users
 
         private async Task SaveLoginAttempt(AbpLoginResult loginResult, string tenancyName, string userNameOrEmailAddress)
         {
-            var loginAttempt = new UserLoginAttempt
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                TenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null,
-                TenancyName = tenancyName,
+                var loginAttempt = new UserLoginAttempt
+                {
+                    TenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null,
+                    TenancyName = tenancyName,
 
-                UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
-                UserNameOrEmailAddress = userNameOrEmailAddress,
+                    UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
+                    UserNameOrEmailAddress = userNameOrEmailAddress,
 
-                Result = loginResult.Result,
-            };
+                    Result = loginResult.Result,
+                };
 
-            //TODO: We should replace this workaround with IClientInfoProvider when it's implemented in ABP (https://github.com/aspnetboilerplate/aspnetboilerplate/issues/926)
-            if (AuditInfoProvider != null)
-            {
-                var auditInfo = new AuditInfo();
-                AuditInfoProvider.Fill(auditInfo);
-                loginAttempt.BrowserInfo = auditInfo.BrowserInfo;
-                loginAttempt.ClientIpAddress = auditInfo.ClientIpAddress;
-                loginAttempt.ClientName = auditInfo.ClientName;
+                //TODO: We should replace this workaround with IClientInfoProvider when it's implemented in ABP (https://github.com/aspnetboilerplate/aspnetboilerplate/issues/926)
+                if (AuditInfoProvider != null)
+                {
+                    var auditInfo = new AuditInfo();
+                    AuditInfoProvider.Fill(auditInfo);
+                    loginAttempt.BrowserInfo = auditInfo.BrowserInfo;
+                    loginAttempt.ClientIpAddress = auditInfo.ClientIpAddress;
+                    loginAttempt.ClientName = auditInfo.ClientName;
+                }
+
+                await _userLoginAttemptRepository.InsertAsync(loginAttempt);
+
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+                await uow.CompleteAsync();
             }
-
-            await _userLoginAttemptRepository.InsertAsync(loginAttempt);
         }
 
         private async Task<bool> TryLoginFromExternalAuthenticationSources(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
