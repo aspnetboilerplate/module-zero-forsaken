@@ -414,7 +414,7 @@ namespace Abp.Authorization.Users
                     var verificationResult = new PasswordHasher().VerifyHashedPassword(user.Password, plainPassword);
                     if (verificationResult != PasswordVerificationResult.Success)
                     {
-                        return new AbpLoginResult(AbpLoginResultType.InvalidPassword, tenant);
+                        return new AbpLoginResult(AbpLoginResultType.InvalidPassword, tenant, user);
                     }
                 }
 
@@ -836,16 +836,17 @@ namespace Abp.Authorization.Users
         {
             public AbpLoginResultType Result { get; private set; }
 
-            public TTenant Tenant { get; set; }
+            public TTenant Tenant { get; private set; }
 
             public TUser User { get; private set; }
 
             public ClaimsIdentity Identity { get; private set; }
 
-            public AbpLoginResult(AbpLoginResultType result, TTenant tenant = null)
+            public AbpLoginResult(AbpLoginResultType result, TTenant tenant = null, TUser user = null)
             {
                 Result = result;
                 Tenant = tenant;
+                User = user;
             }
 
             public AbpLoginResult(TTenant tenant, TUser user, ClaimsIdentity identity)
