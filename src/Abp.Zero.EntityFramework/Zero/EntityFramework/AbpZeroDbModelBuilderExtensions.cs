@@ -51,7 +51,7 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<UserPermissionSetting>().ToTable(prefix + "Permissions");
             modelBuilder.Entity<TRole>().ToTable(prefix + "Roles");
             modelBuilder.Entity<Setting>().ToTable(prefix + "Settings");
-            modelBuilder.Entity<TTenant>().ToTable(prefix + "Tenant");
+            modelBuilder.Entity<TTenant>().ToTable(prefix + "Tenants");
             modelBuilder.Entity<UserLogin>().ToTable(prefix + "UserLogins");
             modelBuilder.Entity<UserLoginAttempt>().ToTable(prefix + "UserLoginAttempts");
             modelBuilder.Entity<UserNotificationInfo>().ToTable(prefix + "UserNotifications");
