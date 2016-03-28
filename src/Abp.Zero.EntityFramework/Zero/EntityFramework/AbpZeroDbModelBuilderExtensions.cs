@@ -28,36 +28,49 @@ namespace Abp.Zero.EntityFramework
         /// <typeparam name="TUser">The type of the user entity.</typeparam>
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
-        public static void ChangeAbpTablePrefix<TTenant,TRole,TUser>(this DbModelBuilder modelBuilder, string prefix)
+        public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this DbModelBuilder modelBuilder, string prefix, string schemaName = null)
             where TTenant : AbpTenant<TTenant, TUser>
             where TRole : AbpRole<TTenant, TUser>
             where TUser : AbpUser<TTenant, TUser>
         {
             prefix = prefix ?? "";
 
-            modelBuilder.Entity<AuditLog>().ToTable(prefix + "AuditLogs");
-            modelBuilder.Entity<BackgroundJobInfo>().ToTable(prefix + "BackgroundJobs");
-            modelBuilder.Entity<Edition>().ToTable(prefix + "Editions");
-            modelBuilder.Entity<FeatureSetting>().ToTable(prefix + "Features");
-            modelBuilder.Entity<TenantFeatureSetting>().ToTable(prefix + "Features");
-            modelBuilder.Entity<EditionFeatureSetting>().ToTable(prefix + "Features");
-            modelBuilder.Entity<ApplicationLanguage>().ToTable(prefix + "Languages");
-            modelBuilder.Entity<ApplicationLanguageText>().ToTable(prefix + "LanguageTexts");
-            modelBuilder.Entity<NotificationInfo>().ToTable(prefix + "Notifications");
-            modelBuilder.Entity<NotificationSubscriptionInfo>().ToTable(prefix + "NotificationSubscriptions");
-            modelBuilder.Entity<OrganizationUnit>().ToTable(prefix + "OrganizationUnits");
-            modelBuilder.Entity<PermissionSetting>().ToTable(prefix + "Permissions");
-            modelBuilder.Entity<RolePermissionSetting>().ToTable(prefix + "Permissions");
-            modelBuilder.Entity<UserPermissionSetting>().ToTable(prefix + "Permissions");
-            modelBuilder.Entity<TRole>().ToTable(prefix + "Roles");
-            modelBuilder.Entity<Setting>().ToTable(prefix + "Settings");
-            modelBuilder.Entity<TTenant>().ToTable(prefix + "Tenants");
-            modelBuilder.Entity<UserLogin>().ToTable(prefix + "UserLogins");
-            modelBuilder.Entity<UserLoginAttempt>().ToTable(prefix + "UserLoginAttempts");
-            modelBuilder.Entity<UserNotificationInfo>().ToTable(prefix + "UserNotifications");
-            modelBuilder.Entity<UserOrganizationUnit>().ToTable(prefix + "UserOrganizationUnits");
-            modelBuilder.Entity<UserRole>().ToTable(prefix + "UserRoles");
-            modelBuilder.Entity<TUser>().ToTable(prefix + "Users");
+            SetTableName<AuditLog>(modelBuilder, prefix + "AuditLogs", schemaName);
+            SetTableName<BackgroundJobInfo>(modelBuilder, prefix + "BackgroundJobs", schemaName);
+            SetTableName<Edition>(modelBuilder, prefix + "Editions", schemaName);
+            SetTableName<FeatureSetting>(modelBuilder, prefix + "Features", schemaName);
+            SetTableName<TenantFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
+            SetTableName<EditionFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
+            SetTableName<ApplicationLanguage>(modelBuilder, prefix + "Languages", schemaName);
+            SetTableName<ApplicationLanguageText>(modelBuilder, prefix + "LanguageTexts", schemaName);
+            SetTableName<NotificationInfo>(modelBuilder, prefix + "Notifications", schemaName);
+            SetTableName<NotificationSubscriptionInfo>(modelBuilder, prefix + "NotificationSubscriptions", schemaName);
+            SetTableName<OrganizationUnit>(modelBuilder, prefix + "OrganizationUnits", schemaName);
+            SetTableName<PermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
+            SetTableName<RolePermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
+            SetTableName<UserPermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
+            SetTableName<TRole>(modelBuilder, prefix + "Roles", schemaName);
+            SetTableName<Setting>(modelBuilder, prefix + "Settings", schemaName);
+            SetTableName<TTenant>(modelBuilder, prefix + "Tenants", schemaName);
+            SetTableName<UserLogin>(modelBuilder, prefix + "UserLogins", schemaName);
+            SetTableName<UserLoginAttempt>(modelBuilder, prefix + "UserLoginAttempts", schemaName);
+            SetTableName<UserNotificationInfo>(modelBuilder, prefix + "UserNotifications", schemaName);
+            SetTableName<UserOrganizationUnit>(modelBuilder, prefix + "UserOrganizationUnits", schemaName);
+            SetTableName<UserRole>(modelBuilder, prefix + "UserRoles", schemaName);
+            SetTableName<TUser>(modelBuilder, prefix + "Users", schemaName);
+        }
+
+        private static void SetTableName<TEntity>(DbModelBuilder modelBuilder, string tableName, string schemaName)
+            where TEntity : class
+        {
+            if (schemaName == null)
+            {
+                modelBuilder.Entity<TEntity>().ToTable(tableName);
+            }
+            else
+            {
+                modelBuilder.Entity<TEntity>().ToTable(tableName, schemaName);                
+            }
         }
     }
 }
