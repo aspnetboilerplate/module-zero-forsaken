@@ -235,6 +235,18 @@ namespace Abp.Zero.EntityFramework
                 .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 3);
 
             #endregion
+
+            #region UserLoginAttempt.IX_UserId_TenantId
+
+            modelBuilder.Entity<UserLoginAttempt>()
+                .Property(ula => ula.UserId)
+                .CreateIndex("IX_UserId_TenantId", 1);
+
+            modelBuilder.Entity<UserLoginAttempt>()
+                .Property(ula => ula.TenantId)
+                .CreateIndex("IX_UserId_TenantId", 2);
+
+            #endregion
         }
     }
 }
