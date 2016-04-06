@@ -8,10 +8,10 @@ namespace Abp.Zero.SampleApp.Editions
     {
         public EditionManager(
             IRepository<Edition> editionRepository,
-            IRepository<EditionFeatureSetting, long> editionFeatureRepository)
+            IAbpZeroFeatureValueStore featureValueStore)
             : base(
                editionRepository,
-               editionFeatureRepository)
+               featureValueStore)
         {
         }
     }

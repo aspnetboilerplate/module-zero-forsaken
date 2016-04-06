@@ -40,17 +40,21 @@ namespace Abp.MultiTenancy
 
         public ICacheManager CacheManager { get; set; }
 
+        public IFeatureManager FeatureManager { get; set; }
+
         protected IRepository<TTenant> TenantRepository { get; set; }
 
         protected IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
 
-        public IFeatureManager FeatureManager { get; set; }
+        private readonly IAbpZeroFeatureValueStore _featureValueStore;
 
         protected AbpTenantManager(
             IRepository<TTenant> tenantRepository, 
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
-            AbpEditionManager editionManager)
+            AbpEditionManager editionManager,
+            IAbpZeroFeatureValueStore featureValueStore)
         {
+            _featureValueStore = featureValueStore;
             TenantRepository = tenantRepository;
             TenantFeatureRepository = tenantFeatureRepository;
             EditionManager = editionManager;
@@ -114,25 +118,9 @@ namespace Abp.MultiTenancy
             return IdentityResult.Success;
         }
 
-        public async Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
+        public Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
         {
-            var cacheItem = await GetTenantFeatureCacheItemAsync(tenantId);
-            var value = cacheItem.FeatureValues.GetOrDefault(featureName);
-            if (value != null)
-            {
-                return value;
-            }
-
-            if (cacheItem.EditionId.HasValue)
-            {
-                value = await EditionManager.GetFeatureValueOrNullAsync(cacheItem.EditionId.Value, featureName);
-                if (value != null)
-                {
-                    return value;
-                }
-            }
-
-            return null;
+            return _featureValueStore.GetValueOrNullAsync(tenantId, featureName);
         }
 
         public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int tenantId)
@@ -225,24 +213,6 @@ namespace Abp.MultiTenancy
         public async Task ResetAllFeaturesAsync(int tenantId)
         {
             await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
-        }
-
-        private async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
-        {
-            return await CacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
-            {
-                var tenant = await GetByIdAsync(tenantId);
-
-                var newCacheItem = new TenantFeatureCacheItem { EditionId = tenant.EditionId };
-
-                var featureSettings = await TenantFeatureRepository.GetAllListAsync(f => f.TenantId == tenantId);
-                foreach (var featureSetting in featureSettings)
-                {
-                    newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
-                }
-
-                return newCacheItem;
-            });
         }
 
         protected virtual async Task<IdentityResult> ValidateTenantAsync(TTenant tenant)

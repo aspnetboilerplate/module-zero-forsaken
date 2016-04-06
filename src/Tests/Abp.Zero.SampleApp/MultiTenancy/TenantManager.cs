@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Application.Features;
+using Abp.Domain.Repositories;
 using Abp.MultiTenancy;
 using Abp.Zero.SampleApp.Editions;
 using Abp.Zero.SampleApp.Roles;
@@ -11,8 +12,9 @@ namespace Abp.Zero.SampleApp.MultiTenancy
         public TenantManager(
             IRepository<Tenant> tenantRepository,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
-            EditionManager editionManager) :
-            base(tenantRepository, tenantFeatureRepository, editionManager)
+            EditionManager editionManager,
+            IAbpZeroFeatureValueStore featureValueStore) :
+            base(tenantRepository, tenantFeatureRepository, editionManager, featureValueStore)
         {
         }
     }

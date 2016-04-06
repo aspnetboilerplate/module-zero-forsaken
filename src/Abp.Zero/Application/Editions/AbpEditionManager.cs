@@ -17,6 +17,7 @@ namespace Abp.Application.Editions
         IEventHandler<EntityChangedEventData<Edition>>,
         IEventHandler<EntityChangedEventData<EditionFeatureSetting>>
     {
+        private readonly IAbpZeroFeatureValueStore _featureValueStore;
         public IQueryable<Edition> Editions { get { return EditionRepository.GetAll(); } }
 
         public ICacheManager CacheManager { get; set; }
@@ -25,52 +26,23 @@ namespace Abp.Application.Editions
 
         protected IRepository<Edition> EditionRepository { get; set; }
 
-        protected IRepository<EditionFeatureSetting, long> EditionFeatureRepository { get; set; }
-
         protected AbpEditionManager(
             IRepository<Edition> editionRepository,
-            IRepository<EditionFeatureSetting, long> editionFeatureRepository
-            )
+            IAbpZeroFeatureValueStore featureValueStore)
         {
+            _featureValueStore = featureValueStore;
             EditionRepository = editionRepository;
-            EditionFeatureRepository = editionFeatureRepository;
         }
 
-        public virtual async Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)
+        public virtual Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)
         {
-            var cacheItem = await GetEditionFeatureCacheItemAsync(editionId);
-            return cacheItem.FeatureValues.GetOrDefault(featureName);
+            return _featureValueStore.GetEditionValueOrNullAsync(editionId, featureName);
         }
 
         [UnitOfWork]
-        public virtual async Task SetFeatureValueAsync(int editionId, string featureName, string value)
+        public virtual Task SetFeatureValueAsync(int editionId, string featureName, string value)
         {
-            if (await GetFeatureValueOrNullAsync(editionId, featureName) == value)
-            {
-                return;
-            }
-
-            var currentSetting = await EditionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
-
-            var feature = FeatureManager.GetOrNull(featureName);
-            if (feature == null || feature.DefaultValue == value)
-            {
-                if (currentSetting != null)
-                {
-                    await EditionFeatureRepository.DeleteAsync(currentSetting);
-                }
-
-                return;
-            }
-
-            if (currentSetting == null)
-            {
-                await EditionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
-            }
-            else
-            {
-                currentSetting.Value = value;
-            }
+            return _featureValueStore.SetEditionFeatureValueAsync(editionId, featureName, value);
         }
 
         public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int editionId)
@@ -136,29 +108,6 @@ namespace Abp.Application.Editions
             }
 
             CacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
-        }
-
-        protected virtual async Task<EditionfeatureCacheItem> GetEditionFeatureCacheItemAsync(int editionId)
-        {
-            return await CacheManager
-                .GetEditionFeatureCache()
-                .GetAsync(
-                    editionId,
-                    async () => await CreateEditionFeatureCacheItem(editionId)
-                );
-        }
-
-        protected virtual async Task<EditionfeatureCacheItem> CreateEditionFeatureCacheItem(int editionId)
-        {
-            var newCacheItem = new EditionfeatureCacheItem();
-
-            var featureSettings = await EditionFeatureRepository.GetAllListAsync(f => f.EditionId == editionId);
-            foreach (var featureSetting in featureSettings)
-            {
-                newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
-            }
-
-            return newCacheItem;
         }
     }
 }

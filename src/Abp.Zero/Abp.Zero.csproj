@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Application\Editions\EditionfeatureCacheItem.cs" />
     <Compile Include="Application\Editions\AbpEditionManager.cs" />
+    <Compile Include="Application\Features\IAbpZeroFeatureValueStore.cs" />
     <Compile Include="Authorization\Roles\AbpRoleBase.cs" />
     <Compile Include="Authorization\Roles\AbpRolePermissionCacheItemInvalidator.cs" />
     <Compile Include="Authorization\Roles\PermissionEqualityComparer.cs" />
