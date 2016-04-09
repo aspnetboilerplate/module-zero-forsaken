@@ -19,8 +19,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
         protected AbpRoleMap()
             : base("AbpRoles")
         {
-            References(x => x.Tenant).Column("TenantId").Nullable();
-            
+            Map(x => x.TenantId);
             Map(x => x.Name);
             Map(x => x.DisplayName);
             Map(x => x.IsStatic);

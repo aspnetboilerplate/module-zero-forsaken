@@ -18,7 +18,7 @@ namespace Abp.Authorization.Roles
     /// Non-static (dynamic) roles can be added/removed by users and we can not know their name while coding.
     /// A user can have multiple roles. Thus, user will have all permissions of all assigned roles.
     /// </remarks>
-    public class AbpRole<TTenant, TUser> : AbpRoleBase, IFullAudited<TUser>, IAudited<TUser>, IMayHaveTenant<TTenant, TUser>
+    public class AbpRole<TTenant, TUser> : AbpRoleBase, IFullAudited<TUser>
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
@@ -26,12 +26,6 @@ namespace Abp.Authorization.Roles
         /// Maximum length of the <see cref="DisplayName"/> property.
         /// </summary>
         public const int MaxDisplayNameLength = 64;
-
-        /// <summary>
-        /// The Tenant, if this role is a tenant-level role.
-        /// </summary>
-        [ForeignKey("TenantId")]
-        public virtual TTenant Tenant { get; set; }
 
         /// <summary>
         /// Display name of this role.

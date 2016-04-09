@@ -10,7 +10,7 @@ namespace Abp.MultiTenancy
         /// <summary>
         /// Tenant's Id.
         /// </summary>
-        public virtual int TenantId { get; set; }
+        public virtual int TenantId { get; set; } //TODO@Halil: Should use IMustHaveTenant and use uow filters to get tenant features
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TenantFeatureSetting"/> class.
