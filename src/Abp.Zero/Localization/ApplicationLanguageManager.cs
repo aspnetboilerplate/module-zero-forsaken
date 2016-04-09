@@ -72,7 +72,7 @@ namespace Abp.Localization
                 throw new AbpException("There is already a language with name = " + language.Name); //TODO: LOCALIZE?
             }
 
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
             {
                 await _languageRepository.InsertAsync(language);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace Abp.Localization
                 throw new AbpException("Can not delete a host language from tenant!"); //TODO: LOCALIZE?
             }
 
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.SetTenantId(currentLanguage.TenantId))
             {
                 await _languageRepository.DeleteAsync(currentLanguage.Id);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
@@ -126,7 +126,7 @@ namespace Abp.Localization
                 throw new AbpException("Can not update a host language from tenant"); //TODO: LOCALIZE
             }
 
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
             {
                 await _languageRepository.UpdateAsync(language);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
@@ -199,7 +199,7 @@ namespace Abp.Localization
         [UnitOfWork]
         protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguagesFromDatabaseAsync(int? tenantId)
         {
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return (await _languageRepository.GetAllListAsync(l => l.TenantId == tenantId)).ToDictionary(l => l.Name);
             }

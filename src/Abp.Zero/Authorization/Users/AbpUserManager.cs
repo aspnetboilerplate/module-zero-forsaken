@@ -347,9 +347,10 @@ namespace Abp.Authorization.Users
                 }
             }
 
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            int? tenantId = tenant == null ? (int?) null : tenant.Id;
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var user = await AbpStore.FindAsync(tenant == null ? (int?)null : tenant.Id, login);
+                var user = await AbpStore.FindAsync(tenantId, login);
                 if (user == null)
                 {
                     return new AbpLoginResult(AbpLoginResultType.UnknownExternalLogin, tenant);
@@ -399,11 +400,12 @@ namespace Abp.Authorization.Users
                 }
             }
 
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            var tenantId = tenant == null ? (int?) null : tenant.Id;
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var loggedInFromExternalSource = await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant);
 
-                var user = await AbpStore.FindByNameOrEmailAsync(tenant == null ? (int?)null : tenant.Id, userNameOrEmailAddress);
+                var user = await AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
                 if (user == null)
                 {
                     return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress, tenant);
@@ -495,7 +497,7 @@ namespace Abp.Authorization.Users
                         {
                             user = await source.Object.CreateUserAsync(userNameOrEmailAddress, tenant);
 
-                            user.Tenant = tenant;
+                            user.TenantId = tenant == null ? (int?)null : tenant.Id;
                             user.AuthenticationSource = source.Object.Name;
                             user.Password = new PasswordHasher().HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 

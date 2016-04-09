@@ -62,7 +62,7 @@ namespace Abp.Localization
         [UnitOfWork]
         public virtual async Task UpdateStringAsync(int? tenantId, string sourceName, CultureInfo culture, string key, string value)
         {
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var existingEntity = await _applicationTextRepository.FirstOrDefaultAsync(t =>
                     t.TenantId == tenantId &&

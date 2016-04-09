@@ -14,7 +14,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
             context.Users.Add(
                 new User
                 {
-                    Tenant = null, //Tenancy owner
                     UserName = "userOwner",
                     Name = "Owner",
                     Surname = "One",
@@ -26,7 +25,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             context.Users.Add(
                 new User
                 {
-                    Tenant = defaultTenant, //A user of tenant1
+                    TenantId = defaultTenant.Id, //A user of tenant1
                     UserName = "user1",
                     Name = "User",
                     Surname = "One",

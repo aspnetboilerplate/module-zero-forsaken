@@ -88,7 +88,7 @@ namespace Abp.Authorization.Users
         }
 
         /// <summary>
-        /// Tries to find a user with user name or email address.
+        /// Tries to find a user with user name or email address in current tenant.
         /// </summary>
         /// <param name="userNameOrEmailAddress">User name or email address</param>
         /// <returns>User or null</returns>
@@ -100,7 +100,7 @@ namespace Abp.Authorization.Users
         }
 
         /// <summary>
-        /// Tries to find a user with user name or email address.
+        /// Tries to find a user with user name or email address in given tenant.
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNameOrEmailAddress">User name or email address</param>
@@ -108,13 +108,9 @@ namespace Abp.Authorization.Users
         [UnitOfWork]
         public virtual async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
         {
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return await _userRepository.FirstOrDefaultAsync(
-                    user =>
-                        user.TenantId == tenantId &&
-                        (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
-                    );
+                return await FindByNameOrEmailAsync(userNameOrEmailAddress);
             }
         }
 
