@@ -13,7 +13,7 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser<TTenant, TUser> : AbpUserBase, IFullAudited<TUser>, IAudited<TUser>, IMayHaveTenant<TTenant, TUser>, IPassivable
+    public class AbpUser<TTenant, TUser> : AbpUserBase, IFullAudited<TUser>, IPassivable
         where TTenant : AbpTenant<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
@@ -62,12 +62,6 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="AuthenticationSource"/> property.
         /// </summary>
         public const int MaxAuthenticationSourceLength = 64;
-
-        /// <summary>
-        /// Tenant of this user.
-        /// </summary>
-        [ForeignKey("TenantId")]
-        public virtual TTenant Tenant { get; set; }
 
         /// <summary>
         /// Authorization source name.
