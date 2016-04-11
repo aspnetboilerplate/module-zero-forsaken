@@ -1,16 +1,17 @@
 ﻿using Abp.Application.Features;
+using Abp.Domain.Entities;
 
 namespace Abp.MultiTenancy
 {
     /// <summary>
     /// Feature setting for a Tenant (<see cref="AbpTenant{TTenant,TUser}"/>).
     /// </summary>
-    public class TenantFeatureSetting : FeatureSetting
+    public class TenantFeatureSetting : FeatureSetting, IMustHaveTenant
     {
         /// <summary>
         /// Tenant's Id.
         /// </summary>
-        public virtual int TenantId { get; set; } //TODO@Halil: Should use IMustHaveTenant and use uow filters to get tenant features
+        public virtual int TenantId { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TenantFeatureSetting"/> class.

@@ -65,7 +65,6 @@ namespace Abp.Localization
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var existingEntity = await _applicationTextRepository.FirstOrDefaultAsync(t =>
-                    t.TenantId == tenantId &&
                     t.Source == sourceName &&
                     t.LanguageName == culture.Name &&
                     t.Key == key

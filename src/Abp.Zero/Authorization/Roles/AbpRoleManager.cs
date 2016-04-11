@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Domain.Services;
+using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -50,6 +50,7 @@ namespace Abp.Authorization.Roles
 
         private readonly IPermissionManager _permissionManager;
         private readonly ICacheManager _cacheManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
@@ -58,11 +59,13 @@ namespace Abp.Authorization.Roles
             AbpRoleStore<TTenant, TRole, TUser> store,
             IPermissionManager permissionManager,
             IRoleManagementConfig roleManagementConfig,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(store)
         {
             _permissionManager = permissionManager;
             _cacheManager = cacheManager;
+            _unitOfWorkManager = unitOfWorkManager;
 
             RoleManagementConfig = roleManagementConfig;
             AbpStore = store;
@@ -234,12 +237,12 @@ namespace Abp.Authorization.Roles
             var oldPermissions = await GetGrantedPermissionsAsync(role);
             var newPermissions = permissions.ToArray();
 
-            foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p, new PermissionEqualityComparer())))
+            foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p, PermissionEqualityComparer.Instance)))
             {
                 await ProhibitPermissionAsync(role, permission);
             }
 
-            foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p, new PermissionEqualityComparer())))
+            foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p, PermissionEqualityComparer.Instance)))
             {
                 await GrantPermissionAsync(role, permission);
             }
@@ -399,24 +402,28 @@ namespace Abp.Authorization.Roles
             await SetGrantedPermissionsAsync(role, permissions);
         }
 
+        [UnitOfWork]
         public virtual async Task<IdentityResult> CreateStaticRoles(int tenantId)
         {
             var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
 
-            foreach (var staticRoleDefinition in staticRoleDefinitions)
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var role = new TRole
+                foreach (var staticRoleDefinition in staticRoleDefinitions)
                 {
-                    TenantId = tenantId,
-                    Name = staticRoleDefinition.RoleName,
-                    DisplayName = staticRoleDefinition.RoleName,
-                    IsStatic = true
-                };
+                    var role = new TRole
+                    {
+                        TenantId = tenantId,
+                        Name = staticRoleDefinition.RoleName,
+                        DisplayName = staticRoleDefinition.RoleName,
+                        IsStatic = true
+                    };
 
-                var identityResult = await CreateAsync(role);
-                if (!identityResult.Succeeded)
-                {
-                    return identityResult;
+                    var identityResult = await CreateAsync(role);
+                    if (!identityResult.Succeeded)
+                    {
+                        return identityResult;
+                    }
                 }
             }
 

@@ -8,7 +8,6 @@ namespace Abp.Authorization.Roles
     public class AbpRolePermissionCacheItemInvalidator :
         IEventHandler<EntityChangedEventData<RolePermissionSetting>>,
         IEventHandler<EntityDeletedEventData<AbpRoleBase>>,
-
         ITransientDependency
     {
         private readonly ICacheManager _cacheManager;

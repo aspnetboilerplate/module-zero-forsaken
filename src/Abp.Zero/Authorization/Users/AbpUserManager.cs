@@ -449,30 +449,34 @@ namespace Abp.Authorization.Users
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                var loginAttempt = new UserLoginAttempt
+                var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?) null;
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    TenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null,
-                    TenancyName = tenancyName,
+                    var loginAttempt = new UserLoginAttempt
+                    {
+                        TenantId = tenantId,
+                        TenancyName = tenancyName,
 
-                    UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
-                    UserNameOrEmailAddress = userNameOrEmailAddress,
+                        UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
+                        UserNameOrEmailAddress = userNameOrEmailAddress,
 
-                    Result = loginResult.Result,
-                };
+                        Result = loginResult.Result,
+                    };
 
-                //TODO: We should replace this workaround with IClientInfoProvider when it's implemented in ABP (https://github.com/aspnetboilerplate/aspnetboilerplate/issues/926)
-                if (AuditInfoProvider != null)
-                {
-                    var auditInfo = new AuditInfo();
-                    AuditInfoProvider.Fill(auditInfo);
-                    loginAttempt.BrowserInfo = auditInfo.BrowserInfo;
-                    loginAttempt.ClientIpAddress = auditInfo.ClientIpAddress;
-                    loginAttempt.ClientName = auditInfo.ClientName;
+                    //TODO: We should replace this workaround with IClientInfoProvider when it's implemented in ABP (https://github.com/aspnetboilerplate/aspnetboilerplate/issues/926)
+                    if (AuditInfoProvider != null)
+                    {
+                        var auditInfo = new AuditInfo();
+                        AuditInfoProvider.Fill(auditInfo);
+                        loginAttempt.BrowserInfo = auditInfo.BrowserInfo;
+                        loginAttempt.ClientIpAddress = auditInfo.ClientIpAddress;
+                        loginAttempt.ClientName = auditInfo.ClientName;
+                    }
+
+                    await _userLoginAttemptRepository.InsertAsync(loginAttempt);
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
 
-                await _userLoginAttemptRepository.InsertAsync(loginAttempt);
-
-                await _unitOfWorkManager.Current.SaveChangesAsync();
                 await uow.CompleteAsync();
             }
         }
@@ -491,36 +495,38 @@ namespace Abp.Authorization.Users
                     if (await source.Object.TryAuthenticateAsync(userNameOrEmailAddress, plainPassword, tenant))
                     {
                         var tenantId = tenant == null ? (int?)null : tenant.Id;
-
-                        var user = await AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
-                        if (user == null)
+                        using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                         {
-                            user = await source.Object.CreateUserAsync(userNameOrEmailAddress, tenant);
-
-                            user.TenantId = tenant == null ? (int?)null : tenant.Id;
-                            user.AuthenticationSource = source.Object.Name;
-                            user.Password = new PasswordHasher().HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
-
-                            user.Roles = new List<UserRole>();
-                            foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
+                            var user = await AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
+                            if (user == null)
                             {
-                                user.Roles.Add(new UserRole { RoleId = defaultRole.Id });
+                                user = await source.Object.CreateUserAsync(userNameOrEmailAddress, tenant);
+
+                                user.TenantId = tenantId;
+                                user.AuthenticationSource = source.Object.Name;
+                                user.Password = new PasswordHasher().HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
+
+                                user.Roles = new List<UserRole>();
+                                foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
+                                {
+                                    user.Roles.Add(new UserRole { RoleId = defaultRole.Id });
+                                }
+
+                                await Store.CreateAsync(user);
+                            }
+                            else
+                            {
+                                await source.Object.UpdateUserAsync(user, tenant);
+
+                                user.AuthenticationSource = source.Object.Name;
+
+                                await Store.UpdateAsync(user);
                             }
 
-                            await Store.CreateAsync(user);
+                            await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                            return true;
                         }
-                        else
-                        {
-                            await source.Object.UpdateUserAsync(user, tenant);
-
-                            user.AuthenticationSource = source.Object.Name;
-
-                            await Store.UpdateAsync(user);
-                        }
-
-                        await _unitOfWorkManager.Current.SaveChangesAsync();
-
-                        return true;
                     }
                 }
             }

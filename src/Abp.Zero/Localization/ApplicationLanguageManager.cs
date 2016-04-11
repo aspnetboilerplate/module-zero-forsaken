@@ -201,7 +201,7 @@ namespace Abp.Localization
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return (await _languageRepository.GetAllListAsync(l => l.TenantId == tenantId)).ToDictionary(l => l.Name);
+                return (await _languageRepository.GetAllListAsync()).ToDictionary(l => l.Name);
             }
         }
     }

@@ -7,6 +7,9 @@ namespace Abp.Authorization.Roles
     /// </summary>
     internal class PermissionEqualityComparer : IEqualityComparer<Permission>
     {
+        public static PermissionEqualityComparer Instance { get { return _instance; } }
+        private static PermissionEqualityComparer _instance = new PermissionEqualityComparer();
+
         public bool Equals(Permission x, Permission y)
         {
             if (x == null && y == null)

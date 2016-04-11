@@ -206,12 +206,15 @@ namespace Abp.Authorization.Users
 
         public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
         {
-            var query = from userLogin in _userLoginRepository.GetAll()
-                join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-                where user.TenantId == tenantId && userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-                select user;
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                var query = from userLogin in _userLoginRepository.GetAll()
+                            join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                            where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                            select user;
 
-            return Task.FromResult(query.FirstOrDefault());
+                return Task.FromResult(query.FirstOrDefault());
+            }
         }
 
         public virtual async Task AddToRoleAsync(TUser user, string roleName)
@@ -304,8 +307,6 @@ namespace Abp.Authorization.Users
         {
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
         }
-
-
 
         public virtual void Dispose()
         {
