@@ -5,7 +5,6 @@ using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -13,19 +12,18 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Implements 'User Store' of ASP.NET Identity Framework.
     /// </summary>
-    public abstract class AbpUserStore<TTenant, TRole, TUser> :
+    public abstract class AbpUserStore<TRole, TUser> :
         IUserPasswordStore<TUser, long>,
         IUserEmailStore<TUser, long>,
         IUserLoginStore<TUser, long>,
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
-        IUserPermissionStore<TTenant, TUser>,
+        IUserPermissionStore<TUser>,
         
         ITransientDependency
 
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         private readonly IRepository<TUser, long> _userRepository;
         private readonly IRepository<UserLogin, long> _userLoginRepository;

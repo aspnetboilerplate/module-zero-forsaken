@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Authorization.Users;
 using Abp.Domain.Entities.Auditing;
-using Abp.MultiTenancy;
 
 namespace Abp.Authorization.Roles
 {
@@ -18,9 +17,8 @@ namespace Abp.Authorization.Roles
     /// Non-static (dynamic) roles can be added/removed by users and we can not know their name while coding.
     /// A user can have multiple roles. Thus, user will have all permissions of all assigned roles.
     /// </remarks>
-    public class AbpRole<TTenant, TUser> : AbpRoleBase, IFullAudited<TUser>
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+    public class AbpRole<TUser> : AbpRoleBase, IFullAudited<TUser>
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// Maximum length of the <see cref="DisplayName"/> property.

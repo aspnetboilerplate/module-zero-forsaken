@@ -15,9 +15,9 @@ namespace Abp.Application.Features
     /// Implements <see cref="IFeatureValueStore"/>.
     /// </summary>
     public abstract class AbpFeatureValueStore<TTenant, TRole, TUser> : IAbpZeroFeatureValueStore, ITransientDependency 
-        where TTenant : AbpTenant<TTenant, TUser> 
-        where TRole : AbpRole<TTenant, TUser> 
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser> 
+        where TRole : AbpRole<TUser> 
+        where TUser : AbpUser<TUser>
     {
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;

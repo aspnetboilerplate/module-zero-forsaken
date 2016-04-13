@@ -35,20 +35,20 @@ namespace Abp.Authorization.Users
     public abstract class AbpUserManager<TTenant, TRole, TUser>
         : UserManager<TUser, long>,
         IDomainService
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>, new()
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TRole : AbpRole<TUser>, new()
+        where TUser : AbpUser<TUser>
     {
-        private IUserPermissionStore<TTenant, TUser> UserPermissionStore
+        private IUserPermissionStore<TUser> UserPermissionStore
         {
             get
             {
-                if (!(Store is IUserPermissionStore<TTenant, TUser>))
+                if (!(Store is IUserPermissionStore<TUser>))
                 {
                     throw new AbpException("Store is not IUserPermissionStore");
                 }
 
-                return Store as IUserPermissionStore<TTenant, TUser>;
+                return Store as IUserPermissionStore<TUser>;
             }
         }
 
@@ -64,7 +64,7 @@ namespace Abp.Authorization.Users
 
         protected ISettingManager SettingManager { get; private set; }
 
-        protected AbpUserStore<TTenant, TRole, TUser> AbpStore { get; private set; }
+        protected AbpUserStore<TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -79,7 +79,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserLoginAttempt, long> _userLoginAttemptRepository;
 
         protected AbpUserManager(
-            AbpUserStore<TTenant, TRole, TUser> userStore,
+            AbpUserStore<TRole, TUser> userStore,
             AbpRoleManager<TTenant, TRole, TUser> roleManager,
             IRepository<TTenant> tenantRepository,
             IMultiTenancyConfig multiTenancyConfig,
@@ -572,9 +572,9 @@ namespace Abp.Authorization.Users
             }
 
             var oldUserName = (await GetUserByIdAsync(user.Id)).UserName;
-            if (oldUserName == AbpUser<TTenant, TUser>.AdminUserName && user.UserName != AbpUser<TTenant, TUser>.AdminUserName)
+            if (oldUserName == AbpUser<TUser>.AdminUserName && user.UserName != AbpUser<TUser>.AdminUserName)
             {
-                return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"), AbpUser<TTenant, TUser>.AdminUserName));
+                return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"), AbpUser<TUser>.AdminUserName));
             }
 
             return await base.UpdateAsync(user);
@@ -582,9 +582,9 @@ namespace Abp.Authorization.Users
 
         public async override Task<IdentityResult> DeleteAsync(TUser user)
         {
-            if (user.UserName == AbpUser<TTenant, TUser>.AdminUserName)
+            if (user.UserName == AbpUser<TUser>.AdminUserName)
             {
-                return AbpIdentityResult.Failed(string.Format(L("CanNotDeleteAdminUser"), AbpUser<TTenant, TUser>.AdminUserName));
+                return AbpIdentityResult.Failed(string.Format(L("CanNotDeleteAdminUser"), AbpUser<TUser>.AdminUserName));
             }
 
             return await base.DeleteAsync(user);
@@ -799,7 +799,7 @@ namespace Abp.Authorization.Users
 
         private async Task<TTenant> GetDefaultTenantAsync()
         {
-            var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenant<TTenant, TUser>.DefaultTenantName);
+            var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenant<TUser>.DefaultTenantName);
             if (tenant == null)
             {
                 throw new AbpException("There should be a 'Default' tenant if multi-tenancy is disabled!");

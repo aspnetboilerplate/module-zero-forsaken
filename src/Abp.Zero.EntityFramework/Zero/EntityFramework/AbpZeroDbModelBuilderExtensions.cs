@@ -29,9 +29,9 @@ namespace Abp.Zero.EntityFramework
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
         public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this DbModelBuilder modelBuilder, string prefix, string schemaName = null)
-            where TTenant : AbpTenant<TTenant, TUser>
-            where TRole : AbpRole<TTenant, TUser>
-            where TUser : AbpUser<TTenant, TUser>
+            where TTenant : AbpTenant<TUser>
+            where TRole : AbpRole<TUser>
+            where TUser : AbpUser<TUser>
         {
             prefix = prefix ?? "";
 

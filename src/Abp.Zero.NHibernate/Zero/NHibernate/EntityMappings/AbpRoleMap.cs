@@ -8,10 +8,9 @@ namespace Abp.Zero.NHibernate.EntityMappings
     /// <summary>
     /// Base class for role mapping.
     /// </summary>
-    public abstract class AbpRoleMap<TTenant, TRole, TUser> : EntityMap<TRole>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+    public abstract class AbpRoleMap<TRole, TUser> : EntityMap<TRole>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// Constructor.

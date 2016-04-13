@@ -23,9 +23,9 @@ namespace Abp.Authorization.Roles
     public abstract class AbpRoleManager<TTenant, TRole, TUser>
         : RoleManager<TRole, int>,
         IDomainService
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>, new()
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TRole : AbpRole<TUser>, new()
+        where TUser : AbpUser<TUser>
     {
         public ILocalizationManager LocalizationManager { get; set; }
 
@@ -33,20 +33,20 @@ namespace Abp.Authorization.Roles
 
         public IRoleManagementConfig RoleManagementConfig { get; private set; }
 
-        private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
+        private IRolePermissionStore<TRole, TUser> RolePermissionStore
         {
             get
             {
-                if (!(Store is IRolePermissionStore<TTenant, TRole, TUser>))
+                if (!(Store is IRolePermissionStore<TRole, TUser>))
                 {
                     throw new AbpException("Store is not IRolePermissionStore");
                 }
 
-                return Store as IRolePermissionStore<TTenant, TRole, TUser>;
+                return Store as IRolePermissionStore<TRole, TUser>;
             }
         }
 
-        protected AbpRoleStore<TTenant, TRole, TUser> AbpStore { get; private set; }
+        protected AbpRoleStore<TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly ICacheManager _cacheManager;
@@ -56,7 +56,7 @@ namespace Abp.Authorization.Roles
         /// Constructor.
         /// </summary>
         protected AbpRoleManager(
-            AbpRoleStore<TTenant, TRole, TUser> store,
+            AbpRoleStore<TRole, TUser> store,
             IPermissionManager permissionManager,
             IRoleManagementConfig roleManagementConfig,
             ICacheManager cacheManager,

@@ -137,8 +137,6 @@
     <Compile Include="Application\Features\FeatureSetting.cs" />
     <Compile Include="Application\Features\EditionFeatureSetting.cs" />
     <Compile Include="Application\Features\AbpFeatureValueStore.cs" />
-    <Compile Include="MultiTenancy\IMayHaveTenant.cs" />
-    <Compile Include="MultiTenancy\IMustHaveTenant.cs" />
     <Compile Include="Authorization\Roles\AbpRoleManager.cs" />
     <Compile Include="MultiTenancy\TenantFeatureCacheItemInvalidator.cs" />
     <Compile Include="MultiTenancy\TenantFeatureSetting.cs" />

@@ -15,9 +15,9 @@ namespace Abp.Authorization
     /// <typeparam name="TRole"></typeparam>
     /// <typeparam name="TUser"></typeparam>
     public abstract class PermissionChecker<TTenant, TRole, TUser> : IPermissionChecker, ITransientDependency
-        where TRole : AbpRole<TTenant, TUser>, new()
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+        where TRole : AbpRole<TUser>, new()
+        where TUser : AbpUser<TUser>
+        where TTenant : AbpTenant<TUser>
     {
         private readonly AbpUserManager<TTenant, TRole, TUser> _userManager;
 

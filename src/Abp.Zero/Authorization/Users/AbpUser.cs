@@ -6,16 +6,14 @@ using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
-using Abp.MultiTenancy;
 
 namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser<TTenant, TUser> : AbpUserBase, IFullAudited<TUser>, IPassivable
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+    public class AbpUser<TUser> : AbpUserBase, IFullAudited<TUser>, IPassivable
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// UserName of the admin.
