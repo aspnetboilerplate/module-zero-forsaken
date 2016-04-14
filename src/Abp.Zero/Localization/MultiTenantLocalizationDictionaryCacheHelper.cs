@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using Abp.Runtime.Caching;
+using System;
+using System.Collections.Generic;
 
 namespace Abp.Localization
 {
@@ -18,9 +19,9 @@ namespace Abp.Localization
             return cacheManager.GetCache(CacheName).AsTyped<string, Dictionary<string, string>>();
         }
 
-        public static string CalculateCacheKey(int? tenantId, string sourceName, string languageName)
+        public static string CalculateCacheKey(Guid? tenantId, string sourceName, string languageName)
         {
-            return sourceName + "#" + languageName + "#" + (tenantId ?? 0);
+            return sourceName + "#" + languageName + "#" + (tenantId ?? Guid.Empty);
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Auditing
 {
@@ -9,12 +10,12 @@ namespace Abp.Auditing
     /// </summary>
     public class AuditingStore : IAuditingStore, ITransientDependency
     {
-        private readonly IRepository<AuditLog, long> _auditLogRepository;
+        private readonly IRepository<AuditLog, Guid> _auditLogRepository;
 
         /// <summary>
         /// Creates  a new <see cref="AuditingStore"/>.
         /// </summary>
-        public AuditingStore(IRepository<AuditLog, long> auditLogRepository)
+        public AuditingStore(IRepository<AuditLog, Guid> auditLogRepository)
         {
             _auditLogRepository = auditLogRepository;
         }

@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Features;
+using System;
 
 namespace Abp.MultiTenancy
 {
@@ -10,14 +11,13 @@ namespace Abp.MultiTenancy
         /// <summary>
         /// Tenant's Id.
         /// </summary>
-        public virtual int TenantId { get; set; }
+        public virtual Guid TenantId { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TenantFeatureSetting"/> class.
         /// </summary>
         public TenantFeatureSetting()
         {
-            
         }
 
         /// <summary>
@@ -26,8 +26,8 @@ namespace Abp.MultiTenancy
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="name">Feature name.</param>
         /// <param name="value">Feature value.</param>
-        public TenantFeatureSetting(int tenantId, string name, string value)
-            :base(name, value)
+        public TenantFeatureSetting(Guid tenantId, string name, string value)
+            : base(name, value)
         {
             TenantId = tenantId;
         }

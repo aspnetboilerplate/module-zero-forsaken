@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization.Roles;
@@ -26,6 +19,13 @@ using Abp.Timing;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Abp.Authorization.Users
 {
@@ -33,7 +33,7 @@ namespace Abp.Authorization.Users
     /// Extends <see cref="UserManager{TUser,TKey}"/> of ASP.NET Identity Framework.
     /// </summary>
     public abstract class AbpUserManager<TTenant, TRole, TUser>
-        : UserManager<TUser, long>,
+        : UserManager<TUser, Guid>,
         IDomainService
         where TTenant : AbpTenant<TTenant, TUser>
         where TRole : AbpRole<TTenant, TUser>, new()
@@ -70,18 +70,18 @@ namespace Abp.Authorization.Users
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IUserManagementConfig _userManagementConfig;
         private readonly IIocResolver _iocResolver;
-        private readonly IRepository<TTenant> _tenantRepository;
+        private readonly IRepository<TTenant, Guid> _tenantRepository;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
         private readonly ICacheManager _cacheManager;
-        private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
-        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IRepository<OrganizationUnit, Guid> _organizationUnitRepository;
+        private readonly IRepository<UserOrganizationUnit, Guid> _userOrganizationUnitRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
-        private readonly IRepository<UserLoginAttempt, long> _userLoginAttemptRepository;
+        private readonly IRepository<UserLoginAttempt, Guid> _userLoginAttemptRepository;
 
         protected AbpUserManager(
             AbpUserStore<TTenant, TRole, TUser> userStore,
             AbpRoleManager<TTenant, TRole, TUser> roleManager,
-            IRepository<TTenant> tenantRepository,
+            IRepository<TTenant, Guid> tenantRepository,
             IMultiTenancyConfig multiTenancyConfig,
             IPermissionManager permissionManager,
             IUnitOfWorkManager unitOfWorkManager,
@@ -89,10 +89,10 @@ namespace Abp.Authorization.Users
             IUserManagementConfig userManagementConfig,
             IIocResolver iocResolver,
             ICacheManager cacheManager,
-            IRepository<OrganizationUnit, long> organizationUnitRepository,
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<OrganizationUnit, Guid> organizationUnitRepository,
+            IRepository<UserOrganizationUnit, Guid> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
-            IRepository<UserLoginAttempt, long> userLoginAttemptRepository)
+            IRepository<UserLoginAttempt, Guid> userLoginAttemptRepository)
             : base(userStore)
         {
             AbpStore = userStore;
@@ -135,7 +135,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="permissionName">Permission name</param>
-        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(Guid userId, string permissionName)
         {
             return await IsGrantedAsync(
                 userId,
@@ -158,7 +158,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
+        public virtual async Task<bool> IsGrantedAsync(Guid userId, Permission permission)
         {
             //Check for multi-tenancy side
             if (!permission.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
@@ -349,7 +349,7 @@ namespace Abp.Authorization.Users
 
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                var user = await AbpStore.FindAsync(tenant == null ? (int?)null : tenant.Id, login);
+                var user = await AbpStore.FindAsync(tenant == null ? (Guid?)null : tenant.Id, login);
                 if (user == null)
                 {
                     return new AbpLoginResult(AbpLoginResultType.UnknownExternalLogin, tenant);
@@ -403,7 +403,7 @@ namespace Abp.Authorization.Users
             {
                 var loggedInFromExternalSource = await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant);
 
-                var user = await AbpStore.FindByNameOrEmailAsync(tenant == null ? (int?)null : tenant.Id, userNameOrEmailAddress);
+                var user = await AbpStore.FindByNameOrEmailAsync(tenant == null ? (Guid?)null : tenant.Id, userNameOrEmailAddress);
                 if (user == null)
                 {
                     return new AbpLoginResult(AbpLoginResultType.InvalidUserNameOrEmailAddress, tenant);
@@ -449,10 +449,10 @@ namespace Abp.Authorization.Users
             {
                 var loginAttempt = new UserLoginAttempt
                 {
-                    TenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null,
+                    TenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (Guid?)null,
                     TenancyName = tenancyName,
 
-                    UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
+                    UserId = loginResult.User != null ? loginResult.User.Id : (Guid?)null,
                     UserNameOrEmailAddress = userNameOrEmailAddress,
 
                     Result = loginResult.Result,
@@ -488,7 +488,7 @@ namespace Abp.Authorization.Users
                 {
                     if (await source.Object.TryAuthenticateAsync(userNameOrEmailAddress, plainPassword, tenant))
                     {
-                        var tenantId = tenant == null ? (int?)null : tenant.Id;
+                        var tenantId = tenant == null ? (Guid?)null : tenant.Id;
 
                         var user = await AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
                         if (user == null)
@@ -533,7 +533,7 @@ namespace Abp.Authorization.Users
         /// <param name="userId">User id</param>
         /// <returns>User</returns>
         /// <exception cref="AbpException">Throws exception if no user found with given id</exception>
-        public virtual async Task<TUser> GetUserByIdAsync(long userId)
+        public virtual async Task<TUser> GetUserByIdAsync(Guid userId)
         {
             var user = await FindByIdAsync(userId);
             if (user == null)
@@ -549,7 +549,7 @@ namespace Abp.Authorization.Users
             var identity = await base.CreateIdentityAsync(user, authenticationType);
             if (user.TenantId.HasValue)
             {
-                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
+                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
             }
 
             return identity;
@@ -594,7 +594,7 @@ namespace Abp.Authorization.Users
             return IdentityResult.Success;
         }
 
-        public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId, string userName, string emailAddress)
+        public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(Guid? expectedUserId, string userName, string emailAddress)
         {
             var user = (await FindByNameAsync(userName));
             if (user != null && user.Id != expectedUserId)
@@ -644,7 +644,7 @@ namespace Abp.Authorization.Users
             return IdentityResult.Success;
         }
 
-        public virtual async Task<bool> IsInOrganizationUnitAsync(long userId, long ouId)
+        public virtual async Task<bool> IsInOrganizationUnitAsync(Guid userId, Guid ouId)
         {
             return await IsInOrganizationUnitAsync(
                 await GetUserByIdAsync(userId),
@@ -659,7 +659,7 @@ namespace Abp.Authorization.Users
                 ) > 0;
         }
 
-        public virtual async Task AddToOrganizationUnitAsync(long userId, long ouId)
+        public virtual async Task AddToOrganizationUnitAsync(Guid userId, Guid ouId)
         {
             await AddToOrganizationUnitAsync(
                 await GetUserByIdAsync(userId),
@@ -681,7 +681,7 @@ namespace Abp.Authorization.Users
             await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
         }
 
-        public virtual async Task RemoveFromOrganizationUnitAsync(long userId, long ouId)
+        public virtual async Task RemoveFromOrganizationUnitAsync(Guid userId, Guid ouId)
         {
             await RemoveFromOrganizationUnitAsync(
                 await GetUserByIdAsync(userId),
@@ -694,7 +694,7 @@ namespace Abp.Authorization.Users
             await _userOrganizationUnitRepository.DeleteAsync(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
         }
 
-        public virtual async Task SetOrganizationUnitsAsync(long userId, params long[] organizationUnitIds)
+        public virtual async Task SetOrganizationUnitsAsync(Guid userId, params Guid[] organizationUnitIds)
         {
             await SetOrganizationUnitsAsync(
                 await GetUserByIdAsync(userId),
@@ -702,7 +702,7 @@ namespace Abp.Authorization.Users
                 );
         }
 
-        private async Task CheckMaxUserOrganizationUnitMembershipCountAsync(int? tenantId, int requestedCount)
+        private async Task CheckMaxUserOrganizationUnitMembershipCountAsync(Guid? tenantId, int requestedCount)
         {
             var maxCount = await _organizationUnitSettings.GetMaxUserMembershipCountAsync(tenantId);
             if (requestedCount > maxCount)
@@ -711,11 +711,11 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
+        public virtual async Task SetOrganizationUnitsAsync(TUser user, params Guid[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
             {
-                organizationUnitIds = new long[0];
+                organizationUnitIds = new Guid[0];
             }
 
             await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, organizationUnitIds.Length);
@@ -779,7 +779,7 @@ namespace Abp.Authorization.Users
             }
         }
 
-        private async Task<bool> IsEmailConfirmationRequiredForLoginAsync(int? tenantId)
+        private async Task<bool> IsEmailConfirmationRequiredForLoginAsync(Guid? tenantId)
         {
             if (tenantId.HasValue)
             {
@@ -800,7 +800,7 @@ namespace Abp.Authorization.Users
             return tenant;
         }
 
-        private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
+        private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(Guid userId)
         {
             return await _cacheManager.GetUserPermissionCache().GetAsync(userId, async () =>
             {

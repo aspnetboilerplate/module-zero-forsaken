@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Abp.Domain.Entities;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
 
 namespace Abp.Authorization.Users
 {
@@ -8,7 +9,7 @@ namespace Abp.Authorization.Users
     /// Used to store a User Login for external Login services.
     /// </summary>
     [Table("AbpUserLogins")]
-    public class UserLogin : Entity<long>
+    public class UserLogin : Entity<Guid>
     {
         /// <summary>
         /// Maximum length of <see cref="LoginProvider"/> property.
@@ -23,7 +24,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Id of the User.
         /// </summary>
-        public virtual long UserId { get; set; }
+        public virtual Guid UserId { get; set; }
 
         /// <summary>
         /// Login Provider.

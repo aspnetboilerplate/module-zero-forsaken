@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Application.Editions;
+﻿using Abp.Application.Editions;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Abp.MultiTenancy
 {
@@ -13,7 +14,7 @@ namespace Abp.MultiTenancy
     /// Represents a Tenant of the application.
     /// </summary>
     [Table("AbpTenants")]
-    public class AbpTenant<TTenant, TUser> : FullAuditedEntity<int, TUser>, IPassivable
+    public class AbpTenant<TTenant, TUser> : FullAuditedEntity<Guid, TUser>, IPassivable
         where TUser : AbpUser<TTenant, TUser>
         where TTenant : AbpTenant<TTenant, TUser>
     {
@@ -36,7 +37,7 @@ namespace Abp.MultiTenancy
         /// Max length of the <see cref="Name"/> property.
         /// </summary>
         public const int MaxNameLength = 128;
-        
+
         /// <summary>
         /// Tenancy name. This property is the UNIQUE name of this Tenant.
         /// It can be used as subdomain name in a web application.
@@ -49,7 +50,8 @@ namespace Abp.MultiTenancy
         /// Current <see cref="Edition"/> of the Tenant.
         /// </summary>
         public virtual Edition Edition { get; set; }
-        public virtual int? EditionId { get; set; }
+
+        public virtual Guid? EditionId { get; set; }
 
         /// <summary>
         /// Display name of the Tenant.

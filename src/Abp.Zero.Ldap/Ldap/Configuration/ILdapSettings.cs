@@ -1,3 +1,4 @@
+using System;
 using System.DirectoryServices.AccountManagement;
 using System.Threading.Tasks;
 
@@ -9,16 +10,16 @@ namespace Abp.Zero.Ldap.Configuration
     /// </summary>
     public interface ILdapSettings
     {
-        Task<bool> GetIsEnabled(int? tenantId);
+        Task<bool> GetIsEnabled(Guid? tenantId);
 
-        Task<ContextType> GetContextType(int? tenantId);
+        Task<ContextType> GetContextType(Guid? tenantId);
 
-        Task<string> GetContainer(int? tenantId);
+        Task<string> GetContainer(Guid? tenantId);
 
-        Task<string> GetDomain(int? tenantId);
+        Task<string> GetDomain(Guid? tenantId);
 
-        Task<string> GetUserName(int? tenantId);
+        Task<string> GetUserName(Guid? tenantId);
 
-        Task<string> GetPassword(int? tenantId);
+        Task<string> GetPassword(Guid? tenantId);
     }
 }

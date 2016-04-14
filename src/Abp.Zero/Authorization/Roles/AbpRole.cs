@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Abp.Authorization.Users;
+using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Authorization.Users;
-using Abp.Domain.Entities.Auditing;
-using Abp.MultiTenancy;
 
 namespace Abp.Authorization.Roles
 {
     /// <summary>
     /// Represents a role in an application. A role is used to group permissions.
     /// </summary>
-    /// <remarks> 
+    /// <remarks>
     /// Application should use permissions to check if user is granted to perform an operation.
     /// Checking 'if a user has a role' is not possible until the role is static (<see cref="IsStatic"/>).
     /// Static roles can be used in the code and can not be deleted by users.
@@ -77,7 +77,7 @@ namespace Abp.Authorization.Roles
         /// </summary>
         /// <param name="tenantId">TenantId or null (if this is not a tenant-level role)</param>
         /// <param name="displayName">Display name of the role</param>
-        public AbpRole(int? tenantId, string displayName)
+        public AbpRole(Guid? tenantId, string displayName)
             : this()
         {
             TenantId = tenantId;
@@ -90,7 +90,7 @@ namespace Abp.Authorization.Roles
         /// <param name="tenantId">TenantId or null (if this is not a tenant-level role)</param>
         /// <param name="name">Unique role name</param>
         /// <param name="displayName">Display name of the role</param>
-        public AbpRole(int? tenantId, string name, string displayName)
+        public AbpRole(Guid? tenantId, string name, string displayName)
             : this(tenantId, displayName)
         {
             Name = name;

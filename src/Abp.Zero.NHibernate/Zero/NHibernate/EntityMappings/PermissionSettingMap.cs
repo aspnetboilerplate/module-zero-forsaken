@@ -1,9 +1,10 @@
 using Abp.Authorization;
 using Abp.NHibernate.EntityMappings;
+using System;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class PermissionSettingMap : EntityMap<PermissionSetting, long>
+    public class PermissionSettingMap : EntityMap<PermissionSetting, Guid>
     {
         public PermissionSettingMap()
             : base("AbpPermissions")

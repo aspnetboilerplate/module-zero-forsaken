@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -17,6 +13,11 @@ using Abp.Localization;
 using Abp.Runtime.Caching;
 using Abp.Zero;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Abp.MultiTenancy
 {
@@ -42,15 +43,15 @@ namespace Abp.MultiTenancy
 
         public IFeatureManager FeatureManager { get; set; }
 
-        protected IRepository<TTenant> TenantRepository { get; set; }
+        protected IRepository<TTenant, Guid> TenantRepository { get; set; }
 
-        protected IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
+        protected IRepository<TenantFeatureSetting, Guid> TenantFeatureRepository { get; set; }
 
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
 
         protected AbpTenantManager(
-            IRepository<TTenant> tenantRepository, 
-            IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
+            IRepository<TTenant, Guid> tenantRepository,
+            IRepository<TenantFeatureSetting, Guid> tenantFeatureRepository,
             AbpEditionManager editionManager,
             IAbpZeroFeatureValueStore featureValueStore)
         {
@@ -91,12 +92,12 @@ namespace Abp.MultiTenancy
             return IdentityResult.Success;
         }
 
-        public virtual async Task<TTenant> FindByIdAsync(int id)
+        public virtual async Task<TTenant> FindByIdAsync(Guid id)
         {
             return await TenantRepository.FirstOrDefaultAsync(id);
         }
 
-        public virtual async Task<TTenant> GetByIdAsync(int id)
+        public virtual async Task<TTenant> GetByIdAsync(Guid id)
         {
             var tenant = await FindByIdAsync(id);
             if (tenant == null)
@@ -118,12 +119,12 @@ namespace Abp.MultiTenancy
             return IdentityResult.Success;
         }
 
-        public Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
+        public Task<string> GetFeatureValueOrNullAsync(Guid tenantId, string featureName)
         {
             return _featureValueStore.GetValueOrNullAsync(tenantId, featureName);
         }
 
-        public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int tenantId)
+        public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(Guid tenantId)
         {
             var values = new List<NameValue>();
 
@@ -135,7 +136,7 @@ namespace Abp.MultiTenancy
             return values;
         }
 
-        public virtual async Task SetFeatureValuesAsync(int tenantId, params NameValue[] values)
+        public virtual async Task SetFeatureValuesAsync(Guid tenantId, params NameValue[] values)
         {
             if (values.IsNullOrEmpty())
             {
@@ -149,7 +150,7 @@ namespace Abp.MultiTenancy
         }
 
         [UnitOfWork]
-        public virtual async Task SetFeatureValueAsync(int tenantId, string featureName, string value)
+        public virtual async Task SetFeatureValueAsync(Guid tenantId, string featureName, string value)
         {
             await SetFeatureValueAsync(await GetByIdAsync(tenantId), featureName, value);
         }
@@ -210,7 +211,7 @@ namespace Abp.MultiTenancy
         /// Tenant will have features according to it's edition.
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
-        public async Task ResetAllFeaturesAsync(int tenantId)
+        public async Task ResetAllFeaturesAsync(Guid tenantId)
         {
             await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
         }

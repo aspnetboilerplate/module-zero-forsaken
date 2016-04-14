@@ -1,9 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Configuration
 {
@@ -12,23 +13,23 @@ namespace Abp.Configuration
     /// </summary>
     public class SettingStore : ISettingStore, ITransientDependency
     {
-        private readonly IRepository<Setting, long> _settingRepository;
+        private readonly IRepository<Setting, Guid> _settingRepository;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SettingStore(IRepository<Setting, long> settingRepository)
+        public SettingStore(IRepository<Setting, Guid> settingRepository)
         {
             _settingRepository = settingRepository;
         }
 
-        public virtual async Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
+        public virtual async Task<List<SettingInfo>> GetAllListAsync(Guid? tenantId, Guid? userId)
         {
             var settings = await _settingRepository.GetAllListAsync(s => s.TenantId == tenantId && s.UserId == userId);
             return settings.Select(s => s.ToSettingInfo()).ToList();
         }
 
-        public virtual async Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
+        public virtual async Task<SettingInfo> GetSettingOrNullAsync(Guid? tenantId, Guid? userId, string name)
         {
             var setting = await _settingRepository.FirstOrDefaultAsync(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name);
             return setting.ToSettingInfo();

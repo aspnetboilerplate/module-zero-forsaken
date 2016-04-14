@@ -1,7 +1,7 @@
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Application.Editions
 {
@@ -9,7 +9,7 @@ namespace Abp.Application.Editions
     /// Represents an edition of the application.
     /// </summary>
     [Table("AbpEditions")]
-    public class Edition : FullAuditedEntity
+    public class Edition : FullAuditedEntity<Guid>
     {
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.

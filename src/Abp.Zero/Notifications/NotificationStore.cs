@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Notifications
 {
@@ -36,7 +36,7 @@ namespace Abp.Notifications
             return _notificationSubscriptionRepository.InsertAsync(subscription);
         }
 
-        public virtual Task DeleteSubscriptionAsync(long userId, string notificationName, string entityTypeName, string entityId)
+        public virtual Task DeleteSubscriptionAsync(Guid userId, string notificationName, string entityTypeName, string entityId)
         {
             return _notificationSubscriptionRepository.DeleteAsync(s =>
                 s.UserId == userId &&
@@ -70,7 +70,7 @@ namespace Abp.Notifications
                 );
         }
 
-        public virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        public virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(Guid?[] tenantIds, string notificationName, string entityTypeName, string entityId)
         {
             return _notificationSubscriptionRepository.GetAllListAsync(s =>
                 tenantIds.Contains(s.TenantId) &&
@@ -80,14 +80,14 @@ namespace Abp.Notifications
                 );
         }
 
-        public virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(long userId)
+        public virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(Guid userId)
         {
             return _notificationSubscriptionRepository.GetAllListAsync(s =>
                 s.UserId == userId
                 );
         }
 
-        public virtual async Task<bool> IsSubscribedAsync(long userId, string notificationName, string entityTypeName, string entityId)
+        public virtual async Task<bool> IsSubscribedAsync(Guid userId, string notificationName, string entityTypeName, string entityId)
         {
             return (await _notificationSubscriptionRepository.CountAsync(s =>
                 s.UserId == userId &&
@@ -110,7 +110,7 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual async Task UpdateAllUserNotificationStatesAsync(long userId, UserNotificationState state)
+        public virtual async Task UpdateAllUserNotificationStatesAsync(Guid userId, UserNotificationState state)
         {
             var userNotifications = await _userNotificationRepository.GetAllListAsync(un => un.UserId == userId);
 
@@ -125,13 +125,13 @@ namespace Abp.Notifications
             return _userNotificationRepository.DeleteAsync(userNotificationId);
         }
 
-        public virtual Task DeleteAllUserNotificationsAsync(long userId)
+        public virtual Task DeleteAllUserNotificationsAsync(Guid userId)
         {
             return _userNotificationRepository.DeleteAsync(un => un.UserId == userId);
         }
 
         [UnitOfWork]
-        public virtual Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(long userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public virtual Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(Guid userId, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
             var query = from userNotificationInfo in _userNotificationRepository.GetAll()
                         join notificationInfo in _notificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
@@ -148,7 +148,7 @@ namespace Abp.Notifications
                 ).ToList());
         }
 
-        public virtual Task<int> GetUserNotificationCountAsync(long userId, UserNotificationState? state = null)
+        public virtual Task<int> GetUserNotificationCountAsync(Guid userId, UserNotificationState? state = null)
         {
             return _userNotificationRepository.CountAsync(un => un.UserId == userId && (state == null || un.State == state.Value));
         }

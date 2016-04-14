@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
@@ -9,11 +6,15 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Application.Editions
 {
-    public abstract class AbpEditionManager : 
-        IDomainService, 
+    public abstract class AbpEditionManager :
+        IDomainService,
         IEventHandler<EntityChangedEventData<Edition>>,
         IEventHandler<EntityChangedEventData<EditionFeatureSetting>>
     {
@@ -24,28 +25,28 @@ namespace Abp.Application.Editions
 
         public IFeatureManager FeatureManager { get; set; }
 
-        protected IRepository<Edition> EditionRepository { get; set; }
+        protected IRepository<Edition, Guid> EditionRepository { get; set; }
 
         protected AbpEditionManager(
-            IRepository<Edition> editionRepository,
+            IRepository<Edition, Guid> editionRepository,
             IAbpZeroFeatureValueStore featureValueStore)
         {
             _featureValueStore = featureValueStore;
             EditionRepository = editionRepository;
         }
 
-        public virtual Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)
+        public virtual Task<string> GetFeatureValueOrNullAsync(Guid editionId, string featureName)
         {
             return _featureValueStore.GetEditionValueOrNullAsync(editionId, featureName);
         }
 
         [UnitOfWork]
-        public virtual Task SetFeatureValueAsync(int editionId, string featureName, string value)
+        public virtual Task SetFeatureValueAsync(Guid editionId, string featureName, string value)
         {
             return _featureValueStore.SetEditionFeatureValueAsync(editionId, featureName, value);
         }
 
-        public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int editionId)
+        public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(Guid editionId)
         {
             var values = new List<NameValue>();
 
@@ -57,7 +58,7 @@ namespace Abp.Application.Editions
             return values;
         }
 
-        public virtual async Task SetFeatureValuesAsync(int editionId, params NameValue[] values)
+        public virtual async Task SetFeatureValuesAsync(Guid editionId, params NameValue[] values)
         {
             if (values.IsNullOrEmpty())
             {
@@ -80,12 +81,12 @@ namespace Abp.Application.Editions
             return EditionRepository.FirstOrDefaultAsync(edition => edition.Name == name);
         }
 
-        public virtual Task<Edition> FindByIdAsync(int id)
+        public virtual Task<Edition> FindByIdAsync(Guid id)
         {
             return EditionRepository.FirstOrDefaultAsync(id);
         }
 
-        public virtual Task<Edition> GetByIdAsync(int id)
+        public virtual Task<Edition> GetByIdAsync(Guid id)
         {
             return EditionRepository.GetAsync(id);
         }

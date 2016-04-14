@@ -2,29 +2,30 @@
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
+using System;
 
 namespace Abp.Runtime.Caching
 {
     public static class AbpZeroCacheManagerExtensions
     {
-        public static ITypedCache<long, UserPermissionCacheItem> GetUserPermissionCache(this ICacheManager cacheManager)
+        public static ITypedCache<Guid, UserPermissionCacheItem> GetUserPermissionCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<long, UserPermissionCacheItem>(UserPermissionCacheItem.CacheStoreName);
+            return cacheManager.GetCache<Guid, UserPermissionCacheItem>(UserPermissionCacheItem.CacheStoreName);
         }
 
-        public static ITypedCache<int, RolePermissionCacheItem> GetRolePermissionCache(this ICacheManager cacheManager)
+        public static ITypedCache<Guid, RolePermissionCacheItem> GetRolePermissionCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<int, RolePermissionCacheItem>(RolePermissionCacheItem.CacheStoreName);
+            return cacheManager.GetCache<Guid, RolePermissionCacheItem>(RolePermissionCacheItem.CacheStoreName);
         }
 
-        public static ITypedCache<int, TenantFeatureCacheItem> GetTenantFeatureCache(this ICacheManager cacheManager)
+        public static ITypedCache<Guid, TenantFeatureCacheItem> GetTenantFeatureCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<int, TenantFeatureCacheItem>(TenantFeatureCacheItem.CacheStoreName);
+            return cacheManager.GetCache<Guid, TenantFeatureCacheItem>(TenantFeatureCacheItem.CacheStoreName);
         }
 
-        public static ITypedCache<int, EditionfeatureCacheItem> GetEditionFeatureCache(this ICacheManager cacheManager)
+        public static ITypedCache<Guid, EditionfeatureCacheItem> GetEditionFeatureCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<int, EditionfeatureCacheItem>(EditionfeatureCacheItem.CacheStoreName);
+            return cacheManager.GetCache<Guid, EditionfeatureCacheItem>(EditionfeatureCacheItem.CacheStoreName);
         }
     }
 }

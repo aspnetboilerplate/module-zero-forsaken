@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace Abp.Organizations
@@ -18,7 +19,7 @@ namespace Abp.Organizations
         /// Returns value for given tenant.
         /// </summary>
         /// <param name="tenantId">The tenant Id or null for the host.</param>
-        Task<int> GetMaxUserMembershipCountAsync(int? tenantId);
+        Task<int> GetMaxUserMembershipCountAsync(Guid? tenantId);
 
         /// <summary>
         /// Sets Maximum allowed organization unit membership count for a user.
@@ -26,6 +27,6 @@ namespace Abp.Organizations
         /// <param name="tenantId">The tenant Id or null for the host.</param>
         /// <param name="value">Setting value.</param>
         /// <returns></returns>
-        Task SetMaxUserMembershipCountAsync(int? tenantId, int value);
+        Task SetMaxUserMembershipCountAsync(Guid? tenantId, int value);
     }
 }

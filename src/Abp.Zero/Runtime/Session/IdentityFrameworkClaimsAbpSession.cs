@@ -1,7 +1,8 @@
-using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Threading;
 
 namespace Abp.Runtime.Session
 {
@@ -10,7 +11,7 @@ namespace Abp.Runtime.Session
     /// </summary>
     public class IdentityFrameworkClaimsAbpSession : ClaimsAbpSession, ISingletonDependency
     {
-        public override long? UserId
+        public override Guid? UserId
         {
             get
             {
@@ -20,8 +21,8 @@ namespace Abp.Runtime.Session
                     return null;
                 }
 
-                long userId;
-                if (!long.TryParse(userIdAsString, out userId))
+                Guid userId;
+                if (!Guid.TryParse(userIdAsString, out userId))
                 {
                     return null;
                 }
@@ -33,7 +34,7 @@ namespace Abp.Runtime.Session
         /// <summary>
         /// Constructor.
         /// </summary>
-        public IdentityFrameworkClaimsAbpSession(IMultiTenancyConfig multiTenancy) 
+        public IdentityFrameworkClaimsAbpSession(IMultiTenancyConfig multiTenancy)
             : base(multiTenancy)
         {
         }

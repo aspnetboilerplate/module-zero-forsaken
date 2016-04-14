@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using Abp.Localization.Dictionaries;
+using System;
+using System.Collections.Generic;
 
 namespace Abp.Localization
 {
@@ -13,12 +14,12 @@ namespace Abp.Localization
         /// </summary>
         /// <param name="tenantId">TenantId or null for host.</param>
         /// <param name="name">Localization key name.</param>
-        LocalizedString GetOrNull(int? tenantId, string name);
+        LocalizedString GetOrNull(Guid? tenantId, string name);
 
         /// <summary>
         /// Gets all <see cref="LocalizedString"/>s.
         /// </summary>
         /// <param name="tenantId">TenantId or null for host.</param>
-        IReadOnlyList<LocalizedString> GetAllStrings(int? tenantId);
+        IReadOnlyList<LocalizedString> GetAllStrings(Guid? tenantId);
     }
 }

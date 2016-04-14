@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Microsoft.AspNet.Identity;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Abp.Authorization.Roles
 {
@@ -10,7 +11,7 @@ namespace Abp.Authorization.Roles
     /// Base class for role.
     /// </summary>
     [Table("AbpRoles")]
-    public abstract class AbpRoleBase : FullAuditedEntity<int>, IRole<int>, IMayHaveTenant
+    public abstract class AbpRoleBase : FullAuditedEntity<Guid>, IRole<Guid>, IMayHaveTenant
     {
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
@@ -20,7 +21,7 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Tenant's Id, if this role is a tenant-level role. Null, if not.
         /// </summary>
-        public virtual int? TenantId { get; set; }
+        public virtual Guid? TenantId { get; set; }
 
         /// <summary>
         /// Unique name of this role.

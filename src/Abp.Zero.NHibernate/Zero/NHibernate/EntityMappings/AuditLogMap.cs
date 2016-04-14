@@ -1,9 +1,10 @@
 ﻿using Abp.Auditing;
 using Abp.NHibernate.EntityMappings;
+using System;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class AuditLogMap : EntityMap<AuditLog, long>
+    public class AuditLogMap : EntityMap<AuditLog, Guid>
     {
         public AuditLogMap()
             : base("AbpAuditLogs")

@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Threading;
 using Abp.UI;
 using Abp.Zero;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Organizations
 {
@@ -15,9 +16,9 @@ namespace Abp.Organizations
     /// </summary>
     public class OrganizationUnitManager : DomainService
     {
-        protected IRepository<OrganizationUnit, long> OrganizationUnitRepository { get; private set; }
+        protected IRepository<OrganizationUnit, Guid> OrganizationUnitRepository { get; private set; }
 
-        public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository)
+        public OrganizationUnitManager(IRepository<OrganizationUnit, Guid> organizationUnitRepository)
         {
             OrganizationUnitRepository = organizationUnitRepository;
 
@@ -38,7 +39,7 @@ namespace Abp.Organizations
             await OrganizationUnitRepository.UpdateAsync(organizationUnit);
         }
 
-        public virtual async Task<string> GetNextChildCodeAsync(long? parentId)
+        public virtual async Task<string> GetNextChildCodeAsync(Guid? parentId)
         {
             var lastChild = await GetLastChildOrNullAsync(parentId);
             if (lastChild == null)
@@ -50,25 +51,25 @@ namespace Abp.Organizations
             return OrganizationUnit.CalculateNextCode(lastChild.Code);
         }
 
-        public virtual async Task<OrganizationUnit> GetLastChildOrNullAsync(long? parentId)
+        public virtual async Task<OrganizationUnit> GetLastChildOrNullAsync(Guid? parentId)
         {
             var children = await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
             return children.OrderBy(c => c.Code).LastOrDefault();
         }
 
-        public virtual string GetCode(long id)
+        public virtual string GetCode(Guid id)
         {
             //TODO: Move to an extension class
             return AsyncHelper.RunSync(() => GetCodeAsync(id));
         }
 
-        public virtual async Task<string> GetCodeAsync(long id)
+        public virtual async Task<string> GetCodeAsync(Guid id)
         {
             return (await OrganizationUnitRepository.GetAsync(id)).Code;
         }
 
         [UnitOfWork]
-        public virtual async Task DeleteAsync(long id)
+        public virtual async Task DeleteAsync(Guid id)
         {
             var children = await FindChildrenAsync(id, true);
 
@@ -81,7 +82,7 @@ namespace Abp.Organizations
         }
 
         [UnitOfWork]
-        public virtual async Task MoveAsync(long id, long? parentId)
+        public virtual async Task MoveAsync(Guid id, Guid? parentId)
         {
             var organizationUnit = await OrganizationUnitRepository.GetAsync(id);
             if (organizationUnit.ParentId == parentId)
@@ -108,7 +109,7 @@ namespace Abp.Organizations
             }
         }
 
-        public async Task<List<OrganizationUnit>> FindChildrenAsync(long? parentId, bool recursive = false)
+        public async Task<List<OrganizationUnit>> FindChildrenAsync(Guid? parentId, bool recursive = false)
         {
             if (recursive)
             {

@@ -1,9 +1,10 @@
 using Abp.Authorization.Users;
 using Abp.NHibernate.EntityMappings;
+using System;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class UserLoginMap : EntityMap<UserLogin, long>
+    public class UserLoginMap : EntityMap<UserLogin, Guid>
     {
         public UserLoginMap()
             : base("AbpUserLogins")

@@ -1,8 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Microsoft.AspNet.Identity;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Abp.Authorization.Users
 {
@@ -10,7 +11,7 @@ namespace Abp.Authorization.Users
     /// Base class for user.
     /// </summary>
     [Table("AbpUsers")]
-    public abstract class AbpUserBase : FullAuditedEntity<long>, IUser<long>, IMayHaveTenant
+    public abstract class AbpUserBase : FullAuditedEntity<Guid>, IUser<Guid>, IMayHaveTenant
     {
         /// <summary>
         /// Maximum length of the <see cref="UserName"/> property.
@@ -28,6 +29,6 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Tenant Id of this user.
         /// </summary>
-        public virtual int? TenantId { get; set; }
+        public virtual Guid? TenantId { get; set; }
     }
 }

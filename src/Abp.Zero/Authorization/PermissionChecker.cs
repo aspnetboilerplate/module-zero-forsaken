@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
-using Abp.Authorization.Roles;
+﻿using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization
 {
@@ -41,7 +42,7 @@ namespace Abp.Authorization
             return AbpSession.UserId.HasValue && await _userManager.IsGrantedAsync(AbpSession.UserId.Value, permissionName);
         }
 
-        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(Guid userId, string permissionName)
         {
             return await _userManager.IsGrantedAsync(userId, permissionName);
         }

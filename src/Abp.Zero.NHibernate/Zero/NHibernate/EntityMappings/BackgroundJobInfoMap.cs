@@ -1,9 +1,10 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.NHibernate.EntityMappings;
+using System;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class BackgroundJobInfoMap : EntityMap<BackgroundJobInfo, long>
+    public class BackgroundJobInfoMap : EntityMap<BackgroundJobInfo, Guid>
     {
         public BackgroundJobInfoMap()
             : base("AbpBackgroundJobs")

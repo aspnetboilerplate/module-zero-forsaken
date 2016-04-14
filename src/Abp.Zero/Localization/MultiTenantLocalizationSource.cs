@@ -1,10 +1,10 @@
-using System;
-using System.Globalization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Localization.Dictionaries;
 using Castle.Core.Logging;
+using System;
+using System.Globalization;
 
 //TODO: No need to inherit from DictionaryBasedLocalizationSource?
 
@@ -19,7 +19,7 @@ namespace Abp.Localization
 
         public ILogger Logger { get; set; }
 
-        public MultiTenantLocalizationSource(string name, MultiTenantLocalizationDictionaryProvider dictionaryProvider) 
+        public MultiTenantLocalizationSource(string name, MultiTenantLocalizationDictionaryProvider dictionaryProvider)
             : base(name, dictionaryProvider)
         {
             Logger = NullLogger.Instance;
@@ -31,11 +31,11 @@ namespace Abp.Localization
 
             if (Logger is NullLogger && iocResolver.IsRegistered(typeof(ILoggerFactory)))
             {
-                Logger = iocResolver.Resolve<ILoggerFactory>().Create(typeof (MultiTenantLocalizationSource));
+                Logger = iocResolver.Resolve<ILoggerFactory>().Create(typeof(MultiTenantLocalizationSource));
             }
         }
 
-        public string GetString(int? tenantId, string name, CultureInfo culture)
+        public string GetString(Guid? tenantId, string name, CultureInfo culture)
         {
             var value = GetStringOrNull(tenantId, name, culture);
 
@@ -47,7 +47,7 @@ namespace Abp.Localization
             return value;
         }
 
-        public string GetStringOrNull(int? tenantId, string name, CultureInfo culture, bool tryDefaults = true)
+        public string GetStringOrNull(Guid? tenantId, string name, CultureInfo culture, bool tryDefaults = true)
         {
             var cultureName = culture.Name;
             var dictionaries = DictionaryProvider.Dictionaries;

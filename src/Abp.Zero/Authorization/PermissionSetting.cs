@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Abp.Domain.Entities.Auditing;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Authorization
 {
@@ -8,7 +9,7 @@ namespace Abp.Authorization
     /// Used to grant/deny a permission for a role or user.
     /// </summary>
     [Table("AbpPermissions")]
-    public abstract class PermissionSetting : CreationAuditedEntity<long>
+    public abstract class PermissionSetting : CreationAuditedEntity<Guid>
     {
         /// <summary>
         /// Maximum length of the <see cref="Name"/> field.

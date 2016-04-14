@@ -1,5 +1,6 @@
-using System.Globalization;
 using Abp.Localization.Sources;
+using System;
+using System.Globalization;
 
 namespace Abp.Localization
 {
@@ -14,7 +15,7 @@ namespace Abp.Localization
         /// <param name="tenantId">TenantId or null for host.</param>
         /// <param name="name">Localization key name.</param>
         /// <param name="culture">Culture</param>
-        string GetString(int? tenantId, string name, CultureInfo culture);
+        string GetString(Guid? tenantId, string name, CultureInfo culture);
 
         /// <summary>
         /// Gets a <see cref="LocalizedString"/>.
@@ -23,6 +24,6 @@ namespace Abp.Localization
         /// <param name="name">Localization key name.</param>
         /// <param name="culture">Culture</param>
         /// <param name="tryDefaults">True: fallbacks to default languages if can not find in given culture</param>
-        string GetStringOrNull(int? tenantId, string name, CultureInfo culture, bool tryDefaults = true);
+        string GetStringOrNull(Guid? tenantId, string name, CultureInfo culture, bool tryDefaults = true);
     }
 }

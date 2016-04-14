@@ -1,9 +1,10 @@
 using Abp.Authorization.Users;
 using Abp.NHibernate.EntityMappings;
+using System;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class UserOrganizationUnitMap : EntityMap<UserOrganizationUnit, long>
+    public class UserOrganizationUnitMap : EntityMap<UserOrganizationUnit, Guid>
     {
         public UserOrganizationUnitMap()
             : base("AbpUserOrganizationUnits")

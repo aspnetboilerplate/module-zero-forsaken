@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using Abp.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
-using Abp.Extensions;
 
 namespace Abp.Auditing
 {
@@ -10,7 +10,7 @@ namespace Abp.Auditing
     /// Used to store audit logs.
     /// </summary>
     [Table("AbpAuditLogs")]
-    public class AuditLog : Entity<long>, IMayHaveTenant
+    public class AuditLog : Entity<Guid>, IMayHaveTenant
     {
         /// <summary>
         /// Maximum length of <see cref="ServiceName"/> property.
@@ -55,12 +55,12 @@ namespace Abp.Auditing
         /// <summary>
         /// TenantId.
         /// </summary>
-        public virtual int? TenantId { get; set; }
+        public virtual Guid? TenantId { get; set; }
 
         /// <summary>
         /// UserId.
         /// </summary>
-        public virtual long? UserId { get; set; }
+        public virtual Guid? UserId { get; set; }
 
         /// <summary>
         /// Service (class/interface) name.
@@ -117,12 +117,12 @@ namespace Abp.Auditing
         /// <summary>
         /// <see cref="AuditInfo.ImpersonatorUserId"/>.
         /// </summary>
-        public virtual long? ImpersonatorUserId { get; set; }
+        public virtual Guid? ImpersonatorUserId { get; set; }
 
         /// <summary>
         /// <see cref="AuditInfo.ImpersonatorTenantId"/>.
         /// </summary>
-        public virtual int? ImpersonatorTenantId { get; set; }
+        public virtual Guid? ImpersonatorTenantId { get; set; }
 
         /// <summary>
         /// <see cref="AuditInfo.CustomData"/>.
@@ -139,22 +139,22 @@ namespace Abp.Auditing
         {
             var exceptionMessage = auditInfo.Exception != null ? auditInfo.Exception.ToString() : null;
             return new AuditLog
-                   {
-                       TenantId = auditInfo.TenantId,
-                       UserId = auditInfo.UserId,
-                       ServiceName = auditInfo.ServiceName.TruncateWithPostfix(MaxServiceNameLength),
-                       MethodName = auditInfo.MethodName.TruncateWithPostfix(MaxMethodNameLength),
-                       Parameters = auditInfo.Parameters.TruncateWithPostfix(MaxParametersLength),
-                       ExecutionTime = auditInfo.ExecutionTime,
-                       ExecutionDuration = auditInfo.ExecutionDuration,
-                       ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
-                       ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
-                       BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
-                       Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
-                       ImpersonatorUserId = auditInfo.ImpersonatorUserId,
-                       ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
-                       CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)
-                   };
+            {
+                TenantId = auditInfo.TenantId,
+                UserId = auditInfo.UserId,
+                ServiceName = auditInfo.ServiceName.TruncateWithPostfix(MaxServiceNameLength),
+                MethodName = auditInfo.MethodName.TruncateWithPostfix(MaxMethodNameLength),
+                Parameters = auditInfo.Parameters.TruncateWithPostfix(MaxParametersLength),
+                ExecutionTime = auditInfo.ExecutionTime,
+                ExecutionDuration = auditInfo.ExecutionDuration,
+                ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
+                ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
+                BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
+                Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
+                ImpersonatorUserId = auditInfo.ImpersonatorUserId,
+                ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
+                CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)
+            };
         }
 
         public override string ToString()

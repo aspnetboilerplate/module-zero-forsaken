@@ -1,10 +1,11 @@
-﻿using System.DirectoryServices.AccountManagement;
-using System.Threading.Tasks;
-using Abp.Authorization.Users;
+﻿using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Zero.Ldap.Configuration;
+using System;
+using System.DirectoryServices.AccountManagement;
+using System.Threading.Tasks;
 
 namespace Abp.Zero.Ldap.Authentication
 {
@@ -112,7 +113,7 @@ namespace Abp.Zero.Ldap.Authentication
         protected virtual async Task<PrincipalContext> CreatePrincipalContext(TTenant tenant)
         {
             var tenantId = GetIdOrNull(tenant);
-            
+
             return new PrincipalContext(
                 await _settings.GetContextType(tenantId),
                 ConvertToNullIfEmpty(await _settings.GetDomain(tenantId)),
@@ -126,7 +127,7 @@ namespace Abp.Zero.Ldap.Authentication
         {
             if (!_ldapModuleConfig.IsEnabled)
             {
-                throw new AbpException("Ldap Authentication module is disabled globally!");                
+                throw new AbpException("Ldap Authentication module is disabled globally!");
             }
 
             var tenantId = GetIdOrNull(tenant);
@@ -136,10 +137,10 @@ namespace Abp.Zero.Ldap.Authentication
             }
         }
 
-        private static int? GetIdOrNull(TTenant tenant)
+        private static Guid? GetIdOrNull(TTenant tenant)
         {
             return tenant == null
-                ? (int?)null
+                ? (Guid?)null
                 : tenant.Id;
         }
 

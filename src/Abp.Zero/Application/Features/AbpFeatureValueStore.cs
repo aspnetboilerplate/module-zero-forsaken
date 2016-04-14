@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
@@ -8,31 +7,33 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
+using System;
+using System.Threading.Tasks;
 
 namespace Abp.Application.Features
 {
     /// <summary>
     /// Implements <see cref="IFeatureValueStore"/>.
     /// </summary>
-    public abstract class AbpFeatureValueStore<TTenant, TRole, TUser> : IAbpZeroFeatureValueStore, ITransientDependency 
-        where TTenant : AbpTenant<TTenant, TUser> 
-        where TRole : AbpRole<TTenant, TUser> 
+    public abstract class AbpFeatureValueStore<TTenant, TRole, TUser> : IAbpZeroFeatureValueStore, ITransientDependency
+        where TTenant : AbpTenant<TTenant, TUser>
+        where TRole : AbpRole<TTenant, TUser>
         where TUser : AbpUser<TTenant, TUser>
     {
         private readonly ICacheManager _cacheManager;
-        private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
-        private readonly IRepository<TTenant> _tenantRepository;
-        private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
+        private readonly IRepository<TenantFeatureSetting, Guid> _tenantFeatureRepository;
+        private readonly IRepository<TTenant, Guid> _tenantRepository;
+        private readonly IRepository<EditionFeatureSetting, Guid> _editionFeatureRepository;
         private readonly IFeatureManager _featureManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TRole, TUser}"/> class.
         /// </summary>
         protected AbpFeatureValueStore(
-            ICacheManager cacheManager, 
-            IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
-            IRepository<TTenant> tenantRepository,
-            IRepository<EditionFeatureSetting, long> editionFeatureRepository,
+            ICacheManager cacheManager,
+            IRepository<TenantFeatureSetting, Guid> tenantFeatureRepository,
+            IRepository<TTenant, Guid> tenantRepository,
+            IRepository<EditionFeatureSetting, Guid> editionFeatureRepository,
             IFeatureManager featureManager)
         {
             _cacheManager = cacheManager;
@@ -43,18 +44,18 @@ namespace Abp.Application.Features
         }
 
         /// <inheritdoc/>
-        public virtual Task<string> GetValueOrNullAsync(int tenantId, Feature feature)
+        public virtual Task<string> GetValueOrNullAsync(Guid tenantId, Feature feature)
         {
             return GetValueOrNullAsync(tenantId, feature.Name);
         }
 
-        public virtual async Task<string> GetEditionValueOrNullAsync(int editionId, string featureName)
+        public virtual async Task<string> GetEditionValueOrNullAsync(Guid editionId, string featureName)
         {
             var cacheItem = await GetEditionFeatureCacheItemAsync(editionId);
             return cacheItem.FeatureValues.GetOrDefault(featureName);
         }
 
-        public async Task<string> GetValueOrNullAsync(int tenantId, string featureName)
+        public async Task<string> GetValueOrNullAsync(Guid tenantId, string featureName)
         {
             var cacheItem = await GetTenantFeatureCacheItemAsync(tenantId);
             var value = cacheItem.FeatureValues.GetOrDefault(featureName);
@@ -76,7 +77,7 @@ namespace Abp.Application.Features
         }
 
         [UnitOfWork]
-        public virtual async Task SetEditionFeatureValueAsync(int editionId, string featureName, string value)
+        public virtual async Task SetEditionFeatureValueAsync(Guid editionId, string featureName, string value)
         {
             if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
             {
@@ -106,7 +107,7 @@ namespace Abp.Application.Features
             }
         }
 
-        private async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
+        private async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(Guid tenantId)
         {
             return await _cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {
@@ -124,7 +125,7 @@ namespace Abp.Application.Features
             });
         }
 
-        protected virtual async Task<EditionfeatureCacheItem> GetEditionFeatureCacheItemAsync(int editionId)
+        protected virtual async Task<EditionfeatureCacheItem> GetEditionFeatureCacheItemAsync(Guid editionId)
         {
             return await _cacheManager
                 .GetEditionFeatureCache()
@@ -134,7 +135,7 @@ namespace Abp.Application.Features
                 );
         }
 
-        protected virtual async Task<EditionfeatureCacheItem> CreateEditionFeatureCacheItem(int editionId)
+        protected virtual async Task<EditionfeatureCacheItem> CreateEditionFeatureCacheItem(Guid editionId)
         {
             var newCacheItem = new EditionfeatureCacheItem();
 

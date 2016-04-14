@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -10,6 +5,12 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Localization
 {
@@ -26,12 +27,12 @@ namespace Abp.Localization
         /// </summary>
         public const string CacheName = "AbpZeroLanguages";
 
-        private ITypedCache<int, Dictionary<string, ApplicationLanguage>> LanguageListCache
+        private ITypedCache<Guid, Dictionary<string, ApplicationLanguage>> LanguageListCache
         {
-            get { return _cacheManager.GetCache<int, Dictionary<string, ApplicationLanguage>>(CacheName); }
+            get { return _cacheManager.GetCache<Guid, Dictionary<string, ApplicationLanguage>>(CacheName); }
         }
 
-        private readonly IRepository<ApplicationLanguage> _languageRepository;
+        private readonly IRepository<ApplicationLanguage, Guid> _languageRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly ISettingManager _settingManager;
@@ -40,7 +41,7 @@ namespace Abp.Localization
         /// Initializes a new instance of the <see cref="ApplicationLanguageManager"/> class.
         /// </summary>
         public ApplicationLanguageManager(
-            IRepository<ApplicationLanguage> languageRepository,
+            IRepository<ApplicationLanguage, Guid> languageRepository,
             ICacheManager cacheManager,
             IUnitOfWorkManager unitOfWorkManager,
             ISettingManager settingManager)
@@ -55,7 +56,7 @@ namespace Abp.Localization
         /// Gets list of all languages available to given tenant (or null for host)
         /// </summary>
         /// <param name="tenantId">TenantId or null for host</param>
-        public async Task<IReadOnlyList<ApplicationLanguage>> GetLanguagesAsync(int? tenantId)
+        public async Task<IReadOnlyList<ApplicationLanguage>> GetLanguagesAsync(Guid? tenantId)
         {
             return (await GetLanguageDictionary(tenantId)).Values.ToImmutableList();
         }
@@ -85,7 +86,7 @@ namespace Abp.Localization
         /// <param name="tenantId">Tenant Id or null for host.</param>
         /// <param name="languageName">Name of the language.</param>
         [UnitOfWork]
-        public virtual async Task RemoveAsync(int? tenantId, string languageName)
+        public virtual async Task RemoveAsync(Guid? tenantId, string languageName)
         {
             var currentLanguage = (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == languageName);
             if (currentLanguage == null)
@@ -110,7 +111,7 @@ namespace Abp.Localization
         /// </summary>
         /// <param name="language">The language to be updated</param>
         [UnitOfWork]
-        public virtual async Task UpdateAsync(int? tenantId, ApplicationLanguage language)
+        public virtual async Task UpdateAsync(Guid? tenantId, ApplicationLanguage language)
         {
             var existingLanguageWithSameName = (await GetLanguagesAsync(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
             if (existingLanguageWithSameName != null)
@@ -137,7 +138,7 @@ namespace Abp.Localization
         /// Gets the default language or null for a tenant or the host.
         /// </summary>
         /// <param name="tenantId">Tenant Id of null for host</param>
-        public async Task<ApplicationLanguage> GetDefaultLanguageOrNullAsync(int? tenantId)
+        public async Task<ApplicationLanguage> GetDefaultLanguageOrNullAsync(Guid? tenantId)
         {
             var defaultLanguageName = tenantId.HasValue
                 ? await _settingManager.GetSettingValueForTenantAsync(LocalizationSettingNames.DefaultLanguage, tenantId.Value)
@@ -151,7 +152,7 @@ namespace Abp.Localization
         /// </summary>
         /// <param name="tenantId">Tenant Id of null for host</param>
         /// <param name="languageName">Name of the language.</param>
-        public async Task SetDefaultLanguageAsync(int? tenantId, string languageName)
+        public async Task SetDefaultLanguageAsync(Guid? tenantId, string languageName)
         {
             var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
@@ -166,13 +167,13 @@ namespace Abp.Localization
 
         public void HandleEvent(EntityChangedEventData<ApplicationLanguage> eventData)
         {
-            LanguageListCache.Remove(eventData.Entity.TenantId ?? 0);
+            LanguageListCache.Remove(eventData.Entity.TenantId ?? Guid.Empty);
 
             //Also invalidate the language script cache
             _cacheManager.GetCache("AbpLocalizationScripts").Clear(); //TODO: CAN BE AN OPTIMIZATION?
         }
 
-        private async Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionary(int? tenantId)
+        private async Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionary(Guid? tenantId)
         {
             //Creates a copy of the cached dictionary (to not modify it)
             var languageDictionary = new Dictionary<string, ApplicationLanguage>(await GetLanguageDictionaryFromCacheAsync(null));
@@ -191,13 +192,13 @@ namespace Abp.Localization
             return languageDictionary;
         }
 
-        private Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionaryFromCacheAsync(int? tenantId)
+        private Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionaryFromCacheAsync(Guid? tenantId)
         {
-            return LanguageListCache.GetAsync(tenantId ?? 0, () => GetLanguagesFromDatabaseAsync(tenantId));
+            return LanguageListCache.GetAsync(tenantId ?? Guid.Empty, () => GetLanguagesFromDatabaseAsync(tenantId));
         }
 
         [UnitOfWork]
-        protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguagesFromDatabaseAsync(int? tenantId)
+        protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguagesFromDatabaseAsync(Guid? tenantId)
         {
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {

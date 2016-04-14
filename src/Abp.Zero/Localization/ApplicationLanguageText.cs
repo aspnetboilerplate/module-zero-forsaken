@@ -1,8 +1,8 @@
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Localization
 {
@@ -11,7 +11,7 @@ namespace Abp.Localization
     /// </summary>
     [Serializable]
     [Table("AbpLanguageTexts")]
-    public class ApplicationLanguageText : AuditedEntity<long>, IMayHaveTenant
+    public class ApplicationLanguageText : AuditedEntity<Guid>, IMayHaveTenant
     {
         public const int MaxSourceNameLength = 128;
         public const int MaxKeyLength = 256;
@@ -20,7 +20,7 @@ namespace Abp.Localization
         /// <summary>
         /// TenantId of this entity. Can be null for host.
         /// </summary>
-        public virtual int? TenantId { get; set; }
+        public virtual Guid? TenantId { get; set; }
 
         /// <summary>
         /// Language name (culture name). Matches to <see cref="ApplicationLanguage.Name"/>.

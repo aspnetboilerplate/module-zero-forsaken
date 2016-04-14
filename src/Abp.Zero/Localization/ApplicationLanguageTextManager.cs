@@ -1,9 +1,10 @@
-using System.Globalization;
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
+using System;
+using System.Globalization;
+using System.Threading.Tasks;
 
 namespace Abp.Localization
 {
@@ -13,15 +14,15 @@ namespace Abp.Localization
     public class ApplicationLanguageTextManager : IApplicationLanguageTextManager, ITransientDependency
     {
         private readonly ILocalizationManager _localizationManager;
-        private readonly IRepository<ApplicationLanguageText, long> _applicationTextRepository;
+        private readonly IRepository<ApplicationLanguageText, Guid> _applicationTextRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationLanguageTextManager"/> class.
         /// </summary>
         public ApplicationLanguageTextManager(
-            ILocalizationManager localizationManager, 
-            IRepository<ApplicationLanguageText, long> applicationTextRepository,
+            ILocalizationManager localizationManager,
+            IRepository<ApplicationLanguageText, Guid> applicationTextRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
             _localizationManager = localizationManager;
@@ -37,7 +38,7 @@ namespace Abp.Localization
         /// <param name="culture">Culture</param>
         /// <param name="key">Localization key</param>
         /// <param name="tryDefaults">True: fallbacks to default languages if can not find in given culture</param>
-        public string GetStringOrNull(int? tenantId, string sourceName, CultureInfo culture, string key, bool tryDefaults = true)
+        public string GetStringOrNull(Guid? tenantId, string sourceName, CultureInfo culture, string key, bool tryDefaults = true)
         {
             var source = _localizationManager.GetSource(sourceName);
 
@@ -60,7 +61,7 @@ namespace Abp.Localization
         /// <param name="key">Localization key</param>
         /// <param name="value">New localized value.</param>
         [UnitOfWork]
-        public virtual async Task UpdateStringAsync(int? tenantId, string sourceName, CultureInfo culture, string key, string value)
+        public virtual async Task UpdateStringAsync(Guid? tenantId, string sourceName, CultureInfo culture, string key, string value)
         {
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
@@ -84,11 +85,11 @@ namespace Abp.Localization
                     await _applicationTextRepository.InsertAsync(
                         new ApplicationLanguageText
                         {
-                           TenantId = tenantId,
-                           Source = sourceName,
-                           LanguageName = culture.Name,
-                           Key = key,
-                           Value = value
+                            TenantId = tenantId,
+                            Source = sourceName,
+                            LanguageName = culture.Name,
+                            Key = key,
+                            Value = value
                         });
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }

@@ -1,6 +1,7 @@
+using Abp.Domain.Entities.Auditing;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Application.Features
 {
@@ -8,7 +9,7 @@ namespace Abp.Application.Features
     /// Base class for feature settings
     /// </summary>
     [Table("AbpFeatures")]
-    public abstract class FeatureSetting : CreationAuditedEntity<long>
+    public abstract class FeatureSetting : CreationAuditedEntity<Guid>
     {
         /// <summary>
         /// Maximum length of the <see cref="Name"/> field.
@@ -39,7 +40,6 @@ namespace Abp.Application.Features
         /// </summary>
         protected FeatureSetting()
         {
-            
         }
 
         /// <summary>

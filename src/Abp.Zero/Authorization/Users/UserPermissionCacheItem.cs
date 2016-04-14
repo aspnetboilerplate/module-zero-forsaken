@@ -18,9 +18,9 @@ namespace Abp.Authorization.Users
         /// </summary>
         public static TimeSpan CacheExpireTime { get; private set; }
 
-        public long UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        public List<int> RoleIds { get; set; }
+        public List<Guid> RoleIds { get; set; }
 
         public HashSet<string> GrantedPermissions { get; set; }
 
@@ -33,12 +33,12 @@ namespace Abp.Authorization.Users
 
         public UserPermissionCacheItem()
         {
-            RoleIds = new List<int>();
+            RoleIds = new List<Guid>();
             GrantedPermissions = new HashSet<string>();
             ProhibitedPermissions = new HashSet<string>();
         }
 
-        public UserPermissionCacheItem(long userId)
+        public UserPermissionCacheItem(Guid userId)
             : this()
         {
             UserId = userId;

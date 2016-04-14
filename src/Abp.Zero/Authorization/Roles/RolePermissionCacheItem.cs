@@ -18,7 +18,7 @@ namespace Abp.Authorization.Roles
         /// </summary>
         public static TimeSpan CacheExpireTime { get; private set; }
 
-        public long RoleId { get; set; }
+        public Guid RoleId { get; set; }
 
         public HashSet<string> GrantedPermissions { get; set; }
 
@@ -35,7 +35,7 @@ namespace Abp.Authorization.Roles
             ProhibitedPermissions = new HashSet<string>();
         }
 
-        public RolePermissionCacheItem(int roleId)
+        public RolePermissionCacheItem(Guid roleId)
             : this()
         {
             RoleId = roleId;

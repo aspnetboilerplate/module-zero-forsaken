@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Abp.Collections.Extensions;
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using Abp.Extensions;
 
 namespace Abp.Organizations
 {
@@ -14,7 +14,7 @@ namespace Abp.Organizations
     /// Represents an organization unit (OU).
     /// </summary>
     [Table("AbpOrganizationUnits")]
-    public class OrganizationUnit : FullAuditedEntity<long>, IMayHaveTenant
+    public class OrganizationUnit : FullAuditedEntity<Guid>, IMayHaveTenant
     {
         /// <summary>
         /// Maximum length of the <see cref="DisplayName"/> property.
@@ -39,7 +39,7 @@ namespace Abp.Organizations
         /// <summary>
         /// TenantId of this entity.
         /// </summary>
-        public virtual int? TenantId { get; set; }
+        public virtual Guid? TenantId { get; set; }
 
         /// <summary>
         /// Parent <see cref="OrganizationUnit"/>.
@@ -52,7 +52,7 @@ namespace Abp.Organizations
         /// Parent <see cref="OrganizationUnit"/> Id.
         /// Null, if this OU is root.
         /// </summary>
-        public virtual long? ParentId { get; set; }
+        public virtual Guid? ParentId { get; set; }
 
         /// <summary>
         /// Hierarchical Code of this organization unit.
@@ -81,7 +81,6 @@ namespace Abp.Organizations
         /// </summary>
         public OrganizationUnit()
         {
-            
         }
 
         /// <summary>
@@ -90,7 +89,7 @@ namespace Abp.Organizations
         /// <param name="tenantId">Tenant's Id or null for host.</param>
         /// <param name="displayName">Display name.</param>
         /// <param name="parentId">Parent's Id or null if OU is a root.</param>
-        public OrganizationUnit(int? tenantId, string displayName, long? parentId = null)
+        public OrganizationUnit(Guid? tenantId, string displayName, Guid? parentId = null)
         {
             TenantId = tenantId;
             DisplayName = displayName;
@@ -113,7 +112,7 @@ namespace Abp.Organizations
         }
 
         /// <summary>
-        /// Appends a child code to a parent code. 
+        /// Appends a child code to a parent code.
         /// Example: if parentCode = "00001", childCode = "00042" then returns "00001.00042".
         /// </summary>
         /// <param name="parentCode">Parent code. Can be null or empty if parent is a root.</param>
