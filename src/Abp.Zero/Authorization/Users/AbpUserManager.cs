@@ -60,7 +60,7 @@ namespace Abp.Authorization.Users
 
         public FeatureDependencyContext FeatureDependencyContext { get; set; }
 
-        protected AbpRoleManager<TTenant, TRole, TUser> RoleManager { get; private set; }
+        protected AbpRoleManager<TRole, TUser> RoleManager { get; private set; }
 
         protected ISettingManager SettingManager { get; private set; }
 
@@ -80,7 +80,7 @@ namespace Abp.Authorization.Users
 
         protected AbpUserManager(
             AbpUserStore<TRole, TUser> userStore,
-            AbpRoleManager<TTenant, TRole, TUser> roleManager,
+            AbpRoleManager<TRole, TUser> roleManager,
             IRepository<TTenant> tenantRepository,
             IMultiTenancyConfig multiTenancyConfig,
             IPermissionManager permissionManager,

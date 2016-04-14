@@ -20,10 +20,9 @@ namespace Abp.Authorization.Roles
     /// Extends <see cref="RoleManager{TRole,TKey}"/> of ASP.NET Identity Framework.
     /// Applications should derive this class with appropriate generic arguments.
     /// </summary>
-    public abstract class AbpRoleManager<TTenant, TRole, TUser>
+    public abstract class AbpRoleManager<TRole, TUser>
         : RoleManager<TRole, int>,
         IDomainService
-        where TTenant : AbpTenant<TUser>
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {

@@ -3,12 +3,11 @@ using Abp.Authorization.Roles;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
 using Abp.Zero.Configuration;
-using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.Roles
 {
-    public class RoleManager : AbpRoleManager<Tenant, Role, User>
+    public class RoleManager : AbpRoleManager<Role, User>
     {
         public RoleManager(
             RoleStore store, 
