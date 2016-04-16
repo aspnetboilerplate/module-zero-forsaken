@@ -29,6 +29,8 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
 {
+    //TODO: Extract Login operations to AbpLoginManager and remove TTenant generic parameter.
+
     /// <summary>
     /// Extends <see cref="UserManager{TUser,TKey}"/> of ASP.NET Identity Framework.
     /// </summary>
@@ -382,21 +384,24 @@ namespace Abp.Authorization.Users
 
             //Get and check tenant
             TTenant tenant = null;
-            if (!_multiTenancyConfig.IsEnabled)
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                tenant = await GetDefaultTenantAsync();
-            }
-            else if (!string.IsNullOrWhiteSpace(tenancyName))
-            {
-                tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
-                if (tenant == null)
+                if (!_multiTenancyConfig.IsEnabled)
                 {
-                    return new AbpLoginResult(AbpLoginResultType.InvalidTenancyName);
+                    tenant = await GetDefaultTenantAsync();
                 }
-
-                if (!tenant.IsActive)
+                else if (!string.IsNullOrWhiteSpace(tenancyName))
                 {
-                    return new AbpLoginResult(AbpLoginResultType.TenantIsNotActive, tenant);
+                    tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+                    if (tenant == null)
+                    {
+                        return new AbpLoginResult(AbpLoginResultType.InvalidTenancyName);
+                    }
+
+                    if (!tenant.IsActive)
+                    {
+                        return new AbpLoginResult(AbpLoginResultType.TenantIsNotActive, tenant);
+                    }
                 }
             }
 

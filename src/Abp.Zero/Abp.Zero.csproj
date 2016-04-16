@@ -147,6 +147,7 @@
     <Compile Include="Organizations\OrganizationUnitManager.cs" />
     <Compile Include="Organizations\OrganizationUnitSettings.cs" />
     <Compile Include="Runtime\Caching\AbpZeroCacheManagerExtensions.cs" />
+    <Compile Include="Runtime\Session\AbpSessionExtensions.cs" />
     <Compile Include="Runtime\Session\IdentityFrameworkClaimsAbpSession.cs" />
     <Compile Include="Configuration\SettingStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
