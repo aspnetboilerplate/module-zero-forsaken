@@ -2,7 +2,7 @@ using FluentMigrator;
 
 namespace Abp.Zero.FluentMigrator.Migrations
 {
-    [Migration(20160122)]
+    [Migration(2016012201)]
     public class _20160122_01_Create_AbpBackgroundJobs_Table : AutoReversingMigration
     {
         public override void Up()
