@@ -88,6 +88,7 @@ namespace Abp.Authorization.Roles
             await _rolePermissionSettingRepository.InsertAsync(
                 new RolePermissionSetting
                 {
+                    TenantId = role.TenantId,
                     RoleId = role.Id,
                     Name = permissionGrant.Name,
                     IsGranted = permissionGrant.IsGranted

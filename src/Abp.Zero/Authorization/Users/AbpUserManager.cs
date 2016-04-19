@@ -813,9 +813,11 @@ namespace Abp.Authorization.Users
             return tenant;
         }
 
+
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
         {
-            return await _cacheManager.GetUserPermissionCache().GetAsync(userId, async () =>
+            var cacheKey = userId + "@" + (AbpSession.TenantId ?? 0);
+            return await _cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new UserPermissionCacheItem(userId);
 

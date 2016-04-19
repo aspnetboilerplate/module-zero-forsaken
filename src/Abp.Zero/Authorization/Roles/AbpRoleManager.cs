@@ -453,7 +453,8 @@ namespace Abp.Authorization.Roles
 
         private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(int roleId)
         {
-            return await _cacheManager.GetRolePermissionCache().GetAsync(roleId, async () =>
+            var cacheKey = roleId + "@" + (AbpSession.TenantId ?? 0);
+            return await _cacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 

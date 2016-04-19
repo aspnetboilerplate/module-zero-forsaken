@@ -109,17 +109,20 @@ namespace Abp.Application.Features
             }
         }
 
-        [UnitOfWork]
-        protected virtual async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
+        protected async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
         {
             return await _cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {
                 TTenant tenant;
-                using (_unitOfWorkManager.Current.SetTenantId(null))
+                using (var uow = _unitOfWorkManager.Begin())
                 {
-                    tenant = await _tenantRepository.GetAsync(tenantId);
-                }
+                    using (_unitOfWorkManager.Current.SetTenantId(null))
+                    {
+                        tenant = await _tenantRepository.GetAsync(tenantId);
+                    }
 
+                    await uow.CompleteAsync();
+                }
                 var newCacheItem = new TenantFeatureCacheItem { EditionId = tenant.EditionId };
 
                 using (var uow = _unitOfWorkManager.Begin())

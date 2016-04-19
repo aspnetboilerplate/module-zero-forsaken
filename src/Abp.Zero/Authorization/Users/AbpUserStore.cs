@@ -155,6 +155,7 @@ namespace Abp.Authorization.Users
             await _userLoginRepository.InsertAsync(
                 new UserLogin
                 {
+                    TenantId = user.TenantId,
                     LoginProvider = login.LoginProvider,
                     ProviderKey = login.ProviderKey,
                     UserId = user.Id
@@ -221,6 +222,7 @@ namespace Abp.Authorization.Users
             await _userRoleRepository.InsertAsync(
                 new UserRole
                 {
+                    TenantId = user.TenantId,
                     UserId = user.Id,
                     RoleId = role.Id
                 });
@@ -270,6 +272,7 @@ namespace Abp.Authorization.Users
             await _userPermissionSettingRepository.InsertAsync(
                 new UserPermissionSetting
                 {
+                    TenantId = user.TenantId,
                     UserId = user.Id,
                     Name = permissionGrant.Name,
                     IsGranted = permissionGrant.IsGranted
