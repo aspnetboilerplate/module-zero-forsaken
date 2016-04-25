@@ -19,7 +19,7 @@ namespace Abp.Configuration
         /// Constructor.
         /// </summary>
         public SettingStore(
-            IRepository<Setting, long> settingRepository, 
+            IRepository<Setting, long> settingRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
             _settingRepository = settingRepository;
@@ -29,12 +29,19 @@ namespace Abp.Configuration
         [UnitOfWork]
         public virtual async Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
         {
+            /* Combined SetTenantId and DisableFilter for backward compatibility.
+             * SetTenantId switches database (for tenant) if needed.
+             * DisableFilter and Where condition ensures to work even if tenantId is null for single db approach.
+             */
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return 
-                    (await _settingRepository.GetAllListAsync(s => s.UserId == userId))
-                    .Select(s => s.ToSettingInfo())
-                    .ToList();
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    return
+                        (await _settingRepository.GetAllListAsync(s => s.UserId == userId && s.TenantId == tenantId))
+                        .Select(s => s.ToSettingInfo())
+                        .ToList();
+                }
             }
         }
 
@@ -43,9 +50,11 @@ namespace Abp.Configuration
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return 
-                    (await _settingRepository.FirstOrDefaultAsync(s => s.UserId == userId && s.Name == name))
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    return (await _settingRepository.FirstOrDefaultAsync(s => s.UserId == userId && s.Name == name && s.TenantId == tenantId))
                     .ToSettingInfo();
+                }
             }
         }
 
@@ -54,10 +63,13 @@ namespace Abp.Configuration
         {
             using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
             {
-                await _settingRepository.DeleteAsync(
-                    s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    await _settingRepository.DeleteAsync(
+                    s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name && s.TenantId == settingInfo.TenantId
                     );
-                await _unitOfWorkManager.Current.SaveChangesAsync();
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                }
             }
         }
 
@@ -66,8 +78,11 @@ namespace Abp.Configuration
         {
             using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
             {
-                await _settingRepository.InsertAsync(settingInfo.ToSetting());
-                await _unitOfWorkManager.Current.SaveChangesAsync();
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    await _settingRepository.InsertAsync(settingInfo.ToSetting());
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                }
             }
         }
 
@@ -76,16 +91,21 @@ namespace Abp.Configuration
         {
             using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
             {
-                var setting = await _settingRepository.FirstOrDefaultAsync(
-                s => s.TenantId == settingInfo.TenantId && s.UserId == settingInfo.UserId && s.Name == settingInfo.Name
-                );
-
-                if (setting != null)
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    setting.Value = settingInfo.Value;
-                }
+                    var setting = await _settingRepository.FirstOrDefaultAsync(
+                        s => s.TenantId == settingInfo.TenantId &&
+                             s.UserId == settingInfo.UserId &&
+                             s.Name == settingInfo.Name
+                        );
 
-                await _unitOfWorkManager.Current.SaveChangesAsync();
+                    if (setting != null)
+                    {
+                        setting.Value = settingInfo.Value;
+                    }
+
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                }
             }
         }
     }
