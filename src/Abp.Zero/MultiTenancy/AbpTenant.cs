@@ -64,12 +64,6 @@ namespace Abp.MultiTenancy
         public virtual bool IsActive { get; set; }
 
         /// <summary>
-        /// Defined settings for this tenant.
-        /// </summary>
-        [ForeignKey("TenantId")]
-        public virtual ICollection<Setting> Settings { get; set; }
-
-        /// <summary>
         /// Creates a new tenant.
         /// </summary>
         public AbpTenant()

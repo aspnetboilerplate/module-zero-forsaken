@@ -92,6 +92,11 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<NotificationInfo> Notifications { get; set; }
 
         /// <summary>
+        /// Tenant notifications.
+        /// </summary>
+        public virtual IDbSet<TenantNotificationInfo> TenantNotifications { get; set; }
+
+        /// <summary>
         /// User notifications.
         /// </summary>
         public virtual IDbSet<UserNotificationInfo> UserNotifications { get; set; }

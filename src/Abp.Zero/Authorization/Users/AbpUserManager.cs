@@ -124,9 +124,10 @@ namespace Abp.Authorization.Users
                 return result;
             }
 
-            if (AbpSession.TenantId.HasValue)
+            var tenantId = GetCurrentTenantId();
+            if (tenantId.HasValue && !user.TenantId.HasValue)
             {
-                user.TenantId = AbpSession.TenantId.Value;
+                user.TenantId = tenantId.Value;
             }
 
             return await base.CreateAsync(user);
@@ -816,7 +817,7 @@ namespace Abp.Authorization.Users
 
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
         {
-            var cacheKey = userId + "@" + (AbpSession.TenantId ?? 0);
+            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
             return await _cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new UserPermissionCacheItem(userId);
@@ -870,6 +871,16 @@ namespace Abp.Authorization.Users
                 User = user;
                 Identity = identity;
             }
+        }
+
+        private int? GetCurrentTenantId()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return _unitOfWorkManager.Current.GetTenantId();
+            }
+
+            return AbpSession.TenantId;
         }
     }
 }

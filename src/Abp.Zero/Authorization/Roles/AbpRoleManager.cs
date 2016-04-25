@@ -326,9 +326,10 @@ namespace Abp.Authorization.Roles
                 return result;
             }
 
-            if (AbpSession.TenantId.HasValue)
+            var tenantId = GetCurrentTenantId();
+            if (tenantId.HasValue && !role.TenantId.HasValue)
             {
-                role.TenantId = AbpSession.TenantId.Value;
+                role.TenantId = tenantId.Value;
             }
 
             return await base.CreateAsync(role);
@@ -453,7 +454,7 @@ namespace Abp.Authorization.Roles
 
         private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(int roleId)
         {
-            var cacheKey = roleId + "@" + (AbpSession.TenantId ?? 0);
+            var cacheKey = roleId + "@" + (GetCurrentTenantId() ?? 0);
             return await _cacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
@@ -477,6 +478,16 @@ namespace Abp.Authorization.Roles
         private string L(string name)
         {
             return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+        }
+
+        private int? GetCurrentTenantId()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return _unitOfWorkManager.Current.GetTenantId();
+            }
+
+            return AbpSession.TenantId;
         }
     }
 }

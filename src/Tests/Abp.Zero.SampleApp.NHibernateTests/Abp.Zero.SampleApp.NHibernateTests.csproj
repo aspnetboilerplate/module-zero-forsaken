@@ -36,12 +36,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Abp, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Abp.0.8.4.0\lib\net452\Abp.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\aspnetboilerplate\src\Abp\bin\Debug\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Abp.NHibernate, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Abp.NHibernate.0.8.4.0\lib\net452\Abp.NHibernate.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\aspnetboilerplate\src\Abp.NHibernate\bin\Debug\Abp.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Abp.TestBase, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Abp.TestBase.0.8.4.0\lib\net452\Abp.TestBase.dll</HintPath>

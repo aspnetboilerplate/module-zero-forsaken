@@ -29,5 +29,14 @@ namespace Abp.Authorization.Users
         /// Tenant Id of this user.
         /// </summary>
         public virtual int? TenantId { get; set; }
+
+        /// <summary>
+        /// Creates <see cref="UserIdentifier"/> from this User.
+        /// </summary>
+        /// <returns></returns>
+        public virtual UserIdentifier ToUserIdentifier()
+        {
+            return new UserIdentifier(TenantId, Id);
+        }
     }
 }
