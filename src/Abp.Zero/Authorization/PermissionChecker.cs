@@ -2,6 +2,7 @@
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
@@ -25,6 +26,8 @@ namespace Abp.Authorization
 
         public IAbpSession AbpSession { get; set; }
 
+        public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -44,6 +47,20 @@ namespace Abp.Authorization
         public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
             return await _userManager.IsGrantedAsync(userId, permissionName);
+        }
+
+        [UnitOfWork]
+        public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
+        {
+            if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
+            {
+                return await IsGrantedAsync(user.UserId, permissionName);
+            }
+
+            using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
+            {
+                return await _userManager.IsGrantedAsync(user.UserId, permissionName);
+            }
         }
     }
 }
