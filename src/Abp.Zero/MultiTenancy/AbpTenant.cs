@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Editions;
 using Abp.Authorization.Users;
-using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
@@ -13,6 +11,7 @@ namespace Abp.MultiTenancy
     /// Represents a Tenant of the application.
     /// </summary>
     [Table("AbpTenants")]
+    [MultiTenancySide(MultiTenancySides.Host)]
     public class AbpTenant<TUser> : FullAuditedEntity<int, TUser>, IPassivable
         where TUser : AbpUser<TUser>
     {
