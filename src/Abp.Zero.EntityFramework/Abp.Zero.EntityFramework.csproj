@@ -95,6 +95,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -109,9 +110,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityFramework\Extensions\EntityFrameworkModelBuilderExtensions.cs" />
     <Compile Include="Zero\EntityFramework\AbpZeroHostDbContext.cs" />
+    <Compile Include="Zero\EntityFramework\AbpZeroDbMigrator.cs" />
     <Compile Include="Zero\EntityFramework\AbpZeroTenantDbContext.cs" />
     <Compile Include="Data\ConnectionStringHelper.cs" />
     <Compile Include="Zero\EntityFramework\DbPerTenantConnectionStringResolver.cs" />
+    <Compile Include="Zero\EntityFramework\ISupportSeedMode.cs" />
+    <Compile Include="Zero\EntityFramework\SeedMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Zero.EntityFramework.nuspec" />

@@ -113,6 +113,7 @@
     <Compile Include="Localization\IMultiTenantLocalizationSource.cs" />
     <Compile Include="Localization\MultiTenantLocalizationSource.cs" />
     <Compile Include="MultiTenancy\AbpTenantBase.cs" />
+    <Compile Include="MultiTenancy\IAbpZeroDbMigrator.cs" />
     <Compile Include="MultiTenancy\IDbPerTenantConnectionStringResolver.cs" />
     <Compile Include="MultiTenancy\ITenantCache.cs" />
     <Compile Include="MultiTenancy\TenantCache.cs" />
