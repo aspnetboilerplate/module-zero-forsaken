@@ -4,7 +4,7 @@ using Abp.Domain.Entities;
 namespace Abp.MultiTenancy
 {
     /// <summary>
-    /// Feature setting for a Tenant (<see cref="AbpTenant{TTenant,TUser}"/>).
+    /// Feature setting for a Tenant (<see cref="AbpTenant{TUser}"/>).
     /// </summary>
     public class TenantFeatureSetting : FeatureSetting, IMustHaveTenant
     {

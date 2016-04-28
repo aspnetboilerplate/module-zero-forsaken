@@ -112,6 +112,12 @@
     <Compile Include="Localization\IMultiTenantLocalizationDictionary.cs" />
     <Compile Include="Localization\IMultiTenantLocalizationSource.cs" />
     <Compile Include="Localization\MultiTenantLocalizationSource.cs" />
+    <Compile Include="MultiTenancy\AbpTenantBase.cs" />
+    <Compile Include="MultiTenancy\IDbPerTenantConnectionStringResolver.cs" />
+    <Compile Include="MultiTenancy\ITenantCache.cs" />
+    <Compile Include="MultiTenancy\TenantCache.cs" />
+    <Compile Include="MultiTenancy\TenantCacheItem.cs" />
+    <Compile Include="MultiTenancy\TenantCacheManagerExtensions.cs" />
     <Compile Include="MultiTenancy\TenantFeatureCacheItem.cs" />
     <Compile Include="Auditing\AuditingStore.cs" />
     <Compile Include="Auditing\AuditLog.cs" />
@@ -162,9 +168,11 @@
     <Compile Include="Authorization\Users\UserLogin.cs" />
     <Compile Include="Zero\AbpZeroConsts.cs" />
     <Compile Include="Zero\AbpZeroCoreModule.cs" />
+    <Compile Include="Zero\Configuration\AbpZeroEntityTypes.cs" />
     <Compile Include="Zero\Configuration\AbpZeroSettingNames.cs" />
     <Compile Include="Zero\Configuration\AbpZeroSettingProvider.cs" />
     <Compile Include="Zero\Configuration\IAbpZeroConfig.cs" />
+    <Compile Include="Zero\Configuration\IAbpZeroEntityTypes.cs" />
     <Compile Include="Zero\Configuration\ILanguageManagementConfig.cs" />
     <Compile Include="Organizations\IOrganizationUnitSettings.cs" />
     <Compile Include="Zero\Configuration\IRoleManagementConfig.cs" />

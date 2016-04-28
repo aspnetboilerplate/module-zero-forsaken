@@ -12,7 +12,7 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser<TUser> : AbpUserBase, IFullAudited<TUser>, IPassivable
+    public abstract class AbpUser<TUser> : AbpUserBase, IFullAudited<TUser>, IPassivable
         where TUser : AbpUser<TUser>
     {
         /// <summary>

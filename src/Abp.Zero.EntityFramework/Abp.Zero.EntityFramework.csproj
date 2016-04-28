@@ -93,6 +93,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -109,6 +110,8 @@
     <Compile Include="EntityFramework\Extensions\EntityFrameworkModelBuilderExtensions.cs" />
     <Compile Include="Zero\EntityFramework\AbpZeroHostDbContext.cs" />
     <Compile Include="Zero\EntityFramework\AbpZeroTenantDbContext.cs" />
+    <Compile Include="Data\ConnectionStringHelper.cs" />
+    <Compile Include="Zero\EntityFramework\DbPerTenantConnectionStringResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Zero.EntityFramework.nuspec" />
