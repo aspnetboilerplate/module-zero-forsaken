@@ -156,6 +156,7 @@
     <Compile Include="TestDatas\InitialTestOrganizationUnitsBuilder.cs" />
     <Compile Include="TestDatas\InitialUserOrganizationUnitsBuilder.cs" />
     <Compile Include="TestDatas\InitialUsersBuilder.cs" />
+    <Compile Include="Users\UserAccountSynchronizer_Tests.cs" />
     <Compile Include="Users\UserAppService_Tests.cs" />
     <Compile Include="Users\UserLoginHelper.cs" />
     <Compile Include="Users\UserLogin_ExternalAuthenticationSources_Test.cs" />

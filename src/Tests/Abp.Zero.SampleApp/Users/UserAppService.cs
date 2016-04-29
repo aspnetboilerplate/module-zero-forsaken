@@ -25,5 +25,25 @@ namespace Abp.Zero.SampleApp.Users
                                        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
                                    });
         }
+
+        public void UpdateUser(UpdateUserInput input)
+        {
+            var user = _userRepository.Get(input.Id);
+
+            user.TenantId = null;
+            user.UserName = input.UserName;
+            user.Name = input.Name;
+            user.Surname = input.Surname;
+            user.EmailAddress = input.EmailAddress;
+            user.IsEmailConfirmed = true;
+            user.Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw=="; //123qwe
+
+            _userRepository.Update(user);
+        }
+
+        public void DeleteUser(long userId)
+        {
+            _userRepository.Delete(userId);
+        }
     }
 }

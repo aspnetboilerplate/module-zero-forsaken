@@ -3,8 +3,11 @@ using Abp.Application.Services.Dto;
 
 namespace Abp.Zero.SampleApp.Users.Dto
 {
-    public class CreateUserInput : IInputDto
+    public class UpdateUserInput : IInputDto
     {
+        [Required]
+        public long Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 
