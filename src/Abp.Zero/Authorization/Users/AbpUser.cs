@@ -42,11 +42,6 @@ namespace Abp.Authorization.Users
         public const int MaxPlainPasswordLength = 32;
 
         /// <summary>
-        /// Maximum length of the <see cref="EmailAddress"/> property.
-        /// </summary>
-        public const int MaxEmailAddressLength = 256;
-
-        /// <summary>
         /// Maximum length of the <see cref="EmailConfirmationCode"/> property.
         /// </summary>
         public const int MaxEmailConfirmationCodeLength = 128;
@@ -95,14 +90,6 @@ namespace Abp.Authorization.Users
         [Required]
         [StringLength(MaxPasswordLength)]
         public virtual string Password { get; set; }
-
-        /// <summary>
-        /// Email address of the user.
-        /// Email address must be unique for it's tenant.
-        /// </summary>
-        [Required]
-        [StringLength(MaxEmailAddressLength)]
-        public virtual string EmailAddress { get; set; }
 
         /// <summary>
         /// Is the <see cref="EmailAddress"/> confirmed.

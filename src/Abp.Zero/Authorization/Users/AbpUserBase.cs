@@ -18,6 +18,11 @@ namespace Abp.Authorization.Users
         public const int MaxUserNameLength = 32;
 
         /// <summary>
+        /// Maximum length of the <see cref="EmailAddress"/> property.
+        /// </summary>
+        public const int MaxEmailAddressLength = 256;
+
+        /// <summary>
         /// User name.
         /// User name must be unique for it's tenant.
         /// </summary>
@@ -29,6 +34,14 @@ namespace Abp.Authorization.Users
         /// Tenant Id of this user.
         /// </summary>
         public virtual int? TenantId { get; set; }
+
+        /// <summary>
+        /// Email address of the user.
+        /// Email address must be unique for it's tenant.
+        /// </summary>
+        [Required]
+        [StringLength(MaxEmailAddressLength)]
+        public virtual string EmailAddress { get; set; }
 
         /// <summary>
         /// Creates <see cref="UserIdentifier"/> from this User.
