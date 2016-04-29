@@ -50,6 +50,11 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<BackgroundJobInfo> BackgroundJobs { get; set; }
 
         /// <summary>
+        /// User accounts
+        /// </summary>
+        public virtual IDbSet<UserAccount> UserAccounts { get; set; }
+
+        /// <summary>
         /// Default constructor.
         /// Do not directly instantiate this class. Instead, use dependency injection!
         /// </summary>
