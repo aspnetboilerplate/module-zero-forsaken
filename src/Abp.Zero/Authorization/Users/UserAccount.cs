@@ -15,7 +15,7 @@ namespace Abp.Authorization.Users
 
         public long UserId { get; set; }
 
-        public long UserLinkId { get; set; }
+        public long? UserLinkId { get; set; }
 
         public string UserName { get; set; }
 
