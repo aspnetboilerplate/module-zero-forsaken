@@ -42,7 +42,7 @@ namespace Abp.Authorization.Users
                 _userAccountRepository.Insert(new UserAccount
                 {
                     TenantId = eventData.Entity.TenantId,
-                    Username = eventData.Entity.UserName,
+                    UserName = eventData.Entity.UserName,
                     UserId = eventData.Entity.Id,
                     EmailAddress = eventData.Entity.EmailAddress
                 });
@@ -78,7 +78,7 @@ namespace Abp.Authorization.Users
                 var userAccount = _userAccountRepository.FirstOrDefault(ua => ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id);
                 if (userAccount != null)
                 {
-                    userAccount.Username = eventData.Entity.UserName;
+                    userAccount.UserName = eventData.Entity.UserName;
                     userAccount.EmailAddress = eventData.Entity.EmailAddress;
                     _userAccountRepository.Update(userAccount);
                 }
