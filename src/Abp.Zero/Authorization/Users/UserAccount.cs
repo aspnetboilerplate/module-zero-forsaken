@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 
 namespace Abp.Authorization.Users
 {
@@ -9,7 +10,8 @@ namespace Abp.Authorization.Users
     /// Represents a summary user
     /// </summary>
     [Table("AbpUserAccounts")]
-    public class UserAccount : FullAuditedEntity<long>, IMayHaveTenant
+    [MultiTenancySide(MultiTenancySides.Host)]
+    public class UserAccount : FullAuditedEntity<long>
     {
         public int? TenantId { get; set; }
 
