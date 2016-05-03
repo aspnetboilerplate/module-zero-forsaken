@@ -12,15 +12,15 @@ namespace Abp.Authorization.Users
     [MultiTenancySide(MultiTenancySides.Host)]
     public class UserAccount : FullAuditedEntity<long>
     {
-        public int? TenantId { get; set; }
+        public virtual int? TenantId { get; set; }
 
-        public long UserId { get; set; }
+        public virtual long UserId { get; set; }
 
-        public long? UserLinkId { get; set; }
+        public virtual long? UserLinkId { get; set; }
 
-        public string UserName { get; set; }
+        public virtual string UserName { get; set; }
 
-        public string EmailAddress { get; set; }
+        public virtual string EmailAddress { get; set; }
 
         public virtual DateTime? LastLoginTime { get; set; }
     }
