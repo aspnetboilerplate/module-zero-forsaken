@@ -20,12 +20,12 @@ namespace Abp.Zero.NHibernate.EntityMappings
             : base("AbpRoles")
         {
             References(x => x.Tenant).Column("TenantId").Nullable();
-            
+
             Map(x => x.Name);
             Map(x => x.DisplayName);
             Map(x => x.IsStatic);
             Map(x => x.IsDefault);
-            
+
             this.MapFullAudited();
 
             Polymorphism.Explicit();

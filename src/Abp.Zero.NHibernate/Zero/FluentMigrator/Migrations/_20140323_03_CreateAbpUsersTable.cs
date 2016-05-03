@@ -26,7 +26,7 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .OnColumn("UserName").Ascending()
                 .WithOptions().Unique()
                 .WithOptions().NonClustered();
-            
+
             Create.Index("AbpUsers_TenantId_EmailAddress")
                 .OnTable("AbpUsers")
                 .OnColumn("TenantId").Ascending()

@@ -1,6 +1,6 @@
+using Abp.Localization.Dictionaries;
 using System.Collections.Generic;
 using System.Globalization;
-using Abp.Localization.Dictionaries;
 
 namespace Abp.Localization
 {

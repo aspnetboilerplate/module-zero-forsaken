@@ -9,7 +9,6 @@ using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

@@ -1,5 +1,5 @@
-using System;
 using Abp.Zero.Configuration;
+using System;
 
 namespace Abp.Zero.Ldap.Configuration
 {

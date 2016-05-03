@@ -1,11 +1,11 @@
+using Abp.Collections.Extensions;
+using Abp.Dependency;
+using Abp.Localization.Dictionaries;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.Localization.Dictionaries;
 
 namespace Abp.Localization
 {
@@ -79,7 +79,7 @@ namespace Abp.Localization
                 _internalProvider.Dictionaries.GetOrDefault(language.Name) ??
                 new EmptyDictionary(CultureInfo.GetCultureInfo(language.Name));
 
-            var dictionary =  _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
+            var dictionary = _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
             {
                 sourceName = _sourceName,
                 internalDictionary = internalDictionary

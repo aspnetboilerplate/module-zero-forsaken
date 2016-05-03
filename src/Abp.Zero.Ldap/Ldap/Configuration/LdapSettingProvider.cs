@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.DirectoryServices.AccountManagement;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Localization;
+using System.Collections.Generic;
+using System.DirectoryServices.AccountManagement;
 
 namespace Abp.Zero.Ldap.Configuration
 {

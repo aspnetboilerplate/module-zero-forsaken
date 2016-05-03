@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
@@ -7,6 +6,7 @@ using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.Zero.Configuration;
 using Castle.MicroKernel.Registration;
+using System.Reflection;
 
 namespace Abp.Zero
 {
@@ -48,7 +48,7 @@ namespace Abp.Zero
 
         private void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
         {
-            if (typeof (IAbpZeroFeatureValueStore).IsAssignableFrom(handler.ComponentModel.Implementation) && !IocManager.IsRegistered<IAbpZeroFeatureValueStore>())
+            if (typeof(IAbpZeroFeatureValueStore).IsAssignableFrom(handler.ComponentModel.Implementation) && !IocManager.IsRegistered<IAbpZeroFeatureValueStore>())
             {
                 IocManager.IocContainer.Register(
                     Component.For<IAbpZeroFeatureValueStore>().ImplementedBy(handler.ComponentModel.Implementation).Named("AbpZeroFeatureValueStore").LifestyleTransient()

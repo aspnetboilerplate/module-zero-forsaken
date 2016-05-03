@@ -1,5 +1,3 @@
-using System.Data.Common;
-using System.Data.Entity;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
@@ -14,6 +12,8 @@ using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
 using Abp.Organizations;
+using System.Data.Common;
+using System.Data.Entity;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -146,7 +146,6 @@ namespace Abp.Zero.EntityFramework
         /// </summary>
         protected AbpZeroDbContext()
         {
-
         }
 
         /// <summary>
@@ -156,7 +155,6 @@ namespace Abp.Zero.EntityFramework
         protected AbpZeroDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-
         }
 
         /// <summary>
@@ -165,7 +163,6 @@ namespace Abp.Zero.EntityFramework
         protected AbpZeroDbContext(DbConnection dbConnection, bool contextOwnsConnection)
             : base(dbConnection, contextOwnsConnection)
         {
-
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -182,7 +179,7 @@ namespace Abp.Zero.EntityFramework
                 .Property(j => j.NextTryTime)
                 .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
 
-            #endregion
+            #endregion BackgroundJobInfo.IX_IsAbandoned_NextTryTime
 
             #region NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId
 
@@ -202,7 +199,7 @@ namespace Abp.Zero.EntityFramework
                 .Property(ns => ns.UserId)
                 .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 4);
 
-            #endregion
+            #endregion NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId
 
             #region UserNotificationInfo.IX_UserId_State_CreationTime
 
@@ -218,7 +215,7 @@ namespace Abp.Zero.EntityFramework
                 .Property(un => un.CreationTime)
                 .CreateIndex("IX_UserId_State_CreationTime", 3);
 
-            #endregion
+            #endregion UserNotificationInfo.IX_UserId_State_CreationTime
 
             #region UserLoginAttempt.IX_TenancyName_UserNameOrEmailAddress_Result
 
@@ -234,7 +231,7 @@ namespace Abp.Zero.EntityFramework
                 .Property(ula => ula.Result)
                 .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 3);
 
-            #endregion
+            #endregion UserLoginAttempt.IX_TenancyName_UserNameOrEmailAddress_Result
 
             #region UserLoginAttempt.IX_UserId_TenantId
 
@@ -246,7 +243,7 @@ namespace Abp.Zero.EntityFramework
                 .Property(ula => ula.TenantId)
                 .CreateIndex("IX_UserId_TenantId", 2);
 
-            #endregion
+            #endregion UserLoginAttempt.IX_UserId_TenantId
         }
     }
 }

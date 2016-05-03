@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using Abp.Application.Editions;
+﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -11,6 +10,7 @@ using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
 using Abp.Organizations;
+using System.Data.Entity;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -69,7 +69,7 @@ namespace Abp.Zero.EntityFramework
             }
             else
             {
-                modelBuilder.Entity<TEntity>().ToTable(tableName, schemaName);                
+                modelBuilder.Entity<TEntity>().ToTable(tableName, schemaName);
             }
         }
     }

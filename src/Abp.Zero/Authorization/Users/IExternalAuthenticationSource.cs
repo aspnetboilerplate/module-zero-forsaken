@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Abp.MultiTenancy;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization.Users
 {

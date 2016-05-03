@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 
 namespace Abp.IdentityFramework
 {
@@ -7,19 +7,16 @@ namespace Abp.IdentityFramework
     {
         public AbpIdentityResult()
         {
-            
         }
 
         public AbpIdentityResult(IEnumerable<string> errors)
             : base(errors)
         {
-            
         }
 
         public AbpIdentityResult(params string[] errors)
-            :base(errors)
+            : base(errors)
         {
-            
         }
 
         public static AbpIdentityResult Failed(params string[] errors)

@@ -145,7 +145,7 @@ namespace Abp.Zero.FluentMigrator
                 .WithColumn(columnName).AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
         }
 
-        #endregion
+        #endregion Create table
 
         #region Alter table
 
@@ -223,6 +223,6 @@ namespace Abp.Zero.FluentMigrator
                 .AddColumn("TenantId").AsInt32().Nullable().ForeignKey("AbpTenants", "Id");
         }
 
-        #endregion
+        #endregion Alter table
     }
 }

@@ -1,15 +1,15 @@
-﻿using System.Reflection;
-using Abp.Localization.Dictionaries.Xml;
+﻿using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Modules;
 using Abp.Zero.Ldap.Configuration;
+using System.Reflection;
 
 namespace Abp.Zero.Ldap
 {
     /// <summary>
     /// This module extends module zero to add LDAP authentication.
     /// </summary>
-    [DependsOn(typeof (AbpZeroCoreModule))]
+    [DependsOn(typeof(AbpZeroCoreModule))]
     public class AbpZeroLdapModule : AbpModule
     {
         public override void PreInitialize()

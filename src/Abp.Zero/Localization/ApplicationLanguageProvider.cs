@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using Abp.Runtime.Session;
 using Abp.Threading;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Abp.Localization
 {
@@ -55,7 +55,7 @@ namespace Abp.Localization
                 languageInfos[0].IsDefault = true;
                 return;
             }
-            
+
             var languageInfo = languageInfos.FirstOrDefault(l => l.Name == defaultLanguage.Name);
             if (languageInfo == null)
             {

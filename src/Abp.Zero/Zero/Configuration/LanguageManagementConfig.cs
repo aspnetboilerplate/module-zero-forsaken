@@ -1,9 +1,9 @@
-using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Castle.Core.Logging;
+using System.Linq;
 
 namespace Abp.Zero.Configuration
 {
@@ -32,7 +32,7 @@ namespace Abp.Zero.Configuration
                 .Where(s => s is IDictionaryBasedLocalizationSource)
                 .Cast<IDictionaryBasedLocalizationSource>()
                 .ToList();
-            
+
             foreach (var source in sources)
             {
                 _configuration.Localization.Sources.Remove(source);

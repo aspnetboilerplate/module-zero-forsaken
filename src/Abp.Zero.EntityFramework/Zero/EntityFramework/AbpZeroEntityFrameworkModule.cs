@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Abp.EntityFramework;
+﻿using Abp.EntityFramework;
 using Abp.Modules;
+using System.Reflection;
 
 namespace Abp.Zero.EntityFramework
 {

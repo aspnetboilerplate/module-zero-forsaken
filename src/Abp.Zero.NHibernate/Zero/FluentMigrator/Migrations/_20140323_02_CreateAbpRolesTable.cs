@@ -16,10 +16,10 @@ namespace Abp.Zero.FluentMigrator.Migrations
 
             Insert.IntoTable("AbpRoles").Row(
                 new
-                    {
-                        Name = "Admin",
-                        DisplayName = "Admin"
-                    }
+                {
+                    Name = "Admin",
+                    DisplayName = "Admin"
+                }
                 );
         }
     }
