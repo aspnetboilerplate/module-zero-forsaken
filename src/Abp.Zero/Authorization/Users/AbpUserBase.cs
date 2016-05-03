@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
@@ -42,6 +43,11 @@ namespace Abp.Authorization.Users
         [Required]
         [StringLength(MaxEmailAddressLength)]
         public virtual string EmailAddress { get; set; }
+
+        /// <summary>
+        /// The last time this user entered to the system.
+        /// </summary>
+        public virtual DateTime? LastLoginTime { get; set; }
 
         /// <summary>
         /// Creates <see cref="UserIdentifier"/> from this User.

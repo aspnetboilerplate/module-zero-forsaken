@@ -44,7 +44,8 @@ namespace Abp.Authorization.Users
                     TenantId = eventData.Entity.TenantId,
                     UserName = eventData.Entity.UserName,
                     UserId = eventData.Entity.Id,
-                    EmailAddress = eventData.Entity.EmailAddress
+                    EmailAddress = eventData.Entity.EmailAddress,
+                    LastLoginTime = eventData.Entity.LastLoginTime
                 });
             }
         }
@@ -80,6 +81,7 @@ namespace Abp.Authorization.Users
                 {
                     userAccount.UserName = eventData.Entity.UserName;
                     userAccount.EmailAddress = eventData.Entity.EmailAddress;
+                    userAccount.LastLoginTime = eventData.Entity.LastLoginTime;
                     _userAccountRepository.Update(userAccount);
                 }
             }

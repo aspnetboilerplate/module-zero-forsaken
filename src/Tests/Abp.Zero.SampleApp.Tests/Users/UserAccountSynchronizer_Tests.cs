@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Abp.Timing;
 using Abp.Zero.SampleApp.Users;
 using Abp.Zero.SampleApp.Users.Dto;
 using Shouldly;
@@ -29,6 +30,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     userAccount.TenantId.ShouldBe(user.TenantId);
                     userAccount.UserName.ShouldBe(user.UserName);
                     userAccount.EmailAddress.ShouldBe(user.EmailAddress);
+                    userAccount.LastLoginTime.ShouldBe(user.LastLoginTime);
                 });
         }
 
@@ -36,13 +38,15 @@ namespace Abp.Zero.SampleApp.Tests.Users
         public void Should_Update_UserAccount_When_User_Updated()
         {
             var user = CreateAndGetUser();
+            var now = Clock.Now;
             _userAppService.UpdateUser(new UpdateUserInput
             {
                 Id = user.Id,
                 Name = user.Name,
                 Surname = user.Surname,
                 UserName = "y.emre",
-                EmailAddress = "y.emre@aspnetboilerplate.com"
+                EmailAddress = "y.emre@aspnetboilerplate.com",
+                LastLoginTime = now
             });
 
             UsingDbContext(
@@ -54,6 +58,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     userAccount.TenantId.ShouldBe(user.TenantId);
                     userAccount.UserName.ShouldBe("y.emre");
                     userAccount.EmailAddress.ShouldBe("y.emre@aspnetboilerplate.com");
+                    userAccount.LastLoginTime.ShouldBe(now);
                 });
         }
 

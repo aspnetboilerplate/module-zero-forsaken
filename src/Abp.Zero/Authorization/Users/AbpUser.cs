@@ -111,11 +111,6 @@ namespace Abp.Authorization.Users
         public virtual string PasswordResetCode { get; set; }
 
         /// <summary>
-        /// The last time this user entered to the system.
-        /// </summary>
-        public virtual DateTime? LastLoginTime { get; set; }
-
-        /// <summary>
         /// Is this user active?
         /// If as user is not active, he/she can not use the application.
         /// </summary>

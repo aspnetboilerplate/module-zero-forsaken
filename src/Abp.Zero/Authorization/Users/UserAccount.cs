@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 
@@ -22,5 +21,7 @@ namespace Abp.Authorization.Users
         public string UserName { get; set; }
 
         public string EmailAddress { get; set; }
+
+        public virtual DateTime? LastLoginTime { get; set; }
     }
 }
