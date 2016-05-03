@@ -198,17 +198,17 @@ namespace Abp.Notifications
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
                 var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-                            join notificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
+                            join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo.TenantNotificationId equals tenantNotificationInfo.Id
                             where userNotificationInfo.UserId == user.UserId && (state == null || userNotificationInfo.State == state.Value)
-                            orderby notificationInfo.CreationTime descending
-                            select new { userNotificationInfo, notificationInfo };
+                            orderby tenantNotificationInfo.CreationTime descending
+                            select new { userNotificationInfo, tenantNotificationInfo = tenantNotificationInfo };
 
                 query = query.PageBy(skipCount, maxResultCount);
 
                 var list = query.ToList();
 
                 return Task.FromResult(list.Select(
-                    a => new UserNotificationInfoWithNotificationInfo(a.userNotificationInfo, a.notificationInfo)
+                    a => new UserNotificationInfoWithNotificationInfo(a.userNotificationInfo, a.tenantNotificationInfo)
                     ).ToList());
             }
         }
@@ -228,9 +228,9 @@ namespace Abp.Notifications
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-                            join notificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo.NotificationId equals notificationInfo.Id
+                            join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo.TenantNotificationId equals tenantNotificationInfo.Id
                             where userNotificationInfo.Id == userNotificationId
-                            select new { userNotificationInfo, notificationInfo };
+                            select new { userNotificationInfo, tenantNotificationInfo = tenantNotificationInfo };
 
                 var item = query.FirstOrDefault();
                 if (item == null)
@@ -238,7 +238,7 @@ namespace Abp.Notifications
                     return Task.FromResult((UserNotificationInfoWithNotificationInfo)null);
                 }
 
-                return Task.FromResult(new UserNotificationInfoWithNotificationInfo(item.userNotificationInfo, item.notificationInfo));
+                return Task.FromResult(new UserNotificationInfoWithNotificationInfo(item.userNotificationInfo, item.tenantNotificationInfo));
             }
         }
 
@@ -250,7 +250,12 @@ namespace Abp.Notifications
                 return _tenantNotificationRepository.InsertAsync(tenantNotificationInfo);
             }
         }
-        
+
+        public virtual Task DeleteNotificationAsync(NotificationInfo notification)
+        {
+            return _notificationRepository.DeleteAsync(notification);
+        }
+
         [UnitOfWork]
         protected virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int? tenantId, string notificationName, string entityTypeName, string entityId)
         {
