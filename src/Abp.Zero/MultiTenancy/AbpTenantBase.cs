@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using Abp.Runtime.Security;
 
 namespace Abp.MultiTenancy
 {
@@ -30,9 +31,9 @@ namespace Abp.MultiTenancy
         public virtual string TenancyName { get; set; }
 
         /// <summary>
-        /// Encrypted connection string of the tenant database.
+        /// ENCRYPTED connection string of the tenant database.
         /// Can be null if this tenant is stored in host database.
-        /// TODO: IMPLEMENT ENCRYPTION
+        /// Use <see cref="SimpleStringCipher"/> to encrypt/decrypt this.
         /// </summary>
         [StringLength(MaxConnectionStringLength)]
         public virtual string ConnectionString { get; set; }

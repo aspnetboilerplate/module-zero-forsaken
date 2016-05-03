@@ -4,6 +4,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
+using Abp.Runtime.Security;
 
 namespace Abp.MultiTenancy
 {
@@ -46,7 +47,7 @@ namespace Abp.MultiTenancy
                 Name = tenant.Name,
                 TenancyName = tenant.TenancyName,
                 EditionId = tenant.EditionId,
-                ConnectionString = tenant.ConnectionString,
+                ConnectionString = SimpleStringCipher.Instance.Decrypt(tenant.ConnectionString),
                 IsActive = tenant.IsActive
             };
         }
