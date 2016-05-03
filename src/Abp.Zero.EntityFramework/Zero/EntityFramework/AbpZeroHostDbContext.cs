@@ -9,6 +9,7 @@ using Abp.MultiTenancy;
 
 namespace Abp.Zero.EntityFramework
 {
+    [MultiTenancySide(MultiTenancySides.Host)]
     public abstract class AbpZeroHostDbContext<TTenant, TRole, TUser> : AbpZeroCommonDbContext<TRole, TUser>
         where TTenant : AbpTenant<TUser>
         where TRole : AbpRole<TUser>

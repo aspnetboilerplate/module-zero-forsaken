@@ -12,7 +12,8 @@ using Abp.Notifications;
 namespace Abp.Zero.EntityFramework
 {
     /// <summary>
-    /// DbContext for ABP zero.
+    /// Base DbContext for ABP zero.
+    /// Derive your DbContext from this class to have base entities.
     /// </summary>
     public abstract class AbpZeroDbContext<TTenant, TRole, TUser> : AbpZeroCommonDbContext<TRole, TUser>
         where TTenant : AbpTenant<TUser>

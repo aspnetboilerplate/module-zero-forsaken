@@ -1,9 +1,11 @@
 using System.Data.Common;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.MultiTenancy;
 
 namespace Abp.Zero.EntityFramework
 {
+    [MultiTenancySide(MultiTenancySides.Host)]
     public abstract class AbpZeroTenantDbContext<TRole, TUser> : AbpZeroCommonDbContext<TRole, TUser>
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
