@@ -6,16 +6,14 @@ using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
-using Abp.MultiTenancy;
 
 namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public class AbpUser<TTenant, TUser> : AbpUserBase, IFullAudited<TUser>, IAudited<TUser>, IMayHaveTenant<TTenant, TUser>, IPassivable
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+    public abstract class AbpUser<TUser> : AbpUserBase, IFullAudited<TUser>, IPassivable
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// UserName of the admin.
@@ -44,11 +42,6 @@ namespace Abp.Authorization.Users
         public const int MaxPlainPasswordLength = 32;
 
         /// <summary>
-        /// Maximum length of the <see cref="EmailAddress"/> property.
-        /// </summary>
-        public const int MaxEmailAddressLength = 256;
-
-        /// <summary>
         /// Maximum length of the <see cref="EmailConfirmationCode"/> property.
         /// </summary>
         public const int MaxEmailConfirmationCodeLength = 128;
@@ -62,12 +55,6 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="AuthenticationSource"/> property.
         /// </summary>
         public const int MaxAuthenticationSourceLength = 64;
-
-        /// <summary>
-        /// Tenant of this user.
-        /// </summary>
-        [ForeignKey("TenantId")]
-        public virtual TTenant Tenant { get; set; }
 
         /// <summary>
         /// Authorization source name.
@@ -105,14 +92,6 @@ namespace Abp.Authorization.Users
         public virtual string Password { get; set; }
 
         /// <summary>
-        /// Email address of the user.
-        /// Email address must be unique for it's tenant.
-        /// </summary>
-        [Required]
-        [StringLength(MaxEmailAddressLength)]
-        public virtual string EmailAddress { get; set; }
-
-        /// <summary>
         /// Is the <see cref="EmailAddress"/> confirmed.
         /// </summary>
         public virtual bool IsEmailConfirmed { get; set; }
@@ -130,11 +109,6 @@ namespace Abp.Authorization.Users
         /// </summary>
         [StringLength(MaxPasswordResetCodeLength)]
         public virtual string PasswordResetCode { get; set; }
-
-        /// <summary>
-        /// The last time this user entered to the system.
-        /// </summary>
-        public virtual DateTime? LastLoginTime { get; set; }
 
         /// <summary>
         /// Is this user active?

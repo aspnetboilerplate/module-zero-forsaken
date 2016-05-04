@@ -21,17 +21,20 @@ namespace Abp.Authorization.Users
 
         public void HandleEvent(EntityChangedEventData<UserPermissionSetting> eventData)
         {
-            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.UserId);
+            var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0);
+            _cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
 
         public void HandleEvent(EntityChangedEventData<UserRole> eventData)
         {
-            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.UserId);
+            var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0);
+            _cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
 
         public void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
-            _cacheManager.GetUserPermissionCache().Remove(eventData.Entity.Id);
+            var cacheKey = eventData.Entity.Id + "@" + (eventData.Entity.TenantId ?? 0);
+            _cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
     }
 }

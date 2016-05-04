@@ -2,83 +2,28 @@ using System.Data.Common;
 using System.Data.Entity;
 using Abp.Application.Editions;
 using Abp.Application.Features;
-using Abp.Auditing;
-using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
-using Abp.Configuration;
-using Abp.EntityFramework;
 using Abp.EntityFramework.Extensions;
-using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
-using Abp.Organizations;
 
 namespace Abp.Zero.EntityFramework
 {
     /// <summary>
-    /// DbContext for ABP zero.
+    /// Base DbContext for ABP zero.
+    /// Derive your DbContext from this class to have base entities.
     /// </summary>
-    public abstract class AbpZeroDbContext<TTenant, TRole, TUser> : AbpDbContext
-        where TRole : AbpRole<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+    public abstract class AbpZeroDbContext<TTenant, TRole, TUser> : AbpZeroCommonDbContext<TRole, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// Tenants
         /// </summary>
         public virtual IDbSet<TTenant> Tenants { get; set; }
-
-        /// <summary>
-        /// Roles.
-        /// </summary>
-        public virtual IDbSet<TRole> Roles { get; set; }
-
-        /// <summary>
-        /// Users.
-        /// </summary>
-        public virtual IDbSet<TUser> Users { get; set; }
-
-        /// <summary>
-        /// User logins.
-        /// </summary>
-        public virtual IDbSet<UserLogin> UserLogins { get; set; }
-
-        /// <summary>
-        /// User login attempts.
-        /// </summary>
-        public virtual IDbSet<UserLoginAttempt> UserLoginAttempts { get; set; }
-
-        /// <summary>
-        /// User roles.
-        /// </summary>
-        public virtual IDbSet<UserRole> UserRoles { get; set; }
-
-        /// <summary>
-        /// Permissions.
-        /// </summary>
-        public virtual IDbSet<PermissionSetting> Permissions { get; set; }
-
-        /// <summary>
-        /// Role permissions.
-        /// </summary>
-        public virtual IDbSet<RolePermissionSetting> RolePermissions { get; set; }
-
-        /// <summary>
-        /// User permissions.
-        /// </summary>
-        public virtual IDbSet<UserPermissionSetting> UserPermissions { get; set; }
-
-        /// <summary>
-        /// Settings.
-        /// </summary>
-        public virtual IDbSet<Setting> Settings { get; set; }
-
-        /// <summary>
-        /// Audit logs.
-        /// </summary>
-        public virtual IDbSet<AuditLog> AuditLogs { get; set; }
 
         /// <summary>
         /// Editions.
@@ -101,44 +46,14 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<EditionFeatureSetting> EditionFeatureSettings { get; set; }
 
         /// <summary>
-        /// Languages.
-        /// </summary>
-        public virtual IDbSet<ApplicationLanguage> Languages { get; set; }
-
-        /// <summary>
-        /// LanguageTexts.
-        /// </summary>
-        public virtual IDbSet<ApplicationLanguageText> LanguageTexts { get; set; }
-
-        /// <summary>
-        /// OrganizationUnits.
-        /// </summary>
-        public virtual IDbSet<OrganizationUnit> OrganizationUnits { get; set; }
-
-        /// <summary>
-        /// UserOrganizationUnits.
-        /// </summary>
-        public virtual IDbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
-
-        /// <summary>
         /// Background jobs.
         /// </summary>
         public virtual IDbSet<BackgroundJobInfo> BackgroundJobs { get; set; }
 
         /// <summary>
-        /// Notifications.
+        /// User accounts
         /// </summary>
-        public virtual IDbSet<NotificationInfo> Notifications { get; set; }
-
-        /// <summary>
-        /// User notifications.
-        /// </summary>
-        public virtual IDbSet<UserNotificationInfo> UserNotifications { get; set; }
-
-        /// <summary>
-        /// Notification subscriptions.
-        /// </summary>
-        public virtual IDbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
+        public virtual IDbSet<UserAccount> UserAccounts { get; set; }
 
         /// <summary>
         /// Default constructor.

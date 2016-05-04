@@ -15,6 +15,14 @@
         /// </summary>
         IUserManagementConfig UserManagement { get; }
 
+        /// <summary>
+        /// Gets language management config.
+        /// </summary>
         ILanguageManagementConfig LanguageManagement { get; }
+
+        /// <summary>
+        /// Gets entity type config.
+        /// </summary>
+        IAbpZeroEntityTypes EntityTypes { get; }
     }
 }

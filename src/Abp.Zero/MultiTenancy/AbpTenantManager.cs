@@ -30,9 +30,9 @@ namespace Abp.MultiTenancy
     public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService,
         IEventHandler<EntityChangedEventData<TTenant>>,
         IEventHandler<EntityDeletedEventData<Edition>>
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         public AbpEditionManager EditionManager { get; set; }
 
@@ -228,7 +228,7 @@ namespace Abp.MultiTenancy
 
         protected virtual async Task<IdentityResult> ValidateTenancyNameAsync(string tenancyName)
         {
-            if (!Regex.IsMatch(tenancyName, AbpTenant<TTenant, TUser>.TenancyNameRegex))
+            if (!Regex.IsMatch(tenancyName, AbpTenant<TUser>.TenancyNameRegex))
             {
                 return AbpIdentityResult.Failed(L("InvalidTenancyName"));
             }

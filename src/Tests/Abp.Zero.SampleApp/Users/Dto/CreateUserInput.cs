@@ -7,10 +7,10 @@ namespace Abp.Zero.SampleApp.Users.Dto
     {
         [Required]
         public string Name { get; set; }
-        
+
         [Required]
         public virtual string Surname { get; set; }
-        
+
         [Required]
         public virtual string UserName { get; set; }
 

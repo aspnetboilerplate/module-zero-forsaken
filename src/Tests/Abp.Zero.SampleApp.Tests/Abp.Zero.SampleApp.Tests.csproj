@@ -37,12 +37,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Abp, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Abp.0.8.4.0\lib\net452\Abp.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\aspnetboilerplate\src\Abp\bin\Debug\Abp.dll</HintPath>
     </Reference>
     <Reference Include="Abp.EntityFramework, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Abp.EntityFramework.0.8.4.0\lib\net452\Abp.EntityFramework.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\aspnetboilerplate\src\Abp.EntityFramework\bin\Debug\Abp.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Abp.TestBase, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Abp.TestBase.0.8.4.0\lib\net452\Abp.TestBase.dll</HintPath>
@@ -156,6 +156,7 @@
     <Compile Include="TestDatas\InitialTestOrganizationUnitsBuilder.cs" />
     <Compile Include="TestDatas\InitialUserOrganizationUnitsBuilder.cs" />
     <Compile Include="TestDatas\InitialUsersBuilder.cs" />
+    <Compile Include="Users\UserAccountSynchronizer_Tests.cs" />
     <Compile Include="Users\UserAppService_Tests.cs" />
     <Compile Include="Users\UserLoginHelper.cs" />
     <Compile Include="Users\UserLogin_ExternalAuthenticationSources_Test.cs" />

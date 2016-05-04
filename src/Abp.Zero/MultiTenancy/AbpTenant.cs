@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 using Abp.Application.Editions;
 using Abp.Authorization.Users;
-using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
@@ -12,10 +9,8 @@ namespace Abp.MultiTenancy
     /// <summary>
     /// Represents a Tenant of the application.
     /// </summary>
-    [Table("AbpTenants")]
-    public class AbpTenant<TTenant, TUser> : FullAuditedEntity<int, TUser>, IPassivable
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+    public abstract class AbpTenant<TUser> : AbpTenantBase, IFullAudited<TUser>, IPassivable
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// "Default".
@@ -26,24 +21,11 @@ namespace Abp.MultiTenancy
         /// "^[a-zA-Z][a-zA-Z0-9_-]{1,}$".
         /// </summary>
         public const string TenancyNameRegex = "^[a-zA-Z][a-zA-Z0-9_-]{1,}$";
-
-        /// <summary>
-        /// Max length of the <see cref="TenancyName"/> property.
-        /// </summary>
-        public const int MaxTenancyNameLength = 64;
-
+        
         /// <summary>
         /// Max length of the <see cref="Name"/> property.
         /// </summary>
         public const int MaxNameLength = 128;
-        
-        /// <summary>
-        /// Tenancy name. This property is the UNIQUE name of this Tenant.
-        /// It can be used as subdomain name in a web application.
-        /// </summary>
-        [Required]
-        [StringLength(MaxTenancyNameLength)]
-        public virtual string TenancyName { get; set; }
 
         /// <summary>
         /// Current <see cref="Edition"/> of the Tenant.
@@ -65,15 +47,24 @@ namespace Abp.MultiTenancy
         public virtual bool IsActive { get; set; }
 
         /// <summary>
-        /// Defined settings for this tenant.
+        /// Reference to the creator user of this entity.
         /// </summary>
-        [ForeignKey("TenantId")]
-        public virtual ICollection<Setting> Settings { get; set; }
+        public virtual TUser CreatorUser { get; set; }
+
+        /// <summary>
+        /// Reference to the last modifier user of this entity.
+        /// </summary>
+        public virtual TUser LastModifierUser { get; set; }
+
+        /// <summary>
+        /// Reference to the deleter user of this entity.
+        /// </summary>
+        public virtual TUser DeleterUser { get; set; }
 
         /// <summary>
         /// Creates a new tenant.
         /// </summary>
-        public AbpTenant()
+        protected AbpTenant()
         {
             IsActive = true;
         }
@@ -83,7 +74,7 @@ namespace Abp.MultiTenancy
         /// </summary>
         /// <param name="tenancyName">UNIQUE name of this Tenant</param>
         /// <param name="name">Display name of the Tenant</param>
-        public AbpTenant(string tenancyName, string name)
+        protected AbpTenant(string tenancyName, string name)
             : this()
         {
             TenancyName = tenancyName;

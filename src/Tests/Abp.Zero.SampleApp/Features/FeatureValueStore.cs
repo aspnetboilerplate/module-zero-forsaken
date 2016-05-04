@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Features;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 using Abp.Zero.SampleApp.MultiTenancy;
@@ -14,13 +15,15 @@ namespace Abp.Zero.SampleApp.Features
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<EditionFeatureSetting, long> editionFeatureRepository,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(
                   cacheManager, 
                   tenantFeatureRepository, 
                   tenantRepository, 
                   editionFeatureRepository, 
-                  featureManager)
+                  featureManager,
+                  unitOfWorkManager)
         {
 
         }

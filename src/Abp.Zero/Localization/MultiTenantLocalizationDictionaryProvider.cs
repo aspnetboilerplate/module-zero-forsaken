@@ -6,6 +6,7 @@ using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Localization.Dictionaries;
+using Abp.Collections.Extensions;
 
 namespace Abp.Localization
 {
@@ -64,7 +65,13 @@ namespace Abp.Localization
 
         protected virtual ILocalizationDictionary GetDefaultDictionary()
         {
-            var defaultLanguage = _languageManager.GetLanguages().FirstOrDefault(l => l.IsDefault);
+            var languages = _languageManager.GetLanguages();
+            if (!languages.Any())
+            {
+                throw new ApplicationException("No language defined!");
+            }
+
+            var defaultLanguage = languages.FirstOrDefault(l => l.IsDefault);
             if (defaultLanguage == null)
             {
                 throw new ApplicationException("Default language is not defined!");

@@ -39,7 +39,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     var role2 = context.Roles.Add(new Role(AbpSession.TenantId, "role2", "Role 1"));
                     context.SaveChanges();
 
-                    context.UserRoles.Add(new UserRole(user1.Id, role1.Id));
+                    context.UserRoles.Add(new UserRole(AbpSession.TenantId, user1.Id, role1.Id));
                 });
         }
 
