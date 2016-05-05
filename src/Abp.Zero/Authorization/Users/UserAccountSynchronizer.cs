@@ -1,3 +1,4 @@
+using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -29,12 +30,10 @@ namespace Abp.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-
         /// <summary>
         /// Handles creation event of user
         /// </summary>
-        /// <param name="eventData"></param>
-        [UnitOfWork]
+        [UnitOfWork(TransactionScopeOption.RequiresNew)]
         public virtual void HandleEvent(EntityCreatedEventData<AbpUserBase> eventData)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
@@ -54,12 +53,14 @@ namespace Abp.Authorization.Users
         /// Handles deletion event of user
         /// </summary>
         /// <param name="eventData"></param>
-        [UnitOfWork]
+        [UnitOfWork(TransactionScopeOption.RequiresNew)]
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                var userAccount = _userAccountRepository.FirstOrDefault(ua => ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id);
+                var userAccount =
+                    _userAccountRepository.FirstOrDefault(
+                        ua => ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id);
                 if (userAccount != null)
                 {
                     _userAccountRepository.Delete(userAccount);
@@ -71,7 +72,7 @@ namespace Abp.Authorization.Users
         /// Handles update event of user
         /// </summary>
         /// <param name="eventData"></param>
-        [UnitOfWork]
+        [UnitOfWork(TransactionScopeOption.RequiresNew)]
         public virtual void HandleEvent(EntityUpdatedEventData<AbpUserBase> eventData)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
