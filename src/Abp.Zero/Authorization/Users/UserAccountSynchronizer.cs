@@ -1,4 +1,3 @@
-using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -33,7 +32,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Handles creation event of user
         /// </summary>
-        [UnitOfWork(TransactionScopeOption.RequiresNew)]
+        [UnitOfWork]
         public virtual void HandleEvent(EntityCreatedEventData<AbpUserBase> eventData)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
@@ -53,7 +52,7 @@ namespace Abp.Authorization.Users
         /// Handles deletion event of user
         /// </summary>
         /// <param name="eventData"></param>
-        [UnitOfWork(TransactionScopeOption.RequiresNew)]
+        [UnitOfWork]
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
@@ -72,7 +71,7 @@ namespace Abp.Authorization.Users
         /// Handles update event of user
         /// </summary>
         /// <param name="eventData"></param>
-        [UnitOfWork(TransactionScopeOption.RequiresNew)]
+        [UnitOfWork]
         public virtual void HandleEvent(EntityUpdatedEventData<AbpUserBase> eventData)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
