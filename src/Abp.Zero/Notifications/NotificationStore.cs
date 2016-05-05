@@ -125,6 +125,19 @@ namespace Abp.Notifications
                 return _notificationSubscriptionRepository.GetAllListAsync(s => s.UserId == user.UserId);
             }
         }
+        
+        [UnitOfWork]
+        protected virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int? tenantId, string notificationName, string entityTypeName, string entityId)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _notificationSubscriptionRepository.GetAllListAsync(s =>
+                s.NotificationName == notificationName &&
+                s.EntityTypeName == entityTypeName &&
+                s.EntityId == entityId
+                );
+            }
+        }
 
         [UnitOfWork]
         public virtual async Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, string entityTypeName, string entityId)
@@ -254,19 +267,6 @@ namespace Abp.Notifications
         public virtual Task DeleteNotificationAsync(NotificationInfo notification)
         {
             return _notificationRepository.DeleteAsync(notification);
-        }
-
-        [UnitOfWork]
-        protected virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int? tenantId, string notificationName, string entityTypeName, string entityId)
-        {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
-            {
-                return _notificationSubscriptionRepository.GetAllListAsync(s =>
-                s.NotificationName == notificationName &&
-                s.EntityTypeName == entityTypeName &&
-                s.EntityId == entityId
-                );
-            }
         }
     }
 }
