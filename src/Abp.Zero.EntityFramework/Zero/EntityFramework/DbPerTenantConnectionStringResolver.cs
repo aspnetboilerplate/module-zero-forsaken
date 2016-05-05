@@ -24,9 +24,9 @@ namespace Abp.Zero.EntityFramework
         /// Initializes a new instance of the <see cref="DbPerTenantConnectionStringResolver"/> class.
         /// </summary>
         public DbPerTenantConnectionStringResolver(
-            IAbpStartupConfiguration configuration, 
+            IAbpStartupConfiguration configuration,
             ICurrentUnitOfWorkProvider currentUnitOfWorkProvider,
-            ITenantCache tenantCache) 
+            ITenantCache tenantCache)
             : base(
                   configuration)
         {
@@ -36,35 +36,35 @@ namespace Abp.Zero.EntityFramework
             AbpSession = NullAbpSession.Instance;
         }
 
-        public override string GetNameOrConnectionString(MultiTenancySides? multiTenancySide = null)
+        public override string GetNameOrConnectionString(ConnectionStringResolveArgs args)
         {
-            if (multiTenancySide == MultiTenancySides.Host)
+            if (args.MultiTenancySide == MultiTenancySides.Host)
             {
-                return GetNameOrConnectionString(null);
+                return GetNameOrConnectionString(new DbPerTenantConnectionStringResolveArgs(null, args));
             }
 
-            return GetNameOrConnectionString(GetCurrentTenantId());
+            return GetNameOrConnectionString(new DbPerTenantConnectionStringResolveArgs(GetCurrentTenantId(), args));
         }
 
-        public string GetNameOrConnectionString(int? tenantId)
+        public virtual string GetNameOrConnectionString(DbPerTenantConnectionStringResolveArgs args)
         {
-            if (tenantId == null)
+            if (args.TenantId == null)
             {
                 //Requested for host
-                return base.GetNameOrConnectionString();
+                return base.GetNameOrConnectionString(args);
             }
 
-            var tenantCacheItem = _tenantCache.Get(tenantId.Value);
+            var tenantCacheItem = _tenantCache.Get(args.TenantId.Value);
             if (tenantCacheItem.ConnectionString.IsNullOrEmpty())
             {
                 //Tenant has not dedicated database
-                return base.GetNameOrConnectionString();
+                return base.GetNameOrConnectionString(args);
             }
 
             return tenantCacheItem.ConnectionString;
         }
-        
-        private int? GetCurrentTenantId()
+
+        protected virtual int? GetCurrentTenantId()
         {
             return _currentUnitOfWorkProvider.Current != null
                 ? _currentUnitOfWorkProvider.Current.GetTenantId()

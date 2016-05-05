@@ -9,9 +9,8 @@ namespace Abp.MultiTenancy
     public interface IDbPerTenantConnectionStringResolver : IConnectionStringResolver
     {
         /// <summary>
-        /// Gets the connection string for given tenantId.
+        /// Gets the connection string for given args.
         /// </summary>
-        /// <param name="tenantId">Tenant Id. Can be null to get host connection string.</param>
-        string GetNameOrConnectionString(int? tenantId);
+        string GetNameOrConnectionString(DbPerTenantConnectionStringResolveArgs args);
     }
 }

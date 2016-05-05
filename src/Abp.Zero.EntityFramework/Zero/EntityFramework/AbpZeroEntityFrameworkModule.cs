@@ -20,7 +20,6 @@ namespace Abp.Zero.EntityFramework
                     .ImplementedBy<DbPerTenantConnectionStringResolver>()
                     .LifestyleTransient()
                 );
-
         }
 
         public override void Initialize()

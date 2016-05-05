@@ -29,8 +29,13 @@ namespace Abp.Zero.EntityFramework
 
         public virtual void CreateOrMigrateForHost()
         {
+            var args = new DbPerTenantConnectionStringResolveArgs(null, MultiTenancySides.Host)
+            {
+                ["DbContextType"] = typeof(TDbContext)
+            };
+
             CreateOrMigrate(
-                _connectionStringResolver.GetNameOrConnectionString(null),
+                _connectionStringResolver.GetNameOrConnectionString(args),
                 SeedMode.Host
                 );
         }
@@ -42,8 +47,13 @@ namespace Abp.Zero.EntityFramework
                 return;
             }
 
+            var args = new DbPerTenantConnectionStringResolveArgs(tenant.Id, MultiTenancySides.Tenant)
+            {
+                ["DbContextType"] = typeof (TDbContext)
+            };
+
             CreateOrMigrate(
-                _connectionStringResolver.GetNameOrConnectionString(tenant.Id),
+                _connectionStringResolver.GetNameOrConnectionString(args),
                 SeedMode.Tenant
                 );
         }
