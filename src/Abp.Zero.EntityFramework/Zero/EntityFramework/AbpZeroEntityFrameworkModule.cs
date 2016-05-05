@@ -15,11 +15,14 @@ namespace Abp.Zero.EntityFramework
     {
         public override void PreInitialize()
         {
-            IocManager.IocContainer.Register(
-                Component.For<IConnectionStringResolver, IDbPerTenantConnectionStringResolver>()
-                    .ImplementedBy<DbPerTenantConnectionStringResolver>()
-                    .LifestyleTransient()
-                );
+            Configuration.ReplaceService(typeof(IConnectionStringResolver), () =>
+            {
+                IocManager.IocContainer.Register(
+                    Component.For<IConnectionStringResolver, IDbPerTenantConnectionStringResolver>()
+                        .ImplementedBy<DbPerTenantConnectionStringResolver>()
+                        .LifestyleTransient()
+                    );
+            });
         }
 
         public override void Initialize()
