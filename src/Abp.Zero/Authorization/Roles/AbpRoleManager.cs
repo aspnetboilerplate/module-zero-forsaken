@@ -1,5 +1,6 @@
 using Abp.Authorization.Users;
 using Abp.Domain.Services;
+using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -9,8 +10,19 @@ using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 using System;
+
+using System;
+
 using System.Collections.Generic;
+
+using System.Collections.Generic;
+
 using System.Linq;
+
+using System.Linq;
+
+using System.Threading.Tasks;
+
 using System.Threading.Tasks;
 
 namespace Abp.Authorization.Roles
@@ -19,12 +31,11 @@ namespace Abp.Authorization.Roles
     /// Extends <see cref="RoleManager{TRole,TKey}"/> of ASP.NET Identity Framework.
     /// Applications should derive this class with appropriate generic arguments.
     /// </summary>
-    public abstract class AbpRoleManager<TTenant, TRole, TUser>
+    public abstract class AbpRoleManager<TRole, TUser>
         : RoleManager<TRole, Guid>,
         IDomainService
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>, new()
-        where TUser : AbpUser<TTenant, TUser>
+        where TRole : AbpRole<TUser>, new()
+        where TUser : AbpUser<TUser>
     {
         public ILocalizationManager LocalizationManager { get; set; }
 
@@ -32,36 +43,39 @@ namespace Abp.Authorization.Roles
 
         public IRoleManagementConfig RoleManagementConfig { get; private set; }
 
-        private IRolePermissionStore<TTenant, TRole, TUser> RolePermissionStore
+        private IRolePermissionStore<TRole, TUser> RolePermissionStore
         {
             get
             {
-                if (!(Store is IRolePermissionStore<TTenant, TRole, TUser>))
+                if (!(Store is IRolePermissionStore<TRole, TUser>))
                 {
                     throw new AbpException("Store is not IRolePermissionStore");
                 }
 
-                return Store as IRolePermissionStore<TTenant, TRole, TUser>;
+                return Store as IRolePermissionStore<TRole, TUser>;
             }
         }
 
-        protected AbpRoleStore<TTenant, TRole, TUser> AbpStore { get; private set; }
+        protected AbpRoleStore<TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly ICacheManager _cacheManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpRoleManager(
-            AbpRoleStore<TTenant, TRole, TUser> store,
+            AbpRoleStore<TRole, TUser> store,
             IPermissionManager permissionManager,
             IRoleManagementConfig roleManagementConfig,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(store)
         {
             _permissionManager = permissionManager;
             _cacheManager = cacheManager;
+            _unitOfWorkManager = unitOfWorkManager;
 
             RoleManagementConfig = roleManagementConfig;
             AbpStore = store;
@@ -233,12 +247,12 @@ namespace Abp.Authorization.Roles
             var oldPermissions = await GetGrantedPermissionsAsync(role);
             var newPermissions = permissions.ToArray();
 
-            foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p, new PermissionEqualityComparer())))
+            foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p, PermissionEqualityComparer.Instance)))
             {
                 await ProhibitPermissionAsync(role, permission);
             }
 
-            foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p, new PermissionEqualityComparer())))
+            foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p, PermissionEqualityComparer.Instance)))
             {
                 await GrantPermissionAsync(role, permission);
             }
@@ -323,9 +337,10 @@ namespace Abp.Authorization.Roles
                 return result;
             }
 
-            if (AbpSession.TenantId.HasValue)
+            var tenantId = GetCurrentTenantId();
+            if (tenantId.HasValue && !role.TenantId.HasValue)
             {
-                role.TenantId = AbpSession.TenantId.Value;
+                role.TenantId = tenantId.Value;
             }
 
             return await base.CreateAsync(role);
@@ -398,24 +413,28 @@ namespace Abp.Authorization.Roles
             await SetGrantedPermissionsAsync(role, permissions);
         }
 
+        [UnitOfWork]
         public virtual async Task<IdentityResult> CreateStaticRoles(Guid tenantId)
         {
             var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
 
-            foreach (var staticRoleDefinition in staticRoleDefinitions)
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var role = new TRole
+                foreach (var staticRoleDefinition in staticRoleDefinitions)
                 {
-                    TenantId = tenantId,
-                    Name = staticRoleDefinition.RoleName,
-                    DisplayName = staticRoleDefinition.RoleName,
-                    IsStatic = true
-                };
+                    var role = new TRole
+                    {
+                        TenantId = tenantId,
+                        Name = staticRoleDefinition.RoleName,
+                        DisplayName = staticRoleDefinition.RoleName,
+                        IsStatic = true
+                    };
 
-                var identityResult = await CreateAsync(role);
-                if (!identityResult.Succeeded)
-                {
-                    return identityResult;
+                    var identityResult = await CreateAsync(role);
+                    if (!identityResult.Succeeded)
+                    {
+                        return identityResult;
+                    }
                 }
             }
 
@@ -446,7 +465,8 @@ namespace Abp.Authorization.Roles
 
         private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(Guid roleId)
         {
-            return await _cacheManager.GetRolePermissionCache().GetAsync(roleId, async () =>
+            var cacheKey = roleId + "@" + (GetCurrentTenantId() ?? Guid.Empty);
+            return await _cacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 
@@ -469,6 +489,16 @@ namespace Abp.Authorization.Roles
         private string L(string name)
         {
             return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+        }
+
+        private Guid? GetCurrentTenantId()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return _unitOfWorkManager.Current.GetTenantId();
+            }
+
+            return AbpSession.TenantId;
         }
     }
 }

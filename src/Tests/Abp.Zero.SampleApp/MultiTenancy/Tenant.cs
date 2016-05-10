@@ -3,7 +3,7 @@ using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.MultiTenancy
 {
-    public class Tenant : AbpTenant<Tenant, User>
+    public class Tenant : AbpTenant<User>
     {
         protected Tenant()
         {

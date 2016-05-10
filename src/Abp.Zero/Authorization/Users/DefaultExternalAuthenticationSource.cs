@@ -10,8 +10,8 @@ namespace Abp.Authorization.Users
     /// <typeparam name="TTenant">Tenant type</typeparam>
     /// <typeparam name="TUser">User type</typeparam>
     public abstract class DefaultExternalAuthenticationSource<TTenant, TUser> : IExternalAuthenticationSource<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>, new()
+        where TTenant : AbpTenant<TUser>
+        where TUser : AbpUser<TUser>, new()
     {
         /// <inheritdoc/>
         public abstract string Name { get; }

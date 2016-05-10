@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,8 +10,10 @@ namespace Abp.Authorization.Users
     /// Represents role record of a user.
     /// </summary>
     [Table("AbpUserRoles")]
-    public class UserRole : CreationAuditedEntity<Guid>
+    public class UserRole : CreationAuditedEntity<Guid>, IMayHaveTenant
     {
+        public virtual Guid? TenantId { get; set; }
+
         /// <summary>
         /// User id.
         /// </summary>
@@ -32,8 +36,9 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="roleId">Role id</param>
-        public UserRole(Guid userId, Guid roleId)
+        public UserRole(Guid? tenantId, Guid userId, Guid roleId)
         {
+            TenantId = tenantId;
             UserId = userId;
             RoleId = roleId;
         }

@@ -2,7 +2,6 @@
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,19 +13,18 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Implements 'User Store' of ASP.NET Identity Framework.
     /// </summary>
-    public abstract class AbpUserStore<TTenant, TRole, TUser> :
+    public abstract class AbpUserStore<TRole, TUser> :
         IUserPasswordStore<TUser, Guid>,
         IUserEmailStore<TUser, Guid>,
         IUserLoginStore<TUser, Guid>,
         IUserRoleStore<TUser, Guid>,
         IQueryableUserStore<TUser, Guid>,
-        IUserPermissionStore<TTenant, TUser>,
+        IUserPermissionStore<TUser>,
 
         ITransientDependency
 
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         private readonly IRepository<TUser, Guid> _userRepository;
         private readonly IRepository<UserLogin, Guid> _userLoginRepository;
@@ -89,7 +87,7 @@ namespace Abp.Authorization.Users
         }
 
         /// <summary>
-        /// Tries to find a user with user name or email address.
+        /// Tries to find a user with user name or email address in current tenant.
         /// </summary>
         /// <param name="userNameOrEmailAddress">User name or email address</param>
         /// <returns>User or null</returns>
@@ -101,7 +99,7 @@ namespace Abp.Authorization.Users
         }
 
         /// <summary>
-        /// Tries to find a user with user name or email address.
+        /// Tries to find a user with user name or email address in given tenant.
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNameOrEmailAddress">User name or email address</param>
@@ -109,13 +107,9 @@ namespace Abp.Authorization.Users
         [UnitOfWork]
         public virtual async Task<TUser> FindByNameOrEmailAsync(Guid? tenantId, string userNameOrEmailAddress)
         {
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return await _userRepository.FirstOrDefaultAsync(
-                    user =>
-                        user.TenantId == tenantId &&
-                        (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
-                    );
+                return await FindByNameOrEmailAsync(userNameOrEmailAddress);
             }
         }
 
@@ -162,6 +156,7 @@ namespace Abp.Authorization.Users
             await _userLoginRepository.InsertAsync(
                 new UserLogin
                 {
+                    TenantId = user.TenantId,
                     LoginProvider = login.LoginProvider,
                     ProviderKey = login.ProviderKey,
                     UserId = user.Id
@@ -211,12 +206,15 @@ namespace Abp.Authorization.Users
 
         public virtual Task<TUser> FindAsync(Guid? tenantId, UserLoginInfo login)
         {
-            var query = from userLogin in _userLoginRepository.GetAll()
-                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-                        where user.TenantId == tenantId && userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-                        select user;
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                var query = from userLogin in _userLoginRepository.GetAll()
+                            join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                            where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                            select user;
 
-            return Task.FromResult(query.FirstOrDefault());
+                return Task.FromResult(query.FirstOrDefault());
+            }
         }
 
         public virtual async Task AddToRoleAsync(TUser user, string roleName)
@@ -225,6 +223,7 @@ namespace Abp.Authorization.Users
             await _userRoleRepository.InsertAsync(
                 new UserRole
                 {
+                    TenantId = user.TenantId,
                     UserId = user.Id,
                     RoleId = role.Id
                 });
@@ -274,6 +273,7 @@ namespace Abp.Authorization.Users
             await _userPermissionSettingRepository.InsertAsync(
                 new UserPermissionSetting
                 {
+                    TenantId = user.TenantId,
                     UserId = user.Id,
                     Name = permissionGrant.Name,
                     IsGranted = permissionGrant.IsGranted

@@ -6,5 +6,9 @@ namespace Abp.Zero.SampleApp.Users
     public interface IUserAppService : IApplicationService
     {
         void CreateUser(CreateUserInput input);
+
+        void UpdateUser(UpdateUserInput input);
+
+        void DeleteUser(long userId);
     }
 }

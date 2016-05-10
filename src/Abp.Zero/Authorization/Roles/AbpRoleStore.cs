@@ -1,7 +1,6 @@
 ﻿using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
-using Abp.MultiTenancy;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,15 +12,14 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Implements 'Role Store' of ASP.NET Identity Framework.
     /// </summary>
-    public abstract class AbpRoleStore<TTenant, TRole, TUser> :
+    public abstract class AbpRoleStore<TRole, TUser> :
         IQueryableRoleStore<TRole, Guid>,
-        IRolePermissionStore<TTenant, TRole, TUser>,
+        IRolePermissionStore<TRole, TUser>,
 
         ITransientDependency
 
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         private readonly IRepository<TRole, Guid> _roleRepository;
         private readonly IRepository<UserRole, Guid> _userRoleRepository;
@@ -91,6 +89,7 @@ namespace Abp.Authorization.Roles
             await _rolePermissionSettingRepository.InsertAsync(
                 new RolePermissionSetting
                 {
+                    TenantId = role.TenantId,
                     RoleId = role.Id,
                     Name = permissionGrant.Name,
                     IsGranted = permissionGrant.IsGranted

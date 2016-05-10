@@ -31,9 +31,9 @@ namespace Abp.MultiTenancy
     public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService,
         IEventHandler<EntityChangedEventData<TTenant>>,
         IEventHandler<EntityDeletedEventData<Edition>>
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         public AbpEditionManager EditionManager { get; set; }
 
@@ -43,14 +43,14 @@ namespace Abp.MultiTenancy
 
         public IFeatureManager FeatureManager { get; set; }
 
-        protected IRepository<TTenant, Guid> TenantRepository { get; set; }
+        protected IRepository<TTenant> TenantRepository { get; set; }
 
         protected IRepository<TenantFeatureSetting, Guid> TenantFeatureRepository { get; set; }
 
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
 
         protected AbpTenantManager(
-            IRepository<TTenant, Guid> tenantRepository,
+            IRepository<TTenant> tenantRepository,
             IRepository<TenantFeatureSetting, Guid> tenantFeatureRepository,
             AbpEditionManager editionManager,
             IAbpZeroFeatureValueStore featureValueStore)
@@ -229,7 +229,7 @@ namespace Abp.MultiTenancy
 
         protected virtual async Task<IdentityResult> ValidateTenancyNameAsync(string tenancyName)
         {
-            if (!Regex.IsMatch(tenancyName, AbpTenant<TTenant, TUser>.TenancyNameRegex))
+            if (!Regex.IsMatch(tenancyName, AbpTenant<TUser>.TenancyNameRegex))
             {
                 return AbpIdentityResult.Failed(L("InvalidTenancyName"));
             }

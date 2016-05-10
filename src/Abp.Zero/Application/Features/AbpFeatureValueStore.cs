@@ -16,15 +16,16 @@ namespace Abp.Application.Features
     /// Implements <see cref="IFeatureValueStore"/>.
     /// </summary>
     public abstract class AbpFeatureValueStore<TTenant, TRole, TUser> : IAbpZeroFeatureValueStore, ITransientDependency
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<TenantFeatureSetting, Guid> _tenantFeatureRepository;
         private readonly IRepository<TTenant, Guid> _tenantRepository;
         private readonly IRepository<EditionFeatureSetting, Guid> _editionFeatureRepository;
         private readonly IFeatureManager _featureManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TRole, TUser}"/> class.
@@ -34,13 +35,15 @@ namespace Abp.Application.Features
             IRepository<TenantFeatureSetting, Guid> tenantFeatureRepository,
             IRepository<TTenant, Guid> tenantRepository,
             IRepository<EditionFeatureSetting, Guid> editionFeatureRepository,
-            IFeatureManager featureManager)
+            IFeatureManager featureManager,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _cacheManager = cacheManager;
             _tenantFeatureRepository = tenantFeatureRepository;
             _tenantRepository = tenantRepository;
             _editionFeatureRepository = editionFeatureRepository;
             _featureManager = featureManager;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         /// <inheritdoc/>
@@ -84,41 +87,57 @@ namespace Abp.Application.Features
                 return;
             }
 
-            var currentSetting = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
+            var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
 
             var feature = _featureManager.GetOrNull(featureName);
             if (feature == null || feature.DefaultValue == value)
             {
-                if (currentSetting != null)
+                if (currentFeature != null)
                 {
-                    await _editionFeatureRepository.DeleteAsync(currentSetting);
+                    await _editionFeatureRepository.DeleteAsync(currentFeature);
                 }
 
                 return;
             }
 
-            if (currentSetting == null)
+            if (currentFeature == null)
             {
                 await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
             }
             else
             {
-                currentSetting.Value = value;
+                currentFeature.Value = value;
             }
         }
 
-        private async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(Guid tenantId)
+        protected async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(Guid tenantId)
         {
             return await _cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {
-                var tenant = await _tenantRepository.GetAsync(tenantId);
+                TTenant tenant;
+                using (var uow = _unitOfWorkManager.Begin())
+                {
+                    using (_unitOfWorkManager.Current.SetTenantId(null))
+                    {
+                        tenant = await _tenantRepository.GetAsync(tenantId);
+                    }
 
+                    await uow.CompleteAsync();
+                }
                 var newCacheItem = new TenantFeatureCacheItem { EditionId = tenant.EditionId };
 
-                var featureSettings = await _tenantFeatureRepository.GetAllListAsync(f => f.TenantId == tenantId);
-                foreach (var featureSetting in featureSettings)
+                using (var uow = _unitOfWorkManager.Begin())
                 {
-                    newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
+                    using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                    {
+                        var featureSettings = await _tenantFeatureRepository.GetAllListAsync();
+                        foreach (var featureSetting in featureSettings)
+                        {
+                            newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
+                        }
+                    }
+
+                    await uow.CompleteAsync();
                 }
 
                 return newCacheItem;

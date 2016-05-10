@@ -11,7 +11,7 @@ namespace Abp.Authorization.Users
     /// Used to save a login attempt of a user.
     /// </summary>
     [Table("AbpUserLoginAttempts")]
-    public class UserLoginAttempt : Entity<Guid>, IHasCreationTime
+    public class UserLoginAttempt : Entity<Guid>, IHasCreationTime, IMayHaveTenant
     {
         /// <summary>
         /// Max length of the <see cref="TenancyName"/> property.

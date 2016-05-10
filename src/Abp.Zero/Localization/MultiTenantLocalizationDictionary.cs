@@ -1,5 +1,6 @@
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Localization.Dictionaries;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
@@ -22,6 +23,7 @@ namespace Abp.Localization
         private readonly IRepository<ApplicationLanguageText, Guid> _customLocalizationRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IAbpSession _session;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTenantLocalizationDictionary"/> class.
@@ -31,13 +33,15 @@ namespace Abp.Localization
             ILocalizationDictionary internalDictionary,
             IRepository<ApplicationLanguageText, Guid> customLocalizationRepository,
             ICacheManager cacheManager,
-            IAbpSession session)
+            IAbpSession session,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _sourceName = sourceName;
             _internalDictionary = internalDictionary;
             _customLocalizationRepository = customLocalizationRepository;
             _cacheManager = cacheManager;
             _session = session;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public CultureInfo CultureInfo { get { return _internalDictionary.CultureInfo; } }
@@ -133,11 +137,15 @@ namespace Abp.Localization
             return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(tenantId, _sourceName, CultureInfo.Name);
         }
 
-        private Dictionary<string, string> GetAllValuesFromDatabase(Guid? tenantId)
+        [UnitOfWork]
+        protected virtual Dictionary<string, string> GetAllValuesFromDatabase(Guid? tenantId)
         {
-            return _customLocalizationRepository
-                .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name && l.TenantId == tenantId)
-                .ToDictionary(l => l.Key, l => l.Value);
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _customLocalizationRepository
+                    .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
+                    .ToDictionary(l => l.Key, l => l.Value);
+            }
         }
     }
 }

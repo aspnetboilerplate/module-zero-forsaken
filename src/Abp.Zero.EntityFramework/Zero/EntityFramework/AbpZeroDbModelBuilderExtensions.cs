@@ -29,9 +29,9 @@ namespace Abp.Zero.EntityFramework
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
         public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this DbModelBuilder modelBuilder, string prefix, string schemaName = null)
-            where TTenant : AbpTenant<TTenant, TUser>
-            where TRole : AbpRole<TTenant, TUser>
-            where TUser : AbpUser<TTenant, TUser>
+            where TTenant : AbpTenant<TUser>
+            where TRole : AbpRole<TUser>
+            where TUser : AbpUser<TUser>
         {
             prefix = prefix ?? "";
 
@@ -54,10 +54,12 @@ namespace Abp.Zero.EntityFramework
             SetTableName<TTenant>(modelBuilder, prefix + "Tenants", schemaName);
             SetTableName<UserLogin>(modelBuilder, prefix + "UserLogins", schemaName);
             SetTableName<UserLoginAttempt>(modelBuilder, prefix + "UserLoginAttempts", schemaName);
+            SetTableName<TenantNotificationInfo>(modelBuilder, prefix + "TenantNotifications", schemaName);
             SetTableName<UserNotificationInfo>(modelBuilder, prefix + "UserNotifications", schemaName);
             SetTableName<UserOrganizationUnit>(modelBuilder, prefix + "UserOrganizationUnits", schemaName);
             SetTableName<UserRole>(modelBuilder, prefix + "UserRoles", schemaName);
             SetTableName<TUser>(modelBuilder, prefix + "Users", schemaName);
+            SetTableName<UserAccount>(modelBuilder, prefix + "UserAccounts", schemaName);
         }
 
         private static void SetTableName<TEntity>(DbModelBuilder modelBuilder, string tableName, string schemaName)

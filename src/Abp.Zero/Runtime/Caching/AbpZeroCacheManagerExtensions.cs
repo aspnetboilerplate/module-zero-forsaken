@@ -8,14 +8,14 @@ namespace Abp.Runtime.Caching
 {
     public static class AbpZeroCacheManagerExtensions
     {
-        public static ITypedCache<Guid, UserPermissionCacheItem> GetUserPermissionCache(this ICacheManager cacheManager)
+        public static ITypedCache<string, UserPermissionCacheItem> GetUserPermissionCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<Guid, UserPermissionCacheItem>(UserPermissionCacheItem.CacheStoreName);
+            return cacheManager.GetCache<string, UserPermissionCacheItem>(UserPermissionCacheItem.CacheStoreName);
         }
 
-        public static ITypedCache<Guid, RolePermissionCacheItem> GetRolePermissionCache(this ICacheManager cacheManager)
+        public static ITypedCache<string, RolePermissionCacheItem> GetRolePermissionCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<Guid, RolePermissionCacheItem>(RolePermissionCacheItem.CacheStoreName);
+            return cacheManager.GetCache<string, RolePermissionCacheItem>(RolePermissionCacheItem.CacheStoreName);
         }
 
         public static ITypedCache<Guid, TenantFeatureCacheItem> GetTenantFeatureCache(this ICacheManager cacheManager)

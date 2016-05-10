@@ -5,13 +5,13 @@ using Abp.NHibernate.EntityMappings;
 namespace Abp.Zero.NHibernate.EntityMappings
 {
     /// <summary>
-    /// Base class to map classes derived from <see cref="AbpTenant{TTenant,TUser}"/>
+    /// Base class to map classes derived from <see cref="AbpTenant{TTenant}"/>
     /// </summary>
     /// <typeparam name="TTenant">Tenant type</typeparam>
     /// <typeparam name="TUser">User type</typeparam>
     public abstract class AbpTenantMap<TTenant, TUser> : EntityMap<TTenant>
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// Constructor.

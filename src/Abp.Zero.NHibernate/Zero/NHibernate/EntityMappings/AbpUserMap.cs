@@ -5,9 +5,8 @@ using System;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public abstract class AbpUserMap<TTenant, TUser> : EntityMap<TUser, Guid>
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+    public abstract class AbpUserMap<TUser> : EntityMap<TUser, Guid>
+        where TUser : AbpUser<TUser>
     {
         protected AbpUserMap()
             : base("AbpUsers")

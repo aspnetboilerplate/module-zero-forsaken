@@ -127,7 +127,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
         private async Task<bool> IsGrantedAsync(string permissionName)
         {
-            return (await PermissionChecker.IsGrantedAsync(_testUser.Id, permissionName));
+            return (await PermissionChecker.IsGrantedAsync(_testUser.ToUserIdentifier(), permissionName));
         }
     }
 }

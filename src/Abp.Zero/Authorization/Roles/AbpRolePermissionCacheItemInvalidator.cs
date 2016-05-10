@@ -2,13 +2,13 @@ using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
+using System;
 
 namespace Abp.Authorization.Roles
 {
     public class AbpRolePermissionCacheItemInvalidator :
         IEventHandler<EntityChangedEventData<RolePermissionSetting>>,
         IEventHandler<EntityDeletedEventData<AbpRoleBase>>,
-
         ITransientDependency
     {
         private readonly ICacheManager _cacheManager;
@@ -20,12 +20,14 @@ namespace Abp.Authorization.Roles
 
         public void HandleEvent(EntityChangedEventData<RolePermissionSetting> eventData)
         {
-            _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.RoleId);
+            var cacheKey = eventData.Entity.RoleId + "@" + (eventData.Entity.TenantId ?? Guid.Empty);
+            _cacheManager.GetRolePermissionCache().Remove(cacheKey);
         }
 
         public void HandleEvent(EntityDeletedEventData<AbpRoleBase> eventData)
         {
-            _cacheManager.GetRolePermissionCache().Remove(eventData.Entity.Id);
+            var cacheKey = eventData.Entity.Id + "@" + (eventData.Entity.TenantId ?? Guid.Empty);
+            _cacheManager.GetRolePermissionCache().Remove(cacheKey);
         }
     }
 }

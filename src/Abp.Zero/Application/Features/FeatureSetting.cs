@@ -2,6 +2,8 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 
 namespace Abp.Application.Features
 {
@@ -9,6 +11,7 @@ namespace Abp.Application.Features
     /// Base class for feature settings
     /// </summary>
     [Table("AbpFeatures")]
+    [MultiTenancySide(MultiTenancySides.Host)]
     public abstract class FeatureSetting : CreationAuditedEntity<Guid>
     {
         /// <summary>

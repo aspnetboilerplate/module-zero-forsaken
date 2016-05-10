@@ -9,7 +9,7 @@ namespace Abp.Authorization.Users
     /// Used to store a User Login for external Login services.
     /// </summary>
     [Table("AbpUserLogins")]
-    public class UserLogin : Entity<Guid>
+    public class UserLogin : Entity<Guid>, IMayHaveTenant
     {
         /// <summary>
         /// Maximum length of <see cref="LoginProvider"/> property.
@@ -20,6 +20,8 @@ namespace Abp.Authorization.Users
         /// Maximum length of <see cref="ProviderKey"/> property.
         /// </summary>
         public const int MaxProviderKeyLength = 256;
+
+        public virtual Guid? TenantId { get; set; }
 
         /// <summary>
         /// Id of the User.

@@ -1,12 +1,13 @@
 ﻿using Abp.Application.Features;
+using Abp.Domain.Entities;
 using System;
 
 namespace Abp.MultiTenancy
 {
     /// <summary>
-    /// Feature setting for a Tenant (<see cref="AbpTenant{TTenant,TUser}"/>).
+    /// Feature setting for a Tenant (<see cref="AbpTenant{TUser}"/>).
     /// </summary>
-    public class TenantFeatureSetting : FeatureSetting
+    public class TenantFeatureSetting : FeatureSetting, IMustHaveTenant
     {
         /// <summary>
         /// Tenant's Id.

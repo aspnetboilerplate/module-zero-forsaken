@@ -1,6 +1,7 @@
 ﻿using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
@@ -16,15 +17,17 @@ namespace Abp.Authorization
     /// <typeparam name="TRole"></typeparam>
     /// <typeparam name="TUser"></typeparam>
     public abstract class PermissionChecker<TTenant, TRole, TUser> : IPermissionChecker, ITransientDependency
-        where TRole : AbpRole<TTenant, TUser>, new()
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+        where TRole : AbpRole<TUser>, new()
+        where TUser : AbpUser<TUser>
+        where TTenant : AbpTenant<TUser>
     {
         private readonly AbpUserManager<TTenant, TRole, TUser> _userManager;
 
         public ILogger Logger { get; set; }
 
         public IAbpSession AbpSession { get; set; }
+
+        public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -45,6 +48,20 @@ namespace Abp.Authorization
         public virtual async Task<bool> IsGrantedAsync(Guid userId, string permissionName)
         {
             return await _userManager.IsGrantedAsync(userId, permissionName);
+        }
+
+        [UnitOfWork]
+        public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
+        {
+            if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
+            {
+                return await IsGrantedAsync(user.UserId, permissionName);
+            }
+
+            using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
+            {
+                return await _userManager.IsGrantedAsync(user.UserId, permissionName);
+            }
         }
     }
 }

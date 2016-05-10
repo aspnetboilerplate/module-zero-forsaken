@@ -7,12 +7,6 @@ namespace Abp.Zero.FluentMigrator.Migrations
     {
         public override void Up()
         {
-            Create.Index("IX_TenantId_Code")
-                .OnTable("AbpOrganizationUnits")
-                .OnColumn("TenantId").Ascending()
-                .OnColumn("Code").Ascending()
-                .WithOptions().NonClustered();
-
             Create.Index("IX_TenantId_ParentId")
                 .OnTable("AbpOrganizationUnits")
                 .OnColumn("TenantId").Ascending()

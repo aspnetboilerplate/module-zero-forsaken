@@ -9,9 +9,9 @@ namespace Abp.MultiTenancy
     public static class AbpTenantManagerExtensions
     {
         public static TTenant GetById<TTenant, TRole, TUser>(this AbpTenantManager<TTenant, TRole, TUser> tenantManager, Guid id)
-            where TTenant : AbpTenant<TTenant, TUser>
-            where TRole : AbpRole<TTenant, TUser>
-            where TUser : AbpUser<TTenant, TUser>
+            where TTenant : AbpTenant<TUser>
+            where TRole : AbpRole<TUser>
+            where TUser : AbpUser<TUser>
         {
             return AsyncHelper.RunSync(() => tenantManager.GetByIdAsync(id));
         }

@@ -21,13 +21,17 @@
             get { return _languageManagement; }
         }
 
+        public IAbpZeroEntityTypes EntityTypes { get; }
+
         private readonly ILanguageManagementConfig _languageManagement;
 
         public AbpZeroConfig(
             IRoleManagementConfig roleManagementConfig,
             IUserManagementConfig userManagementConfig,
-            ILanguageManagementConfig languageManagement)
+            ILanguageManagementConfig languageManagement,
+            IAbpZeroEntityTypes entityTypes)
         {
+            EntityTypes = entityTypes;
             _roleManagementConfig = roleManagementConfig;
             _userManagementConfig = userManagementConfig;
             _languageManagement = languageManagement;

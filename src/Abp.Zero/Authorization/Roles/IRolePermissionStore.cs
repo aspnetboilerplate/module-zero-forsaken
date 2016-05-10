@@ -1,5 +1,4 @@
 ﻿using Abp.Authorization.Users;
-using Abp.MultiTenancy;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,10 +8,9 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Used to perform permission database operations for a role.
     /// </summary>
-    public interface IRolePermissionStore<TTenant, TRole, TUser>
-        where TRole : AbpRole<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
+    public interface IRolePermissionStore<TRole, TUser>
+        where TRole : AbpRole<TUser>
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// Adds a permission grant setting to a role.

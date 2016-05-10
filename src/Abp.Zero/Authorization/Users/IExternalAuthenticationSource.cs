@@ -9,8 +9,8 @@ namespace Abp.Authorization.Users
     /// <typeparam name="TTenant">Tenant type</typeparam>
     /// <typeparam name="TUser">User type</typeparam>
     public interface IExternalAuthenticationSource<TTenant, TUser>
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>
+        where TTenant : AbpTenant<TUser>
+        where TUser : AbpUser<TUser>
     {
         /// <summary>
         /// Unique name of the authentication source.

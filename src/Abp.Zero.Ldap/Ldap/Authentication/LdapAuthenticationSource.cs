@@ -17,8 +17,8 @@ namespace Abp.Zero.Ldap.Authentication
     /// <typeparam name="TTenant">Tenant type</typeparam>
     /// <typeparam name="TUser">User type</typeparam>
     public abstract class LdapAuthenticationSource<TTenant, TUser> : DefaultExternalAuthenticationSource<TTenant, TUser>, ITransientDependency
-        where TTenant : AbpTenant<TTenant, TUser>
-        where TUser : AbpUser<TTenant, TUser>, new()
+        where TTenant : AbpTenant<TUser>
+        where TUser : AbpUser<TUser>, new()
     {
         /// <summary>
         /// LDAP

@@ -1,9 +1,15 @@
-﻿using Abp.Application.Features;
+﻿using System.Linq;
+using System.Reflection;
+using Abp.Application.Features;
+using Abp.Authorization.Roles;
+using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
+using Abp.MultiTenancy;
+using Abp.Reflection;
 using Abp.Zero.Configuration;
 using Castle.MicroKernel.Registration;
 using System.Reflection;
@@ -19,13 +25,14 @@ namespace Abp.Zero
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.8.4.0";
+        public const string CurrentVersion = "0.9.0.0";
 
         public override void PreInitialize()
         {
             IocManager.Register<IRoleManagementConfig, RoleManagementConfig>();
             IocManager.Register<IUserManagementConfig, UserManagementConfig>();
             IocManager.Register<ILanguageManagementConfig, LanguageManagementConfig>();
+            IocManager.Register<IAbpZeroEntityTypes, AbpZeroEntityTypes>();
             IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
 
             Configuration.Settings.Providers.Add<AbpZeroSettingProvider>();
@@ -42,8 +49,16 @@ namespace Abp.Zero
 
         public override void Initialize()
         {
+            FillMissingEntityTypes();
+
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
+
+            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient); //could not register conventionally
+        }
+
+        public override void PostInitialize()
+        {
+            RegisterTenantCacheIfNeeded();
         }
 
         private void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
@@ -53,6 +68,42 @@ namespace Abp.Zero
                 IocManager.IocContainer.Register(
                     Component.For<IAbpZeroFeatureValueStore>().ImplementedBy(handler.ComponentModel.Implementation).Named("AbpZeroFeatureValueStore").LifestyleTransient()
                     );
+            }
+        }
+
+        private void FillMissingEntityTypes()
+        {
+            using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
+            {
+                if (entityTypes.Object.User != null &&
+                    entityTypes.Object.Role != null &&
+                    entityTypes.Object.Tenant != null)
+                {
+                    return;
+                }
+
+                using (var typeFinder = IocManager.ResolveAsDisposable<ITypeFinder>())
+                {
+                    var types = typeFinder.Object.FindAll();
+                    entityTypes.Object.Tenant = types.FirstOrDefault(t => typeof(AbpTenantBase).IsAssignableFrom(t) && !t.IsAbstract);
+                    entityTypes.Object.Role = types.FirstOrDefault(t => typeof(AbpRoleBase).IsAssignableFrom(t) && !t.IsAbstract);
+                    entityTypes.Object.User = types.FirstOrDefault(t => typeof(AbpUserBase).IsAssignableFrom(t) && !t.IsAbstract);
+                }
+            }
+        }
+
+        private void RegisterTenantCacheIfNeeded()
+        {
+            if (IocManager.IsRegistered<ITenantCache>())
+            {
+                return;
+            }
+            using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
+            {
+                var implType = typeof (TenantCache<,>)
+                    .MakeGenericType(entityTypes.Object.Tenant, entityTypes.Object.User);
+
+                IocManager.Register(typeof (ITenantCache), implType);
             }
         }
     }
