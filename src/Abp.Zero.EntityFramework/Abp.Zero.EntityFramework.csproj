@@ -114,8 +114,7 @@
     <Compile Include="Zero\EntityFramework\AbpZeroTenantDbContext.cs" />
     <Compile Include="Data\ConnectionStringHelper.cs" />
     <Compile Include="Zero\EntityFramework\DbPerTenantConnectionStringResolver.cs" />
-    <Compile Include="Zero\EntityFramework\ISupportSeedMode.cs" />
-    <Compile Include="Zero\EntityFramework\SeedMode.cs" />
+    <Compile Include="Zero\EntityFramework\IMultiTenantSeed.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Abp.Zero.EntityFramework.nuspec" />

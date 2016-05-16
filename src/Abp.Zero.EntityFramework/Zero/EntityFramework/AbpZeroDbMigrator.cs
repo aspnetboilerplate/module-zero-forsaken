@@ -11,7 +11,7 @@ namespace Abp.Zero.EntityFramework
 {
     public abstract class AbpZeroDbMigrator<TDbContext, TConfiguration> : IAbpZeroDbMigrator, ITransientDependency
         where TDbContext : DbContext
-        where TConfiguration : DbMigrationsConfiguration<TDbContext>, ISupportSeedMode, new()
+        where TConfiguration : DbMigrationsConfiguration<TDbContext>, IMultiTenantSeed, new()
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IDbPerTenantConnectionStringResolver _connectionStringResolver;
@@ -29,15 +29,7 @@ namespace Abp.Zero.EntityFramework
 
         public virtual void CreateOrMigrateForHost()
         {
-            var args = new DbPerTenantConnectionStringResolveArgs(null, MultiTenancySides.Host)
-            {
-                ["DbContextType"] = typeof(TDbContext)
-            };
-
-            CreateOrMigrate(
-                _connectionStringResolver.GetNameOrConnectionString(args),
-                SeedMode.Host
-                );
+            CreateOrMigrate(null);
         }
 
         public virtual void CreateOrMigrateForTenant(AbpTenantBase tenant)
@@ -47,20 +39,20 @@ namespace Abp.Zero.EntityFramework
                 return;
             }
 
-            var args = new DbPerTenantConnectionStringResolveArgs(tenant.Id, MultiTenancySides.Tenant)
-            {
-                ["DbContextType"] = typeof (TDbContext)
-            };
-
-            CreateOrMigrate(
-                _connectionStringResolver.GetNameOrConnectionString(args),
-                SeedMode.Tenant
-                );
+            CreateOrMigrate(tenant);
         }
 
-        protected virtual void CreateOrMigrate(string nameOrConnectionString, SeedMode seedMode)
+        protected virtual void CreateOrMigrate(AbpTenantBase tenant)
         {
-            nameOrConnectionString = ConnectionStringHelper.GetConnectionString(nameOrConnectionString);
+            var args = new DbPerTenantConnectionStringResolveArgs(
+                tenant == null ? (int?)null : (int?)tenant.Id, 
+                tenant == null ? MultiTenancySides.Host : MultiTenancySides.Tenant
+                )
+            {
+                ["DbContextType"] = typeof(TDbContext)
+            };
+
+            var nameOrConnectionString = ConnectionStringHelper.GetConnectionString(_connectionStringResolver.GetNameOrConnectionString(args));
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
@@ -70,7 +62,7 @@ namespace Abp.Zero.EntityFramework
                         true,
                         new TConfiguration
                         {
-                            SeedMode = seedMode
+                            Tenant = tenant
                         });
 
                     dbInitializer.InitializeDatabase(dbContext.Object);
