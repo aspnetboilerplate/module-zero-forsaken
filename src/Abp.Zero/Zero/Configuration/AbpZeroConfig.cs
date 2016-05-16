@@ -18,19 +18,22 @@
         {
             get { return _languageManagement; }
         }
-
-        public IAbpZeroEntityTypes EntityTypes { get; }
-
         private readonly ILanguageManagementConfig _languageManagement;
+
+        public IAbpZeroEntityTypes EntityTypes
+        {
+            get { return _entityTypes; }
+        }
+        private readonly IAbpZeroEntityTypes _entityTypes;
 
 
         public AbpZeroConfig(
-            IRoleManagementConfig roleManagementConfig, 
+            IRoleManagementConfig roleManagementConfig,
             IUserManagementConfig userManagementConfig,
             ILanguageManagementConfig languageManagement,
             IAbpZeroEntityTypes entityTypes)
         {
-            EntityTypes = entityTypes;
+            _entityTypes = entityTypes;
             _roleManagementConfig = roleManagementConfig;
             _userManagementConfig = userManagementConfig;
             _languageManagement = languageManagement;
