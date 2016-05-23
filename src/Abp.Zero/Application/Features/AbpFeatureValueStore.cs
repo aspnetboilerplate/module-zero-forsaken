@@ -119,10 +119,11 @@ namespace Abp.Application.Features
                     using (_unitOfWorkManager.Current.SetTenantId(null))
                     {
                         tenant = await _tenantRepository.GetAsync(tenantId);
-                    }
 
-                    await uow.CompleteAsync();
+                        await uow.CompleteAsync();
+                    }
                 }
+
                 var newCacheItem = new TenantFeatureCacheItem { EditionId = tenant.EditionId };
 
                 using (var uow = _unitOfWorkManager.Begin())
@@ -134,9 +135,9 @@ namespace Abp.Application.Features
                         {
                             newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
                         }
-                    }
 
-                    await uow.CompleteAsync();
+                        await uow.CompleteAsync();
+                    }
                 }
 
                 return newCacheItem;
