@@ -138,6 +138,7 @@
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_11_Create_Indexes_For_AbpUserOrganizationUnits.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_12_Create_Indexes_For_AbpUserRoles.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20151230_13_Revise_Users.cs" />
+    <Compile Include="Zero\FluentMigrator\Migrations\_20160524_01_Fix_Inconsistent_Data_Type.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20160122_01_Create_AbpBackgroundJobs_Table.cs" />
     <Compile Include="Zero\FluentMigrator\VersionTable.cs" />
     <Compile Include="Zero\FluentMigrator\Migrations\_20140829_01_Add_Columns_To_AbpUsers_Table.cs" />
