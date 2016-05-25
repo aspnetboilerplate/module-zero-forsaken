@@ -219,13 +219,7 @@ namespace Abp.Authorization.Users
         public virtual async Task AddToRoleAsync(TUser user, string roleName)
         {
             var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
-            await _userRoleRepository.InsertAsync(
-                new UserRole
-                {
-                    TenantId = user.TenantId,
-                    UserId = user.Id,
-                    RoleId = role.Id
-                });
+            await _userRoleRepository.InsertAsync(new UserRole(user.TenantId, user.Id, role.Id));
         }
 
         public virtual async Task RemoveFromRoleAsync(TUser user, string roleName)
