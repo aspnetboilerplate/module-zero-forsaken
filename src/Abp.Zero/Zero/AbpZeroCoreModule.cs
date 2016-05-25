@@ -51,13 +51,8 @@ namespace Abp.Zero
             FillMissingEntityTypes();
 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-
             IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient); //could not register conventionally
-        }
-
-        public override void PostInitialize()
-        {
-            RegisterTenantCacheIfNeeded();
+            RegisterTenantCache();
         }
 
         private void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
@@ -91,7 +86,7 @@ namespace Abp.Zero
             }
         }
 
-        private void RegisterTenantCacheIfNeeded()
+        private void RegisterTenantCache()
         {
             if (IocManager.IsRegistered<ITenantCache>())
             {
