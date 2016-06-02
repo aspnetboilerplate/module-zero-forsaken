@@ -172,7 +172,7 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
-nupkg/push_abp_zero.bat
+nupkg/push.bat
 nupkg/*.nupkg
 sample/ModuleZeroSampleProject.Web/Logs/
 !sample/ModuleZeroSampleProject.Web/bower_components/angular-ui-router/release/

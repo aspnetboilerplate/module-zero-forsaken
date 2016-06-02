@@ -1,4 +1,4 @@
-REM "..\tools\gitlink\GitLink.exe" ..\ -u https://github.com/aspnetboilerplate/aspnetboilerplate -c release
+REM "..\tools\gitlink\GitLink.exe" ..\ -u https://github.com/aspnetboilerplate/module-zero -c release
 
 @ECHO OFF
 SET /P VERSION_SUFFIX=Please enter version-suffix (can be left empty): 
