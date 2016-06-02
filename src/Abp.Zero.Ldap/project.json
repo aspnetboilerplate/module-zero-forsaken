@@ -1,0 +1,46 @@
+﻿{
+  "version": "0.9.1.2-*",
+
+  "dependencies": {
+    "Abp.Zero": "0.9.1.2-*"
+  },
+
+  "frameworks": {
+    "net452": {
+      "frameworkAssemblies": {
+        "System.DirectoryServices.AccountManagement": "4.0.0.0",
+        "System.DirectoryServices.Protocols": "4.0.0.0"
+      }
+    }
+  },
+
+  "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
+    "xmlDoc": true,
+    "embed": {
+      "include": [
+        "Ldap/Localization/Source/*.xml"
+      ]
+    }
+  },
+
+  "packOptions": {
+    "summary": "ASP.NET Boilerplate - Module Zero.",
+    "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "multitenancy", "user management", "role management", "identity", "ldap", "active directory" ],
+    "owners": [ "Halil İbrahim Kalkan" ],
+    "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
+    "projectUrl": "http://www.aspnetboilerplate.com/",
+    "licenseUrl": "https://github.com/aspnetboilerplate/module-zero/blob/master/LICENSE",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/aspnetboilerplate/module-zero"
+    }
+  },
+
+  "packInclude": {
+    "lib/net452/": "bin/Release/net452/Abp.Zero.Ldap.pdb"
+  }
+}

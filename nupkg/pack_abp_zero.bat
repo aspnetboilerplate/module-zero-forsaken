@@ -1,17 +1,11 @@
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero\Abp.Zero.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj" -Properties Configuration=Release -IncludeReferencedProjects -Symbols
+REM "..\tools\gitlink\GitLink.exe" ..\ -u https://github.com/aspnetboilerplate/aspnetboilerplate -c release
 
-ren *.symbols.nupkg *.temp_nupkg
-del /a /f /q *.nupkg
-ren *.temp_nupkg *.nupkg
+@ECHO OFF
+SET /P VERSION_SUFFIX=Please enter version-suffix (can be left empty): 
 
-GitLink.exe ..\ -u https://github.com/aspnetboilerplate/module-zero -c release
-
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero\Abp.Zero.csproj" -Properties Configuration=Release -IncludeReferencedProjects
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj" -Properties Configuration=Release -IncludeReferencedProjects
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj" -Properties Configuration=Release -IncludeReferencedProjects
-"..\src\.nuget\NuGet.exe" "pack" "..\src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj" -Properties Configuration=Release -IncludeReferencedProjects
+dotnet "pack" "..\src\Abp.Zero" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.Zero.Ldap" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.Zero.EntityFramework" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.Zero.NHibernate" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 
 pause

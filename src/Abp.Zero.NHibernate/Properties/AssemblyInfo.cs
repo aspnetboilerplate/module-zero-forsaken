@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using Abp.Zero;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Iteration Zero - NHibernate Integration")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Iteration Zero - NHibernate Integration")]
+[assembly: AssemblyTitle("AbpAbp.Zero.NHibernate")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Module Zero - NHibernate Integration")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.Zero.NHibernate")]
-[assembly: AssemblyCopyright("Copyright © 2014")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
