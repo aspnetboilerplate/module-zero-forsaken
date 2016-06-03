@@ -1,0 +1,14 @@
+﻿{
+  "version": "0.9.1.2-*",
+
+  "dependencies": {
+    "Abp.Zero": "0.9.1.2-*"
+  },
+
+  "frameworks": {
+    "net452": {
+      "frameworkAssemblies": {
+      }
+    }
+  }
+}

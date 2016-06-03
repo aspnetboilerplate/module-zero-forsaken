@@ -24,7 +24,7 @@ namespace Abp.Zero
         /// <summary>
         /// Current version of the zero module.
         /// </summary>
-        public const string CurrentVersion = "0.9.1.1";
+        public const string CurrentVersion = "0.9.1.2";
 
         public override void PreInitialize()
         {
@@ -40,7 +40,7 @@ namespace Abp.Zero
                 new DictionaryBasedLocalizationSource(
                     AbpZeroConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Zero.Localization.Source"
+                        Assembly.GetExecutingAssembly(), "Abp.Zero.Zero.Localization.Source"
                         )));
 
             IocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;

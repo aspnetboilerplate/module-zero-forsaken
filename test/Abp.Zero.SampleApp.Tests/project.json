@@ -1,0 +1,32 @@
+﻿{
+  "version": "1.0.0-*",
+  
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "xunit": "2.1.0",
+    "xunit.runner.visualstudio": "2.1.0",
+    "xunit.extensibility.execution": "2.1.0",
+    "dotnet-test-xunit": "1.0.0-rc2-build10025",
+    "Shouldly": "2.7.0",
+    "NSubstitute": "1.10.0",
+    "Effort.EF6": "1.1.5",
+    "Abp.Zero.SampleApp": "0.9.1.2-*",
+    "Abp.Zero.SampleApp.EntityFramework": "0.9.1.2-*",
+    "Abp.TestBase": "0.9.1.4",
+    "Abp.Zero.Ldap": "0.9.1.2-*"
+  },
+
+  "frameworks": {
+    "net452": {
+      "Microsoft.NETCore.App": "1.0.0-rc2-3002702"
+    }
+  },
+
+  "buildOptions": {
+    "embed": {
+      "include": [
+      ]
+    }
+  }
+}

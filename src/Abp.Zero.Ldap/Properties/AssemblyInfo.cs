@@ -7,11 +7,11 @@ using Abp.Zero;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Abp.Zero.Ldap")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("ASP.NET Boilerplate - Module Zero - Active Directory Integration")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.Zero.Ldap")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

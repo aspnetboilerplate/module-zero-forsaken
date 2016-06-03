@@ -1,25 +1,19 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Abp.Zero;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp.Zero;
-
-[assembly: AssemblyTitle("Abp.Zero")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Module Zero")]
+[assembly: AssemblyTitle("Abp.Zero.Tests")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Volosoft")]
-[assembly: AssemblyProduct("Abp.Zero")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyProduct("Abp.Zero.Tests")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
-[assembly: InternalsVisibleTo("Abp.Zero.NHibernate")]
-[assembly: InternalsVisibleTo("Abp.Zero.EntityFramework")]
-[assembly: InternalsVisibleTo("Abp.Zero.Application")]
-[assembly: InternalsVisibleTo("Abp.Zero.Web.Api")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -27,7 +21,7 @@ using Abp.Zero;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("436fea78-a954-4902-8874-530de9e48d61")]
+[assembly: Guid("2758d172-c92b-47f3-9e7f-749ad6a7ec0d")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -41,3 +35,4 @@ using Abp.Zero;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(AbpZeroCoreModule.CurrentVersion)]
 [assembly: AssemblyFileVersion(AbpZeroCoreModule.CurrentVersion)]
+
