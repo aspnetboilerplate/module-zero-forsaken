@@ -181,5 +181,6 @@ nupkg/*.nupkg
 sample/ModuleZeroSampleProject.Web/Logs/
 !sample/ModuleZeroSampleProject.Web/bower_components/angular-ui-router/release/
 
-# GitLink
+# GitLink and Nuget exe files
 !GitLink.exe
+!nuget.exe
