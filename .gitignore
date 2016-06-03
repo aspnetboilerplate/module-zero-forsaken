@@ -3,6 +3,7 @@
 
 # Generated Files
 project.lock.json
+.vs/
 
 # User-specific files
 *.suo
