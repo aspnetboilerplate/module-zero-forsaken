@@ -1,6 +1,8 @@
 ASP.NET Boilerplate - Module Zero
 ===========
 
+AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/56e9cadwavg3lj64?svg=true)](https://ci.appveyor.com/project/hikalkan/module-zero)
+
 What is 'module zero'
 ----------
 
