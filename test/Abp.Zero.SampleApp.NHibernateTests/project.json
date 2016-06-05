@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "testRunner": "xunit",
@@ -11,9 +11,9 @@
     "Shouldly": "2.7.0",
     "NSubstitute": "1.10.0",
     "Abp.Zero.SampleApp": "0.9.1.2-*",
-    "Abp.TestBase": "0.9.1.4",
     "Abp.Zero.NHibernate": "0.9.1.2-*",
-    "System.Data.SQLite.Core": "1.0.101"
+    "System.Data.SQLite.Core": "1.0.101",
+    "Abp.TestBase": "0.9.2"
   },
 
   "frameworks": {
