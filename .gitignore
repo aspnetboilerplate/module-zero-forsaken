@@ -184,3 +184,4 @@ sample/ModuleZeroSampleProject.Web/Logs/
 # GitLink and Nuget exe files
 !GitLink.exe
 !nuget.exe
+!SQLite.Interop.dll
