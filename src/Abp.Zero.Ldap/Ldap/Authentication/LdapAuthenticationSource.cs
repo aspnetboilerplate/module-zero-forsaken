@@ -107,6 +107,11 @@ namespace Abp.Zero.Ldap.Authentication
             user.Name = userPrincipal.GivenName;
             user.Surname = userPrincipal.Surname;
             user.EmailAddress = userPrincipal.EmailAddress;
+
+            if (userPrincipal.Enabled.HasValue)
+            {
+                user.IsActive = userPrincipal.Enabled.Value;
+            }
         }
 
         protected virtual async Task<PrincipalContext> CreatePrincipalContext(TTenant tenant)

@@ -19,7 +19,7 @@ namespace Abp.Authorization.Users
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
         IUserPermissionStore<TUser>,
-        
+
         ITransientDependency
 
         where TRole : AbpRole<TUser>
@@ -218,13 +218,13 @@ namespace Abp.Authorization.Users
 
         public virtual async Task AddToRoleAsync(TUser user, string roleName)
         {
-            var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
+            var role = await GetRoleByNameAsync(roleName);
             await _userRoleRepository.InsertAsync(new UserRole(user.TenantId, user.Id, role.Id));
         }
 
         public virtual async Task RemoveFromRoleAsync(TUser user, string roleName)
         {
-            var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
+            var role = await GetRoleByNameAsync(roleName);
             var userRole = await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
             if (userRole == null)
             {
@@ -238,16 +238,16 @@ namespace Abp.Authorization.Users
         {
             //TODO: This is not implemented as async.
             var roleNames = _userRoleRepository.Query(userRoles => (from userRole in userRoles
-                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                where userRole.UserId == user.Id
-                select role.Name).ToList());
+                                                                    join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                                                                    where userRole.UserId == user.Id
+                                                                    select role.Name).ToList());
 
             return Task.FromResult<IList<string>>(roleNames);
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
-            var role = await _roleRepository.SingleAsync(r => r.Name == roleName);
+            var role = await GetRoleByNameAsync(roleName);
             return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
         }
 
@@ -306,6 +306,17 @@ namespace Abp.Authorization.Users
         public virtual void Dispose()
         {
             //No need to dispose since using IOC.
+        }
+
+        private async Task<TRole> GetRoleByNameAsync(string roleName)
+        {
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == roleName);
+            if (role == null)
+            {
+                throw new AbpException("Could not find a role with name: " + roleName);
+            }
+
+            return role;
         }
     }
 }
