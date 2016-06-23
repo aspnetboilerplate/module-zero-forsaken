@@ -2,7 +2,7 @@
   "version": "0.9.4.0-*",
 
   "dependencies": {
-    "Abp": "0.9.4",
+    "Abp": "0.9.6",
     "Microsoft.AspNet.Identity.Core": "2.2.1"
   },
 

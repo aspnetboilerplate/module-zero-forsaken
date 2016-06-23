@@ -13,7 +13,7 @@
     "Abp.Zero.SampleApp": "0.9.4.0-*",
     "Abp.Zero.SampleApp.EntityFramework": "0.9.4.0-*",
     "Abp.Zero.Ldap": "0.9.4.0-*",
-    "Abp.TestBase": "0.9.4",
+    "Abp.TestBase": "0.9.6",
     "Shouldly": "2.8.0"
   },
 
