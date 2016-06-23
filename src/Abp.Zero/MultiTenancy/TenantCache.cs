@@ -17,8 +17,8 @@ namespace Abp.MultiTenancy
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public TenantCache(
-            ICacheManager cacheManager, 
-            IRepository<TTenant> tenantRepository, 
+            ICacheManager cacheManager,
+            IRepository<TTenant> tenantRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
             _cacheManager = cacheManager;
@@ -28,13 +28,50 @@ namespace Abp.MultiTenancy
 
         public virtual TenantCacheItem Get(int tenantId)
         {
+            var cacheItem = GetOrNull(tenantId);
+
+            if (cacheItem == null)
+            {
+                throw new AbpException("There is no tenant with given id: " + tenantId);
+            }
+
+            return cacheItem;
+        }
+
+        public virtual TenantCacheItem Get(string tenancyName)
+        {
+            var cacheItem = GetOrNull(tenancyName);
+
+            if (cacheItem == null)
+            {
+                throw new AbpException("There is no tenant with given tenancy name: " + tenancyName);
+            }
+
+            return cacheItem;
+        }
+
+        public virtual TenantCacheItem GetOrNull(string tenancyName)
+        {
+            var tenantId = _cacheManager.GetTenantByNameCache()
+                .Get(tenancyName, () => GetTenantOrNull(tenancyName)?.Id);
+
+            if (tenantId == null)
+            {
+                return null;
+            }
+
+            return Get(tenantId.Value);
+        }
+
+        public TenantCacheItem GetOrNull(int tenantId)
+        {
             return _cacheManager
                 .GetTenantCache()
                 .Get(
                     tenantId,
                     () =>
                     {
-                        var tenant = GetTenant(tenantId);
+                        var tenant = GetTenantOrNull(tenantId);
                         return CreateTenantCacheItem(tenant);
                     }
                 );
@@ -44,6 +81,7 @@ namespace Abp.MultiTenancy
         {
             return new TenantCacheItem
             {
+                Id = tenant.Id,
                 Name = tenant.Name,
                 TenancyName = tenant.TenancyName,
                 EditionId = tenant.EditionId,
@@ -53,17 +91,38 @@ namespace Abp.MultiTenancy
         }
 
         [UnitOfWork]
-        protected virtual TTenant GetTenant(int tenantId)
+        protected virtual TTenant GetTenantOrNull(int tenantId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                return _tenantRepository.Get(tenantId);
+                return _tenantRepository.FirstOrDefault(tenantId);
+            }
+        }
+
+        [UnitOfWork]
+        protected virtual TTenant GetTenantOrNull(string tenancyName)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(null))
+            {
+                return _tenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
             }
         }
 
         public void HandleEvent(EntityChangedEventData<TTenant> eventData)
         {
-            _cacheManager.GetTenantCache().Remove(eventData.Entity.Id);
+            var existingCacheItem = _cacheManager.GetTenantCache().GetOrDefault(eventData.Entity.Id);
+
+            _cacheManager
+                .GetTenantByNameCache()
+                .Remove(
+                    existingCacheItem != null
+                        ? existingCacheItem.TenancyName
+                        : eventData.Entity.TenancyName
+                );
+
+            _cacheManager
+                .GetTenantCache()
+                .Remove(eventData.Entity.Id);
         }
     }
 }

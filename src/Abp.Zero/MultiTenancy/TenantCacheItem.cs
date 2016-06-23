@@ -7,6 +7,10 @@ namespace Abp.MultiTenancy
     {
         public const string CacheName = "AbpZeroTenantCache";
 
+        public const string ByNameCacheName = "AbpZeroTenantByNameCache";
+
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string TenancyName { get; set; }

@@ -8,5 +8,10 @@ namespace Abp.MultiTenancy
         {
             return cacheManager.GetCache<int, TenantCacheItem>(TenantCacheItem.CacheName);
         }
+
+        public static ITypedCache<string, int?> GetTenantByNameCache(this ICacheManager cacheManager)
+        {
+            return cacheManager.GetCache<string, int?>(TenantCacheItem.CacheName);
+        }
     }
 }
