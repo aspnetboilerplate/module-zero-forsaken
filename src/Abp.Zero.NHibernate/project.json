@@ -2,8 +2,8 @@
   "version": "0.9.6.0-*",
 
   "dependencies": {
-    "Abp.FluentMigrator": "0.9.6",
-    "Abp.NHibernate": "0.9.6",
+    "Abp.FluentMigrator": "0.9.7",
+    "Abp.NHibernate": "0.9.7",
     "Abp.Zero": "0.9.6.0-*"
   },
 
