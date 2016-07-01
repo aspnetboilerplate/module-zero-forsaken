@@ -21,11 +21,6 @@ namespace Abp.Zero
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpZeroCoreModule : AbpModule
     {
-        /// <summary>
-        /// Current version of the zero module.
-        /// </summary>
-        public const string CurrentVersion = "0.9.4.0";
-
         public override void PreInitialize()
         {
             IocManager.Register<IRoleManagementConfig, RoleManagementConfig>();
