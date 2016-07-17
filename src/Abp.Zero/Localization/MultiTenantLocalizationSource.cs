@@ -41,7 +41,7 @@ namespace Abp.Localization
 
             if (value == null)
             {
-                return ReturnGivenNameOrThrowException(name);
+                return ReturnGivenNameOrThrowException(name, culture);
             }
 
             return value;

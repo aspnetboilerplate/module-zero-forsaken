@@ -2,8 +2,6 @@
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
-using Abp.Collections;
-using Abp.Modules;
 using Abp.TestBase;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.NHibernate.TestDatas;
@@ -13,7 +11,7 @@ using NHibernate.Linq;
 
 namespace Abp.Zero.SampleApp.NHibernate
 {
-    public abstract class NHibernateTestBase : AbpIntegratedTestBase
+    public abstract class NHibernateTestBase : AbpIntegratedTestBase<SampleAppNHibernateModule>
     {
         private SQLiteConnection _connection;
 
@@ -30,12 +28,6 @@ namespace Abp.Zero.SampleApp.NHibernate
             LocalIocManager.IocContainer.Register(
                 Component.For<IDbConnection>().UsingFactoryMethod(() => _connection).LifestyleSingleton()
                 );
-        }
-
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add<SampleAppNHibernateModule>();
         }
 
         public void UsingSession(Action<ISession> action)

@@ -1,9 +1,9 @@
 {
-  "version": "0.9.6.0-*",
+  "version": "0.10.0.0-*",
 
   "dependencies": {
-    "Abp.EntityFramework": "0.9.7",
-    "Abp.Zero": "0.9.6.0-*"
+    "Abp.EntityFramework": "0.10.0.1",
+    "Abp.Zero": "0.10.0.0-*"
   },
 
   "frameworks": {

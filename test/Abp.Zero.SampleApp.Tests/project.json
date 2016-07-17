@@ -10,11 +10,11 @@
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "NSubstitute": "1.10.0",
     "Effort.EF6": "1.1.5",
-    "Abp.Zero.SampleApp": "0.9.6.0-*",
-    "Abp.Zero.SampleApp.EntityFramework": "0.9.6.0-*",
-    "Abp.Zero.Ldap": "0.9.6.0-*",
+    "Abp.Zero.SampleApp": "0.10.0.0-*",
+    "Abp.Zero.SampleApp.EntityFramework": "0.10.0.0-*",
+    "Abp.Zero.Ldap": "0.10.0.0-*",
     "Shouldly": "2.8.0",
-    "Abp.TestBase": "0.9.7"
+    "Abp.TestBase": "0.10.0.1"
   },
 
   "frameworks": {

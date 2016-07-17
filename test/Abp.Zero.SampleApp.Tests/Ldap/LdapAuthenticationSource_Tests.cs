@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
-using Abp.Collections;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Modules;
@@ -15,19 +14,13 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Ldap
 {
-    public class LdapAuthenticationSource_Tests : SampleAppTestBase
+    public class LdapAuthenticationSource_Tests : SampleAppTestBase<LdapAuthenticationSource_Tests.MyUserLoginTestModule>
     {
         private readonly UserManager _userManager;
 
         public LdapAuthenticationSource_Tests()
         {
             _userManager = Resolve<UserManager>();
-        }
-
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add<MyUserLoginTestModule>();
         }
 
         //[Fact]
@@ -76,7 +69,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             await Assert.ThrowsAnyAsync<Exception>(() => _userManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
         }
 
-        [DependsOn(typeof(AbpZeroLdapModule))]
+        [DependsOn(typeof(AbpZeroLdapModule), typeof(SampleAppTestModule))]
         public class MyUserLoginTestModule : AbpModule
         {
             public override void PreInitialize()

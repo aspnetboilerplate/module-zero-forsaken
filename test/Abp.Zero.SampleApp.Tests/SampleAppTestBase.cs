@@ -4,11 +4,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
-using Abp.Collections;
 using Abp.IdentityFramework;
 using Abp.Modules;
 using Abp.TestBase;
-using Abp.Zero.Ldap;
 using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
@@ -20,7 +18,13 @@ using Shouldly;
 
 namespace Abp.Zero.SampleApp.Tests
 {
-    public abstract class SampleAppTestBase : AbpIntegratedTestBase
+    public abstract class SampleAppTestBase : SampleAppTestBase<SampleAppTestModule>
+    {
+        
+    }
+
+    public abstract class SampleAppTestBase<TModule> : AbpIntegratedTestBase<TModule> 
+        where TModule : AbpModule
     {
         protected readonly RoleManager RoleManager;
         protected readonly UserManager UserManager;
@@ -52,14 +56,6 @@ namespace Abp.Zero.SampleApp.Tests
         private void CreateInitialData()
         {
             UsingDbContext(context => new InitialTestDataBuilder(context).Build());
-        }
-
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-
-            modules.Add<AbpZeroLdapModule>();
-            modules.Add<SampleAppEntityFrameworkModule>();
         }
 
         public void UsingDbContext(Action<AppDbContext> action)

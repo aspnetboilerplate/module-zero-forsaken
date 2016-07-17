@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
-using Abp.Collections;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Zero.Configuration;
@@ -11,7 +10,7 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Users
 {
-    public class UserLogin_ExternalAuthenticationSources_Test : SampleAppTestBase
+    public class UserLogin_ExternalAuthenticationSources_Test : SampleAppTestBase<UserLogin_ExternalAuthenticationSources_Test.MyUserLoginTestModule>
     {
         private readonly UserManager _userManager;
 
@@ -19,12 +18,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
         {
             UsingDbContext(UserLoginHelper.CreateTestUsers);
             _userManager = LocalIocManager.Resolve<UserManager>();
-        }
-
-        protected override void AddModules(ITypeList<AbpModule> modules)
-        {
-            base.AddModules(modules);
-            modules.Add<MyUserLoginTestModule>();
         }
 
         [Fact]
@@ -42,7 +35,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
         }
 
-        [DependsOn(typeof(AbpZeroCoreModule))]
+        [DependsOn(typeof(SampleAppTestModule))]
         public class MyUserLoginTestModule : AbpModule
         {
             public override void PreInitialize()
