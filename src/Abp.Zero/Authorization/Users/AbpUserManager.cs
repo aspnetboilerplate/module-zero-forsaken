@@ -41,7 +41,7 @@ namespace Abp.Authorization.Users
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {
-        private IUserPermissionStore<TUser> UserPermissionStore
+        protected IUserPermissionStore<TUser> UserPermissionStore
         {
             get
             {
