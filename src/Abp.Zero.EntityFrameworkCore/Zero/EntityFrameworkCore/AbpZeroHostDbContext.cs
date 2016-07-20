@@ -1,4 +1,3 @@
-using System.Data.Common;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -7,7 +6,7 @@ using Abp.BackgroundJobs;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     [MultiTenancySide(MultiTenancySides.Host)]
     public abstract class AbpZeroHostDbContext<TTenant, TRole, TUser, TSelf> : AbpZeroCommonDbContext<TRole, TUser, TSelf>

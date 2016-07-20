@@ -7,7 +7,7 @@ using Abp.MultiTenancy;
 using Abp.Notifications;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     /// <summary>
     /// Base DbContext for ABP zero.

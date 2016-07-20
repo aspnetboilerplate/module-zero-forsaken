@@ -5,7 +5,7 @@ using Abp.Modules;
 using Abp.MultiTenancy;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     /// <summary>
     /// Entity framework integration module for ASP.NET Boilerplate Zero.

@@ -12,7 +12,7 @@ using Abp.Notifications;
 using Abp.Organizations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     /// <summary>
     /// Extension methods for <see cref="DbModelBuilder"/>.

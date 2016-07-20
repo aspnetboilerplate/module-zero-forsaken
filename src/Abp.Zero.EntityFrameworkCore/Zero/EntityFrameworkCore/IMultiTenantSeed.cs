@@ -1,6 +1,6 @@
 ﻿using Abp.MultiTenancy;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     public interface IMultiTenantSeed
     {

@@ -6,7 +6,7 @@ using Abp.Extensions;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     public abstract class AbpZeroDbMigrator<TDbContext> : IAbpZeroDbMigrator, ITransientDependency
         where TDbContext : DbContext

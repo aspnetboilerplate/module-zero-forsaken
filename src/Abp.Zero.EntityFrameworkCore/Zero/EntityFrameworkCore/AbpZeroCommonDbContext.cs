@@ -1,4 +1,3 @@
-using System.Data.Common;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
@@ -10,7 +9,7 @@ using Abp.Notifications;
 using Abp.Organizations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     public abstract class AbpZeroCommonDbContext<TRole, TUser, TSelf> : AbpDbContext
         where TRole : AbpRole<TUser>

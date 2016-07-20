@@ -3,7 +3,7 @@ using Abp.Authorization.Users;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     [MultiTenancySide(MultiTenancySides.Host)]
     public abstract class AbpZeroTenantDbContext<TRole, TUser,TSelf> : AbpZeroCommonDbContext<TRole, TUser,TSelf>

@@ -4,7 +4,7 @@ using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFrameworkCore
 {
     /// <summary>
     /// Implements <see cref="IDbPerTenantConnectionStringResolver"/> to dynamically resolve
