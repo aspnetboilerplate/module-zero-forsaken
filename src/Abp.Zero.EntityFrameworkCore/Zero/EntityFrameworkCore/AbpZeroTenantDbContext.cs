@@ -12,6 +12,10 @@ namespace Abp.Zero.EntityFrameworkCore
         where TSelf: AbpZeroTenantDbContext<TRole, TUser, TSelf>
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         protected AbpZeroTenantDbContext(DbContextOptions<TSelf> options)
             :base(options)
         {

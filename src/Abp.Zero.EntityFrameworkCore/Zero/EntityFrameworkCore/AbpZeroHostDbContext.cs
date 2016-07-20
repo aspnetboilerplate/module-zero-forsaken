@@ -50,6 +50,10 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         protected AbpZeroHostDbContext(DbContextOptions<TSelf> options)
             :base(options)
         {

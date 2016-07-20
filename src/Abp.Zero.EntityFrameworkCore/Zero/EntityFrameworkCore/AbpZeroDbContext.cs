@@ -53,13 +53,19 @@ namespace Abp.Zero.EntityFrameworkCore
         /// User accounts
         /// </summary>
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         protected AbpZeroDbContext(DbContextOptions<TSelf> options)
             : base(options)
         {
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
