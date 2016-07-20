@@ -55,6 +55,7 @@ namespace Abp.Zero.EntityFramework
             {
                 using (var dbContext = _iocResolver.ResolveAsDisposable<TDbContext>(new {nameOrConnectionString = nameOrConnectionString}))
                 {
+                    //TODO: Please comple the logic of migrations
                     dbContext.Object.Database.Migrate();
                     
 
