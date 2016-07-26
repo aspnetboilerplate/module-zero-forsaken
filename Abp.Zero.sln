@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{364398C2-9B6A-40B3-9845-23ABFB8D12AB}"
 EndProject
@@ -27,6 +27,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.NHibernateTests", "test\Abp.Zero.SampleApp.NHibernateTests\Abp.Zero.SampleApp.NHibernateTests.xproj", "{FA3E87C5-7273-461C-AE9F-67B416E07949}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.Tests", "test\Abp.Zero.SampleApp.Tests\Abp.Zero.SampleApp.Tests.xproj", "{41F88D4F-FAB9-4D0A-85E5-C71F8B63B973}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.EntityFrameworkCore", "src\Abp.Zero.EntityFrameworkCore\Abp.Zero.EntityFrameworkCore.xproj", "{83108E5E-FD31-4762-8854-D795A8FB482F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{41F88D4F-FAB9-4D0A-85E5-C71F8B63B973}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41F88D4F-FAB9-4D0A-85E5-C71F8B63B973}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41F88D4F-FAB9-4D0A-85E5-C71F8B63B973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83108E5E-FD31-4762-8854-D795A8FB482F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83108E5E-FD31-4762-8854-D795A8FB482F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83108E5E-FD31-4762-8854-D795A8FB482F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83108E5E-FD31-4762-8854-D795A8FB482F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,5 +85,6 @@ Global
 		{97670397-EDF9-4968-9A25-0EB71C68D5F8} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
 		{FA3E87C5-7273-461C-AE9F-67B416E07949} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
 		{41F88D4F-FAB9-4D0A-85E5-C71F8B63B973} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
+		{83108E5E-FD31-4762-8854-D795A8FB482F} = {364398C2-9B6A-40B3-9845-23ABFB8D12AB}
 	EndGlobalSection
 EndGlobal
