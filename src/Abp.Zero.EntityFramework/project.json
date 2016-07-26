@@ -25,7 +25,7 @@
   },
 
   "packOptions": {
-    "summary": "ASP.NET Boilerplate - Module Zero.",
+    "summary": "ASP.NET Boilerplate - Module Zero - Entity Framework Integration.",
     "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "multitenancy", "user management", "role management", "identity", "entity framework" ],
     "owners": [ "Halil İbrahim Kalkan" ],
     "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
