@@ -11,7 +11,7 @@ namespace Abp.MultiTenancy
 
         public static ITypedCache<string, int?> GetTenantByNameCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<string, int?>(TenantCacheItem.CacheName);
+            return cacheManager.GetCache<string, int?>(TenantCacheItem.ByNameCacheName);
         }
     }
 }
