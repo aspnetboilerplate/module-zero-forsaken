@@ -419,7 +419,7 @@ namespace Abp.Authorization.Users
 
                 if (!loggedInFromExternalSource)
                 {
-                    var verificationResult = new PasswordHasher().VerifyHashedPassword(user.Password, plainPassword);
+                    var verificationResult = PasswordHasher.VerifyHashedPassword(user.Password, plainPassword);
                     if (verificationResult != PasswordVerificationResult.Success)
                     {
                         return new AbpLoginResult(AbpLoginResultType.InvalidPassword, tenant, user);
@@ -510,7 +510,7 @@ namespace Abp.Authorization.Users
 
                                 user.TenantId = tenantId;
                                 user.AuthenticationSource = source.Object.Name;
-                                user.Password = new PasswordHasher().HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
+                                user.Password = PasswordHasher.HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 
                                 user.Roles = new List<UserRole>();
                                 foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
