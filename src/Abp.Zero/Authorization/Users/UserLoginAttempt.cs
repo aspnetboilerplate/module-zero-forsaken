@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 using Abp.Timing;
 
 namespace Abp.Authorization.Users
@@ -16,7 +17,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Max length of the <see cref="TenancyName"/> property.
         /// </summary>
-        public const int MaxTenancyNameLength = 64;
+        public const int MaxTenancyNameLength = AbpTenantBase.MaxTenancyNameLength;
 
         /// <summary>
         /// Max length of the <see cref="TenancyName"/> property.
