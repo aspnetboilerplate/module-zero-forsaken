@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore;
 using Abp.Modules;
@@ -11,7 +12,7 @@ namespace Abp.Zero.EntityFrameworkCore
     /// Entity framework integration module for ASP.NET Boilerplate Zero.
     /// </summary>
     [DependsOn(typeof(AbpZeroCoreModule), typeof(AbpEntityFrameworkCoreModule))]
-    public class AbpZeroEntityFrameworkModule : AbpModule
+    public class AbpZeroEntityFrameworkCoreModule : AbpModule
     {
         public override void PreInitialize()
         {
@@ -23,6 +24,8 @@ namespace Abp.Zero.EntityFrameworkCore
                         .LifestyleTransient()
                     );
             });
+
+            Configuration.ReplaceService<IDbContextResolver, Abp.Temp.DefaultDbContextResolver>();
         }
 
         public override void Initialize()
