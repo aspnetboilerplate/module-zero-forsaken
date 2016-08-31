@@ -72,6 +72,11 @@ namespace Abp.MultiTenancy
                     () =>
                     {
                         var tenant = GetTenantOrNull(tenantId);
+                        if (tenant == null)
+                        {
+                            return null;
+                        }
+
                         return CreateTenantCacheItem(tenant);
                     }
                 );
