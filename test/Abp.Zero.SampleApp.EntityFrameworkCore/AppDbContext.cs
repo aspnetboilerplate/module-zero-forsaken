@@ -11,6 +11,7 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore
         public AppDbContext(DbContextOptions<AppDbContext> options) 
             : base(options)
         {
+
         }
     }
 }

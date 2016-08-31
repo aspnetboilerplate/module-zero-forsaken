@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Domain.Uow;
 using Abp.Zero.SampleApp.Roles;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
@@ -28,7 +29,7 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.Tests
         [Fact]
         public async Task Should_Create_And_Retrieve_Role()
         {
-            await CreateRole("Role1");
+            await CreateRoleAsync("Role1");
 
             var role1Retrieved = await _roleManager.FindByNameAsync("Role1");
             role1Retrieved.ShouldNotBe(null);
@@ -36,37 +37,86 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.Tests
         }
 
         [Fact]
-        public async Task Multi_Tenancy_Tests()
+        public async Task Multi_Tenancy_Tests_Using_Session()
         {
+            //Switch to host
             AbpSession.TenantId = null;
 
-            await CreateRole("HostRole1");
+            UsingDbContext(context => { context.Roles.Count().ShouldBe(0); });
 
-            UsingDbContext(context =>
-            {
-                context.Roles.Count().ShouldBe(1);
-            });
+            await CreateRoleAsync("HostRole1");
 
+            UsingDbContext(context => { context.Roles.Count().ShouldBe(1); });
+
+            //Switch to tenant 1
             AbpSession.TenantId = 1;
 
-            await CreateRole("TenantRole1");
+            UsingDbContext(context => { context.Roles.Count().ShouldBe(0); });
 
-            UsingDbContext(context =>
-            {
-                context.Roles.Count().ShouldBe(1);
-            });
+            await CreateRoleAsync("TenantRole1");
+
+            UsingDbContext(context => { context.Roles.Count().ShouldBe(1); });
         }
 
-        protected async Task<Role> CreateRole(string name)
+        [Fact]
+        public async Task Multi_Tenancy_Tests_Using_UOW()
         {
-            return await CreateRole(name, name);
+            var uowManager = Resolve<IUnitOfWorkManager>();
+            using (var uow = uowManager.Begin())
+            {
+                using (uowManager.Current.SetTenantId(null)) //Switch to host
+                {
+                    UsingDbContext(context => { context.Roles.Count().ShouldBe(0); });
+
+                    await CreateRoleAsync("HostRole1");
+
+                    UsingDbContext(context =>
+                    {
+                        context.Roles.Count().ShouldBe(1);
+                        context.Roles.First().Name.ShouldBe("HostRole1");
+                    });
+
+                    using (uowManager.Current.SetTenantId(1)) //Switch to tenant 1
+                    {
+                        UsingDbContext(context => { context.Roles.Count().ShouldBe(0); });
+
+                        await CreateRoleAsync("TenantRole1");
+
+                        UsingDbContext(context =>
+                        {
+                            context.Roles.Count().ShouldBe(1);
+                            context.Roles.First().Name.ShouldBe("TenantRole1");
+                        });
+                    }
+
+                    //Automatically re-stored to host
+                    UsingDbContext(context =>
+                    {
+                        context.Roles.Count().ShouldBe(1);
+                        context.Roles.First().Name.ShouldBe("HostRole1");
+                    });
+                }
+
+                await uow.CompleteAsync();
+            }
         }
 
-        protected async Task<Role> CreateRole(string name, string displayName)
+        protected async Task<Role> CreateRoleAsync(string name)
+        {
+            return await CreateRoleAsync(name, name);
+        }
+
+        protected async Task<Role> CreateRoleAsync(string name, string displayName)
         {
             var role = new Role(AbpSession.TenantId, name, displayName);
 
             (await _roleManager.CreateAsync(role)).Succeeded.ShouldBe(true);
+
+            var uowManager = Resolve<IUnitOfWorkManager>();
+            if (uowManager.Current != null)
+            {
+                await uowManager.Current.SaveChangesAsync();
+            }
 
             await UsingDbContextAsync(async context =>
             {

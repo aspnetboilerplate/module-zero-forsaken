@@ -17,10 +17,11 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.Tests
     public class SampleAppTestModule : AbpModule
     {
         private DbContextOptions<AppDbContext> _hostDbContextOptions;
-        private Dictionary<int, DbContextOptions<AppDbContext>> _tenantDbContextOptions; //only used for db per tenant architecture
+        private Dictionary<int, DbContextOptions<AppDbContext>> _tenantDbContextOptions;
         public override void PreInitialize()
         {
             Configuration.UnitOfWork.IsTransactional = false; //EF Core InMemory DB does not support transactions.
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
             SetupInMemoryDb();
         }
 

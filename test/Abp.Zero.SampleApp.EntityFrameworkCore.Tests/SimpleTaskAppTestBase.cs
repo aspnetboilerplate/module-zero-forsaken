@@ -57,7 +57,7 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.Tests
             {
                 using (var contextProvider = LocalIocManager.ResolveAsDisposable<IDbContextProvider<AppDbContext>>())
                 {
-                    var dbContext = contextProvider.Object.GetDbContext();
+                    var dbContext = contextProvider.Object.GetDbContext();                    
 
                     await action(dbContext);
                     await dbContext.SaveChangesAsync(true);
