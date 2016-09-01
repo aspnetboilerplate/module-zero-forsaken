@@ -4,7 +4,7 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore;
 using Abp.TestBase;
-using Abp.Zero.SampleApp.EntityFrameworkCore.Tests.TestDatas;
+using Abp.Zero.SampleApp.EntityFrameworkCore.TestDataBuilders.HostDatas;
 
 namespace Abp.Zero.SampleApp.EntityFrameworkCore.Tests
 {
@@ -12,7 +12,7 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.Tests
     {
         public SimpleTaskAppTestBase()
         {
-            UsingDbContext(context => new TestDataBuilder(context).Build());
+            UsingDbContext(context => new HostDataBuilder(context).Build());
         }
 
         protected virtual void UsingDbContext(Action<AppDbContext> action)

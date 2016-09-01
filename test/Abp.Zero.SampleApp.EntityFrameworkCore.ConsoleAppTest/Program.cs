@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
@@ -8,6 +10,9 @@ using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Zero.EntityFrameworkCore;
+using Abp.Zero.SampleApp.EntityFrameworkCore.TestDataBuilders.HostDatas;
+using Abp.Zero.SampleApp.EntityFrameworkCore.TestDataBuilders.TenantDatas;
+using Abp.Zero.SampleApp.MultiTenancy;
 using Castle.Facilities.Logging;
 using Castle.LoggingFacility.MsLogging;
 using Castle.Windsor.MsDependencyInjection;
@@ -85,7 +90,21 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest
 
         public void Run()
         {
-            _appTestMigrator.CreateOrMigrateForHost();
+            List<Tenant> tenants = null;
+
+            _appTestMigrator.CreateOrMigrateForHost(context =>
+            {
+                new HostDataBuilder(context).Build();
+                tenants = context.Tenants.ToList();
+            });
+
+            foreach (var tenant in tenants)
+            {
+                _appTestMigrator.CreateOrMigrateForTenant(tenant, context =>
+                {
+                    new TenantDataBuilder(context).Build(tenant.Id);
+                });
+            }
         }
     }
 
@@ -94,11 +113,9 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest
         public AppTestMigrator(
             IUnitOfWorkManager unitOfWorkManager,
             IDbPerTenantConnectionStringResolver connectionStringResolver,
-            IIocResolver iocResolver,
             IDbContextResolver dbContextResolver)
             : base(unitOfWorkManager,
                   connectionStringResolver,
-                  iocResolver,
                   dbContextResolver)
         {
 
