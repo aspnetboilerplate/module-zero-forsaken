@@ -34,6 +34,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFr
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFrameworkCore.Tests", "test\Abp.Zero.SampleApp.EntityFrameworkCore.Tests\Abp.Zero.SampleApp.EntityFrameworkCore.Tests.xproj", "{9223F076-ECE7-4381-9BBF-F3E33073B91A}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest", "test\Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest\Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest.xproj", "{25F73233-3922-4BC0-AC1C-2042613DEC5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{9223F076-ECE7-4381-9BBF-F3E33073B91A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9223F076-ECE7-4381-9BBF-F3E33073B91A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9223F076-ECE7-4381-9BBF-F3E33073B91A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25F73233-3922-4BC0-AC1C-2042613DEC5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25F73233-3922-4BC0-AC1C-2042613DEC5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25F73233-3922-4BC0-AC1C-2042613DEC5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25F73233-3922-4BC0-AC1C-2042613DEC5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,5 +106,6 @@ Global
 		{83108E5E-FD31-4762-8854-D795A8FB482F} = {364398C2-9B6A-40B3-9845-23ABFB8D12AB}
 		{76E2CCE7-A61F-4700-9054-9923645E41CC} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
 		{9223F076-ECE7-4381-9BBF-F3E33073B91A} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
+		{25F73233-3922-4BC0-AC1C-2042613DEC5E} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
 	EndGlobalSection
 EndGlobal

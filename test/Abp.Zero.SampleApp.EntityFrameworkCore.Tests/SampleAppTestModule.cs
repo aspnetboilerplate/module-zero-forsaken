@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Abp.Zero.SampleApp.EntityFrameworkCore.Tests
 {
     [DependsOn(
-        typeof(SampleAppEntityFrameworkModule),
+        typeof(SampleAppEntityFrameworkCoreModule),
         typeof(AbpTestBaseModule))]
     public class SampleAppTestModule : AbpModule
     {

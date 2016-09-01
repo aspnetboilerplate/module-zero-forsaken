@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.Temp
 {
-    /* TODO: Move to Abp.EntityFrameworkCore package! */
+    /* TODO: Remove this code after ABP upgrade! */
 
     public class DefaultDbContextResolver : IDbContextResolver, ITransientDependency
     {

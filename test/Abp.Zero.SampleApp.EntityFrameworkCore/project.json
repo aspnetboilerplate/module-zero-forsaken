@@ -3,13 +3,31 @@
 
   "dependencies": {
     "Abp.Zero.SampleApp": "0.11.0.2-*",
-    "Abp.Zero.EntityFrameworkCore": "0.11.0.2-*"
+    "Abp.Zero.EntityFrameworkCore": "0.11.0.2-*",
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
+    "Microsoft.EntityFrameworkCore.SqlServer.Design": {
+      "version": "1.0.0",
+      "type": "build"
+    },
+    "Microsoft.EntityFrameworkCore.Tools": {
+      "version": "1.0.0-preview2-final",
+      "type": "build"
+    }
+  },
+
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools": "1.0.0-preview2-final"
+  },
+
+  "buildOptions": {
+    "emitEntryPoint": true
   },
 
   "frameworks": {
     "net461": {
       "frameworkAssemblies": {
-      }
+      },
+      "Microsoft.NETCore.App": "1.0.0"
     }
   }
 }

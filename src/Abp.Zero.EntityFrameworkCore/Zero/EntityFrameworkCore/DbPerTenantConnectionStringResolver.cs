@@ -27,8 +27,7 @@ namespace Abp.Zero.EntityFrameworkCore
             IAbpStartupConfiguration configuration,
             ICurrentUnitOfWorkProvider currentUnitOfWorkProvider,
             ITenantCache tenantCache)
-            : base(
-                  configuration)
+            : base(configuration)
         {
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
             _tenantCache = tenantCache;
