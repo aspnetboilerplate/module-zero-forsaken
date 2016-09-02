@@ -1,8 +1,8 @@
 ﻿{
-  "version": "0.11.0.2-*",
+  "version": "0.11.2.0-*",
 
   "dependencies": {
-    "Abp.Zero": "0.11.0.2-*"
+    "Abp.Zero": "0.11.2.0-*"
   },
 
   "frameworks": {

@@ -69,6 +69,7 @@ namespace Abp.Zero.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             #region BackgroundJobInfo.IX_IsAbandoned_NextTryTime
 
 

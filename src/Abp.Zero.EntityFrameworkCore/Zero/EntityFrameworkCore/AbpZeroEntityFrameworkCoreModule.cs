@@ -11,7 +11,7 @@ namespace Abp.Zero.EntityFrameworkCore
     /// Entity framework integration module for ASP.NET Boilerplate Zero.
     /// </summary>
     [DependsOn(typeof(AbpZeroCoreModule), typeof(AbpEntityFrameworkCoreModule))]
-    public class AbpZeroEntityFrameworkModule : AbpModule
+    public class AbpZeroEntityFrameworkCoreModule : AbpModule
     {
         public override void PreInitialize()
         {

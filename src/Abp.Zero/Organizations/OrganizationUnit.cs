@@ -61,7 +61,7 @@ namespace Abp.Organizations
         /// It's changeable if OU hierarch is changed.
         /// </summary>
         [Required]
-        [StringLength(MaxDisplayNameLength)]
+        [StringLength(MaxCodeLength)]
         public virtual string Code { get; set; }
 
         /// <summary>

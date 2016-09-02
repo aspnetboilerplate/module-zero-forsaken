@@ -48,10 +48,13 @@ namespace Abp.Zero.EntityFramework
                 tenant == null ? (int?) null : (int?) tenant.Id,
                 tenant == null ? MultiTenancySides.Host : MultiTenancySides.Tenant
                 );
+
             args["DbContextType"] = typeof (TDbContext);
             args["DbContextConcreteType"] = typeof(TDbContext);
 
-            var nameOrConnectionString = ConnectionStringHelper.GetConnectionString(_connectionStringResolver.GetNameOrConnectionString(args));
+            var nameOrConnectionString = ConnectionStringHelper.GetConnectionString(
+                _connectionStringResolver.GetNameOrConnectionString(args)
+            );
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {

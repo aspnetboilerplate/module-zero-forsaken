@@ -135,8 +135,6 @@ namespace Abp.Zero.EntityFrameworkCore
                     .WithOne()
                     .HasForeignKey<TUser>(p => p.LastModifierUserId);
             });
-
-
         }
     }
 }
