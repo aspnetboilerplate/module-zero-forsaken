@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Abp.Configuration.Startup;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore;
 using Abp.Modules;
@@ -24,8 +23,6 @@ namespace Abp.Zero.EntityFrameworkCore
                         .LifestyleTransient()
                     );
             });
-
-            Configuration.ReplaceService<IDbContextResolver, Abp.Temp.DefaultDbContextResolver>();
         }
 
         public override void Initialize()
