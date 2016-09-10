@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Abp.IdentityFramework;
 using Abp.Organizations;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
+using Abp.Zero.SampleApp.Users.Dto;
+using Microsoft.AspNet.Identity;
 using Shouldly;
 using Xunit;
 
@@ -62,6 +64,24 @@ namespace Abp.Zero.SampleApp.Tests.Users
             UsingDbContext(context => context.UserOrganizationUnits.FirstOrDefault(ou => ou.UserId == _defaultTenantAdmin.Id && ou.OrganizationUnitId == ou11.Id).ShouldBeNull());
         }
 
+        [Fact]
+        public async Task Should_Remove_User_From_Organization_When_User_Is_Deleted()
+        {
+
+            //Arrange
+            var user = CreateAndGetTestUser();
+            var ou11 = GetOU("OU11");
+
+            await _userManager.AddToOrganizationUnitAsync(user, ou11);
+            (await _userManager.IsInOrganizationUnitAsync(user, ou11)).ShouldBe(true);
+
+            //Act
+            (await _userManager.DeleteAsync(user)).CheckErrors();
+
+            //Assert
+            (await _userManager.IsInOrganizationUnitAsync(user, ou11)).ShouldBe(false);
+        }
+
         [Theory]
         [InlineData(new object[] { new string[0] })]
         [InlineData(new object[] { new[] { "OU12", "OU21" } })]
@@ -98,6 +118,26 @@ namespace Abp.Zero.SampleApp.Tests.Users
             organizationUnit.ShouldNotBeNull();
 
             return organizationUnit;
+        }
+
+        private User CreateAndGetTestUser()
+        {
+            _userManager.Create(
+                new User
+                {
+                    EmailAddress = "emre@aspnetboilerplate.com",
+                    Name = "Yunus",
+                    Surname = "Emre",
+                    UserName = "yunus.emre",
+                    IsEmailConfirmed = true,
+                    Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
+                });
+
+            return UsingDbContext(
+                context =>
+                {
+                    return context.Users.Single(u => u.UserName == "yunus.emre");
+                });
         }
     }
 }
