@@ -114,6 +114,12 @@ namespace Abp.Authorization.Users
 
             LocalizationManager = NullLocalizationManager.Instance;
             AbpSession = NullAbpSession.Instance;
+
+            UserLockoutEnabledByDefault = true;
+
+            //TODO: What should be?
+            DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            MaxFailedAccessAttemptsBeforeLockout = 5;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)

@@ -92,7 +92,7 @@ namespace Abp.Authorization.Users
         public virtual string Password { get; set; }
 
         /// <summary>
-        /// Is the <see cref="EmailAddress"/> confirmed.
+        /// Is the <see cref="AbpUserBase.EmailAddress"/> confirmed.
         /// </summary>
         public virtual bool IsEmailConfirmed { get; set; }
 
@@ -109,6 +109,21 @@ namespace Abp.Authorization.Users
         /// </summary>
         [StringLength(MaxPasswordResetCodeLength)]
         public virtual string PasswordResetCode { get; set; }
+
+        /// <summary>
+        /// Lockout end date.
+        /// </summary>
+        public DateTimeOffset LockoutEndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the access failed count.
+        /// </summary>
+        public int AccessFailedCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the access failed count.
+        /// </summary>
+        public bool LockoutEnabled { get; set; }
 
         /// <summary>
         /// Is this user active?
