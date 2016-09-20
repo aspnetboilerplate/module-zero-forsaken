@@ -15,12 +15,14 @@ namespace Abp.Authorization
     /// <typeparam name="TTenant"></typeparam>
     /// <typeparam name="TRole"></typeparam>
     /// <typeparam name="TUser"></typeparam>
-    public abstract class PermissionChecker<TTenant, TRole, TUser> : IPermissionChecker, ITransientDependency
+    public abstract class PermissionChecker<TTenant, TRole, TUser> : IPermissionChecker, ITransientDependency, IIocManagerAccessor
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
         where TTenant : AbpTenant<TUser>
     {
         private readonly AbpUserManager<TTenant, TRole, TUser> _userManager;
+
+        public IIocManager IocManager { get; set; }
 
         public ILogger Logger { get; set; }
 
