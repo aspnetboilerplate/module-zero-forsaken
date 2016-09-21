@@ -3,15 +3,16 @@ using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class UserRoleMap : EntityMap<UserRole, long>
+    public class UserClaimMap : EntityMap<UserClaim, long>
     {
-        public UserRoleMap()
-            : base("AbpUserRoles")
+        public UserClaimMap()
+            : base("AbpUserClaims")
         {
             Map(x => x.TenantId);
             Map(x => x.UserId);
-            Map(x => x.RoleId);
-            
+            Map(x => x.ClaimType);
+            Map(x => x.ClaimValue);
+
             this.MapCreationAudited();
         }
     }

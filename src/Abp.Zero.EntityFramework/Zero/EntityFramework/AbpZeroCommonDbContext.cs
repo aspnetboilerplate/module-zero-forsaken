@@ -42,6 +42,11 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<UserRole> UserRoles { get; set; }
 
         /// <summary>
+        /// User claims.
+        /// </summary>
+        public virtual IDbSet<UserClaim> UserClaims { get; set; }
+
+        /// <summary>
         /// Permissions.
         /// </summary>
         public virtual IDbSet<PermissionSetting> Permissions { get; set; }

@@ -148,10 +148,16 @@ namespace Abp.Authorization.Users
         public virtual ICollection<UserLogin> Logins { get; set; }
 
         /// <summary>
-        /// Role definitions for this user.
+        /// Roles of this user.
         /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<UserRole> Roles { get; set; }
+
+        /// <summary>
+        /// Claims of this user.
+        /// </summary>
+        [ForeignKey("UserId")]
+        public virtual ICollection<UserClaim> Claims { get; set; }
 
         /// <summary>
         /// Permission definitions for this user.
@@ -171,7 +177,7 @@ namespace Abp.Authorization.Users
 
         public virtual TUser LastModifierUser { get; set; }
 
-        public AbpUser()
+        protected AbpUser()
         {
             IsActive = true;
         }

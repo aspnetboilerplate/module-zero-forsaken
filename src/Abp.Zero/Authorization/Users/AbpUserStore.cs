@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -23,19 +25,23 @@ namespace Abp.Authorization.Users
         IUserLockoutStore<TUser, long>,
         IUserPermissionStore<TUser>,
         IUserPhoneNumberStore<TUser, long>,
+        IUserClaimStore<TUser, long>,
 
         ITransientDependency
 
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
     {
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+
         private readonly IRepository<TUser, long> _userRepository;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
+        private readonly IRepository<UserClaim, long> _userClaimRepository;
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+        
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -45,14 +51,18 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            IRepository<UserClaim, long> userClaimRepository)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
             _unitOfWorkManager = unitOfWorkManager;
+            _userClaimRepository = userClaimRepository;
             _userPermissionSettingRepository = userPermissionSettingRepository;
+
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         public virtual async Task CreateAsync(TUser user)
@@ -238,15 +248,15 @@ namespace Abp.Authorization.Users
             await _userRoleRepository.DeleteAsync(userRole);
         }
 
-        public virtual Task<IList<string>> GetRolesAsync(TUser user)
+        [UnitOfWork]
+        public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
-            //TODO: This is not implemented as async.
-            var roleNames = _userRoleRepository.Query(userRoles => (from userRole in userRoles
-                                                                    join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                                                                    where userRole.UserId == user.Id
-                                                                    select role.Name).ToList());
+            var query = from userRole in _userRoleRepository.GetAll()
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == user.Id
+                select role.Name;
 
-            return Task.FromResult<IList<string>>(roleNames);
+            return await AsyncQueryableExecuter.ToListAsync(query);
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
@@ -391,6 +401,30 @@ namespace Abp.Authorization.Users
         {
             user.IsPhoneNumberConfirmed = confirmed;
             return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region IUserClaimStore
+
+        public async Task<IList<Claim>> GetClaimsAsync(TUser user)
+        {
+            var userClaims = await _userClaimRepository.GetAllListAsync(uc => uc.UserId == user.Id);
+            return userClaims.Select(uc => new Claim(uc.ClaimType, uc.ClaimValue)).ToList();
+        }
+
+        public Task AddClaimAsync(TUser user, Claim claim)
+        {
+            return _userClaimRepository.InsertAsync(new UserClaim(user, claim));
+        }
+
+        public Task RemoveClaimAsync(TUser user, Claim claim)
+        {
+            return _userClaimRepository.DeleteAsync(
+                uc => uc.UserId == user.Id &&
+                      uc.ClaimType == claim.Type &&
+                      uc.ClaimValue == claim.Value
+            );
         }
 
         #endregion
