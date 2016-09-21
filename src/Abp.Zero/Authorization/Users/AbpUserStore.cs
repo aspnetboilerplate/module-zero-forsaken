@@ -65,6 +65,14 @@ namespace Abp.Authorization.Users
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
+        #region IQueryableUserStore
+
+        public virtual IQueryable<TUser> Users => _userRepository.GetAll();
+
+        #endregion
+
+        #region IUserStore
+
         public virtual async Task CreateAsync(TUser user)
         {
             await _userRepository.InsertAsync(user);
@@ -89,14 +97,14 @@ namespace Abp.Authorization.Users
         {
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.UserName == userName
-                );
+            );
         }
 
         public virtual async Task<TUser> FindByEmailAsync(string email)
         {
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.EmailAddress == email
-                );
+            );
         }
 
         /// <summary>
@@ -126,6 +134,10 @@ namespace Abp.Authorization.Users
             }
         }
 
+        #endregion
+        
+        #region IUserPasswordStore
+
         public virtual Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
             user.Password = passwordHash;
@@ -141,6 +153,10 @@ namespace Abp.Authorization.Users
         {
             return Task.FromResult(!string.IsNullOrEmpty(user.Password));
         }
+
+        #endregion
+
+        #region IUserEmailStore
 
         public virtual Task SetEmailAsync(TUser user, string email)
         {
@@ -164,6 +180,10 @@ namespace Abp.Authorization.Users
             return Task.FromResult(0);
         }
 
+        #endregion
+
+        #region IUserLoginStore
+
         public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login)
         {
             await _userLoginRepository.InsertAsync(
@@ -182,7 +202,7 @@ namespace Abp.Authorization.Users
                 ul => ul.UserId == user.Id &&
                       ul.LoginProvider == login.LoginProvider &&
                       ul.ProviderKey == login.ProviderKey
-                );
+            );
         }
 
         public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
@@ -196,7 +216,7 @@ namespace Abp.Authorization.Users
         {
             var userLogin = await _userLoginRepository.FirstOrDefaultAsync(
                 ul => ul.LoginProvider == login.LoginProvider && ul.ProviderKey == login.ProviderKey
-                );
+            );
 
             if (userLogin == null)
             {
@@ -210,9 +230,9 @@ namespace Abp.Authorization.Users
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
             var query = from userLogin in _userLoginRepository.GetAll()
-                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-                        where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-                        select user;
+                join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                select user;
 
             return Task.FromResult(query.ToList());
         }
@@ -229,6 +249,10 @@ namespace Abp.Authorization.Users
                 return Task.FromResult(query.FirstOrDefault());
             }
         }
+
+        #endregion
+
+        #region IUserRoleStore
 
         public virtual async Task AddToRoleAsync(TUser user, string roleName)
         {
@@ -265,10 +289,9 @@ namespace Abp.Authorization.Users
             return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
         }
 
-        public virtual IQueryable<TUser> Users
-        {
-            get { return _userRepository.GetAll(); }
-        }
+        #endregion
+
+        #region IUserPermissionStore
 
         public virtual async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
@@ -293,7 +316,7 @@ namespace Abp.Authorization.Users
                 permissionSetting => permissionSetting.UserId == user.Id &&
                                      permissionSetting.Name == permissionGrant.Name &&
                                      permissionSetting.IsGranted == permissionGrant.IsGranted
-                );
+            );
         }
 
         public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId)
@@ -306,10 +329,10 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
         {
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
-                p => p.UserId == userId &&
-                     p.Name == permissionGrant.Name &&
-                     p.IsGranted == permissionGrant.IsGranted
-                ) != null;
+                       p => p.UserId == userId &&
+                            p.Name == permissionGrant.Name &&
+                            p.IsGranted == permissionGrant.IsGranted
+                   ) != null;
         }
 
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
@@ -317,21 +340,7 @@ namespace Abp.Authorization.Users
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
         }
 
-        public virtual void Dispose()
-        {
-            //No need to dispose since using IOC.
-        }
-
-        private async Task<TRole> GetRoleByNameAsync(string roleName)
-        {
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == roleName);
-            if (role == null)
-            {
-                throw new AbpException("Could not find a role with name: " + roleName);
-            }
-
-            return role;
-        }
+        #endregion
 
         #region IUserLockoutStore
 
@@ -425,6 +434,30 @@ namespace Abp.Authorization.Users
                       uc.ClaimType == claim.Type &&
                       uc.ClaimValue == claim.Value
             );
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public virtual void Dispose()
+        {
+            //No need to dispose since using IOC.
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private async Task<TRole> GetRoleByNameAsync(string roleName)
+        {
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == roleName);
+            if (role == null)
+            {
+                throw new AbpException("Could not find a role with name: " + roleName);
+            }
+
+            return role;
         }
 
         #endregion
