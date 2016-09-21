@@ -327,12 +327,16 @@ namespace Abp.Authorization.Users
 
         public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
         {
-            return Task.FromResult(user.LockoutEndDate);
+            return Task.FromResult(
+                user.LockoutEndDateUtc.HasValue
+                    ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc))
+                    : new DateTimeOffset()
+            );
         }
 
         public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
         {
-            user.LockoutEndDate = lockoutEnd;
+            user.LockoutEndDateUtc = lockoutEnd == DateTimeOffset.MinValue ? new DateTime?() : lockoutEnd.UtcDateTime;
             return Task.FromResult(0);
         }
 

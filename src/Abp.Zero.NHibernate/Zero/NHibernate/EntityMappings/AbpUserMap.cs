@@ -22,7 +22,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.IsActive);
             Map(x => x.AuthenticationSource);
             Map(x => x.IsLockoutEnabled);
-            Map(x => x.LockoutEndDate);
+            Map(x => x.LockoutEndDateUtc);
             Map(x => x.AccessFailedCount);
             Map(x => x.PhoneNumber);
             Map(x => x.IsPhoneNumberConfirmed);

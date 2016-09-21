@@ -113,7 +113,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Lockout end date.
         /// </summary>
-        public virtual DateTimeOffset LockoutEndDate { get; set; }
+        public virtual DateTime? LockoutEndDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the access failed count.
