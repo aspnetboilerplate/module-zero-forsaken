@@ -354,12 +354,12 @@ namespace Abp.Authorization.Users
 
         public Task<bool> GetLockoutEnabledAsync(TUser user)
         {
-            return Task.FromResult(user.LockoutEnabled);
+            return Task.FromResult(user.IsLockoutEnabled);
         }
 
         public Task SetLockoutEnabledAsync(TUser user, bool enabled)
         {
-            user.LockoutEnabled = enabled;
+            user.IsLockoutEnabled = enabled;
             return Task.FromResult(0);
         }
 

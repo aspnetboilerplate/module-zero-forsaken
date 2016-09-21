@@ -123,7 +123,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Gets or sets the lockout enabled.
         /// </summary>
-        public virtual bool LockoutEnabled { get; set; }
+        public virtual bool IsLockoutEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets the phone number.
