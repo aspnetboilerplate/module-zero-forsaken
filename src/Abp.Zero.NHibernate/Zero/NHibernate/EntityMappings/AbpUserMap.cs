@@ -22,6 +22,9 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.LastLoginTime);
             Map(x => x.IsActive);
             Map(x => x.AuthenticationSource);
+            Map(x => x.LockoutEnabled);
+            Map(x => x.LockoutEndDate);
+            Map(x => x.AccessFailedCount);
 
             this.MapFullAudited();
 

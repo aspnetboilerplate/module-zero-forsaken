@@ -113,17 +113,17 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Lockout end date.
         /// </summary>
-        public DateTimeOffset LockoutEndDate { get; set; }
+        public virtual DateTimeOffset LockoutEndDate { get; set; }
 
         /// <summary>
         /// Gets or sets the access failed count.
         /// </summary>
-        public int AccessFailedCount { get; set; }
+        public virtual int AccessFailedCount { get; set; }
 
         /// <summary>
         /// Gets or sets the access failed count.
         /// </summary>
-        public bool LockoutEnabled { get; set; }
+        public virtual bool LockoutEnabled { get; set; }
 
         /// <summary>
         /// Is this user active?
