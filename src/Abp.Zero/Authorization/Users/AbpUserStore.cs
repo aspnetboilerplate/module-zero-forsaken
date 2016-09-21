@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
@@ -13,11 +14,13 @@ namespace Abp.Authorization.Users
     /// Implements 'User Store' of ASP.NET Identity Framework.
     /// </summary>
     public abstract class AbpUserStore<TRole, TUser> :
+        IUserStore<TUser, long>,
         IUserPasswordStore<TUser, long>,
         IUserEmailStore<TUser, long>,
         IUserLoginStore<TUser, long>,
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
+        IUserLockoutStore<TUser, long>,
         IUserPermissionStore<TUser>,
 
         ITransientDependency
@@ -318,5 +321,47 @@ namespace Abp.Authorization.Users
 
             return role;
         }
+
+        #region IUserLockoutStore implementation
+
+        public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
+        {
+            return Task.FromResult(user.LockoutEndDate);
+        }
+
+        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+        {
+            user.LockoutEndDate = lockoutEnd;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> IncrementAccessFailedCountAsync(TUser user)
+        {
+            return Task.FromResult(++user.AccessFailedCount);
+        }
+
+        public Task ResetAccessFailedCountAsync(TUser user)
+        {
+            user.AccessFailedCount = 0;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> GetAccessFailedCountAsync(TUser user)
+        {
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+        public Task<bool> GetLockoutEnabledAsync(TUser user)
+        {
+            return Task.FromResult(user.LockoutEnabled);
+        }
+
+        public Task SetLockoutEnabledAsync(TUser user, bool enabled)
+        {
+            user.LockoutEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        #endregion
     }
 }

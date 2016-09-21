@@ -16,6 +16,8 @@ namespace Abp.Authorization.Users
 
         UserEmailIsNotConfirmed,
 
-        UnknownExternalLogin
+        UnknownExternalLogin,
+
+        LockedOut
     }
 }

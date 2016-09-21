@@ -14,7 +14,7 @@ namespace Abp.Zero.Configuration
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 }
 
                 if (!typeof (AbpUserBase).IsAssignableFrom(value))
@@ -34,7 +34,7 @@ namespace Abp.Zero.Configuration
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 }
 
                 if (!typeof(AbpRoleBase).IsAssignableFrom(value))
@@ -54,7 +54,7 @@ namespace Abp.Zero.Configuration
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 }
 
                 if (!typeof(AbpTenantBase).IsAssignableFrom(value))

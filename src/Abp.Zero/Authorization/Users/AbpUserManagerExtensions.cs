@@ -23,7 +23,7 @@ namespace Abp.Authorization.Users
         {
             if (manager == null)
             {
-                throw new ArgumentNullException("manager");
+                throw new ArgumentNullException(nameof(manager));
             }
 
             return AsyncHelper.RunSync(() => manager.IsGrantedAsync(userId, permissionName));
@@ -36,7 +36,7 @@ namespace Abp.Authorization.Users
         {
             if (manager == null)
             {
-                throw new ArgumentNullException("manager");
+                throw new ArgumentNullException(nameof(manager));
             }
 
             return AsyncHelper.RunSync(() => manager.LoginAsync(userNameOrEmailAddress, plainPassword, tenancyName));
