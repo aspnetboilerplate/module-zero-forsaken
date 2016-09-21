@@ -30,11 +30,11 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Test_Set_Get()
         {
-            (await _userManager.GetSecurityStampAsync(_testUser.Id)).ShouldBeNull();
+            var oldStamp = await _userManager.GetSecurityStampAsync(_testUser.Id);
 
             await _userManager.UpdateSecurityStampAsync(_testUser.Id);
 
-            (await _userManager.GetSecurityStampAsync(_testUser.Id)).ShouldNotBeNull();
+            (await _userManager.GetSecurityStampAsync(_testUser.Id)).ShouldNotBe(oldStamp);
         }
     }
 }

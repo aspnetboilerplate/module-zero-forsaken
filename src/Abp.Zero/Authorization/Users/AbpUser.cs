@@ -141,6 +141,11 @@ namespace Abp.Authorization.Users
         public virtual string SecurityStamp { get; set; }
 
         /// <summary>
+        /// Is two factor auth enabled.
+        /// </summary>
+        public virtual bool IsTwoFactorEnabled { get; set; }
+
+        /// <summary>
         /// Is this user active?
         /// If as user is not active, he/she can not use the application.
         /// </summary>
@@ -185,6 +190,7 @@ namespace Abp.Authorization.Users
         protected AbpUser()
         {
             IsActive = true;
+            SecurityStamp = SequentialGuidGenerator.Instance.Create().ToString();
         }
 
         public virtual void SetNewPasswordResetCode()

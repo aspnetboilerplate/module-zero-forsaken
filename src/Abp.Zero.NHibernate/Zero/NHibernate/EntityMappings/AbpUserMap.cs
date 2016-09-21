@@ -27,6 +27,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.PhoneNumber);
             Map(x => x.IsPhoneNumberConfirmed);
             Map(x => x.SecurityStamp);
+            Map(x => x.IsTwoFactorEnabled);
 
             this.MapFullAudited();
 

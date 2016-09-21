@@ -27,6 +27,7 @@ namespace Abp.Authorization.Users
         IUserPhoneNumberStore<TUser, long>,
         IUserClaimStore<TUser, long>,
         IUserSecurityStampStore<TUser, long>,
+        IUserTwoFactorStore<TUser, long>,
 
         ITransientDependency
 
@@ -477,5 +478,16 @@ namespace Abp.Authorization.Users
         }
 
         #endregion
+
+        public Task SetTwoFactorEnabledAsync(TUser user, bool enabled)
+        {
+            user.IsTwoFactorEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        public Task<bool> GetTwoFactorEnabledAsync(TUser user)
+        {
+            return Task.FromResult(user.IsTwoFactorEnabled);
+        }
     }
 }
