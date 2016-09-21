@@ -22,6 +22,7 @@ namespace Abp.Authorization.Users
         IQueryableUserStore<TUser, long>,
         IUserLockoutStore<TUser, long>,
         IUserPermissionStore<TUser>,
+        IUserPhoneNumberStore<TUser, long>,
 
         ITransientDependency
 
@@ -322,7 +323,7 @@ namespace Abp.Authorization.Users
             return role;
         }
 
-        #region IUserLockoutStore implementation
+        #region IUserLockoutStore
 
         public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
         {
@@ -359,6 +360,32 @@ namespace Abp.Authorization.Users
         public Task SetLockoutEnabledAsync(TUser user, bool enabled)
         {
             user.LockoutEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region IUserPhoneNumberStore
+
+        public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+        {
+            user.PhoneNumber = phoneNumber;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetPhoneNumberAsync(TUser user)
+        {
+            return Task.FromResult(user.PhoneNumber);
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+        {
+            return Task.FromResult(user.IsPhoneNumberConfirmed);
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+        {
+            user.IsPhoneNumberConfirmed = confirmed;
             return Task.FromResult(0);
         }
 

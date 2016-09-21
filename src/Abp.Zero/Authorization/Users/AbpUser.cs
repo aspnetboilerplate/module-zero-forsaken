@@ -121,9 +121,19 @@ namespace Abp.Authorization.Users
         public virtual int AccessFailedCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the access failed count.
+        /// Gets or sets the lockout enabled.
         /// </summary>
         public virtual bool LockoutEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the phone number.
+        /// </summary>
+        public virtual string PhoneNumber {get; set; }
+
+        /// <summary>
+        /// Is the <see cref="AbpUserBase.EmailAddress"/> confirmed.
+        /// </summary>
+        public virtual bool IsPhoneNumberConfirmed { get; set; }
 
         /// <summary>
         /// Is this user active?

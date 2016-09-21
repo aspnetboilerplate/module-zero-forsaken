@@ -1,5 +1,4 @@
 ﻿using Abp.Authorization.Users;
-using Abp.MultiTenancy;
 using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
@@ -25,6 +24,8 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.LockoutEnabled);
             Map(x => x.LockoutEndDate);
             Map(x => x.AccessFailedCount);
+            Map(x => x.PhoneNumber);
+            Map(x => x.IsPhoneNumberConfirmed);
 
             this.MapFullAudited();
 
