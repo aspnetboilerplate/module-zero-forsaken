@@ -8,6 +8,7 @@ using System.Transactions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization.Roles;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -370,23 +371,23 @@ namespace Abp.Authorization.Users
         }
 
         [UnitOfWork]
-        public virtual async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
+        public virtual async Task<AbpLoginResult> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null, bool shouldLockout = true)
         {
-            var result = await LoginAsyncInternal(userNameOrEmailAddress, plainPassword, tenancyName);
+            var result = await LoginAsyncInternal(userNameOrEmailAddress, plainPassword, tenancyName, shouldLockout);
             await SaveLoginAttempt(result, tenancyName, userNameOrEmailAddress);
             return result;
         }
 
-        private async Task<AbpLoginResult> LoginAsyncInternal(string userNameOrEmailAddress, string plainPassword, string tenancyName = null)
+        private async Task<AbpLoginResult> LoginAsyncInternal(string userNameOrEmailAddress, string plainPassword, string tenancyName, bool shouldLockout)
         {
             if (userNameOrEmailAddress.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("userNameOrEmailAddress");
+                throw new ArgumentNullException(nameof(userNameOrEmailAddress));
             }
 
             if (plainPassword.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("plainPassword");
+                throw new ArgumentNullException(nameof(plainPassword));
             }
 
             //Get and check tenant
@@ -415,6 +416,7 @@ namespace Abp.Authorization.Users
             var tenantId = tenant == null ? (int?) null : tenant.Id;
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
+                //TryLoginFromExternalAuthenticationSources method may create the user, that's why we are calling it before AbpStore.FindByNameOrEmailAsync
                 var loggedInFromExternalSource = await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant);
 
                 var user = await AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
@@ -428,8 +430,20 @@ namespace Abp.Authorization.Users
                     var verificationResult = PasswordHasher.VerifyHashedPassword(user.Password, plainPassword);
                     if (verificationResult != PasswordVerificationResult.Success)
                     {
+                        if (shouldLockout)
+                        {
+                            (await AccessFailedAsync(user.Id)).CheckErrors();
+
+                            if (await IsLockedOutAsync(user.Id))
+                            {
+                                return new AbpLoginResult(AbpLoginResultType.LockedOut, tenant, user);
+                            }
+                        }
+
                         return new AbpLoginResult(AbpLoginResultType.InvalidPassword, tenant, user);
                     }
+
+                    await ResetAccessFailedCountAsync(user.Id);
                 }
 
                 return await CreateLoginResultAsync(user, tenant);

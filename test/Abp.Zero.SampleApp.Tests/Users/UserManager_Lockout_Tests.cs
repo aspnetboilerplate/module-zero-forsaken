@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abp.Authorization.Users;
 using Abp.Threading;
 using Abp.Zero.SampleApp.Users;
 using Shouldly;
@@ -38,10 +39,32 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
 
-            //Wait for unlock
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(1)); //Wait for unlock
             
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task Test_Login_Lockout()
+        {
+            (await _userManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
+
+            for (int i = 0; i < _userManager.MaxFailedAccessAttemptsBeforeLockout - 1; i++)
+            {
+                (await _userManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
+            }
+
+            (await _userManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.LockedOut);
+            (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
+
+            await Task.Delay(TimeSpan.FromSeconds(1)); //Wait for unlock
+
+            (await _userManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
+            (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
+            (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(1);
+
+            (await _userManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
+            (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(0);
         }
     }
 }
