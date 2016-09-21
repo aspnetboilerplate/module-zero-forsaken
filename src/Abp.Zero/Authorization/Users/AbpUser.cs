@@ -136,6 +136,11 @@ namespace Abp.Authorization.Users
         public virtual bool IsPhoneNumberConfirmed { get; set; }
 
         /// <summary>
+        /// Gets or sets the security stamp.
+        /// </summary>
+        public virtual string SecurityStamp { get; set; }
+
+        /// <summary>
         /// Is this user active?
         /// If as user is not active, he/she can not use the application.
         /// </summary>

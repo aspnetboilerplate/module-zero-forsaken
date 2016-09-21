@@ -26,6 +26,7 @@ namespace Abp.Authorization.Users
         IUserPermissionStore<TUser>,
         IUserPhoneNumberStore<TUser, long>,
         IUserClaimStore<TUser, long>,
+        IUserSecurityStampStore<TUser, long>,
 
         ITransientDependency
 
@@ -458,6 +459,21 @@ namespace Abp.Authorization.Users
             }
 
             return role;
+        }
+
+        #endregion
+
+        #region IUserSecurityStampStore
+
+        public Task SetSecurityStampAsync(TUser user, string stamp)
+        {
+            user.SecurityStamp = stamp;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetSecurityStampAsync(TUser user)
+        {
+            return Task.FromResult(user.SecurityStamp);
         }
 
         #endregion

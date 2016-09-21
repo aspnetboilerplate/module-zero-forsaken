@@ -26,6 +26,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.AccessFailedCount);
             Map(x => x.PhoneNumber);
             Map(x => x.IsPhoneNumberConfirmed);
+            Map(x => x.SecurityStamp);
 
             this.MapFullAudited();
 
