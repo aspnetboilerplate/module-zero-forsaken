@@ -176,9 +176,7 @@ namespace Abp.Authorization
                     {
                         if (shouldLockout)
                         {
-                            (await _userManager.AccessFailedAsync(user.Id)).CheckErrors();
-
-                            if (await _userManager.IsLockedOutAsync(user.Id))
+                            if (await TryLockOutAsync(tenantId, user.Id))
                             {
                                 return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
                             }
@@ -219,8 +217,7 @@ namespace Abp.Authorization
             );
         }
 
-        private async Task SaveLoginAttempt(AbpLoginResult<TTenant, TUser> loginResult, string tenancyName,
-            string userNameOrEmailAddress)
+        private async Task SaveLoginAttempt(AbpLoginResult<TTenant, TUser> loginResult, string tenancyName, string userNameOrEmailAddress)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
@@ -248,6 +245,26 @@ namespace Abp.Authorization
                     await uow.CompleteAsync();
                 }
             }
+        }
+
+        private async Task<bool> TryLockOutAsync(int? tenantId, long userId)
+        {
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    (await _userManager.AccessFailedAsync(userId)).CheckErrors();
+
+                    var isLockOut =  await _userManager.IsLockedOutAsync(userId);
+
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                    await uow.CompleteAsync();
+
+                    return isLockOut;
+                }
+            }
+
         }
 
         private async Task<bool> TryLoginFromExternalAuthenticationSources(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
