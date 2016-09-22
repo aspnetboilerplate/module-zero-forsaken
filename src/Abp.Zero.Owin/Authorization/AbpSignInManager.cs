@@ -105,7 +105,7 @@ namespace Abp.Authorization
             int? tenantId = tenant == null ? (int?)null : tenant.Id;
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var user = await _userManager.AbpStore.FindAsync(tenantId, login); //TODO: Add FindAsync to usermanager to make abpstore protected again?
+                var user = await _userManager.AbpStore.FindAsync(tenantId, login);
                 if (user == null)
                 {
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UnknownExternalLogin, tenant);
@@ -172,6 +172,11 @@ namespace Abp.Authorization
 
                 if (!loggedInFromExternalSource)
                 {
+                    if (await _userManager.IsLockedOutAsync(user.Id))
+                    {
+                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
+                    }
+
                     var verificationResult = UserManager.PasswordHasher.VerifyHashedPassword(user.Password, plainPassword);
                     if (verificationResult != PasswordVerificationResult.Success)
                     {
@@ -213,7 +218,11 @@ namespace Abp.Authorization
 
             await _unitOfWorkManager.Current.SaveChangesAsync();
 
-            return new AbpLoginResult<TTenant, TUser>(tenant, user, await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie));
+            return new AbpLoginResult<TTenant, TUser>(
+                tenant,
+                user,
+                await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie)
+            );
         }
 
         private async Task SaveLoginAttempt(AbpLoginResult<TTenant, TUser> loginResult, string tenancyName,
