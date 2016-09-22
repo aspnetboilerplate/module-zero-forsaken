@@ -45,10 +45,10 @@ namespace Abp.Authorization
             IAuthenticationManager authenticationManager,
             IMultiTenancyConfig multiTenancyConfig,
             IRepository<TTenant> tenantRepository,
-            IUnitOfWorkManager unitOfWorkManager, 
-            ISettingManager settingManager, 
-            IRepository<UserLoginAttempt, long> userLoginAttemptRepository, 
-            IUserManagementConfig userManagementConfig, 
+            IUnitOfWorkManager unitOfWorkManager,
+            ISettingManager settingManager,
+            IRepository<UserLoginAttempt, long> userLoginAttemptRepository,
+            IUserManagementConfig userManagementConfig,
             IIocResolver iocResolver, AbpRoleManager<TRole, TUser> roleManager)
             : base(
                 userManager,
@@ -221,7 +221,7 @@ namespace Abp.Authorization
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?) null;
+                var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null;
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     var loginAttempt = new UserLoginAttempt
@@ -233,18 +233,14 @@ namespace Abp.Authorization
                         UserNameOrEmailAddress = userNameOrEmailAddress,
 
                         Result = loginResult.Result,
+
+                        BrowserInfo = ClientInfoProvider.BrowserInfo,
+                        ClientIpAddress = ClientInfoProvider.ClientIpAddress,
+                        ClientName = ClientInfoProvider.ComputerName,
                     };
 
-                    //TODO: We should replace this workaround with IClientInfoProvider when it's implemented in ABP (https://github.com/aspnetboilerplate/aspnetboilerplate/issues/926)
-                    {
-
-                        loginAttempt.BrowserInfo = ClientInfoProvider.BrowserInfo;
-                        loginAttempt.ClientIpAddress = ClientInfoProvider.ClientIpAddress;
-                        loginAttempt.ClientName = ClientInfoProvider.ComputerName;
-
-                        await _userLoginAttemptRepository.InsertAsync(loginAttempt);
-                        await _unitOfWorkManager.Current.SaveChangesAsync();
-                    }
+                    await _userLoginAttemptRepository.InsertAsync(loginAttempt);
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
 
                     await uow.CompleteAsync();
                 }
@@ -324,7 +320,5 @@ namespace Abp.Authorization
 
             return await _settingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
         }
-
-
     }
 }
