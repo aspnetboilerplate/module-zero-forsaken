@@ -5,10 +5,10 @@ using Abp.Threading;
 
 namespace Abp.Authorization
 {
-    public static class AbpSignInManagerExtensions
+    public static class AbpLogInManagerExtensions
     {
         public static AbpLoginResult<TTenant, TUser> Login<TTenant, TRole, TUser>(
-            this AbpSignInManager<TTenant, TRole, TUser> signInManager, 
+            this AbpLogInManager<TTenant, TRole, TUser> logInManager, 
             string userNameOrEmailAddress, 
             string plainPassword, 
             string tenancyName = null, 
@@ -18,7 +18,7 @@ namespace Abp.Authorization
                 where TUser : AbpUser<TUser>
         {
             return AsyncHelper.RunSync(
-                () => signInManager.LoginAsync(
+                () => logInManager.LoginAsync(
                     userNameOrEmailAddress,
                     plainPassword,
                     tenancyName,

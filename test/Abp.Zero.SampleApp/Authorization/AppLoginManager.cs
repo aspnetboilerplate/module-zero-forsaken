@@ -9,15 +9,13 @@ using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
-using Microsoft.Owin.Security;
 
 namespace Abp.Zero.SampleApp.Authorization
 {
-    public class AppSignInManager : AbpSignInManager<Tenant, Role, User>
+    public class AppLogInManager : AbpLogInManager<Tenant, Role, User>
     {
-        public AppSignInManager(
+        public AppLogInManager(
             UserManager userManager, 
-            IAuthenticationManager authenticationManager, 
             IMultiTenancyConfig multiTenancyConfig, 
             IRepository<Tenant> tenantRepository, 
             IUnitOfWorkManager unitOfWorkManager, 
@@ -27,7 +25,6 @@ namespace Abp.Zero.SampleApp.Authorization
             RoleManager roleManager) 
             : base(
                   userManager,
-                  authenticationManager, 
                   multiTenancyConfig, 
                   tenantRepository, 
                   unitOfWorkManager, 

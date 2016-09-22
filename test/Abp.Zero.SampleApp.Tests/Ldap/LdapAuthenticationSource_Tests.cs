@@ -17,17 +17,17 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 {
     public class LdapAuthenticationSource_Tests : SampleAppTestBase<LdapAuthenticationSource_Tests.MyUserLoginTestModule>
     {
-        private readonly AppSignInManager _signInManager;
+        private readonly AppLogInManager _logInManager;
 
         public LdapAuthenticationSource_Tests()
         {
-            _signInManager = Resolve<AppSignInManager>();
+            _logInManager = Resolve<AppLogInManager>();
         }
 
         //[Fact]
         public async Task Should_Login_From_Ldap_Without_Any_Configuration()
         {
-            var result = await _signInManager.LoginAsync("-","-", Tenant.DefaultTenantName);
+            var result = await _logInManager.LoginAsync("-","-", Tenant.DefaultTenantName);
             result.Result.ShouldBe(AbpLoginResultType.Success);
         }
 
@@ -39,7 +39,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.IsEnabled, "false");
 
-            var result = await _signInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
+            var result = await _logInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
             result.Result.ShouldBe(AbpLoginResultType.InvalidUserNameOrEmailAddress);
         }
 
@@ -53,7 +53,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.UserName, "-");
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password, "-");
 
-            var result = await _signInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
+            var result = await _logInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
             result.Result.ShouldBe(AbpLoginResultType.Success);
         }
 
@@ -67,7 +67,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.UserName, "NoUserName");
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password, "123123123123");
 
-            await Assert.ThrowsAnyAsync<Exception>(() => _signInManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
+            await Assert.ThrowsAnyAsync<Exception>(() => _logInManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
         }
 
         [DependsOn(typeof(AbpZeroLdapModule), typeof(SampleAppTestModule))]

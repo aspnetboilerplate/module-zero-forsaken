@@ -13,18 +13,18 @@ namespace Abp.Zero.SampleApp.Tests.Users
 {
     public class UserLogin_ExternalAuthenticationSources_Test : SampleAppTestBase<UserLogin_ExternalAuthenticationSources_Test.MyUserLoginTestModule>
     {
-        private readonly AppSignInManager _signInManager;
+        private readonly AppLogInManager _logInManager;
 
         public UserLogin_ExternalAuthenticationSources_Test()
         {
             UsingDbContext(UserLoginHelper.CreateTestUsers);
-            _signInManager = LocalIocManager.Resolve<AppSignInManager>();
+            _logInManager = LocalIocManager.Resolve<AppLogInManager>();
         }
 
         [Fact]
         public async Task Should_Login_From_Fake_Authentication_Source()
         {
-            var loginResult = await _signInManager.LoginAsync("fakeuser@mydomain.com", "123qwe", Tenant.DefaultTenantName);
+            var loginResult = await _logInManager.LoginAsync("fakeuser@mydomain.com", "123qwe", Tenant.DefaultTenantName);
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
             loginResult.User.AuthenticationSource.ShouldBe("FakeSource");
         }
@@ -32,7 +32,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Should_Fallback_To_Default_Login_Users()
         {
-            var loginResult = await _signInManager.LoginAsync("owner@aspnetboilerplate.com", "123qwe");
+            var loginResult = await _logInManager.LoginAsync("owner@aspnetboilerplate.com", "123qwe");
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
         }
 

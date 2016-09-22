@@ -12,13 +12,13 @@ namespace Abp.Zero.SampleApp.Tests.Users
     public class UserManager_Lockout_Tests : SampleAppTestBase
     {
         private readonly UserManager _userManager;
-        private readonly AppSignInManager _signInManager;
+        private readonly AppLogInManager _logInManager;
         private readonly User _testUser;
 
         public UserManager_Lockout_Tests()
         {
             _userManager = Resolve<UserManager>();
-            _signInManager = Resolve<AppSignInManager>();
+            _logInManager = Resolve<AppLogInManager>();
 
             _testUser = AsyncHelper.RunSync(() => CreateUser("TestUser"));
         }
@@ -48,23 +48,23 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Test_Login_Lockout()
         {
-            (await _signInManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
+            (await _logInManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
 
             for (int i = 0; i < _userManager.MaxFailedAccessAttemptsBeforeLockout - 1; i++)
             {
-                (await _signInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
+                (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
             }
 
-            (await _signInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.LockedOut);
+            (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.LockedOut);
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
 
             await Task.Delay(TimeSpan.FromSeconds(1)); //Wait for unlock
 
             (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(0);
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
-            (await _signInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
+            (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
 
-            (await _signInManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
+            (await _logInManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
             (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(0);
         }
     }
