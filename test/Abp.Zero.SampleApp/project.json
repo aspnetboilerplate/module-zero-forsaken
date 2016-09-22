@@ -1,8 +1,9 @@
-﻿{
+{
   "version": "0.13.0.1-*",
 
   "dependencies": {
-    "Abp.Zero": "0.13.0.1-*"
+    "Abp.Zero": "0.13.0.1-*",
+    "Abp.Zero.Owin": "0.13.0.1-*"
   },
 
   "frameworks": {

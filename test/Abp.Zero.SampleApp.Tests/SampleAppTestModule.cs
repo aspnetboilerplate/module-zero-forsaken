@@ -2,6 +2,9 @@ using Abp.Modules;
 using Abp.TestBase;
 using Abp.Zero.Ldap;
 using Abp.Zero.SampleApp.EntityFramework;
+using Castle.MicroKernel.Registration;
+using Microsoft.Owin.Security;
+using NSubstitute;
 
 namespace Abp.Zero.SampleApp.Tests
 {
@@ -11,6 +14,11 @@ namespace Abp.Zero.SampleApp.Tests
         typeof(AbpTestBaseModule))]
     public class SampleAppTestModule : AbpModule
     {
-
+        public override void Initialize()
+        {
+            IocManager.IocContainer.Register(
+                Component.For<IAuthenticationManager>().Instance(Substitute.For<IAuthenticationManager>())
+            );
+        }
     }
 }

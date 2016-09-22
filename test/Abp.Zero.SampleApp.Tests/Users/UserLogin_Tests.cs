@@ -5,8 +5,8 @@ using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Runtime.Session;
 using Abp.Zero.Configuration;
+using Abp.Zero.SampleApp.Authorization;
 using Abp.Zero.SampleApp.MultiTenancy;
-using Abp.Zero.SampleApp.Users;
 using Shouldly;
 using Xunit;
 
@@ -14,12 +14,12 @@ namespace Abp.Zero.SampleApp.Tests.Users
 {
     public class UserLogin_Tests : SampleAppTestBase
     {
-        private readonly UserManager _userManager;
+        private readonly AppSignInManager _signInManager;
 
         public UserLogin_Tests()
         {
             UsingDbContext(UserLoginHelper.CreateTestUsers);
-            _userManager = LocalIocManager.Resolve<UserManager>();
+            _signInManager = LocalIocManager.Resolve<AppSignInManager>();
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             Resolve<IMultiTenancyConfig>().IsEnabled = false;
             AbpSession.TenantId = 1; //TODO: We should not need to set this and implement AbpSession instead of TestSession.
 
-            var loginResult = await _userManager.LoginAsync("user1", "123qwe");
+            var loginResult = await _signInManager.LoginAsync("user1", "123qwe");
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
             loginResult.User.Name.ShouldBe("User");
             loginResult.Identity.ShouldNotBe(null);
@@ -51,7 +51,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             Resolve<IMultiTenancyConfig>().IsEnabled = false;
             //AbpSession.TenantId = 1; //TODO: We should not need to set this and implement AbpSession instead of TestSession.
 
-            var loginResult = await _userManager.LoginAsync("wrongUserName", "asdfgh");
+            var loginResult = await _signInManager.LoginAsync("wrongUserName", "asdfgh");
             loginResult.Result.ShouldBe(AbpLoginResultType.InvalidUserNameOrEmailAddress);
             loginResult.User.ShouldBe(null);
             loginResult.Identity.ShouldBe(null);
@@ -72,7 +72,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
             AbpSession.TenantId = 1;
 
-            var loginResult = await _userManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName);
+            var loginResult = await _signInManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName);
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
             loginResult.User.Name.ShouldBe("User");
             loginResult.Identity.ShouldNotBe(null);
@@ -88,13 +88,13 @@ namespace Abp.Zero.SampleApp.Tests.Users
             AbpSession.UserId = 1;
 
             //Email confirmation is disabled as default
-            (await _userManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(AbpLoginResultType.Success);
+            (await _signInManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(AbpLoginResultType.Success);
 
             //Change configuration
             await Resolve<ISettingManager>().ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, "true");
 
             //Email confirmation is enabled now
-            (await _userManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(AbpLoginResultType.UserEmailIsNotConfirmed);
+            (await _signInManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(AbpLoginResultType.UserEmailIsNotConfirmed);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
 
-            var loginResult = await _userManager.LoginAsync("userOwner", "123qwe");
+            var loginResult = await _signInManager.LoginAsync("userOwner", "123qwe");
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
             loginResult.User.Name.ShouldBe("Owner");
             loginResult.Identity.ShouldNotBe(null);

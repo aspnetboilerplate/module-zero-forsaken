@@ -7,6 +7,7 @@ using Abp.Modules;
 using Abp.Zero.Ldap;
 using Abp.Zero.Ldap.Authentication;
 using Abp.Zero.Ldap.Configuration;
+using Abp.Zero.SampleApp.Authorization;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
 using Shouldly;
@@ -16,17 +17,17 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 {
     public class LdapAuthenticationSource_Tests : SampleAppTestBase<LdapAuthenticationSource_Tests.MyUserLoginTestModule>
     {
-        private readonly UserManager _userManager;
+        private readonly AppSignInManager _signInManager;
 
         public LdapAuthenticationSource_Tests()
         {
-            _userManager = Resolve<UserManager>();
+            _signInManager = Resolve<AppSignInManager>();
         }
 
         //[Fact]
         public async Task Should_Login_From_Ldap_Without_Any_Configuration()
         {
-            var result = await _userManager.LoginAsync("-","-", Tenant.DefaultTenantName);
+            var result = await _signInManager.LoginAsync("-","-", Tenant.DefaultTenantName);
             result.Result.ShouldBe(AbpLoginResultType.Success);
         }
 
@@ -38,7 +39,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.IsEnabled, "false");
 
-            var result = await _userManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
+            var result = await _signInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
             result.Result.ShouldBe(AbpLoginResultType.InvalidUserNameOrEmailAddress);
         }
 
@@ -52,7 +53,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.UserName, "-");
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password, "-");
 
-            var result = await _userManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
+            var result = await _signInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
             result.Result.ShouldBe(AbpLoginResultType.Success);
         }
 
@@ -66,7 +67,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.UserName, "NoUserName");
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password, "123123123123");
 
-            await Assert.ThrowsAnyAsync<Exception>(() => _userManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
+            await Assert.ThrowsAnyAsync<Exception>(() => _signInManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
         }
 
         [DependsOn(typeof(AbpZeroLdapModule), typeof(SampleAppTestModule))]

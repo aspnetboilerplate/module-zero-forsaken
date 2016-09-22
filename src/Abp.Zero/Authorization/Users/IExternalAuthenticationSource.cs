@@ -4,7 +4,7 @@ using Abp.MultiTenancy;
 namespace Abp.Authorization.Users
 {
     /// <summary>
-    /// Defines an authorization source to be used by <see cref="AbpUserManager{TTenant,TRole,TUser}.LoginAsync"/> method.
+    /// Defines an authorization source to be used by <see cref="AbpUserManager{TRole,TUser}.LoginAsync"/> method.
     /// </summary>
     /// <typeparam name="TTenant">Tenant type</typeparam>
     /// <typeparam name="TUser">User type</typeparam>

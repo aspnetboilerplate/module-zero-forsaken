@@ -20,7 +20,7 @@ namespace Abp.Authorization
         where TUser : AbpUser<TUser>
         where TTenant : AbpTenant<TUser>
     {
-        private readonly AbpUserManager<TTenant, TRole, TUser> _userManager;
+        private readonly AbpUserManager<TRole, TUser> _userManager;
 
         public IIocManager IocManager { get; set; }
 
@@ -33,7 +33,7 @@ namespace Abp.Authorization
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected PermissionChecker(AbpUserManager<TTenant, TRole, TUser> userManager)
+        protected PermissionChecker(AbpUserManager<TRole, TUser> userManager)
         {
             _userManager = userManager;
 
