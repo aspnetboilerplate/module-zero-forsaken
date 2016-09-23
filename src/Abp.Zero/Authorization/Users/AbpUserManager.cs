@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
@@ -16,7 +17,9 @@ using Abp.Organizations;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
+using Abp.UI;
 using Abp.Zero;
+using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -45,15 +48,15 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public ILocalizationManager LocalizationManager { get; set; }
+        public ILocalizationManager LocalizationManager { get; }
 
         public IAbpSession AbpSession { get; set; }
 
         public FeatureDependencyContext FeatureDependencyContext { get; set; }
 
-        protected AbpRoleManager<TRole, TUser> RoleManager { get; private set; }
+        protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
-        public AbpUserStore<TRole, TUser> AbpStore { get; private set; }
+        public AbpUserStore<TRole, TUser> AbpStore { get; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -61,6 +64,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
+        private readonly ISettingManager _settingManager;
 
         protected AbpUserManager(
             AbpUserStore<TRole, TUser> userStore,
@@ -70,11 +74,16 @@ namespace Abp.Authorization.Users
             ICacheManager cacheManager,
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IOrganizationUnitSettings organizationUnitSettings)
+            IOrganizationUnitSettings organizationUnitSettings,
+            ILocalizationManager localizationManager,
+            IdentityEmailMessageService emailService, ISettingManager settingManager)
             : base(userStore)
         {
             AbpStore = userStore;
             RoleManager = roleManager;
+            LocalizationManager = localizationManager;
+            _settingManager = settingManager;
+
             _permissionManager = permissionManager;
             _unitOfWorkManager = unitOfWorkManager;
             _cacheManager = cacheManager;
@@ -82,14 +91,15 @@ namespace Abp.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitSettings = organizationUnitSettings;
 
-            LocalizationManager = NullLocalizationManager.Instance;
             AbpSession = NullAbpSession.Instance;
 
             UserLockoutEnabledByDefault = true;
-
+            
             //TODO: What should be?
             DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             MaxFailedAccessAttemptsBeforeLockout = 5;
+            
+            EmailService = emailService;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -544,6 +554,77 @@ namespace Abp.Authorization.Users
             }
         }
 
+        public virtual void RegisterTwoFactorProviders(int? tenantId)
+        {
+            TwoFactorProviders.Clear();
+
+            if (!IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, tenantId))
+            {
+                return;
+            }
+
+            if (EmailService != null &&
+                IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, tenantId))
+            {
+                RegisterTwoFactorProvider(
+                    L("Email"),
+                    new EmailTokenProvider<TUser, long>
+                    {
+                        Subject = L("EmailSecurityCodeSubject"),
+                        BodyFormat = L("EmailSecurityCodeBody")
+                    }
+                );
+            }
+
+            if (SmsService != null &&
+                IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, tenantId))
+            {
+                RegisterTwoFactorProvider(
+                    L("Sms"),
+                    new PhoneNumberTokenProvider<TUser, long>
+                    {
+                        MessageFormat = L("SmsSecurityCodeMessage")
+                    }
+                );
+            }
+        }
+
+        public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(long userId)
+        {
+            var user = await GetUserByIdAsync(userId);
+
+            RegisterTwoFactorProviders(user.TenantId);
+
+            return await base.GetValidTwoFactorProvidersAsync(userId);
+        }
+
+        public override async Task<IdentityResult> NotifyTwoFactorTokenAsync(long userId, string twoFactorProvider, string token)
+        {
+            var user = await GetUserByIdAsync(userId);
+
+            RegisterTwoFactorProviders(user.TenantId);
+
+            return await base.NotifyTwoFactorTokenAsync(userId, twoFactorProvider, token);
+        }
+
+        public override async Task<string> GenerateTwoFactorTokenAsync(long userId, string twoFactorProvider)
+        {
+            var user = await GetUserByIdAsync(userId);
+
+            RegisterTwoFactorProviders(user.TenantId);
+
+            return await base.GenerateTwoFactorTokenAsync(userId, twoFactorProvider);
+        }
+
+        public override async Task<bool> VerifyTwoFactorTokenAsync(long userId, string twoFactorProvider, string token)
+        {
+            var user = await GetUserByIdAsync(userId);
+
+            RegisterTwoFactorProviders(user.TenantId);
+
+            return await base.VerifyTwoFactorTokenAsync(userId, twoFactorProvider, token);
+        }
+
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
         {
             var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
@@ -570,6 +651,13 @@ namespace Abp.Authorization.Users
 
                 return newCacheItem;
             });
+        }
+
+        private bool IsTrue(string settingName, int? tenantId)
+        {
+            return tenantId == null
+                ? _settingManager.GetSettingValueForApplication<bool>(settingName)
+                : _settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
         }
 
         private string L(string name)
