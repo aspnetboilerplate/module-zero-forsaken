@@ -17,15 +17,12 @@ using Abp.Organizations;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
-using Abp.UI;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
 {
-    //TODO: Extract Login operations to AbpLoginManager and remove TTenant generic parameter.
-
     /// <summary>
     /// Extends <see cref="UserManager{TUser,TKey}"/> of ASP.NET Identity Framework.
     /// </summary>
@@ -77,7 +74,8 @@ namespace Abp.Authorization.Users
             IOrganizationUnitSettings organizationUnitSettings,
             ILocalizationManager localizationManager,
             IdentityEmailMessageService emailService, 
-            ISettingManager settingManager)
+            ISettingManager settingManager,
+            IUserTokenProviderAccessor userTokenProviderAccessor)
             : base(userStore)
         {
             AbpStore = userStore;
@@ -99,6 +97,8 @@ namespace Abp.Authorization.Users
             MaxFailedAccessAttemptsBeforeLockout = 5;
             
             EmailService = emailService;
+
+            UserTokenProvider = userTokenProviderAccessor.GetUserTokenProviderOrNull<TUser>();
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)

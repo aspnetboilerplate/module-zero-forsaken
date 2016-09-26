@@ -47,6 +47,7 @@ namespace Abp.Zero
 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
             IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient); //could not register conventionally
+
             RegisterTenantCache();
         }
 

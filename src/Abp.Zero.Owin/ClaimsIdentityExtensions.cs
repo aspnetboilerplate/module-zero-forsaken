@@ -4,7 +4,7 @@ using System.Security.Principal;
 using Abp.Runtime.Security;
 using Microsoft.AspNet.Identity;
 
-namespace Abp.Authorization
+namespace Abp
 {
     //TODO: Use from ABP after ABP v1.0!
     public static class ClaimsIdentityExtensions

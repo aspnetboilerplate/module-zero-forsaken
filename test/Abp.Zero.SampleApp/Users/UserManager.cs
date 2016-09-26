@@ -24,7 +24,8 @@ namespace Abp.Zero.SampleApp.Users
             IOrganizationUnitSettings organizationUnitSettings,
             ILocalizationManager localizationManager,
             ISettingManager settingManager,
-            IdentityEmailMessageService emailService) 
+            IdentityEmailMessageService emailService,
+            IUserTokenProviderAccessor userTokenProviderAccessor)
             : base(
                   userStore, 
                   roleManager, 
@@ -36,9 +37,9 @@ namespace Abp.Zero.SampleApp.Users
                   organizationUnitSettings,
                   localizationManager,
                   emailService,
-                  settingManager)
+                  settingManager,
+                  userTokenProviderAccessor)
         {
-            
         }
     }
 }
