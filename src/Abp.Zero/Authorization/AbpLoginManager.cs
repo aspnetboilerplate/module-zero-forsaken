@@ -46,7 +46,8 @@ namespace Abp.Authorization
             ISettingManager settingManager,
             IRepository<UserLoginAttempt, long> userLoginAttemptRepository,
             IUserManagementConfig userManagementConfig,
-            IIocResolver iocResolver, AbpRoleManager<TRole, TUser> roleManager)
+            IIocResolver iocResolver, 
+            AbpRoleManager<TRole, TUser> roleManager)
         {
             _multiTenancyConfig = multiTenancyConfig;
             _tenantRepository = tenantRepository;
@@ -166,6 +167,8 @@ namespace Abp.Authorization
 
                 if (!loggedInFromExternalSource)
                 {
+                    _userManager.InitializeLockoutSettings(tenantId);
+
                     if (await _userManager.IsLockedOutAsync(user.Id))
                     {
                         return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
@@ -264,7 +267,6 @@ namespace Abp.Authorization
                     return isLockOut;
                 }
             }
-
         }
 
         private async Task<bool> TryLoginFromExternalAuthenticationSources(string userNameOrEmailAddress, string plainPassword, TTenant tenant)

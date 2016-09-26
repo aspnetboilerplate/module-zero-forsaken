@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
+using Abp.Configuration;
 using Abp.Threading;
+using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.Authorization;
 using Abp.Zero.SampleApp.Users;
 using Shouldly;
@@ -22,7 +24,11 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             _testUser = AsyncHelper.RunSync(() => CreateUser("TestUser"));
 
-            _userManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(0.5);
+            Resolve<ISettingManager>()
+                .ChangeSettingForApplicationAsync(
+                    AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
+                    "1"
+                );
         }
 
         [Fact]
@@ -42,7 +48,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
 
-            await Task.Delay(TimeSpan.FromSeconds(1)); //Wait for unlock
+            await Task.Delay(TimeSpan.FromSeconds(1.5)); //Wait for unlock
             
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
         }
@@ -60,7 +66,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.LockedOut);
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
 
-            await Task.Delay(TimeSpan.FromSeconds(1)); //Wait for unlock
+            await Task.Delay(TimeSpan.FromSeconds(1.5)); //Wait for unlock
 
             (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(0);
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
