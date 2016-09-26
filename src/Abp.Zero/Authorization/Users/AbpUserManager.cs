@@ -76,7 +76,8 @@ namespace Abp.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
             ILocalizationManager localizationManager,
-            IdentityEmailMessageService emailService, ISettingManager settingManager)
+            IdentityEmailMessageService emailService, 
+            ISettingManager settingManager)
             : base(userStore)
         {
             AbpStore = userStore;
@@ -94,8 +95,6 @@ namespace Abp.Authorization.Users
             AbpSession = NullAbpSession.Instance;
 
             UserLockoutEnabledByDefault = true;
-            
-            //TODO: What should be?
             DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             MaxFailedAccessAttemptsBeforeLockout = 5;
             
@@ -589,6 +588,13 @@ namespace Abp.Authorization.Users
             }
         }
 
+        public virtual void InitializeLockoutSettings(int? tenantId)
+        {
+            UserLockoutEnabledByDefault = IsTrue(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
+            DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
+            MaxFailedAccessAttemptsBeforeLockout = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+        }
+
         public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(long userId)
         {
             var user = await GetUserByIdAsync(userId);
@@ -655,9 +661,14 @@ namespace Abp.Authorization.Users
 
         private bool IsTrue(string settingName, int? tenantId)
         {
+            return GetSettingValue<bool>(settingName, tenantId);
+        }
+
+        private T GetSettingValue<T>(string settingName, int? tenantId) where T : struct
+        {
             return tenantId == null
-                ? _settingManager.GetSettingValueForApplication<bool>(settingName)
-                : _settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
+                ? _settingManager.GetSettingValueForApplication<T>(settingName)
+                : _settingManager.GetSettingValueForTenant<T>(settingName, tenantId.Value);
         }
 
         private string L(string name)

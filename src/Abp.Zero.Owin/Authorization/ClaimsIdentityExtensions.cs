@@ -6,7 +6,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization
 {
-    //TODO: Move to ABP!
+    //TODO: Use from ABP after ABP v1.0!
     public static class ClaimsIdentityExtensions
     {
         public static int? GetTenantId(this IIdentity identity)

@@ -57,6 +57,30 @@ namespace Abp.Zero.Configuration
                            scopes: SettingScopes.Application | SettingScopes.Tenant,
                            isVisibleToClients: true
                            ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled,
+                           "true",
+                           new FixedLocalizableString("Is user lockout enabled."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout,
+                           "5",
+                           new FixedLocalizableString("Maxumum Failed access attempt count before user lockout."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
+                           "300", //5 minutes
+                           new FixedLocalizableString("User lockout in seconds."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
                    };
         }
     }

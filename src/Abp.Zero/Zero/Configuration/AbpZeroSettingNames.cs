@@ -9,6 +9,24 @@ namespace Abp.Zero.Configuration
             /// </summary>
             public const string IsEmailConfirmationRequiredForLogin = "Abp.Zero.UserManagement.IsEmailConfirmationRequiredForLogin";
 
+            public static class UserLockOut
+            {
+                /// <summary>
+                /// "Abp.Zero.UserManagement.UserLockOut.IsEnabled".
+                /// </summary>
+                public const string IsEnabled = "Abp.Zero.UserManagement.UserLockOut.IsEnabled";
+
+                /// <summary>
+                /// "Abp.Zero.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout".
+                /// </summary>
+                public const string MaxFailedAccessAttemptsBeforeLockout = "Abp.Zero.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout";
+
+                /// <summary>
+                /// "Abp.Zero.UserManagement.UserLockOut.DefaultAccountLockoutSeconds".
+                /// </summary>
+                public const string DefaultAccountLockoutSeconds = "Abp.Zero.UserManagement.UserLockOut.DefaultAccountLockoutSeconds";
+            }
+
             public static class TwoFactorLogin
             {
                 /// <summary>

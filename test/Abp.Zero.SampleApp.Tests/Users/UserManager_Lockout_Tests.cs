@@ -21,6 +21,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
             _logInManager = Resolve<AppLogInManager>();
 
             _testUser = AsyncHelper.RunSync(() => CreateUser("TestUser"));
+
+            _userManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(0.5);
         }
 
         [Fact]

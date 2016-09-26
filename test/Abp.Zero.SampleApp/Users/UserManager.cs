@@ -1,5 +1,4 @@
-﻿using System;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -39,7 +38,7 @@ namespace Abp.Zero.SampleApp.Users
                   emailService,
                   settingManager)
         {
-            DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(0.5);
+            
         }
     }
 }
