@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -13,25 +16,34 @@ namespace Abp.Authorization.Users
     /// Implements 'User Store' of ASP.NET Identity Framework.
     /// </summary>
     public abstract class AbpUserStore<TRole, TUser> :
+        IUserStore<TUser, long>,
         IUserPasswordStore<TUser, long>,
         IUserEmailStore<TUser, long>,
         IUserLoginStore<TUser, long>,
         IUserRoleStore<TUser, long>,
         IQueryableUserStore<TUser, long>,
+        IUserLockoutStore<TUser, long>,
         IUserPermissionStore<TUser>,
+        IUserPhoneNumberStore<TUser, long>,
+        IUserClaimStore<TUser, long>,
+        IUserSecurityStampStore<TUser, long>,
+        IUserTwoFactorStore<TUser, long>,
 
         ITransientDependency
 
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
     {
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+
         private readonly IRepository<TUser, long> _userRepository;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
+        private readonly IRepository<UserClaim, long> _userClaimRepository;
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+        
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -41,15 +53,27 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<TRole> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            IRepository<UserClaim, long> userClaimRepository)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
             _unitOfWorkManager = unitOfWorkManager;
+            _userClaimRepository = userClaimRepository;
             _userPermissionSettingRepository = userPermissionSettingRepository;
+
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
+
+        #region IQueryableUserStore
+
+        public virtual IQueryable<TUser> Users => _userRepository.GetAll();
+
+        #endregion
+
+        #region IUserStore
 
         public virtual async Task CreateAsync(TUser user)
         {
@@ -75,14 +99,14 @@ namespace Abp.Authorization.Users
         {
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.UserName == userName
-                );
+            );
         }
 
         public virtual async Task<TUser> FindByEmailAsync(string email)
         {
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.EmailAddress == email
-                );
+            );
         }
 
         /// <summary>
@@ -112,6 +136,10 @@ namespace Abp.Authorization.Users
             }
         }
 
+        #endregion
+        
+        #region IUserPasswordStore
+
         public virtual Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
             user.Password = passwordHash;
@@ -127,6 +155,10 @@ namespace Abp.Authorization.Users
         {
             return Task.FromResult(!string.IsNullOrEmpty(user.Password));
         }
+
+        #endregion
+
+        #region IUserEmailStore
 
         public virtual Task SetEmailAsync(TUser user, string email)
         {
@@ -150,6 +182,10 @@ namespace Abp.Authorization.Users
             return Task.FromResult(0);
         }
 
+        #endregion
+
+        #region IUserLoginStore
+
         public virtual async Task AddLoginAsync(TUser user, UserLoginInfo login)
         {
             await _userLoginRepository.InsertAsync(
@@ -168,7 +204,7 @@ namespace Abp.Authorization.Users
                 ul => ul.UserId == user.Id &&
                       ul.LoginProvider == login.LoginProvider &&
                       ul.ProviderKey == login.ProviderKey
-                );
+            );
         }
 
         public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
@@ -182,7 +218,7 @@ namespace Abp.Authorization.Users
         {
             var userLogin = await _userLoginRepository.FirstOrDefaultAsync(
                 ul => ul.LoginProvider == login.LoginProvider && ul.ProviderKey == login.ProviderKey
-                );
+            );
 
             if (userLogin == null)
             {
@@ -196,9 +232,9 @@ namespace Abp.Authorization.Users
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
             var query = from userLogin in _userLoginRepository.GetAll()
-                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-                        where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-                        select user;
+                join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                select user;
 
             return Task.FromResult(query.ToList());
         }
@@ -215,6 +251,10 @@ namespace Abp.Authorization.Users
                 return Task.FromResult(query.FirstOrDefault());
             }
         }
+
+        #endregion
+
+        #region IUserRoleStore
 
         public virtual async Task AddToRoleAsync(TUser user, string roleName)
         {
@@ -234,15 +274,15 @@ namespace Abp.Authorization.Users
             await _userRoleRepository.DeleteAsync(userRole);
         }
 
-        public virtual Task<IList<string>> GetRolesAsync(TUser user)
+        [UnitOfWork]
+        public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
-            //TODO: This is not implemented as async.
-            var roleNames = _userRoleRepository.Query(userRoles => (from userRole in userRoles
-                                                                    join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                                                                    where userRole.UserId == user.Id
-                                                                    select role.Name).ToList());
+            var query = from userRole in _userRoleRepository.GetAll()
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == user.Id
+                select role.Name;
 
-            return Task.FromResult<IList<string>>(roleNames);
+            return await AsyncQueryableExecuter.ToListAsync(query);
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
@@ -251,10 +291,9 @@ namespace Abp.Authorization.Users
             return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
         }
 
-        public virtual IQueryable<TUser> Users
-        {
-            get { return _userRepository.GetAll(); }
-        }
+        #endregion
+
+        #region IUserPermissionStore
 
         public virtual async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
@@ -279,7 +318,7 @@ namespace Abp.Authorization.Users
                 permissionSetting => permissionSetting.UserId == user.Id &&
                                      permissionSetting.Name == permissionGrant.Name &&
                                      permissionSetting.IsGranted == permissionGrant.IsGranted
-                );
+            );
         }
 
         public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId)
@@ -292,10 +331,10 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
         {
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
-                p => p.UserId == userId &&
-                     p.Name == permissionGrant.Name &&
-                     p.IsGranted == permissionGrant.IsGranted
-                ) != null;
+                       p => p.UserId == userId &&
+                            p.Name == permissionGrant.Name &&
+                            p.IsGranted == permissionGrant.IsGranted
+                   ) != null;
         }
 
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
@@ -303,10 +342,114 @@ namespace Abp.Authorization.Users
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
         }
 
+        #endregion
+
+        #region IUserLockoutStore
+
+        public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
+        {
+            return Task.FromResult(
+                user.LockoutEndDateUtc.HasValue
+                    ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc))
+                    : new DateTimeOffset()
+            );
+        }
+
+        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+        {
+            user.LockoutEndDateUtc = lockoutEnd == DateTimeOffset.MinValue ? new DateTime?() : lockoutEnd.UtcDateTime;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> IncrementAccessFailedCountAsync(TUser user)
+        {
+            return Task.FromResult(++user.AccessFailedCount);
+        }
+
+        public Task ResetAccessFailedCountAsync(TUser user)
+        {
+            user.AccessFailedCount = 0;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> GetAccessFailedCountAsync(TUser user)
+        {
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+        public Task<bool> GetLockoutEnabledAsync(TUser user)
+        {
+            return Task.FromResult(user.IsLockoutEnabled);
+        }
+
+        public Task SetLockoutEnabledAsync(TUser user, bool enabled)
+        {
+            user.IsLockoutEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region IUserPhoneNumberStore
+
+        public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+        {
+            user.PhoneNumber = phoneNumber;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetPhoneNumberAsync(TUser user)
+        {
+            return Task.FromResult(user.PhoneNumber);
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+        {
+            return Task.FromResult(user.IsPhoneNumberConfirmed);
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+        {
+            user.IsPhoneNumberConfirmed = confirmed;
+            return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region IUserClaimStore
+
+        public async Task<IList<Claim>> GetClaimsAsync(TUser user)
+        {
+            var userClaims = await _userClaimRepository.GetAllListAsync(uc => uc.UserId == user.Id);
+            return userClaims.Select(uc => new Claim(uc.ClaimType, uc.ClaimValue)).ToList();
+        }
+
+        public Task AddClaimAsync(TUser user, Claim claim)
+        {
+            return _userClaimRepository.InsertAsync(new UserClaim(user, claim));
+        }
+
+        public Task RemoveClaimAsync(TUser user, Claim claim)
+        {
+            return _userClaimRepository.DeleteAsync(
+                uc => uc.UserId == user.Id &&
+                      uc.ClaimType == claim.Type &&
+                      uc.ClaimValue == claim.Value
+            );
+        }
+
+        #endregion
+
+        #region IDisposable
+
         public virtual void Dispose()
         {
             //No need to dispose since using IOC.
         }
+
+        #endregion
+
+        #region Helpers
 
         private async Task<TRole> GetRoleByNameAsync(string roleName)
         {
@@ -317,6 +460,34 @@ namespace Abp.Authorization.Users
             }
 
             return role;
+        }
+
+        #endregion
+
+        #region IUserSecurityStampStore
+
+        public Task SetSecurityStampAsync(TUser user, string stamp)
+        {
+            user.SecurityStamp = stamp;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetSecurityStampAsync(TUser user)
+        {
+            return Task.FromResult(user.SecurityStamp);
+        }
+
+        #endregion
+
+        public Task SetTwoFactorEnabledAsync(TUser user, bool enabled)
+        {
+            user.IsTwoFactorEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        public Task<bool> GetTwoFactorEnabledAsync(TUser user)
+        {
+            return Task.FromResult(user.IsTwoFactorEnabled);
         }
     }
 }

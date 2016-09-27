@@ -92,7 +92,7 @@ namespace Abp.Authorization.Users
         public virtual string Password { get; set; }
 
         /// <summary>
-        /// Is the <see cref="EmailAddress"/> confirmed.
+        /// Is the <see cref="AbpUserBase.EmailAddress"/> confirmed.
         /// </summary>
         public virtual bool IsEmailConfirmed { get; set; }
 
@@ -111,6 +111,41 @@ namespace Abp.Authorization.Users
         public virtual string PasswordResetCode { get; set; }
 
         /// <summary>
+        /// Lockout end date.
+        /// </summary>
+        public virtual DateTime? LockoutEndDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the access failed count.
+        /// </summary>
+        public virtual int AccessFailedCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lockout enabled.
+        /// </summary>
+        public virtual bool IsLockoutEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the phone number.
+        /// </summary>
+        public virtual string PhoneNumber {get; set; }
+
+        /// <summary>
+        /// Is the <see cref="AbpUserBase.EmailAddress"/> confirmed.
+        /// </summary>
+        public virtual bool IsPhoneNumberConfirmed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the security stamp.
+        /// </summary>
+        public virtual string SecurityStamp { get; set; }
+
+        /// <summary>
+        /// Is two factor auth enabled.
+        /// </summary>
+        public virtual bool IsTwoFactorEnabled { get; set; }
+
+        /// <summary>
         /// Is this user active?
         /// If as user is not active, he/she can not use the application.
         /// </summary>
@@ -123,10 +158,16 @@ namespace Abp.Authorization.Users
         public virtual ICollection<UserLogin> Logins { get; set; }
 
         /// <summary>
-        /// Role definitions for this user.
+        /// Roles of this user.
         /// </summary>
         [ForeignKey("UserId")]
         public virtual ICollection<UserRole> Roles { get; set; }
+
+        /// <summary>
+        /// Claims of this user.
+        /// </summary>
+        [ForeignKey("UserId")]
+        public virtual ICollection<UserClaim> Claims { get; set; }
 
         /// <summary>
         /// Permission definitions for this user.
@@ -146,9 +187,10 @@ namespace Abp.Authorization.Users
 
         public virtual TUser LastModifierUser { get; set; }
 
-        public AbpUser()
+        protected AbpUser()
         {
             IsActive = true;
+            SecurityStamp = SequentialGuidGenerator.Instance.Create().ToString();
         }
 
         public virtual void SetNewPasswordResetCode()

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.MultiTenancy;
 
 namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Used to perform permission database operations for a user.
     /// </summary>
-    public interface IUserPermissionStore<TUser>
+    public interface IUserPermissionStore<in TUser>
         where TUser : AbpUser<TUser>
     {
         /// <summary>

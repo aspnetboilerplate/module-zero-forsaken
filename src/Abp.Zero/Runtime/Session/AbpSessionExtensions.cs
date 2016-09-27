@@ -9,12 +9,12 @@ namespace Abp.Runtime.Session
         {
             if (session == null)
             {
-                throw new ArgumentNullException("session");
+                throw new ArgumentNullException(nameof(session));
             }
 
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException(nameof(user));
             }
 
             return session.TenantId == user.TenantId && 

@@ -122,7 +122,7 @@ namespace Abp.Organizations
         {
             if (childCode.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("childCode", "childCode can not be null or empty.");
+                throw new ArgumentNullException(nameof(childCode), "childCode can not be null or empty.");
             }
 
             if (parentCode.IsNullOrEmpty())
@@ -143,7 +143,7 @@ namespace Abp.Organizations
         {
             if (code.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("code", "code can not be null or empty.");
+                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
             }
 
             if (parentCode.IsNullOrEmpty())
@@ -168,7 +168,7 @@ namespace Abp.Organizations
         {
             if (code.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("code", "code can not be null or empty.");
+                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
             }
 
             var parentCode = GetParentCode(code);
@@ -186,7 +186,7 @@ namespace Abp.Organizations
         {
             if (code.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("code", "code can not be null or empty.");
+                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
             }
 
             var splittedCode = code.Split('.');
@@ -202,7 +202,7 @@ namespace Abp.Organizations
         {
             if (code.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("code", "code can not be null or empty.");
+                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
             }
 
             var splittedCode = code.Split('.');
