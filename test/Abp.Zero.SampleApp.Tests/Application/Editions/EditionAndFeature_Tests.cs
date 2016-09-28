@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Application.Features;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Abp.Zero.SampleApp.Editions;
 using Abp.Zero.SampleApp.Features;
 using Abp.Zero.SampleApp.MultiTenancy;

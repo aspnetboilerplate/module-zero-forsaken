@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Application.Features;
-using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
@@ -22,16 +21,14 @@ namespace Abp.MultiTenancy
 {
     /// <summary>
     /// Tenant manager.
-    /// Implements domain logic for <see cref="AbpTenant{TTenant,TUser}"/>.
+    /// Implements domain logic for <see cref="AbpTenant{TUser}"/>.
     /// </summary>
     /// <typeparam name="TTenant">Type of the application Tenant</typeparam>
-    /// <typeparam name="TRole">Type of the application Role</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
-    public abstract class AbpTenantManager<TTenant, TRole, TUser> : IDomainService,
+    public abstract class AbpTenantManager<TTenant, TUser> : IDomainService,
         IEventHandler<EntityChangedEventData<TTenant>>,
         IEventHandler<EntityDeletedEventData<Edition>>
         where TTenant : AbpTenant<TUser>
-        where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
     {
         public AbpEditionManager EditionManager { get; set; }
