@@ -26,7 +26,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         public async Task Should_Login_With_Correct_Values_Without_MultiTenancy()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = false;
-            AbpSession.TenantId = 1; //TODO: We should not need to set this and implement AbpSession instead of TestSession.
+            AbpSession.TenantId = 1;
 
             var loginResult = await _logInManager.LoginAsync("user1", "123qwe");
             loginResult.Result.ShouldBe(AbpLoginResultType.Success);
@@ -49,7 +49,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
         public async Task Should_Not_Login_With_Invalid_UserName_Without_MultiTenancy()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = false;
-            //AbpSession.TenantId = 1; //TODO: We should not need to set this and implement AbpSession instead of TestSession.
 
             var loginResult = await _logInManager.LoginAsync("wrongUserName", "asdfgh");
             loginResult.Result.ShouldBe(AbpLoginResultType.InvalidUserNameOrEmailAddress);

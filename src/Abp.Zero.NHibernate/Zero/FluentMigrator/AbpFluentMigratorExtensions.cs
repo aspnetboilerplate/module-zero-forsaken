@@ -52,13 +52,6 @@ namespace Abp.Zero.FluentMigrator
                 .WithCreatorUserIdColumn();
         }
 
-        //TODO: Move to ABP
-        public static ICreateTableColumnOptionOrWithColumnSyntax WithLastModificationTimeColumn(this ICreateTableWithColumnSyntax table, bool defaultValue = true)
-        {
-            return table
-                .WithColumn("LastModificationTime").AsDateTime().Nullable();
-        }
-
         /// <summary>
         /// Adds LastModifierUserId field to a table. See <see cref="IModificationAudited"/>.
         /// </summary>
@@ -76,13 +69,6 @@ namespace Abp.Zero.FluentMigrator
             return table
                 .WithLastModificationTimeColumn()
                 .WithLastModifierUserIdColumn();
-        }
-
-        //TODO: MOVE to ABP
-        public static ICreateTableColumnOptionOrWithColumnSyntax WithDeletionTimeColumn(this ICreateTableWithColumnSyntax table)
-        {
-            return table
-                .WithColumn("DeletionTime").AsDateTime().Nullable();
         }
 
         /// <summary>
@@ -106,7 +92,7 @@ namespace Abp.Zero.FluentMigrator
         }
 
         /// <summary>
-        /// Adds TenantId column to a table as not nullable. See <see cref="AbpTenant{TTenant,TUser}"/>.
+        /// Adds TenantId column to a table as not nullable. See <see cref="AbpTenant{TUser}"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsRequired(this ICreateTableWithColumnSyntax table)
         {
@@ -115,7 +101,7 @@ namespace Abp.Zero.FluentMigrator
         }
 
         /// <summary>
-        /// Adds TenantId column to a table as nullable. See <see cref="AbpTenant{TTenant,TUser}"/>.
+        /// Adds TenantId column to a table as nullable. See <see cref="AbpTenant{TUser}"/>.
         /// </summary>
         public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsNullable(this ICreateTableWithColumnSyntax table)
         {
@@ -176,13 +162,6 @@ namespace Abp.Zero.FluentMigrator
                 .AddCreatorUserIdColumn();
         }
 
-        //TODO: Move to ABP
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModificationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
-        {
-            return table
-                .AddColumn("LastModificationTime").AsDateTime().Nullable();
-        }
-
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModifierUserIdColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
@@ -194,13 +173,6 @@ namespace Abp.Zero.FluentMigrator
             return table
                 .AddLastModificationTimeColumn()
                 .AddLastModifierUserIdColumn();
-        }
-
-        //TODO: Move to ABP
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddDeletionTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
-        {
-            return table
-                .AddColumn("DeletionTime").AsDateTime().Nullable();
         }
 
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddDeletionAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)

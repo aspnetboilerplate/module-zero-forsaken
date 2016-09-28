@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
-using Abp.Threading;
 using Abp.UI;
 using Abp.Zero;
 
@@ -56,12 +55,6 @@ namespace Abp.Organizations
             return children.OrderBy(c => c.Code).LastOrDefault();
         }
 
-        public virtual string GetCode(long id)
-        {
-            //TODO: Move to an extension class
-            return AsyncHelper.RunSync(() => GetCodeAsync(id));
-        }
-
         public virtual async Task<string> GetCodeAsync(long id)
         {
             return (await OrganizationUnitRepository.GetAsync(id)).Code;
@@ -110,20 +103,21 @@ namespace Abp.Organizations
 
         public async Task<List<OrganizationUnit>> FindChildrenAsync(long? parentId, bool recursive = false)
         {
-            if (recursive)
-            {
-                if (!parentId.HasValue)
-                {
-                    return await OrganizationUnitRepository.GetAllListAsync();
-                }
-
-                var code = await GetCodeAsync(parentId.Value);
-                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.Code.StartsWith(code) && ou.Id != parentId.Value);
-            }
-            else
+            if (!recursive)
             {
                 return await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
             }
+
+            if (!parentId.HasValue)
+            {
+                return await OrganizationUnitRepository.GetAllListAsync();
+            }
+
+            var code = await GetCodeAsync(parentId.Value);
+
+            return await OrganizationUnitRepository.GetAllListAsync(
+                ou => ou.Code.StartsWith(code) && ou.Id != parentId.Value
+            );
         }
 
         protected virtual async Task ValidateOrganizationUnitAsync(OrganizationUnit organizationUnit)
