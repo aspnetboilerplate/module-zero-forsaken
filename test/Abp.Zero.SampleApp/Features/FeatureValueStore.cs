@@ -4,12 +4,11 @@ using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 using Abp.Zero.SampleApp.MultiTenancy;
-using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.Features
 {
-    public class FeatureValueStore : AbpFeatureValueStore<Tenant, Role, User>
+    public class FeatureValueStore : AbpFeatureValueStore<Tenant, User>
     {
         public FeatureValueStore(ICacheManager cacheManager,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,

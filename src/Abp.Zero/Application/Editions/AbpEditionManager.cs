@@ -5,20 +5,15 @@ using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
-using Abp.Domain.Uow;
-using Abp.Events.Bus.Entities;
-using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
 
 namespace Abp.Application.Editions
 {
-    public abstract class AbpEditionManager : 
-        IDomainService, 
-        IEventHandler<EntityChangedEventData<Edition>>,
-        IEventHandler<EntityChangedEventData<EditionFeatureSetting>>
+    public abstract class AbpEditionManager : IDomainService
     {
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
-        public IQueryable<Edition> Editions { get { return EditionRepository.GetAll(); } }
+
+        public IQueryable<Edition> Editions => EditionRepository.GetAll();
 
         public ICacheManager CacheManager { get; set; }
 
@@ -92,23 +87,6 @@ namespace Abp.Application.Editions
         public virtual Task DeleteAsync(Edition edition)
         {
             return EditionRepository.DeleteAsync(edition);
-        }
-
-        //TODO: Should move cache invalidation code to AbpFeatureValueStore
-
-        public virtual void HandleEvent(EntityChangedEventData<EditionFeatureSetting> eventData)
-        {
-            CacheManager.GetEditionFeatureCache().Remove(eventData.Entity.EditionId);
-        }
-
-        public virtual void HandleEvent(EntityChangedEventData<Edition> eventData)
-        {
-            if (eventData.Entity.IsTransient())
-            {
-                return;
-            }
-
-            CacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
         }
     }
 }

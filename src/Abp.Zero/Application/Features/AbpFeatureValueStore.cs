@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
 using Abp.Application.Editions;
-using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Events.Bus.Entities;
+using Abp.Events.Bus.Handlers;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 
@@ -14,9 +15,13 @@ namespace Abp.Application.Features
     /// <summary>
     /// Implements <see cref="IFeatureValueStore"/>.
     /// </summary>
-    public abstract class AbpFeatureValueStore<TTenant, TRole, TUser> : IAbpZeroFeatureValueStore, ITransientDependency
+    public abstract class AbpFeatureValueStore<TTenant, TUser> : 
+        IAbpZeroFeatureValueStore, 
+        ITransientDependency,
+        IEventHandler<EntityChangedEventData<Edition>>,
+        IEventHandler<EntityChangedEventData<EditionFeatureSetting>>
+
         where TTenant : AbpTenant<TUser>
-        where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
     {
         private readonly ICacheManager _cacheManager;
@@ -27,7 +32,7 @@ namespace Abp.Application.Features
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TRole, TUser}"/> class.
+        /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TUser}"/> class.
         /// </summary>
         protected AbpFeatureValueStore(
             ICacheManager cacheManager,
@@ -165,6 +170,21 @@ namespace Abp.Application.Features
             }
 
             return newCacheItem;
+        }
+
+        public virtual void HandleEvent(EntityChangedEventData<EditionFeatureSetting> eventData)
+        {
+            _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.EditionId);
+        }
+
+        public virtual void HandleEvent(EntityChangedEventData<Edition> eventData)
+        {
+            if (eventData.Entity.IsTransient())
+            {
+                return;
+            }
+
+            _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
         }
     }
 }
