@@ -36,10 +36,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/module-zero"
+    },
+    "files": {
+      "mappings": {
+        "lib/net452/": "bin/Release/net452/Abp.Zero.NHibernate.pdb"
+      }
     }
-  },
-
-  "packInclude": {
-    "lib/net452/": "bin/Release/net452/Abp.Zero.NHibernate.pdb"
   }
 }

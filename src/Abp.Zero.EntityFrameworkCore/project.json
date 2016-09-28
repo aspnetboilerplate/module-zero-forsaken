@@ -36,6 +36,11 @@
     "repository": {
       "type": "git",
       "url": "https://github.com/aspnetboilerplate/module-zero"
+    },
+    "files": {
+      "mappings": {
+        "lib/net461/": "bin/Release/net461/Abp.Zero.EntityFrameworkCore.pdb"
+      }
     }
   }
 }
