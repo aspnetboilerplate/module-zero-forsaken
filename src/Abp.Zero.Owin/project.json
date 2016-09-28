@@ -1,8 +1,8 @@
 ﻿{
-  "version": "0.13.0.1-*",
+  "version": "1.0.0.0-*",
 
   "dependencies": {
-    "Abp.Zero": "0.13.0.1-*",
+    "Abp.Zero": "1.0.0.0-*",
     "Microsoft.AspNet.Identity.Owin": "2.2.1"
   },
 
