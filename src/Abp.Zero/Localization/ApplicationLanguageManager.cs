@@ -69,7 +69,7 @@ namespace Abp.Localization
         {
             if ((await GetLanguagesAsync(language.TenantId)).Any(l => l.Name == language.Name))
             {
-                throw new AbpException("There is already a language with name = " + language.Name); //TODO: LOCALIZE?
+                throw new AbpException("There is already a language with name = " + language.Name);
             }
 
             using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
@@ -95,7 +95,7 @@ namespace Abp.Localization
 
             if (currentLanguage.TenantId == null && tenantId != null)
             {
-                throw new AbpException("Can not delete a host language from tenant!"); //TODO: LOCALIZE?
+                throw new AbpException("Can not delete a host language from tenant!");
             }
 
             using (_unitOfWorkManager.Current.SetTenantId(currentLanguage.TenantId))
@@ -108,7 +108,6 @@ namespace Abp.Localization
         /// <summary>
         /// Updates a language.
         /// </summary>
-        /// <param name="language">The language to be updated</param>
         [UnitOfWork]
         public virtual async Task UpdateAsync(int? tenantId, ApplicationLanguage language)
         {
@@ -117,13 +116,13 @@ namespace Abp.Localization
             {
                 if (existingLanguageWithSameName.Id != language.Id)
                 {
-                    throw new AbpException("There is already a language with name = " + language.Name); //TODO: LOCALIZE
+                    throw new AbpException("There is already a language with name = " + language.Name);
                 }
             }
 
             if (language.TenantId == null && tenantId != null)
             {
-                throw new AbpException("Can not update a host language from tenant"); //TODO: LOCALIZE
+                throw new AbpException("Can not update a host language from tenant");
             }
 
             using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
@@ -169,7 +168,7 @@ namespace Abp.Localization
             LanguageListCache.Remove(eventData.Entity.TenantId ?? 0);
 
             //Also invalidate the language script cache
-            _cacheManager.GetCache("AbpLocalizationScripts").Clear(); //TODO: CAN BE AN OPTIMIZATION?
+            _cacheManager.GetCache("AbpLocalizationScripts").Clear();
         }
 
         private async Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionary(int? tenantId)

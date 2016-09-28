@@ -87,8 +87,6 @@ namespace Abp.Localization
                 return internalLocalizedString;
             }
 
-            //TODO: Fallback to internal's default dictionary!
-
             //Not found at all
             return null;
         }
