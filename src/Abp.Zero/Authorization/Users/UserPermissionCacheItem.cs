@@ -11,13 +11,6 @@ namespace Abp.Authorization.Users
     {
         public const string CacheStoreName = "AbpZeroUserPermissions";
 
-        /// <summary>
-        /// Gets/sets expire time for cache items.
-        /// Default: 20 minutes.
-        /// TODO: This is not used yet!
-        /// </summary>
-        public static TimeSpan CacheExpireTime { get; private set; }
-
         public long UserId { get; set; }
 
         public List<int> RoleIds { get; set; }
@@ -25,11 +18,6 @@ namespace Abp.Authorization.Users
         public HashSet<string> GrantedPermissions { get; set; }
 
         public HashSet<string> ProhibitedPermissions { get; set; }
-
-        static UserPermissionCacheItem()
-        {
-            CacheExpireTime = TimeSpan.FromMinutes(20);
-        }
 
         public UserPermissionCacheItem()
         {

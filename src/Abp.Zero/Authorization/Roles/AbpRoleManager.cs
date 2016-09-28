@@ -445,7 +445,7 @@ namespace Abp.Authorization.Roles
 
                 foreach (var permissionInfo in await RolePermissionStore.GetPermissionsAsync(roleId))
                 {
-                    if (permissionInfo.IsGranted) //TODO: Remove IsGranted?
+                    if (permissionInfo.IsGranted)
                     {
                         newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
                     }

@@ -11,21 +11,9 @@ namespace Abp.Authorization.Roles
     {
         public const string CacheStoreName = "AbpZeroRolePermissions";
 
-        /// <summary>
-        /// Gets/sets expire time for cache items.
-        /// Default: 20 minutes.
-        /// TODO: This is not used yet!
-        /// </summary>
-        public static TimeSpan CacheExpireTime { get; private set; }
-
         public long RoleId { get; set; }
 
         public HashSet<string> GrantedPermissions { get; set; }
-
-        static RolePermissionCacheItem()
-        {
-            CacheExpireTime = TimeSpan.FromMinutes(120);
-        }
 
         public RolePermissionCacheItem()
         {
