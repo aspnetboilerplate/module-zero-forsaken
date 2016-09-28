@@ -12,8 +12,8 @@
     "Abp.Zero.SampleApp": "0.13.0.1-*",
     "Abp.Zero.NHibernate": "0.13.0.1-*",
     "Shouldly": "2.8.2",
-    "Abp.TestBase": "0.13.0",
-    "System.Data.SQLite.Core": "1.0.103"
+    "System.Data.SQLite.Core": "1.0.103",
+    "Abp.TestBase": "1.0.0"
   },
 
   "frameworks": {

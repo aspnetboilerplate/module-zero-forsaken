@@ -23,13 +23,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         }
 
         [Fact]
-        public async Task Should_Be_Granted_If_IsGrantedByDefault_Is_True_With_No_Permission_Setting()
-        {
-            (await IsGrantedAsync("Permission3")).ShouldBe(true);
-        }
-
-        [Fact]
-        public async Task Should_Not_Be_Granted_If_IsGrantedByDefault_Is_False_With_No_Permission_Setting()
+        public async Task Should_Not_Be_Granted_With_No_Permission_Setting()
         {
             (await IsGrantedAsync("Permission1")).ShouldBe(false);
         }
@@ -110,8 +104,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             (await IsGrantedAsync("Permission1")).ShouldBe(true); //Role1 has Permission1
             (await IsGrantedAsync("Permission2")).ShouldBe(true); //Role2 has Permission2
-            (await IsGrantedAsync("Permission3")).ShouldBe(true); //Permission3 is granted by default
-            (await IsGrantedAsync("Permission4")).ShouldBe(true); //Permission4 is granted by default
+            (await IsGrantedAsync("Permission3")).ShouldBe(false);
+            (await IsGrantedAsync("Permission4")).ShouldBe(false);
         }
 
         [Fact]

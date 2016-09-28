@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
 
 namespace Abp.Zero.SampleApp.Users.Dto
 {
-    public class UpdateUserInput : IInputDto
+    public class UpdateUserInput
     {
         [Required]
         public long Id { get; set; }

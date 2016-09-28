@@ -169,9 +169,7 @@ namespace Abp.Authorization.Roles
             var cacheItem = await GetRolePermissionCacheItemAsync(roleId);
 
             //Check the permission
-            return permission.IsGrantedByDefault
-                ? !(cacheItem.ProhibitedPermissions.Contains(permission.Name))
-                : (cacheItem.GrantedPermissions.Contains(permission.Name));
+            return cacheItem.GrantedPermissions.Contains(permission.Name);
         }
 
         /// <summary>
@@ -259,14 +257,7 @@ namespace Abp.Authorization.Roles
                 return;
             }
 
-            if (permission.IsGrantedByDefault)
-            {
-                await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, false));
-            }
-            else
-            {
-                await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
-            }
+            await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
         }
 
         /// <summary>
@@ -281,14 +272,7 @@ namespace Abp.Authorization.Roles
                 return;
             }
 
-            if (permission.IsGrantedByDefault)
-            {
-                await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, false));
-            }
-            else
-            {
-                await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
-            }
+            await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
         }
 
         /// <summary>
@@ -461,13 +445,9 @@ namespace Abp.Authorization.Roles
 
                 foreach (var permissionInfo in await RolePermissionStore.GetPermissionsAsync(roleId))
                 {
-                    if (permissionInfo.IsGranted)
+                    if (permissionInfo.IsGranted) //TODO: Remove IsGranted?
                     {
                         newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
-                    }
-                    else
-                    {
-                        newCacheItem.ProhibitedPermissions.Add(permissionInfo.Name);
                     }
                 }
 

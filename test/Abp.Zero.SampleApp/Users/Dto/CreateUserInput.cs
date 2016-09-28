@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
 
 namespace Abp.Zero.SampleApp.Users.Dto
 {
-    public class CreateUserInput : IInputDto
+    public class CreateUserInput
     {
         [Required]
         public string Name { get; set; }

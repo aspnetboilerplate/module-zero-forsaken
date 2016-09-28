@@ -22,8 +22,6 @@ namespace Abp.Authorization.Roles
 
         public HashSet<string> GrantedPermissions { get; set; }
 
-        public HashSet<string> ProhibitedPermissions { get; set; }
-
         static RolePermissionCacheItem()
         {
             CacheExpireTime = TimeSpan.FromMinutes(120);
@@ -32,7 +30,6 @@ namespace Abp.Authorization.Roles
         public RolePermissionCacheItem()
         {
             GrantedPermissions = new HashSet<string>();
-            ProhibitedPermissions = new HashSet<string>();
         }
 
         public RolePermissionCacheItem(int roleId)

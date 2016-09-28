@@ -40,6 +40,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Fact]
         public async Task Test_Lockout_Full()
         {
+            _userManager.InitializeLockoutSettings(_testUser.TenantId);
+
             for (int i = 0; i < _userManager.MaxFailedAccessAttemptsBeforeLockout; i++)
             {
                 (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
