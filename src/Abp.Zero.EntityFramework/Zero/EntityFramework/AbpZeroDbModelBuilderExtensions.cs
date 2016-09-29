@@ -60,6 +60,7 @@ namespace Abp.Zero.EntityFramework
             SetTableName<UserRole>(modelBuilder, prefix + "UserRoles", schemaName);
             SetTableName<TUser>(modelBuilder, prefix + "Users", schemaName);
             SetTableName<UserAccount>(modelBuilder, prefix + "UserAccounts", schemaName);
+            SetTableName<UserClaim>(modelBuilder, prefix + "UserClaims", schemaName);
         }
 
         private static void SetTableName<TEntity>(DbModelBuilder modelBuilder, string tableName, string schemaName)
