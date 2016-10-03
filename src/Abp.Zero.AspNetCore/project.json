@@ -1,0 +1,39 @@
+﻿{
+  "version": "1.0.0.0-*",
+
+  "dependencies": {
+    "Abp.Zero": "1.0.0.0-*",
+    "Microsoft.AspNetCore.Mvc": "1.0.0"
+  },
+
+  "frameworks": {
+    "net461": {
+    }
+  },
+
+  "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
+    "xmlDoc": true
+  },
+
+  "packOptions": {
+    "summary": "ASP.NET Boilerplate - Module Zero - ASP.NET Core Adapter.",
+    "tags": [ "asp.net", "asp.net mvc", "boilerplate", "application framework", "web framework", "framework", "domain driven design", "multitenancy", "user management", "role management", "identity", "aspnet core" ],
+    "owners": [ "Halil İbrahim Kalkan" ],
+    "iconUrl": "http://www.aspnetboilerplate.com/images/abp_nupkg.png",
+    "projectUrl": "http://www.aspnetboilerplate.com/",
+    "licenseUrl": "https://github.com/aspnetboilerplate/module-zero/blob/master/LICENSE",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/aspnetboilerplate/module-zero"
+    },
+    "files": {
+      "mappings": {
+        "lib/net461/": "bin/Release/net461/Abp.Zero.AspNetCore.pdb"
+      }
+    }
+  }
+}
