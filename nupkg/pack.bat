@@ -5,6 +5,7 @@ SET /P VERSION_SUFFIX=Please enter version-suffix (can be left empty):
 
 dotnet "pack" "..\src\Abp.Zero" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Zero.Owin" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
+dotnet "pack" "..\src\Abp.Zero.AspNetCore" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Zero.Ldap" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Zero.EntityFramework" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
 dotnet "pack" "..\src\Abp.Zero.EntityFrameworkCore" -c "Release" -o "." --version-suffix "%VERSION_SUFFIX%"
