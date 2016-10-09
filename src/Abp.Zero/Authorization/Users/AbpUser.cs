@@ -44,7 +44,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="EmailConfirmationCode"/> property.
         /// </summary>
-        public const int MaxEmailConfirmationCodeLength = 128;
+        public const int MaxEmailConfirmationCodeLength = 328;
 
         /// <summary>
         /// Maximum length of the <see cref="PasswordResetCode"/> property.
