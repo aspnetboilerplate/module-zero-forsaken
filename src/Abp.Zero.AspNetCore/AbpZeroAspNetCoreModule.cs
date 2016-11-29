@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Abp.Authorization.Users;
+using Abp.Configuration.Startup;
 using Abp.Modules;
 
 namespace Abp.Zero.AspNetCore
@@ -9,6 +11,7 @@ namespace Abp.Zero.AspNetCore
         public override void PreInitialize()
         {
             IocManager.Register<IAbpZeroAspNetCoreConfiguration, AbpZeroAspNetCoreConfiguration>();
+            Configuration.ReplaceService<IUserTokenProviderAccessor, AspNetCoreUserTokenProviderAccessor>();
         }
 
         public override void Initialize()
