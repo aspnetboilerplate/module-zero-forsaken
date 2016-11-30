@@ -1,9 +1,9 @@
-﻿{
+{
   "version": "1.0.0.0-*",
 
   "dependencies": {
     "Abp.Zero": "1.0.0.0-*",
-    "Microsoft.AspNetCore.Mvc": "1.0.0"
+    "Microsoft.AspNetCore.Mvc": "1.1.0"
   },
 
   "frameworks": {

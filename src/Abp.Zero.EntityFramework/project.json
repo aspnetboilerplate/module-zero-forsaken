@@ -2,7 +2,7 @@
   "version": "1.0.0.0-*",
 
   "dependencies": {
-    "Abp.EntityFramework": "1.0.0",
+    "Abp.EntityFramework": "1.1.0",
     "Abp.Zero": "1.0.0.0-*"
   },
 
