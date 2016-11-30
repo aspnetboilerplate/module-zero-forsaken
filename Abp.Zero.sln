@@ -38,6 +38,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFr
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.Owin", "src\Abp.Zero.Owin\Abp.Zero.Owin.xproj", "{81D2351F-6CA1-4976-86EB-63946EBD0A36}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.AspNetCore", "src\Abp.Zero.AspNetCore\Abp.Zero.AspNetCore.xproj", "{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{81D2351F-6CA1-4976-86EB-63946EBD0A36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81D2351F-6CA1-4976-86EB-63946EBD0A36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81D2351F-6CA1-4976-86EB-63946EBD0A36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,5 +120,6 @@ Global
 		{9223F076-ECE7-4381-9BBF-F3E33073B91A} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
 		{25F73233-3922-4BC0-AC1C-2042613DEC5E} = {E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}
 		{81D2351F-6CA1-4976-86EB-63946EBD0A36} = {364398C2-9B6A-40B3-9845-23ABFB8D12AB}
+		{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44} = {364398C2-9B6A-40B3-9845-23ABFB8D12AB}
 	EndGlobalSection
 EndGlobal

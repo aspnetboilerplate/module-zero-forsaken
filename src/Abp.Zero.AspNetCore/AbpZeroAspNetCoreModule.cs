@@ -1,18 +1,17 @@
 ﻿using System.Reflection;
 using Abp.Authorization.Users;
-using Abp.Modules;
-using Abp.Zero;
 using Abp.Configuration.Startup;
-using Abp.Owin;
+using Abp.Modules;
 
-namespace Abp
+namespace Abp.Zero.AspNetCore
 {
     [DependsOn(typeof(AbpZeroCoreModule))]
-    public class AbpZeroOwinModule : AbpModule
+    public class AbpZeroAspNetCoreModule : AbpModule
     {
         public override void PreInitialize()
         {
-            Configuration.ReplaceService<IUserTokenProviderAccessor, OwinUserTokenProviderAccessor>();
+            IocManager.Register<IAbpZeroAspNetCoreConfiguration, AbpZeroAspNetCoreConfiguration>();
+            Configuration.ReplaceService<IUserTokenProviderAccessor, AspNetCoreUserTokenProviderAccessor>();
         }
 
         public override void Initialize()

@@ -9,11 +9,11 @@
     "xunit.runner.visualstudio": "2.2.0-beta2-build1149",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "NSubstitute": "1.10.0",
-    "Abp.Zero.SampleApp": "1.0.0.0-*",
-    "Abp.Zero.NHibernate": "1.0.0.0-*",
+    "Abp.Zero.SampleApp": "1.1.0.0-*",
+    "Abp.Zero.NHibernate": "1.1.0.0-*",
     "Shouldly": "2.8.2",
     "System.Data.SQLite.Core": "1.0.103",
-    "Abp.TestBase": "1.0.0"
+    "Abp.TestBase": "1.1.0"
   },
 
   "frameworks": {
