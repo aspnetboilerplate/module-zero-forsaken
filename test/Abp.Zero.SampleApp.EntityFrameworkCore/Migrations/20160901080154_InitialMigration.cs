@@ -654,14 +654,12 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AbpUsers_CreatorUserId",
                 table: "AbpUsers",
-                column: "CreatorUserId",
-                unique: true);
+                column: "CreatorUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AbpUsers_LastModifierUserId",
                 table: "AbpUsers",
-                column: "LastModifierUserId",
-                unique: true);
+                column: "LastModifierUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
