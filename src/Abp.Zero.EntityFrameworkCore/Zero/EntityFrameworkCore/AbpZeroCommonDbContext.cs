@@ -128,17 +128,20 @@ namespace Abp.Zero.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<TUser>()
-                .Ignore(p => p.DeleterUser);
-
+            
             modelBuilder.Entity<TUser>(u =>
             {
+                u.HasOne(p => p.DeleterUser)
+                    .WithMany()
+                    .HasForeignKey(p => p.DeleterUserId);
+
                 u.HasOne(p => p.CreatorUser)
-                    .WithOne()
-                    .HasForeignKey<TUser>(p => p.CreatorUserId);
+                    .WithMany()
+                    .HasForeignKey(p => p.CreatorUserId);
+
                 u.HasOne(p => p.LastModifierUser)
-                    .WithOne()
-                    .HasForeignKey<TUser>(p => p.LastModifierUserId);
+                    .WithMany()
+                    .HasForeignKey(p => p.LastModifierUserId);
             });
         }
     }
