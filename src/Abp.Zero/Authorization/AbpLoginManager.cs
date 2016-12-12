@@ -28,16 +28,16 @@ namespace Abp.Authorization
     {
         public IClientInfoProvider ClientInfoProvider { get; set; }
 
-        private readonly IMultiTenancyConfig _multiTenancyConfig;
-        private readonly IRepository<TTenant> _tenantRepository;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly AbpUserManager<TRole, TUser> _userManager;
-        private readonly ISettingManager _settingManager;
-        private readonly IRepository<UserLoginAttempt, long> _userLoginAttemptRepository;
-        private readonly IUserManagementConfig _userManagementConfig;
-        private readonly IIocResolver _iocResolver;
-        private readonly AbpRoleManager<TRole, TUser> _roleManager;
-        
+        protected IMultiTenancyConfig MultiTenancyConfig { get; }
+        protected IRepository<TTenant> TenantRepository { get; }
+        protected IUnitOfWorkManager UnitOfWorkManager { get; }
+        protected AbpUserManager<TRole, TUser> UserManager { get; }
+        protected ISettingManager SettingManager { get; }
+        protected IRepository<UserLoginAttempt, long> UserLoginAttemptRepository { get; }
+        protected IUserManagementConfig UserManagementConfig { get; }
+        protected IIocResolver IocResolver { get; }
+        protected AbpRoleManager<TRole, TUser> RoleManager { get; }
+
         public AbpLogInManager(
             AbpUserManager<TRole, TUser> userManager,
             IMultiTenancyConfig multiTenancyConfig,
@@ -49,15 +49,15 @@ namespace Abp.Authorization
             IIocResolver iocResolver, 
             AbpRoleManager<TRole, TUser> roleManager)
         {
-            _multiTenancyConfig = multiTenancyConfig;
-            _tenantRepository = tenantRepository;
-            _unitOfWorkManager = unitOfWorkManager;
-            _settingManager = settingManager;
-            _userLoginAttemptRepository = userLoginAttemptRepository;
-            _userManagementConfig = userManagementConfig;
-            _iocResolver = iocResolver;
-            _roleManager = roleManager;
-            _userManager = userManager;
+            MultiTenancyConfig = multiTenancyConfig;
+            TenantRepository = tenantRepository;
+            UnitOfWorkManager = unitOfWorkManager;
+            SettingManager = settingManager;
+            UserLoginAttemptRepository = userLoginAttemptRepository;
+            UserManagementConfig = userManagementConfig;
+            IocResolver = iocResolver;
+            RoleManager = roleManager;
+            UserManager = userManager;
 
             ClientInfoProvider = NullClientInfoProvider.Instance;
         }
@@ -79,13 +79,13 @@ namespace Abp.Authorization
 
             //Get and check tenant
             TTenant tenant = null;
-            if (!_multiTenancyConfig.IsEnabled)
+            if (!MultiTenancyConfig.IsEnabled)
             {
                 tenant = await GetDefaultTenantAsync();
             }
             else if (!string.IsNullOrWhiteSpace(tenancyName))
             {
-                tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+                tenant = await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
                 if (tenant == null)
                 {
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidTenancyName);
@@ -98,9 +98,9 @@ namespace Abp.Authorization
             }
 
             int? tenantId = tenant == null ? (int?)null : tenant.Id;
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var user = await _userManager.AbpStore.FindAsync(tenantId, login);
+                var user = await UserManager.AbpStore.FindAsync(tenantId, login);
                 if (user == null)
                 {
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UnknownExternalLogin, tenant);
@@ -132,15 +132,15 @@ namespace Abp.Authorization
 
             //Get and check tenant
             TTenant tenant = null;
-            using (_unitOfWorkManager.Current.SetTenantId(null))
+            using (UnitOfWorkManager.Current.SetTenantId(null))
             {
-                if (!_multiTenancyConfig.IsEnabled)
+                if (!MultiTenancyConfig.IsEnabled)
                 {
                     tenant = await GetDefaultTenantAsync();
                 }
                 else if (!string.IsNullOrWhiteSpace(tenancyName))
                 {
-                    tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+                    tenant = await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
                     if (tenant == null)
                     {
                         return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidTenancyName);
@@ -154,12 +154,12 @@ namespace Abp.Authorization
             }
 
             var tenantId = tenant == null ? (int?)null : tenant.Id;
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 //TryLoginFromExternalAuthenticationSources method may create the user, that's why we are calling it before AbpStore.FindByNameOrEmailAsync
                 var loggedInFromExternalSource = await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant);
 
-                var user = await _userManager.AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
+                var user = await UserManager.AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
                 if (user == null)
                 {
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidUserNameOrEmailAddress, tenant);
@@ -167,14 +167,14 @@ namespace Abp.Authorization
 
                 if (!loggedInFromExternalSource)
                 {
-                    _userManager.InitializeLockoutSettings(tenantId);
+                    UserManager.InitializeLockoutSettings(tenantId);
 
-                    if (await _userManager.IsLockedOutAsync(user.Id))
+                    if (await UserManager.IsLockedOutAsync(user.Id))
                     {
                         return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
                     }
 
-                    var verificationResult = _userManager.PasswordHasher.VerifyHashedPassword(user.Password, plainPassword);
+                    var verificationResult = UserManager.PasswordHasher.VerifyHashedPassword(user.Password, plainPassword);
                     if (verificationResult != PasswordVerificationResult.Success)
                     {
                         if (shouldLockout)
@@ -188,7 +188,7 @@ namespace Abp.Authorization
                         return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidPassword, tenant, user);
                     }
 
-                    await _userManager.ResetAccessFailedCountAsync(user.Id);
+                    await UserManager.ResetAccessFailedCountAsync(user.Id);
                 }
 
                 return await CreateLoginResultAsync(user, tenant);
@@ -209,23 +209,23 @@ namespace Abp.Authorization
 
             user.LastLoginTime = Clock.Now;
 
-            await _userManager.AbpStore.UpdateAsync(user);
+            await UserManager.AbpStore.UpdateAsync(user);
 
-            await _unitOfWorkManager.Current.SaveChangesAsync();
+            await UnitOfWorkManager.Current.SaveChangesAsync();
 
             return new AbpLoginResult<TTenant, TUser>(
                 tenant,
                 user,
-                await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie)
+                await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie)
             );
         }
 
         private async Task SaveLoginAttempt(AbpLoginResult<TTenant, TUser> loginResult, string tenancyName, string userNameOrEmailAddress)
         {
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null;
-                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                using (UnitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     var loginAttempt = new UserLoginAttempt
                     {
@@ -242,8 +242,8 @@ namespace Abp.Authorization
                         ClientName = ClientInfoProvider.ComputerName,
                     };
 
-                    await _userLoginAttemptRepository.InsertAsync(loginAttempt);
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                    await UserLoginAttemptRepository.InsertAsync(loginAttempt);
+                    await UnitOfWorkManager.Current.SaveChangesAsync();
 
                     await uow.CompleteAsync();
                 }
@@ -252,15 +252,15 @@ namespace Abp.Authorization
 
         private async Task<bool> TryLockOutAsync(int? tenantId, long userId)
         {
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                using (UnitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    (await _userManager.AccessFailedAsync(userId)).CheckErrors();
+                    (await UserManager.AccessFailedAsync(userId)).CheckErrors();
 
-                    var isLockOut =  await _userManager.IsLockedOutAsync(userId);
+                    var isLockOut =  await UserManager.IsLockedOutAsync(userId);
 
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                    await UnitOfWorkManager.Current.SaveChangesAsync();
 
                     await uow.CompleteAsync();
 
@@ -271,36 +271,36 @@ namespace Abp.Authorization
 
         private async Task<bool> TryLoginFromExternalAuthenticationSources(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
         {
-            if (!_userManagementConfig.ExternalAuthenticationSources.Any())
+            if (!UserManagementConfig.ExternalAuthenticationSources.Any())
             {
                 return false;
             }
 
-            foreach (var sourceType in _userManagementConfig.ExternalAuthenticationSources)
+            foreach (var sourceType in UserManagementConfig.ExternalAuthenticationSources)
             {
-                using (var source = _iocResolver.ResolveAsDisposable<IExternalAuthenticationSource<TTenant, TUser>>(sourceType))
+                using (var source = IocResolver.ResolveAsDisposable<IExternalAuthenticationSource<TTenant, TUser>>(sourceType))
                 {
                     if (await source.Object.TryAuthenticateAsync(userNameOrEmailAddress, plainPassword, tenant))
                     {
                         var tenantId = tenant == null ? (int?)null : tenant.Id;
-                        using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                        using (UnitOfWorkManager.Current.SetTenantId(tenantId))
                         {
-                            var user = await _userManager.AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
+                            var user = await UserManager.AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
                             if (user == null)
                             {
                                 user = await source.Object.CreateUserAsync(userNameOrEmailAddress, tenant);
 
                                 user.TenantId = tenantId;
                                 user.AuthenticationSource = source.Object.Name;
-                                user.Password = _userManager.PasswordHasher.HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
+                                user.Password = UserManager.PasswordHasher.HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 
                                 user.Roles = new List<UserRole>();
-                                foreach (var defaultRole in _roleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
+                                foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
                                 {
                                     user.Roles.Add(new UserRole(tenantId, user.Id, defaultRole.Id));
                                 }
 
-                                await _userManager.AbpStore.CreateAsync(user);
+                                await UserManager.AbpStore.CreateAsync(user);
                             }
                             else
                             {
@@ -308,10 +308,10 @@ namespace Abp.Authorization
 
                                 user.AuthenticationSource = source.Object.Name;
 
-                                await _userManager.AbpStore.UpdateAsync(user);
+                                await UserManager.AbpStore.UpdateAsync(user);
                             }
 
-                            await _unitOfWorkManager.Current.SaveChangesAsync();
+                            await UnitOfWorkManager.Current.SaveChangesAsync();
 
                             return true;
                         }
@@ -324,7 +324,7 @@ namespace Abp.Authorization
 
         private async Task<TTenant> GetDefaultTenantAsync()
         {
-            var tenant = await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenant<TUser>.DefaultTenantName);
+            var tenant = await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenant<TUser>.DefaultTenantName);
             if (tenant == null)
             {
                 throw new AbpException("There should be a 'Default' tenant if multi-tenancy is disabled!");
@@ -337,10 +337,10 @@ namespace Abp.Authorization
         {
             if (tenantId.HasValue)
             {
-                return await _settingManager.GetSettingValueForTenantAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, tenantId.Value);
+                return await SettingManager.GetSettingValueForTenantAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, tenantId.Value);
             }
 
-            return await _settingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+            return await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
         }
     }
 }
