@@ -23,11 +23,6 @@ namespace Abp.Auditing
         public const int MaxMethodNameLength = 256;
 
         /// <summary>
-        /// Maximum length of <see cref="Parameters"/> property.
-        /// </summary>
-        public const int MaxParametersLength = 1024;
-
-        /// <summary>
         /// Maximum length of <see cref="ClientIpAddress"/> property.
         /// </summary>
         public const int MaxClientIpAddressLength = 64;
@@ -73,11 +68,7 @@ namespace Abp.Auditing
         /// </summary>
         [MaxLength(MaxMethodNameLength)]
         public virtual string MethodName { get; set; }
-
-        /// <summary>
-        /// Calling parameters.
-        /// </summary>
-        [MaxLength(MaxParametersLength)]
+        
         public virtual string Parameters { get; set; }
 
         /// <summary>
