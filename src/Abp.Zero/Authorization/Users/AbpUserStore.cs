@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -488,6 +489,21 @@ namespace Abp.Authorization.Users
         public Task<bool> GetTwoFactorEnabledAsync(TUser user)
         {
             return Task.FromResult(user.IsTwoFactorEnabled);
+        }
+
+        public async Task<string> GetUserNameFromDatabaseAsync(long userId)
+        {
+            using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions()
+            {
+                Scope = TransactionScopeOption.RequiresNew,
+                IsTransactional = false,
+                IsolationLevel = IsolationLevel.ReadUncommitted
+            }))
+            {
+                var user = await _userRepository.GetAsync(userId);
+                await uow.CompleteAsync();
+                return user.UserName;
+            }
         }
     }
 }
