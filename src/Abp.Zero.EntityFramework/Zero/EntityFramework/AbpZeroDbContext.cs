@@ -75,7 +75,7 @@ namespace Abp.Zero.EntityFramework
         }
 
         /// <summary>
-        /// This constructor can be used for unit tests.
+        /// This constructor can be used for unit tests or passing an existing connection to dbcontext.
         /// </summary>
         protected AbpZeroDbContext(DbConnection dbConnection, bool contextOwnsConnection)
             : base(dbConnection, contextOwnsConnection)
