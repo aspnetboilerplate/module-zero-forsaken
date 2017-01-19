@@ -1,5 +1,7 @@
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -55,32 +57,42 @@ namespace Abp.Zero.EntityFramework
         /// </summary>
         public virtual IDbSet<UserAccount> UserAccounts { get; set; }
 
-        /// <summary>
-        /// Default constructor.
-        /// Do not directly instantiate this class. Instead, use dependency injection!
-        /// </summary>
         protected AbpZeroDbContext()
         {
 
         }
 
-        /// <summary>
-        /// Constructor with connection string parameter.
-        /// </summary>
-        /// <param name="nameOrConnectionString">Connection string or a name in connection strings in configuration file</param>
         protected AbpZeroDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
 
         }
 
-        /// <summary>
-        /// This constructor can be used for unit tests or passing an existing connection to dbcontext.
-        /// </summary>
-        protected AbpZeroDbContext(DbConnection dbConnection, bool contextOwnsConnection)
-            : base(dbConnection, contextOwnsConnection)
+        protected AbpZeroDbContext(DbCompiledModel model)
+            : base(model)
         {
 
+        }
+
+        protected AbpZeroDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection)
+        {
+
+        }
+
+        protected AbpZeroDbContext(string nameOrConnectionString, DbCompiledModel model)
+            : base(nameOrConnectionString, model)
+        {
+        }
+
+        protected AbpZeroDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
+        {
+        }
+
+        protected AbpZeroDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+            : base(existingConnection, model, contextOwnsConnection)
+        {
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

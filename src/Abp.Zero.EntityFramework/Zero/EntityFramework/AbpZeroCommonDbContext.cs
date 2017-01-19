@@ -1,5 +1,7 @@
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
@@ -130,13 +132,38 @@ namespace Abp.Zero.EntityFramework
 
         }
 
+        protected AbpZeroCommonDbContext(DbCompiledModel model)
+            : base(model)
+        {
+
+        }
+
         /// <summary>
         /// This constructor can be used for unit tests.
         /// </summary>
-        protected AbpZeroCommonDbContext(DbConnection dbConnection, bool contextOwnsConnection)
-            : base(dbConnection, contextOwnsConnection)
+        protected AbpZeroCommonDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection)
         {
 
+        }
+
+        protected AbpZeroCommonDbContext(string nameOrConnectionString, DbCompiledModel model)
+            : base(nameOrConnectionString, model)
+        {
+
+        }
+
+        protected AbpZeroCommonDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected AbpZeroCommonDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+            : base(existingConnection, model, contextOwnsConnection)
+        {
         }
     }
 }
