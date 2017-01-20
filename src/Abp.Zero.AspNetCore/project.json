@@ -1,8 +1,8 @@
 {
-  "version": "1.2.0.0-*",
+  "version": "1.3.1.0-*",
 
   "dependencies": {
-    "Abp.Zero": "1.2.0.0-*",
+    "Abp.Zero": "1.3.1.0-*",
     "Microsoft.AspNetCore.Mvc": "1.1.0"
   },
 
