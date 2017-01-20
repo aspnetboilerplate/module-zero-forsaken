@@ -12,53 +12,53 @@ namespace Abp.Zero.Ldap.Configuration
     
     public class LdapSettings : ILdapSettings, ITransientDependency
     {
-        private readonly ISettingManager _settingManager;
+        protected ISettingManager SettingManager { get; }
 
         public LdapSettings(ISettingManager settingManager)
         {
-            _settingManager = settingManager;
+            SettingManager = settingManager;
         }
 
-        public Task<bool> GetIsEnabled(int? tenantId)
+        public virtual Task<bool> GetIsEnabled(int? tenantId)
         {
             return tenantId.HasValue
-                ? _settingManager.GetSettingValueForTenantAsync<bool>(LdapSettingNames.IsEnabled, tenantId.Value)
-                : _settingManager.GetSettingValueForApplicationAsync<bool>(LdapSettingNames.IsEnabled);
+                ? SettingManager.GetSettingValueForTenantAsync<bool>(LdapSettingNames.IsEnabled, tenantId.Value)
+                : SettingManager.GetSettingValueForApplicationAsync<bool>(LdapSettingNames.IsEnabled);
         }
 
-        public async Task<ContextType> GetContextType(int? tenantId)
+        public virtual async Task<ContextType> GetContextType(int? tenantId)
         {
             return tenantId.HasValue
-                ? (await _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.ContextType, tenantId.Value)).ToEnum<ContextType>()
-                : (await _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.ContextType)).ToEnum<ContextType>();
+                ? (await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.ContextType, tenantId.Value)).ToEnum<ContextType>()
+                : (await SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.ContextType)).ToEnum<ContextType>();
         }
 
-        public Task<string> GetContainer(int? tenantId)
+        public virtual Task<string> GetContainer(int? tenantId)
         {
             return tenantId.HasValue
-                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.Container, tenantId.Value)
-                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Container);
+                ? SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Container, tenantId.Value)
+                : SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Container);
         }
 
-        public Task<string> GetDomain(int? tenantId)
+        public virtual Task<string> GetDomain(int? tenantId)
         {
             return tenantId.HasValue
-                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.Domain, tenantId.Value)
-                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Domain);
+                ? SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Domain, tenantId.Value)
+                : SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Domain);
         }
 
-        public Task<string> GetUserName(int? tenantId)
+        public virtual Task<string> GetUserName(int? tenantId)
         {
             return tenantId.HasValue
-                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.UserName, tenantId.Value)
-                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.UserName);
+                ? SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.UserName, tenantId.Value)
+                : SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.UserName);
         }
 
-        public Task<string> GetPassword(int? tenantId)
+        public virtual Task<string> GetPassword(int? tenantId)
         {
             return tenantId.HasValue
-                ? _settingManager.GetSettingValueForTenantAsync(LdapSettingNames.Password, tenantId.Value)
-                : _settingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Password);
+                ? SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Password, tenantId.Value)
+                : SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Password);
         }
     }
 }
