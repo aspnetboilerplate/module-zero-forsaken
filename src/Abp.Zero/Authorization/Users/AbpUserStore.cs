@@ -44,7 +44,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -138,7 +138,7 @@ namespace Abp.Authorization.Users
         }
 
         #endregion
-        
+
         #region IUserPasswordStore
 
         public virtual Task SetPasswordHashAsync(TUser user, string passwordHash)
@@ -233,9 +233,9 @@ namespace Abp.Authorization.Users
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
             var query = from userLogin in _userLoginRepository.GetAll()
-                join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-                where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-                select user;
+                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                        where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                        select user;
 
             return Task.FromResult(query.ToList());
         }
@@ -279,9 +279,9 @@ namespace Abp.Authorization.Users
         public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
             var query = from userRole in _userRoleRepository.GetAll()
-                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                where userRole.UserId == user.Id
-                select role.Name;
+                        join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                        where userRole.UserId == user.Id
+                        select role.Name;
 
             return await AsyncQueryableExecuter.ToListAsync(query);
         }
@@ -493,13 +493,20 @@ namespace Abp.Authorization.Users
 
         public async Task<string> GetUserNameFromDatabaseAsync(long userId)
         {
-            using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions()
+            //note: This workaround will not be needed after fixing https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1828
+            var outerUow = _unitOfWorkManager.Current;
+            using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions
             {
                 Scope = TransactionScopeOption.RequiresNew,
                 IsTransactional = false,
                 IsolationLevel = IsolationLevel.ReadUncommitted
             }))
             {
+                if (outerUow != null)
+                {
+                    _unitOfWorkManager.Current.SetTenantId(outerUow.GetTenantId());
+                }
+
                 var user = await _userRepository.GetAsync(userId);
                 await uow.CompleteAsync();
                 return user.UserName;

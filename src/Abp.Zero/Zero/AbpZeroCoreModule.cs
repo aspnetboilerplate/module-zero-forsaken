@@ -11,6 +11,7 @@ using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Reflection;
 using Abp.Zero.Configuration;
+using Abp.Configuration.Startup;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Zero
@@ -28,6 +29,8 @@ namespace Abp.Zero
             IocManager.Register<ILanguageManagementConfig, LanguageManagementConfig>();
             IocManager.Register<IAbpZeroEntityTypes, AbpZeroEntityTypes>();
             IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
+
+            Configuration.ReplaceService<ITenantStore, TenantStore>(DependencyLifeStyle.Transient);
 
             Configuration.Settings.Providers.Add<AbpZeroSettingProvider>();
 

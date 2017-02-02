@@ -131,7 +131,7 @@ namespace Abp.Authorization.Users
         public virtual string PhoneNumber {get; set; }
 
         /// <summary>
-        /// Is the <see cref="AbpUserBase.EmailAddress"/> confirmed.
+        /// Is the <see cref="AbpUser{TUser}.PhoneNumber"/> confirmed.
         /// </summary>
         public virtual bool IsPhoneNumberConfirmed { get; set; }
 
