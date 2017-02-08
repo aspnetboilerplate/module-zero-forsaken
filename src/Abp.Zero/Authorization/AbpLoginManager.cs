@@ -294,12 +294,15 @@ namespace Abp.Authorization
                                 user.AuthenticationSource = source.Object.Name;
                                 user.Password = UserManager.PasswordHasher.HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 
-                                user.Roles = new List<UserRole>();
-                                foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
+                                if (user.Roles == null)
                                 {
-                                    user.Roles.Add(new UserRole(tenantId, user.Id, defaultRole.Id));
+                                    user.Roles = new List<UserRole>();
+                                    foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
+                                    {
+                                        user.Roles.Add(new UserRole(tenantId, user.Id, defaultRole.Id));
+                                    }
                                 }
-
+                                
                                 await UserManager.AbpStore.CreateAsync(user);
                             }
                             else
