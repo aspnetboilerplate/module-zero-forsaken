@@ -10,10 +10,6 @@ Module-Zero is the module that implements abstract concepts of ASP.NET Boilerpla
 
 See http://www.aspnetboilerplate.com/Pages/Documents/Zero/Overall for more information.
 
-How to start?
--------------------
-Follow the documentation to start: http://www.aspnetboilerplate.com/Pages/Documents/Zero/Installation
-
 Sample Projects
 -------------------
 
