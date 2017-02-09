@@ -13,7 +13,7 @@
     "Abp.Zero.NHibernate": "1.4.2.0-*",
     "Shouldly": "2.8.2",
     "System.Data.SQLite.Core": "1.0.104",
-    "Abp.TestBase": "1.4.0"
+    "Abp.TestBase": "1.4.2"
   },
 
   "frameworks": {
