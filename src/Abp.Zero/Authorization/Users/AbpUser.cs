@@ -190,6 +190,7 @@ namespace Abp.Authorization.Users
         protected AbpUser()
         {
             IsActive = true;
+            IsLockoutEnabled = true;
             SecurityStamp = SequentialGuidGenerator.Instance.Create().ToString();
         }
 
