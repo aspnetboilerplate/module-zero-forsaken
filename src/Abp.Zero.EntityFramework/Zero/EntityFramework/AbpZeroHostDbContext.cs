@@ -1,5 +1,7 @@
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -50,32 +52,42 @@ namespace Abp.Zero.EntityFramework
         /// </summary>
         public virtual IDbSet<UserAccount> UserAccounts { get; set; }
 
-        /// <summary>
-        /// Default constructor.
-        /// Do not directly instantiate this class. Instead, use dependency injection!
-        /// </summary>
         protected AbpZeroHostDbContext()
         {
 
         }
 
-        /// <summary>
-        /// Constructor with connection string parameter.
-        /// </summary>
-        /// <param name="nameOrConnectionString">Connection string or a name in connection strings in configuration file</param>
         protected AbpZeroHostDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
 
         }
 
-        /// <summary>
-        /// This constructor can be used for unit tests.
-        /// </summary>
-        protected AbpZeroHostDbContext(DbConnection dbConnection, bool contextOwnsConnection)
-            : base(dbConnection, contextOwnsConnection)
+        protected AbpZeroHostDbContext(DbCompiledModel model)
+            : base(model)
         {
 
+        }
+
+        protected AbpZeroHostDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection)
+        {
+
+        }
+
+        protected AbpZeroHostDbContext(string nameOrConnectionString, DbCompiledModel model)
+            : base(nameOrConnectionString, model)
+        {
+        }
+
+        protected AbpZeroHostDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
+        {
+        }
+
+        protected AbpZeroHostDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+            : base(existingConnection, model, contextOwnsConnection)
+        {
         }
     }
 }

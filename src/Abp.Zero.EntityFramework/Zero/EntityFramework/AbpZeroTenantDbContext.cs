@@ -1,4 +1,6 @@
 using System.Data.Common;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
@@ -29,13 +31,34 @@ namespace Abp.Zero.EntityFramework
 
         }
 
+        protected AbpZeroTenantDbContext(DbCompiledModel model)
+            : base(model)
+        {
+
+        }
+
         /// <summary>
         /// This constructor can be used for unit tests.
         /// </summary>
-        protected AbpZeroTenantDbContext(DbConnection dbConnection, bool contextOwnsConnection)
-            : base(dbConnection, contextOwnsConnection)
+        protected AbpZeroTenantDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection)
         {
 
+        }
+
+        protected AbpZeroTenantDbContext(string nameOrConnectionString, DbCompiledModel model)
+            : base(nameOrConnectionString, model)
+        {
+        }
+
+        protected AbpZeroTenantDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
+        {
+        }
+
+        protected AbpZeroTenantDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+            : base(existingConnection, model, contextOwnsConnection)
+        {
         }
     }
 }

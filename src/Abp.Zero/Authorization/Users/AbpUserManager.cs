@@ -337,10 +337,13 @@ namespace Abp.Authorization.Users
                 return result;
             }
 
-            var oldUserName = (await GetUserByIdAsync(user.Id)).UserName;
-            if (oldUserName == AbpUser<TUser>.AdminUserName && user.UserName != AbpUser<TUser>.AdminUserName)
+            //Admin user's username can not be changed!
+            if (user.UserName != AbpUser<TUser>.AdminUserName)
             {
-                return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"), AbpUser<TUser>.AdminUserName));
+                if ((await GetOldUserNameAsync(user.Id)) == AbpUser<TUser>.AdminUserName)
+                {
+                    return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"), AbpUser<TUser>.AdminUserName));
+                }
             }
 
             return await base.UpdateAsync(user);
@@ -629,6 +632,11 @@ namespace Abp.Authorization.Users
             RegisterTwoFactorProviders(user.TenantId);
 
             return await base.VerifyTwoFactorTokenAsync(userId, twoFactorProvider, token);
+        }
+
+        protected virtual Task<string> GetOldUserNameAsync(long userId)
+        {
+            return AbpStore.GetUserNameFromDatabaseAsync(userId);
         }
 
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)

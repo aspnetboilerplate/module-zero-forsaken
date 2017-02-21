@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services;
+﻿using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Zero.SampleApp.Users.Dto;
 
 namespace Abp.Zero.SampleApp.Users
@@ -10,5 +11,7 @@ namespace Abp.Zero.SampleApp.Users
         void UpdateUser(UpdateUserInput input);
 
         void DeleteUser(long userId);
+
+        Task ResetPassword(ResetPasswordInput input);
     }
 }

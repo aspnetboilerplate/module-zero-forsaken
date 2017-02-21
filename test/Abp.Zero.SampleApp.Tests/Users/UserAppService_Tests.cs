@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.Auditing;
 using Abp.Zero.SampleApp.Users;
 using Abp.Zero.SampleApp.Users.Dto;
+using Microsoft.AspNet.Identity;
 using Shouldly;
 using Xunit;
 
@@ -10,10 +12,12 @@ namespace Abp.Zero.SampleApp.Tests.Users
     public class UserAppService_Tests : SampleAppTestBase
     {
         private readonly IUserAppService _userAppService;
+        private readonly UserManager _userManager;
 
         public UserAppService_Tests()
         {
             _userAppService = Resolve<IUserAppService>();
+            _userManager = Resolve<UserManager>();
             Resolve<IAuditingConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
@@ -42,6 +46,34 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     auditLog.MethodName.ShouldBe("CreateUser");
                     auditLog.Exception.ShouldBe(null);
                 });
+        }
+
+        [Fact]
+        public async Task Shoudl_Reset_Password()
+        {
+            AbpSession.TenantId = 1; //Default tenant   
+            var managerUser = await _userManager.FindByNameAsync("manager");
+            managerUser.PasswordResetCode = "fc9640bb73ec40a2b42b479610741a5a";
+            _userManager.Update(managerUser);
+
+            AbpSession.TenantId = null; //Default tenant  
+
+            await _userAppService.ResetPassword(new ResetPasswordInput
+            {
+                TenantId = 1,
+                UserId = managerUser.Id,
+                Password = "123qwe",
+                ResetCode = "fc9640bb73ec40a2b42b479610741a5a"
+            });
+
+            var updatedUser = UsingDbContext(
+                context =>
+                {
+                    return context.Users.FirstOrDefault(u => u.UserName == "manager");
+                });
+
+            updatedUser.UserName.ShouldBe("manager");
+            updatedUser.PasswordResetCode.ShouldBe(null);
         }
     }
 }
