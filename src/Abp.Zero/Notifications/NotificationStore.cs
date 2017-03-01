@@ -73,11 +73,11 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual Task<NotificationInfo> GetNotificationOrNullAsync(Guid notificationId)
+        public virtual async Task<NotificationInfo> GetNotificationOrNullAsync(Guid notificationId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                return _notificationRepository.FirstOrDefaultAsync(notificationId);
+                return await _notificationRepository.FirstOrDefaultAsync(notificationId);
             }
         }
 
@@ -118,23 +118,23 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(UserIdentifier user)
+        public virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(UserIdentifier user)
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
-                return _notificationSubscriptionRepository.GetAllListAsync(s => s.UserId == user.UserId);
+                return await _notificationSubscriptionRepository.GetAllListAsync(s => s.UserId == user.UserId);
             }
         }
         
         [UnitOfWork]
-        protected virtual Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int? tenantId, string notificationName, string entityTypeName, string entityId)
+        protected virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int? tenantId, string notificationName, string entityTypeName, string entityId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return _notificationSubscriptionRepository.GetAllListAsync(s =>
-                s.NotificationName == notificationName &&
-                s.EntityTypeName == entityTypeName &&
-                s.EntityId == entityId
+                return await _notificationSubscriptionRepository.GetAllListAsync(s =>
+                    s.NotificationName == notificationName &&
+                    s.EntityTypeName == entityTypeName &&
+                    s.EntityId == entityId
                 );
             }
         }
@@ -227,11 +227,11 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
+        public virtual async Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
-                return _userNotificationRepository.CountAsync(un => un.UserId == user.UserId && (state == null || un.State == state.Value));
+                return await _userNotificationRepository.CountAsync(un => un.UserId == user.UserId && (state == null || un.State == state.Value));
             }
         }
 
@@ -256,11 +256,11 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual Task InsertTenantNotificationAsync(TenantNotificationInfo tenantNotificationInfo)
+        public virtual async Task InsertTenantNotificationAsync(TenantNotificationInfo tenantNotificationInfo)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantNotificationInfo.TenantId))
             {
-                return _tenantNotificationRepository.InsertAsync(tenantNotificationInfo);
+                await _tenantNotificationRepository.InsertAsync(tenantNotificationInfo);
             }
         }
 
