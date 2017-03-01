@@ -9,11 +9,11 @@
     "xunit.extensibility.execution": "2.2.0-beta2-build3300",
     "xunit.runner.visualstudio": "2.2.0-beta2-build1149",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
-    "NSubstitute": "1.10.0",
     "Shouldly": "2.8.2",
-    "Castle.Windsor.MsDependencyInjection": "1.3.0",
     "Microsoft.EntityFrameworkCore.InMemory": "1.1.0",
-    "Abp.TestBase": "1.4.2"
+    "Abp.TestBase": "1.4.3",
+    "Castle.Windsor.MsDependencyInjection": "1.3.1",
+    "NSubstitute": "2.0.2"
   },
 
   "frameworks": {
