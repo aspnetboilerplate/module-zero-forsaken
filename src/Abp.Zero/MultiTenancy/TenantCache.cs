@@ -52,8 +52,12 @@ namespace Abp.MultiTenancy
 
         public virtual TenantCacheItem GetOrNull(string tenancyName)
         {
-            var tenantId = _cacheManager.GetTenantByNameCache()
-                .Get(tenancyName, () => GetTenantOrNull(tenancyName)?.Id);
+            var tenantId = _cacheManager
+                .GetTenantByNameCache()
+                .Get(
+                    tenancyName.ToLowerInvariant(),
+                    () => GetTenantOrNull(tenancyName)?.Id
+                );
 
             if (tenantId == null)
             {
@@ -121,8 +125,8 @@ namespace Abp.MultiTenancy
                 .GetTenantByNameCache()
                 .Remove(
                     existingCacheItem != null
-                        ? existingCacheItem.TenancyName
-                        : eventData.Entity.TenancyName
+                        ? existingCacheItem.TenancyName.ToLowerInvariant()
+                        : eventData.Entity.TenancyName.ToLowerInvariant()
                 );
 
             _cacheManager
