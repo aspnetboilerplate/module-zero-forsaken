@@ -1,9 +1,9 @@
 {
-  "version": "1.4.3.0-*",
+  "version": "1.5.0.0-*",
 
   "dependencies": {
     "Abp.EntityFrameworkCore": "1.4.3",
-    "Abp.Zero": "1.4.3.0-*",
+    "Abp.Zero": "1.5.0.0-*",
     "Microsoft.EntityFrameworkCore.Relational": "1.1.0"
   },
 
