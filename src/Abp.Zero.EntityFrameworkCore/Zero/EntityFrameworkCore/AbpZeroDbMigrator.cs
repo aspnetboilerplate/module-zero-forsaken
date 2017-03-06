@@ -68,7 +68,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                using (var dbContext = _dbContextResolver.Resolve<TDbContext>(nameOrConnectionString))
+                using (var dbContext = _dbContextResolver.Resolve<TDbContext>(nameOrConnectionString, null))
                 {
                     dbContext.Database.Migrate();
                     seedAction?.Invoke(dbContext);
