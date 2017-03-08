@@ -22,6 +22,11 @@ namespace Abp.Localization
         /// The maximum display name length.
         /// </summary>
         public const int MaxDisplayNameLength = 64;
+        
+        /// <summary>
+        /// The maximum direction length, like "ltr" or "rtl".
+        /// </summary>
+        public const int MaxDirectionLength = 3;
 
         /// <summary>
         /// The maximum icon length.
@@ -46,6 +51,13 @@ namespace Abp.Localization
         [Required]
         [StringLength(MaxDisplayNameLength)]
         public virtual string DisplayName { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the view direction.
+        /// </summary>
+        [Required]
+        [StringLength(MaxDirectionLength)]
+        public virtual string Direction { get; set; }
 
         /// <summary>
         /// Gets or sets the icon.
@@ -60,17 +72,18 @@ namespace Abp.Localization
         {
         }
 
-        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null)
+        public ApplicationLanguage(int? tenantId, string name, string displayName, string direction = "ltr", string icon = null)
         {
             TenantId = tenantId;
             Name = name;
             DisplayName = displayName;
+            Direction = direction;
             Icon = icon;
         }
 
         public virtual LanguageInfo ToLanguageInfo()
         {
-            return new LanguageInfo(Name, DisplayName, Icon);
+            return new LanguageInfo(Name, DisplayName, Direction, Icon);
         }
     }
 }
