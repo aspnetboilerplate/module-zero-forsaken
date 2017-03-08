@@ -52,6 +52,7 @@ namespace Abp.Localization
         [StringLength(MaxDisplayNameLength)]
         public virtual string DisplayName { get; set; }
         
+        
         /// <summary>
         /// Gets or sets the view direction.
         /// </summary>
