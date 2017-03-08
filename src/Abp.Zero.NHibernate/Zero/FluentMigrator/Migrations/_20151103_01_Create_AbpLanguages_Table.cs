@@ -13,6 +13,7 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .WithTenantIdAsNullable()
                 .WithColumn("Name").AsString(10).NotNullable()
                 .WithColumn("DisplayName").AsString(64).NotNullable()
+                .WithColumn("Direction").AsString(3).NotNullable()
                 .WithColumn("Icon").AsString(128).Nullable()
                 .WithFullAuditColumns();
         }
