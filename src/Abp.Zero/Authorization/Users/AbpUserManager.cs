@@ -163,6 +163,12 @@ namespace Abp.Authorization.Users
                 }
             }
 
+            //User not found
+            if (await FindByIdAsync(userId) == null)
+            {
+                return false;
+            }
+
             //Get cached user permissions
             var cacheItem = await GetUserPermissionCacheItemAsync(userId);
 
