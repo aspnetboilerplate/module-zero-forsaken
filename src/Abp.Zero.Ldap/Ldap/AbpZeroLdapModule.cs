@@ -21,7 +21,7 @@ namespace Abp.Zero.Ldap
                     AbpZeroConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         Assembly.GetExecutingAssembly(),
-                        "Abp.Zero.Ldap.Ldap.Localization.Source")
+                        "Abp.Zero.Ldap.Localization.Source")
                     )
                 );
 
