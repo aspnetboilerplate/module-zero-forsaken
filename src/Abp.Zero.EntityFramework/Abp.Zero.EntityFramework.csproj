@@ -28,12 +28,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.EntityFramework" Version="1.5.0" />
+    <PackageReference Include="Abp.EntityFramework" Version="1.5.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
 
 </Project>

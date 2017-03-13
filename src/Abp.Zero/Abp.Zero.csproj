@@ -25,13 +25,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp" Version="1.5.0" />
+    <PackageReference Include="Abp" Version="1.5.1" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
 
 </Project>
