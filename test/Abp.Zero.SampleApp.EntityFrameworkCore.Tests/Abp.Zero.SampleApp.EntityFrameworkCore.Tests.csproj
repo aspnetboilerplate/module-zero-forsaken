@@ -13,10 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.2.0" />
@@ -31,6 +27,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

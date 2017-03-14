@@ -3,12 +3,19 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <AssemblyName>Abp.Zero.SampleApp.EntityFrameworkCore</AssemblyName>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <PackageId>Abp.Zero.SampleApp.EntityFrameworkCore</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <ApplicationIcon />
+    <OutputTypeEx>library</OutputTypeEx>
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
