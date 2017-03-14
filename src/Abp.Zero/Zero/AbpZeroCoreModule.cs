@@ -38,7 +38,7 @@ namespace Abp.Zero
                 new DictionaryBasedLocalizationSource(
                     AbpZeroConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Zero.Zero.Localization.Source"
+                        Assembly.GetExecutingAssembly(), "Abp.Zero.Localization.Source"
                         )));
 
             IocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;

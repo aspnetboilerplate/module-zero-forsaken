@@ -1,44 +1,45 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{364398C2-9B6A-40B3-9845-23ABFB8D12AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{974A8277-6807-4C84-A0EA-B98AEC770EF8}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
+		appveyor.yml = appveyor.yml
+		common.props = common.props
 	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero", "src\Abp.Zero\Abp.Zero.xproj", "{E06353A0-8403-44A0-8D57-200D55E2F2C5}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.Ldap", "src\Abp.Zero.Ldap\Abp.Zero.Ldap.xproj", "{C28F608B-F34E-411C-8D88-C5D566141735}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.EntityFramework", "src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.xproj", "{A57787C3-AD9A-40A8-B955-EDA596397429}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.NHibernate", "src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.xproj", "{C64C24CD-74CE-47A2-A03C-06F4F78413F1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E1AD01DD-1A0D-40DF-AFBE-F2AA3B4160AB}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp", "test\Abp.Zero.SampleApp\Abp.Zero.SampleApp.xproj", "{667801A0-99A5-414A-8685-A035408BF413}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero", "src\Abp.Zero\Abp.Zero.csproj", "{E06353A0-8403-44A0-8D57-200D55E2F2C5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFramework", "test\Abp.Zero.SampleApp.EntityFramework\Abp.Zero.SampleApp.EntityFramework.xproj", "{97670397-EDF9-4968-9A25-0EB71C68D5F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.Ldap", "src\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj", "{C28F608B-F34E-411C-8D88-C5D566141735}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.NHibernateTests", "test\Abp.Zero.SampleApp.NHibernateTests\Abp.Zero.SampleApp.NHibernateTests.xproj", "{FA3E87C5-7273-461C-AE9F-67B416E07949}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.EntityFramework", "src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj", "{A57787C3-AD9A-40A8-B955-EDA596397429}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.Tests", "test\Abp.Zero.SampleApp.Tests\Abp.Zero.SampleApp.Tests.xproj", "{41F88D4F-FAB9-4D0A-85E5-C71F8B63B973}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.NHibernate", "src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj", "{C64C24CD-74CE-47A2-A03C-06F4F78413F1}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.EntityFrameworkCore", "src\Abp.Zero.EntityFrameworkCore\Abp.Zero.EntityFrameworkCore.xproj", "{83108E5E-FD31-4762-8854-D795A8FB482F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.SampleApp", "test\Abp.Zero.SampleApp\Abp.Zero.SampleApp.csproj", "{667801A0-99A5-414A-8685-A035408BF413}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFrameworkCore", "test\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.xproj", "{76E2CCE7-A61F-4700-9054-9923645E41CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.SampleApp.EntityFramework", "test\Abp.Zero.SampleApp.EntityFramework\Abp.Zero.SampleApp.EntityFramework.csproj", "{97670397-EDF9-4968-9A25-0EB71C68D5F8}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFrameworkCore.Tests", "test\Abp.Zero.SampleApp.EntityFrameworkCore.Tests\Abp.Zero.SampleApp.EntityFrameworkCore.Tests.xproj", "{9223F076-ECE7-4381-9BBF-F3E33073B91A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.SampleApp.NHibernateTests", "test\Abp.Zero.SampleApp.NHibernateTests\Abp.Zero.SampleApp.NHibernateTests.csproj", "{FA3E87C5-7273-461C-AE9F-67B416E07949}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest", "test\Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest\Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest.xproj", "{25F73233-3922-4BC0-AC1C-2042613DEC5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.SampleApp.Tests", "test\Abp.Zero.SampleApp.Tests\Abp.Zero.SampleApp.Tests.csproj", "{41F88D4F-FAB9-4D0A-85E5-C71F8B63B973}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.Owin", "src\Abp.Zero.Owin\Abp.Zero.Owin.xproj", "{81D2351F-6CA1-4976-86EB-63946EBD0A36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.EntityFrameworkCore", "src\Abp.Zero.EntityFrameworkCore\Abp.Zero.EntityFrameworkCore.csproj", "{83108E5E-FD31-4762-8854-D795A8FB482F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Zero.AspNetCore", "src\Abp.Zero.AspNetCore\Abp.Zero.AspNetCore.xproj", "{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.SampleApp.EntityFrameworkCore", "test\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.csproj", "{76E2CCE7-A61F-4700-9054-9923645E41CC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.SampleApp.EntityFrameworkCore.Tests", "test\Abp.Zero.SampleApp.EntityFrameworkCore.Tests\Abp.Zero.SampleApp.EntityFrameworkCore.Tests.csproj", "{9223F076-ECE7-4381-9BBF-F3E33073B91A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest", "test\Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest\Abp.Zero.SampleApp.EntityFrameworkCore.ConsoleAppTest.csproj", "{25F73233-3922-4BC0-AC1C-2042613DEC5E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.Owin", "src\Abp.Zero.Owin\Abp.Zero.Owin.csproj", "{81D2351F-6CA1-4976-86EB-63946EBD0A36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.AspNetCore", "src\Abp.Zero.AspNetCore\Abp.Zero.AspNetCore.csproj", "{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
