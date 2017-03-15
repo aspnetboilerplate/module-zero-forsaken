@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -71,58 +70,6 @@ namespace Abp.Authorization.Roles
             AbpSession = NullAbpSession.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
         }
-
-        #region Obsolete methods
-
-        /// <summary>
-        /// Checks if a role has a permission.
-        /// </summary>
-        /// <param name="roleName">The role's name to check it's permission</param>
-        /// <param name="permissionName">Name of the permission</param>
-        /// <returns>True, if the role has the permission</returns>
-        [Obsolete("Use IsGrantedAsync instead.")]
-        public virtual async Task<bool> HasPermissionAsync(string roleName, string permissionName)
-        {
-            return await IsGrantedAsync((await GetRoleByNameAsync(roleName)).Id, _permissionManager.GetPermission(permissionName));
-        }
-
-        /// <summary>
-        /// Checks if a role has a permission.
-        /// </summary>
-        /// <param name="roleId">The role's id to check it's permission</param>
-        /// <param name="permissionName">Name of the permission</param>
-        /// <returns>True, if the role has the permission</returns>
-        [Obsolete("Use IsGrantedAsync instead.")]
-        public virtual async Task<bool> HasPermissionAsync(int roleId, string permissionName)
-        {
-            return await IsGrantedAsync(roleId, _permissionManager.GetPermission(permissionName));
-        }
-
-        /// <summary>
-        /// Checks if a role has a permission.
-        /// </summary>
-        /// <param name="role">The role</param>
-        /// <param name="permission">The permission</param>
-        /// <returns>True, if the role has the permission</returns>
-        [Obsolete("Use IsGrantedAsync instead.")]
-        public Task<bool> HasPermissionAsync(TRole role, Permission permission)
-        {
-            return IsGrantedAsync(role.Id, permission);
-        }
-
-        /// <summary>
-        /// Checks if a role has a permission.
-        /// </summary>
-        /// <param name="roleId">role id</param>
-        /// <param name="permission">The permission</param>
-        /// <returns>True, if the role has the permission</returns>
-        [Obsolete("Use IsGrantedAsync instead.")]
-        public Task<bool> HasPermissionAsync(int roleId, Permission permission)
-        {
-            return IsGrantedAsync(roleId, permission);
-        }
-
-        #endregion
 
         /// <summary>
         /// Checks if a role is granted for a permission.
