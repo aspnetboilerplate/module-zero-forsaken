@@ -22,4 +22,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authorization\Roles\" />
+    <Folder Include="Authorization\Users\" />
+    <Folder Include="IdentityFramework\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
+  </ItemGroup>
+
 </Project>
