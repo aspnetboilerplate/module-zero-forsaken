@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Abp.Zero.Common</AssemblyName>
+    <PackageId>Abp.Zero.Common</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity;aspnet core</PackageTags>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>Abp</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-de.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-fa.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-fr.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-it.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-lt.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-lv.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-pt-BR.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-ru.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-tr.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-zh-CN.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\AbpZero.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abp" Version="1.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
+
+</Project>

@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Configuration;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
+using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Represents a user.
     /// </summary>
-    public abstract class AbpUser<TUser> : AbpUserBase, IFullAudited<TUser>, IPassivable
+    public abstract class AbpUser<TUser> : AbpUserBase, IUser<long>, IFullAudited<TUser>
         where TUser : AbpUser<TUser>
     {
         /// <summary>
@@ -20,17 +20,7 @@ namespace Abp.Authorization.Users
         /// admin can not be deleted and UserName of the admin can not be changed.
         /// </summary>
         public const string AdminUserName = "admin";
-
-        /// <summary>
-        /// Maximum length of the <see cref="Name"/> property.
-        /// </summary>
-        public const int MaxNameLength = 32;
-
-        /// <summary>
-        /// Maximum length of the <see cref="Surname"/> property.
-        /// </summary>
-        public const int MaxSurnameLength = 32;
-
+        
         /// <summary>
         /// Maximum length of the <see cref="Password"/> property.
         /// </summary>
@@ -52,49 +42,11 @@ namespace Abp.Authorization.Users
         public const int MaxPasswordResetCodeLength = 328;
 
         /// <summary>
-        /// Maximum length of the <see cref="AuthenticationSource"/> property.
-        /// </summary>
-        public const int MaxAuthenticationSourceLength = 64;
-
-        /// <summary>
-        /// Authorization source name.
-        /// It's set to external authentication source name if created by an external source.
-        /// Default: null.
-        /// </summary>
-        [MaxLength(MaxAuthenticationSourceLength)]
-        public virtual string AuthenticationSource { get; set; }
-
-        /// <summary>
-        /// Name of the user.
-        /// </summary>
-        [Required]
-        [StringLength(MaxNameLength)]
-        public virtual string Name { get; set; }
-
-        /// <summary>
-        /// Surname of the user.
-        /// </summary>
-        [Required]
-        [StringLength(MaxSurnameLength)]
-        public virtual string Surname { get; set; }
-
-        /// <summary>
-        /// Return full name (Name Surname )
-        /// </summary>
-        [NotMapped]
-        public virtual string FullName { get { return this.Name + " " + this.Surname; } }
-
-        /// <summary>
         /// Password of the user.
         /// </summary>
         [Required]
         [StringLength(MaxPasswordLength)]
         public virtual string Password { get; set; }
-
-        /// <summary>
-        /// Is the <see cref="AbpUserBase.EmailAddress"/> confirmed.
-        /// </summary>
-        public virtual bool IsEmailConfirmed { get; set; }
 
         /// <summary>
         /// Confirmation code for email.
@@ -146,12 +98,6 @@ namespace Abp.Authorization.Users
         public virtual bool IsTwoFactorEnabled { get; set; }
 
         /// <summary>
-        /// Is this user active?
-        /// If as user is not active, he/she can not use the application.
-        /// </summary>
-        public virtual bool IsActive { get; set; }
-
-        /// <summary>
         /// Login definitions for this user.
         /// </summary>
         [ForeignKey("UserId")]
@@ -186,6 +132,14 @@ namespace Abp.Authorization.Users
         public virtual TUser CreatorUser { get; set; }
 
         public virtual TUser LastModifierUser { get; set; }
+
+        /// <summary>
+        /// Authorization source name.
+        /// It's set to external authentication source name if created by an external source.
+        /// Default: null.
+        /// </summary>
+        [MaxLength(MaxAuthenticationSourceLength)]
+        public virtual string AuthenticationSource { get; set; }
 
         protected AbpUser()
         {
