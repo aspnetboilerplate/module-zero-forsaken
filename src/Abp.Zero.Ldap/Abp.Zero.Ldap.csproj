@@ -19,14 +19,11 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Ldap\Localization\Source\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
     <None Update="bin\Release\net452\Abp.Zero.Ldap.pdb">
       <PackagePath>lib/net452/</PackagePath>
       <Pack>true</Pack>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
