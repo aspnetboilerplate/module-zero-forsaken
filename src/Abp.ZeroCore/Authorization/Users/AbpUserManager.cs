@@ -67,7 +67,8 @@ namespace Abp.Authorization.Users
             IPasswordHasher<TUser> passwordHasher,
             IEnumerable<IUserValidator<TUser>> userValidators,
             IEnumerable<IPasswordValidator<TUser>> passwordValidators,
-            ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors,
+            ILookupNormalizer keyNormalizer, 
+            IdentityErrorDescriber errors,
             IServiceProvider services,
             ILogger<UserManager<TUser>> logger,
             IPermissionManager permissionManager,
@@ -364,23 +365,24 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string newPassword)
         {
-            IdentityResult lastError = IdentityResult.Failed(new IdentityError { Description = "No PasswordValidators registered!" });
+            var errors = new List<IdentityError>();
 
             foreach (var validator in PasswordValidators)
             {
                 var validationResult = await validator.ValidateAsync(this, user, newPassword);
-                if (validationResult.Succeeded)
+                if (!validationResult.Succeeded)
                 {
-                    await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
-                    return IdentityResult.Success;
-                }
-                else
-                {
-                    lastError = validationResult;
+                    errors.AddRange(validationResult.Errors);
                 }
             }
 
-            return lastError;
+            if (errors.Any())
+            {
+                return IdentityResult.Failed(errors.ToArray());
+            }
+            
+            await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+            return IdentityResult.Success;
         }
 
         public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId, string userName, string emailAddress)

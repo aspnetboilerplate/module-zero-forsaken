@@ -19,7 +19,7 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Creates a new instance of a persistence store for roles.
     /// </summary>
-    public class RoleStore<TRole, TUser> :
+    public class RoleStore<TRole, TUser> : //TODO: Rename to AbpRoleStore
         IRoleStore<TRole>,
         IRoleClaimStore<TRole>,
         ITransientDependency
@@ -29,16 +29,13 @@ namespace Abp.Authorization.Roles
     {
         private readonly IRepository<TRole> _roleRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly ILogger<RoleStore<TRole, TUser>> _logger;
 
         public RoleStore(
             IUnitOfWorkManager unitOfWorkManager,
-            IRepository<TRole> roleRepository,
-            ILogger<RoleStore<TRole, TUser>> logger)
+            IRepository<TRole> roleRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
             _roleRepository = roleRepository;
-            _logger = logger;
 
             ErrorDescriber = new IdentityErrorDescriber();
         }

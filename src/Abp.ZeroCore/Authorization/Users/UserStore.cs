@@ -22,7 +22,7 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents a new instance of a persistence store for the specified user and role types.
     /// </summary>
-    public class UserStore<TRole, TUser> :
+    public class UserStore<TRole, TUser> : //TODO: Rename to AbpUserStore
         IUserLoginStore<TUser>,
         IUserRoleStore<TUser>,
         IUserClaimStore<TUser>,
