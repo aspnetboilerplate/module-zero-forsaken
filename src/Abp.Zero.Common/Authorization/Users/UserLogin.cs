@@ -40,5 +40,18 @@ namespace Abp.Authorization.Users
         [Required]
         [MaxLength(MaxProviderKeyLength)]
         public virtual string ProviderKey { get; set; }
+
+        public UserLogin()
+        {
+            
+        }
+
+        public UserLogin(int? tenantId, long userId, string loginProvider, string providerKey)
+        {
+            TenantId = tenantId;
+            UserId = userId;
+            LoginProvider = loginProvider;
+            ProviderKey = providerKey;
+        }
     }
 }

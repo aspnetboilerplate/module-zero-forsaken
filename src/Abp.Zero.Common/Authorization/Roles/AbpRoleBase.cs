@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Authorization.Users;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
@@ -59,6 +60,12 @@ namespace Abp.Authorization.Roles
         /// </summary>
         [ForeignKey("RoleId")]
         public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
+
+        /// <summary>
+        /// Claims of this user.
+        /// </summary>
+        [ForeignKey("UserId")]
+        public virtual ICollection<RoleClaim> Claims { get; set; }
 
         protected AbpRoleBase()
         {

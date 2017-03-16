@@ -23,13 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authorization\Roles\" />
-    <Folder Include="Authorization\Users\" />
-    <Folder Include="IdentityFramework\" />
+    <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
 
 </Project>
