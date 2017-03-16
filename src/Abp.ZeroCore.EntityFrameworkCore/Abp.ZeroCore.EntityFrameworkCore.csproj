@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+
 </Project>
