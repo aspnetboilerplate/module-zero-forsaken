@@ -230,7 +230,7 @@ namespace Abp.Authorization
             return new AbpLoginResult<TTenant, TUser>(
                 tenant,
                 user,
-                principal.Identity as ClaimsIdentity //TODO: DefaultAuthenticationTypes.ApplicationCookie is not defined! && Getting principal.Identity may not be true!
+                principal.Identity as ClaimsIdentity
             );
         }
 
@@ -362,16 +362,9 @@ namespace Abp.Authorization
             return await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
         }
 
-        protected virtual async Task<bool> IsPhoneConfirmationRequiredForLoginAsync(int? tenantId)
+        protected virtual Task<bool> IsPhoneConfirmationRequiredForLoginAsync(int? tenantId)
         {
-            //TODO: Implement
-            return false;
-            //if (tenantId.HasValue)
-            //{
-            //    return await SettingManager.GetSettingValueForTenantAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, tenantId.Value);
-            //}
-
-            //return await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+            return Task.FromResult(false);
         }
     }
 }

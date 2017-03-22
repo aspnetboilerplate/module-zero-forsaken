@@ -11,7 +11,6 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization
 {
-    //TODO: Be sure that this class replaces UserClaimsPrincipalFactory
     public abstract class AbpUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>, ITransientDependency
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>

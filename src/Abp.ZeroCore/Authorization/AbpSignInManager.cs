@@ -55,9 +55,8 @@ namespace Abp.Authorization
 
             using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
             {
-                UserManager.As<AbpUserManager<TRole, TUser>>().InitializeOptions(loginResult.Tenant?.Id); //TODO: Needed? How to confirure two factor authenticators?
+                UserManager.As<AbpUserManager<TRole, TUser>>().InitializeOptions(loginResult.Tenant?.Id);
 
-                //TODO: Merge ifs?
                 if (!bypassTwoFactor && IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, loginResult.Tenant?.Id))
                 {
                     if (await UserManager.GetTwoFactorEnabledAsync(loginResult.User))
