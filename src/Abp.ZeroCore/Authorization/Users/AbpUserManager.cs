@@ -325,18 +325,6 @@ namespace Abp.Authorization.Users
             return user;
         }
 
-        //TODO: UserManager does not define it, move to another place!
-        //public async override Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
-        //{
-        //    var identity = await base.CreateIdentityAsync(user, authenticationType);
-        //    if (user.TenantId.HasValue)
-        //    {
-        //        identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
-        //    }
-
-        //    return identity;
-        //}
-
         public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);

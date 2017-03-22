@@ -107,7 +107,7 @@ namespace Abp.Authorization.Roles
 
             Check.NotNull(role, nameof(role));
 
-            role.ConcurrencyStamp = Guid.NewGuid().ToString(); //TODO: Needs attach before this?
+            role.ConcurrencyStamp = Guid.NewGuid().ToString();
             await _roleRepository.UpdateAsync(role);
 
             try

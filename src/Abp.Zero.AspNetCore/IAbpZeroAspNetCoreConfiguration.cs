@@ -2,7 +2,6 @@
 
 namespace Abp.Zero.AspNetCore
 {
-    //TODO: This class will be probably removed from this project since it's not needed!
     public interface IAbpZeroAspNetCoreConfiguration
     {
         /// <summary>
