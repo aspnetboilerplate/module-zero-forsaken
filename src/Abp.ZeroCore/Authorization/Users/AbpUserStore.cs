@@ -17,9 +17,6 @@ using Abp.Zero;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
-//TODO: Remove EF CORE reference from this assembly
 
 namespace Abp.Authorization.Users
 {
@@ -229,8 +226,9 @@ namespace Abp.Authorization.Users
             {
                 await SaveChanges(cancellationToken);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (AbpDbConcurrencyException ex)
             {
+                Logger.Warn(ex.ToString(), ex);
                 return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
             }
 
@@ -257,7 +255,7 @@ namespace Abp.Authorization.Users
             {
                 await SaveChanges(cancellationToken);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (AbpDbConcurrencyException ex)
             {
                 Logger.Warn(ex.ToString(), ex);
                 return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());

@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp\Abp.csproj" />
     <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
   </ItemGroup>

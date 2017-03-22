@@ -13,7 +13,6 @@ using Abp.Zero;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Abp.Authorization.Roles
 {
@@ -114,7 +113,7 @@ namespace Abp.Authorization.Roles
             {
                 await SaveChanges(cancellationToken);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (AbpDbConcurrencyException ex)
             {
                 Logger.Warn(ex.ToString(), ex);
                 return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
@@ -143,7 +142,7 @@ namespace Abp.Authorization.Roles
             {
                 await SaveChanges(cancellationToken);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (AbpDbConcurrencyException ex)
             {
                 Logger.Warn(ex.ToString(), ex);
                 return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
