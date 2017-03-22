@@ -1,4 +1,8 @@
-﻿using Abp.Authorization.Users;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Authorization.Users;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Authorization.Roles
@@ -16,6 +20,24 @@ namespace Abp.Authorization.Roles
     public abstract class AbpRole<TUser> : AbpRoleBase, IFullAudited<TUser>
         where TUser : AbpUser<TUser>
     {
+        /// <summary>
+        /// Unique name of this role.
+        /// </summary>
+        [Required]
+        [StringLength(MaxNameLength)]
+        public virtual string NormalizedName { get; set; }
+
+        /// <summary>
+        /// Claims of this user.
+        /// </summary>
+        [ForeignKey("UserId")]
+        public virtual ICollection<RoleClaim> Claims { get; set; }
+
+        /// <summary>
+        /// A random value that must change whenever a user is persisted to the store
+        /// </summary>
+        public virtual string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+
         public virtual TUser DeleterUser { get; set; }
 
         public virtual TUser CreatorUser { get; set; }
@@ -24,6 +46,7 @@ namespace Abp.Authorization.Roles
 
         protected AbpRole()
         {
+            SetNormalizedName();
         }
 
         /// <summary>
@@ -34,6 +57,7 @@ namespace Abp.Authorization.Roles
         protected AbpRole(int? tenantId, string displayName)
             : base(tenantId, displayName)
         {
+            SetNormalizedName();
         }
 
         /// <summary>
@@ -45,6 +69,12 @@ namespace Abp.Authorization.Roles
         protected AbpRole(int? tenantId, string name, string displayName)
             : base(tenantId, name, displayName)
         {
+            SetNormalizedName();
+        }
+
+        public void SetNormalizedName()
+        {
+            NormalizedName = Name.ToUpperInvariant();
         }
     }
 }

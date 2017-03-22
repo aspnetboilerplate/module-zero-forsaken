@@ -21,7 +21,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Abp.Authorization
 {
-    //SignInManager<TUser, long>,
     public class AbpLogInManager<TTenant, TRole, TUser> : ITransientDependency
         where TTenant : AbpTenant<TUser>
         where TRole : AbpRole<TUser>, new()
@@ -41,7 +40,7 @@ namespace Abp.Authorization
 
         private readonly IPasswordHasher<TUser> _passwordHasher;
 
-        private readonly IUserClaimsPrincipalFactory<TUser> _claimsPrincipalFactory;
+        private readonly AbpUserClaimsPrincipalFactory<TUser, TRole> _claimsPrincipalFactory;
 
         public AbpLogInManager(
             AbpUserManager<TRole, TUser> userManager,
@@ -54,7 +53,7 @@ namespace Abp.Authorization
             IIocResolver iocResolver, 
             IPasswordHasher<TUser> passwordHasher,
             AbpRoleManager<TRole, TUser> roleManager,
-            IUserClaimsPrincipalFactory<TUser> claimsPrincipalFactory)
+            AbpUserClaimsPrincipalFactory<TUser, TRole> claimsPrincipalFactory)
         {
             _passwordHasher = passwordHasher;
             _claimsPrincipalFactory = claimsPrincipalFactory;
@@ -165,6 +164,8 @@ namespace Abp.Authorization
             var tenantId = tenant == null ? (int?)null : tenant.Id;
             using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
+                UserManager.InitializeOptions(tenantId);
+
                 //TryLoginFromExternalAuthenticationSources method may create the user, that's why we are calling it before AbpStore.FindByNameOrEmailAsync
                 var loggedInFromExternalSource = await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant);
 
@@ -176,15 +177,12 @@ namespace Abp.Authorization
 
                 if (!loggedInFromExternalSource)
                 {
-                    //UserManager.InitializeLockoutSettings(tenantId); //TODO: InitializeLockoutSettings
-
                     if (await UserManager.IsLockedOutAsync(user))
                     {
                         return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
                     }
 
-                    var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, plainPassword);
-                    if (verificationResult != PasswordVerificationResult.Success)
+                    if (!await UserManager.CheckPasswordAsync(user, plainPassword))
                     {
                         if (shouldLockout)
                         {
@@ -196,7 +194,7 @@ namespace Abp.Authorization
 
                         return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidPassword, tenant, user);
                     }
-
+                    
                     await UserManager.ResetAccessFailedCountAsync(user);
                 }
 
@@ -214,6 +212,11 @@ namespace Abp.Authorization
             if (await IsEmailConfirmationRequiredForLoginAsync(user.TenantId) && !user.IsEmailConfirmed)
             {
                 return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UserEmailIsNotConfirmed);
+            }
+
+            if (await IsPhoneConfirmationRequiredForLoginAsync(user.TenantId) && !user.IsPhoneNumberConfirmed)
+            {
+                return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UserPhoneNumberIsNotConfirmed);
             }
 
             user.LastLoginTime = Clock.Now;
@@ -357,6 +360,18 @@ namespace Abp.Authorization
             }
 
             return await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+        }
+
+        protected virtual async Task<bool> IsPhoneConfirmationRequiredForLoginAsync(int? tenantId)
+        {
+            //TODO: Implement
+            return false;
+            //if (tenantId.HasValue)
+            //{
+            //    return await SettingManager.GetSettingValueForTenantAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, tenantId.Value);
+            //}
+
+            //return await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Runtime.Security;
 
@@ -10,7 +11,7 @@ namespace Abp.MultiTenancy
     /// </summary>
     [Table("AbpTenants")]
     [MultiTenancySide(MultiTenancySides.Host)]
-    public abstract class AbpTenantBase : FullAuditedEntity<int>
+    public abstract class AbpTenantBase : FullAuditedEntity<int>, IPassivable
     {
         /// <summary>
         /// Max length of the <see cref="TenancyName"/> property.
@@ -37,5 +38,11 @@ namespace Abp.MultiTenancy
         /// </summary>
         [StringLength(MaxConnectionStringLength)]
         public virtual string ConnectionString { get; set; }
+
+        /// <summary>
+        /// Is this tenant active?
+        /// If as tenant is not active, no user of this tenant can use the application.
+        /// </summary>
+        public virtual bool IsActive { get; set; }
     }
 }

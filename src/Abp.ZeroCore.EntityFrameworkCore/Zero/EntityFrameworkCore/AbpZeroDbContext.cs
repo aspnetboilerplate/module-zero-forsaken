@@ -115,7 +115,23 @@ namespace Abp.Zero.EntityFrameworkCore
                 .HasIndex(ula => new { ula.UserId, ula.TenantId });
 
             #endregion
+
+            modelBuilder.Entity<TTenant>(u =>
+            {
+                u.HasOne(p => p.DeleterUser)
+                    .WithMany()
+                    .HasForeignKey(p => p.DeleterUserId);
+
+                u.HasOne(p => p.CreatorUser)
+                    .WithMany()
+                    .HasForeignKey(p => p.CreatorUserId);
+
+                u.HasOne(p => p.LastModifierUser)
+                    .WithMany()
+                    .HasForeignKey(p => p.LastModifierUserId);
+            });
+
         }
-        
+
     }
 }

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using JetBrains.Annotations;
 
@@ -8,6 +9,7 @@ namespace Abp.Authorization.Users
     /// <summary>
     /// Represents an authentication token for a user.
     /// </summary>
+    [Table("AbpUserTokens")]
     public class UserToken : Entity<long>
     {
         public const int MaxLoginProviderLength = 64;

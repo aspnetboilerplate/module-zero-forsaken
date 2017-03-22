@@ -40,14 +40,14 @@ namespace Abp.Authorization.Roles
             }
         }
 
-        protected RoleStore<TRole, TUser> AbpStore { get; private set; }
+        protected AbpRoleStore<TRole, TUser> AbpStore { get; private set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly ICacheManager _cacheManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         protected AbpRoleManager(
-            RoleStore<TRole, TUser> store,
+            AbpRoleStore<TRole, TUser> store,
             IEnumerable<IRoleValidator<TRole>> roleValidators,
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,

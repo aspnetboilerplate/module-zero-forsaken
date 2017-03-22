@@ -43,7 +43,7 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public ILocalizationManager LocalizationManager { get; }
+        public ILocalizationManager LocalizationManager { get; set; }
 
         public IAbpSession AbpSession { get; set; }
 
@@ -51,7 +51,7 @@ namespace Abp.Authorization.Users
 
         protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
-        public UserStore<TRole, TUser> AbpStore { get; }
+        public AbpUserStore<TRole, TUser> AbpStore { get; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -62,7 +62,8 @@ namespace Abp.Authorization.Users
         private readonly ISettingManager _settingManager;
 
         protected AbpUserManager(
-            UserStore<TRole, TUser> store,
+            AbpRoleManager<TRole, TUser> roleManager,
+            AbpUserStore<TRole, TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<TUser> passwordHasher,
             IEnumerable<IUserValidator<TUser>> userValidators,
@@ -96,6 +97,9 @@ namespace Abp.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
+
+            AbpStore = store;
+            RoleManager = roleManager;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -404,6 +408,8 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<IdentityResult> SetRoles(TUser user, string[] roleNames)
         {
+            await AbpStore.UserRepository.EnsureLoadedAsync(user, u => u.Roles);
+            
             //Remove from removed roles
             foreach (var userRole in user.Roles.ToList())
             {
@@ -570,6 +576,16 @@ namespace Abp.Authorization.Users
             }
         }
 
+        public virtual void InitializeOptions(int? tenantId)
+        {
+            Options = new IdentityOptions();
+
+            //Lockout
+            Options.Lockout.AllowedForNewUsers = IsTrue(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
+            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
+            Options.Lockout.MaxFailedAccessAttempts = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+        }
+
         //TODO: Skipped!
         //public virtual void RegisterTwoFactorProviders(int? tenantId)
         //{
@@ -604,13 +620,6 @@ namespace Abp.Authorization.Users
         //            }
         //        );
         //    }
-        //}
-
-        //public virtual void InitializeLockoutSettings(int? tenantId)
-        //{
-        //    UserLockoutEnabledByDefault = IsTrue(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
-        //    DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
-        //    MaxFailedAccessAttemptsBeforeLockout = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
         //}
 
         //public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(long userId)

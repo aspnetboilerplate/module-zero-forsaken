@@ -14,15 +14,19 @@ using Abp.Extensions;
 using Abp.Linq;
 using Abp.Runtime.Session;
 using Abp.Zero;
+using Castle.Core.Logging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+//TODO: Remove EF CORE reference from this assembly
 
 namespace Abp.Authorization.Users
 {
     /// <summary>
     /// Represents a new instance of a persistence store for the specified user and role types.
     /// </summary>
-    public class UserStore<TRole, TUser> : //TODO: Rename to AbpUserStore
+    public class AbpUserStore<TRole, TUser> :
         IUserLoginStore<TUser>,
         IUserRoleStore<TUser>,
         IUserClaimStore<TUser>,
@@ -33,11 +37,15 @@ namespace Abp.Authorization.Users
         IUserPhoneNumberStore<TUser>,
         IUserTwoFactorStore<TUser>,
         IUserAuthenticationTokenStore<TUser>,
+        IUserPermissionStore<TUser>,
+        IQueryableUserStore<TUser>,
         ITransientDependency
 
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
     {
+        public ILogger Logger { get; set; }
+
         /// <summary>
         /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
         /// </summary>
@@ -53,34 +61,41 @@ namespace Abp.Authorization.Users
 
         public IAbpSession AbpSession { get; set; }
 
+        public IQueryable<TUser> Users => UserRepository.GetAll();
+
+        public IRepository<TUser, long> UserRepository { get; }
+
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
-        private readonly IRepository<TUser, long> _userRepository;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserClaim, long> _userClaimRepository;
+        private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
 
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public UserStore(
+        public AbpUserStore(
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<TUser, long> userRepository,
             IRepository<TRole> roleRepository,
             IAsyncQueryableExecuter asyncQueryableExecuter, 
             IRepository<UserRole, long> userRoleRepository, 
             IRepository<UserLogin, long> userLoginRepository, 
-            IRepository<UserClaim, long> userClaimRepository)
+            IRepository<UserClaim, long> userClaimRepository, 
+            IRepository<UserPermissionSetting, long> userPermissionSettingRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
-            _userRepository = userRepository;
+            UserRepository = userRepository;
             _roleRepository = roleRepository;
             _asyncQueryableExecuter = asyncQueryableExecuter;
             _userRoleRepository = userRoleRepository;
             _userLoginRepository = userLoginRepository;
             _userClaimRepository = userClaimRepository;
+            _userPermissionSettingRepository = userPermissionSettingRepository;
 
             AbpSession = NullAbpSession.Instance;
             ErrorDescriber = new IdentityErrorDescriber();
+            Logger = NullLogger.Instance;
         }
 
         /// <summary>Saves the current store.</summary>
@@ -156,7 +171,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            return Task.FromResult(user.UserName); //TODO: NormalizedUserName?
+            return Task.FromResult(user.NormalizedUserName);
         }
 
         /// <summary>
@@ -172,7 +187,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            user.UserName = normalizedName; //TODO: NormalizedUserName?
+            user.NormalizedUserName = normalizedName;
 
             return Task.CompletedTask;
         }
@@ -189,7 +204,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await _userRepository.InsertAsync(user);
+            await UserRepository.InsertAsync(user);
             await SaveChanges(cancellationToken);
 
             return IdentityResult.Success;
@@ -207,17 +222,17 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await _userRepository.UpdateAsync(user);
+            user.ConcurrencyStamp = Guid.NewGuid().ToString(); //TODO: Needs attach before this?
+            await UserRepository.UpdateAsync(user);
 
-            //TODO: Concurrency Stamp!
-            //try
-            //{
-            //    await SaveChanges(cancellationToken);
-            //}
-            //catch (AbpDbConcurrencyException ex)
-            //{
-            //    return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
-            //}
+            try
+            {
+                await SaveChanges(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
+            }
 
             await SaveChanges(cancellationToken);
 
@@ -236,16 +251,17 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await _userRepository.DeleteAsync(user);
+            await UserRepository.DeleteAsync(user);
 
-            //try
-            //{
-            //    await SaveChanges(cancellationToken);
-            //}
-            //catch (AbpDbConcurrencyException ex) //TODO: Concurrency Stamp!
-            //{
-            //    return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
-            //}
+            try
+            {
+                await SaveChanges(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+                return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
+            }
 
             await SaveChanges(cancellationToken);
 
@@ -264,8 +280,7 @@ namespace Abp.Authorization.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //TODO: Include collections!
-            return _userRepository.GetAsync(userId.To<long>());
+            return UserRepository.GetAsync(userId.To<long>());
         }
 
         /// <summary>
@@ -282,8 +297,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(normalizedUserName, nameof(normalizedUserName));
 
-            //TODO: Include collections!
-            return _userRepository.FirstOrDefaultAsync(u => u.UserName == normalizedUserName);
+            return UserRepository.FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
         }
 
         /// <summary>
@@ -354,7 +368,7 @@ namespace Abp.Authorization.Users
                 return;
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == normalizedRoleName); //TODO: Define normalizedRoleName?
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName== normalizedRoleName);
 
             if (role == null)
             {
@@ -381,8 +395,13 @@ namespace Abp.Authorization.Users
             {
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
-            
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == normalizedRoleName); //TODO: Define normalizedRoleName?
+
+            if (!await IsInRoleAsync(user, normalizedRoleName, cancellationToken))
+            {
+                return;
+            }
+
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName); //TODO: Define normalizedRoleName?
             if (role == null)
             {
                 return;
@@ -397,6 +416,7 @@ namespace Abp.Authorization.Users
         /// <param name="user">The user whose roles should be retrieved.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>A <see cref="Task{TResult}"/> that contains the roles the user is a member of.</returns>
+        [UnitOfWork] //TODO: Added temporary to overcome an exception
         public virtual async Task<IList<string>> GetRolesAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -430,11 +450,13 @@ namespace Abp.Authorization.Users
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == normalizedRoleName); //TODO: Define normalizedRoleName?
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName); //TODO: Define normalizedRoleName?
             if (role == null)
             {
                 return false;
             }
+
+            await UserRepository.EnsureLoadedAsync(user, u => u.Roles, cancellationToken);
 
             return user.Roles.Any(r => r.RoleId == role.Id);
         }
@@ -453,14 +475,15 @@ namespace Abp.Authorization.Users
         /// <param name="user">The user whose claims should be retrieved.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>A <see cref="Task{TResult}"/> that contains the claims granted to a user.</returns>
-        public virtual Task<IList<Claim>> GetClaimsAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<IList<Claim>> GetClaimsAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
 
-            //TODO: Since lazy load is not working for EF Core, we should be sure that Claims are included!
-            return Task.FromResult<IList<Claim>>(user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList());
+            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+
+            return user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
         }
 
         /// <summary>
@@ -470,19 +493,19 @@ namespace Abp.Authorization.Users
         /// <param name="claims">The claim to add to the user.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task AddClaimsAsync([NotNull] TUser user, [NotNull] IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task AddClaimsAsync([NotNull] TUser user, [NotNull] IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
+            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+
             foreach (var claim in claims)
             {
                 user.Claims.Add(new UserClaim(user, claim));
             }
-            
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -493,7 +516,7 @@ namespace Abp.Authorization.Users
         /// <param name="newClaim">The new claim replacing the <paramref name="claim"/>.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task ReplaceClaimAsync([NotNull] TUser user, [NotNull] Claim claim, [NotNull] Claim newClaim, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task ReplaceClaimAsync([NotNull] TUser user, [NotNull] Claim claim, [NotNull] Claim newClaim, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -501,14 +524,14 @@ namespace Abp.Authorization.Users
             Check.NotNull(claim, nameof(claim));
             Check.NotNull(newClaim, nameof(newClaim));
 
+            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+
             var userClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
             foreach (var userClaim in userClaims)
             {
                 userClaim.ClaimType = claim.Type;
                 userClaim.ClaimValue = claim.Value;
             }
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -518,19 +541,19 @@ namespace Abp.Authorization.Users
         /// <param name="claims">The claim to remove.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task RemoveClaimsAsync([NotNull] TUser user, [NotNull] IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task RemoveClaimsAsync([NotNull] TUser user, [NotNull] IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
+            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+
             foreach (var claim in claims)
             {
                 user.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
             }
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -540,16 +563,16 @@ namespace Abp.Authorization.Users
         /// <param name="login">The login to add to the user.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task AddLoginAsync([NotNull] TUser user, [NotNull] UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task AddLoginAsync([NotNull] TUser user, [NotNull] UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
             Check.NotNull(login, nameof(login));
 
-            user.Logins.Add(new UserLogin(user.TenantId, user.Id, login.LoginProvider, login.ProviderKey));
+            await UserRepository.EnsureLoadedAsync(user, u => u.Logins, cancellationToken);
 
-            return Task.CompletedTask;
+            user.Logins.Add(new UserLogin(user.TenantId, user.Id, login.LoginProvider, login.ProviderKey));
         }
 
         /// <summary>
@@ -560,7 +583,7 @@ namespace Abp.Authorization.Users
         /// <param name="providerKey">The key provided by the <paramref name="loginProvider"/> to identify a user.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task RemoveLoginAsync([NotNull] TUser user, [NotNull] string loginProvider, [NotNull] string providerKey, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task RemoveLoginAsync([NotNull] TUser user, [NotNull] string loginProvider, [NotNull] string providerKey, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -568,9 +591,9 @@ namespace Abp.Authorization.Users
             Check.NotNull(loginProvider, nameof(loginProvider));
             Check.NotNull(providerKey, nameof(providerKey));
 
-            user.Logins.RemoveAll(userLogin => userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey);
+            await UserRepository.EnsureLoadedAsync(user, u => u.Logins, cancellationToken);
 
-            return Task.CompletedTask;
+            user.Logins.RemoveAll(userLogin => userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey);
         }
 
         /// <summary>
@@ -581,15 +604,15 @@ namespace Abp.Authorization.Users
         /// <returns>
         /// The <see cref="Task"/> for the asynchronous operation, containing a list of <see cref="UserLoginInfo"/> for the specified <paramref name="user"/>, if any.
         /// </returns>
-        public virtual Task<IList<UserLoginInfo>> GetLoginsAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
 
-            return Task.FromResult<IList<UserLoginInfo>>(
-                user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)
-                ).ToList());
+            await UserRepository.EnsureLoadedAsync(user, u => u.Logins, cancellationToken);
+
+            return user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)).ToList();
         }
 
         /// <summary>
@@ -609,7 +632,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(providerKey, nameof(providerKey));
 
             var query = from userLogin in _userLoginRepository.GetAll()
-                join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
                 where userLogin.LoginProvider == loginProvider &&
                       userLogin.ProviderKey == providerKey &&
                       userLogin.TenantId == AbpSession.TenantId
@@ -702,7 +725,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            return Task.FromResult(user.EmailAddress); //TODO: Add normalizedEmail?
+            return Task.FromResult(user.NormalizedEmailAddress);
         }
 
         /// <summary>
@@ -718,7 +741,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            user.EmailAddress = normalizedEmail; //TODO: Add normalizedEmail?
+            user.NormalizedEmailAddress = normalizedEmail;
 
             return Task.CompletedTask;
         }
@@ -735,7 +758,7 @@ namespace Abp.Authorization.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return _userRepository.FirstOrDefaultAsync(u => u.EmailAddress == normalizedEmail); //TODO: Add normalizedEmail?
+            return UserRepository.FirstOrDefaultAsync(u => u.NormalizedEmailAddress == normalizedEmail); //TODO: Add normalizedEmail?
         }
 
         /// <summary>
@@ -1020,7 +1043,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(claim, nameof(claim));
 
             var query = from userclaims in _userClaimRepository.GetAll()
-                        join user in _userRepository.GetAll() on userclaims.UserId equals user.Id
+                        join user in UserRepository.GetAll() on userclaims.UserId equals user.Id
                         where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type && userclaims.TenantId == AbpSession.TenantId
                         select user;
 
@@ -1044,7 +1067,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentNullException(nameof(normalizedRoleName));
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == normalizedRoleName); //TODO: add normalizedRoleName?
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName); //TODO: add normalizedRoleName?
 
             if (role == null)
             {
@@ -1052,7 +1075,7 @@ namespace Abp.Authorization.Users
             }
 
             var query = from userrole in _userRoleRepository.GetAll()
-                        join user in _userRepository.GetAll() on userrole.UserId equals user.Id
+                        join user in UserRepository.GetAll() on userrole.UserId equals user.Id
                         where userrole.RoleId.Equals(role.Id)
                         select user;
 
@@ -1068,11 +1091,13 @@ namespace Abp.Authorization.Users
         /// <param name="value">The value of the token.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task SetTokenAsync([NotNull] TUser user, string loginProvider, string name, string value, CancellationToken cancellationToken)
+        public virtual async Task SetTokenAsync([NotNull] TUser user, string loginProvider, string name, string value, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
+
+            await UserRepository.EnsureLoadedAsync(user, u => u.Tokens, cancellationToken);
 
             var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name);
             if (token == null)
@@ -1083,8 +1108,6 @@ namespace Abp.Authorization.Users
             {
                 token.Value = value;
             }
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -1095,15 +1118,15 @@ namespace Abp.Authorization.Users
         /// <param name="name">The name of the token.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
+        public async Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
 
-            user.Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
+            await UserRepository.EnsureLoadedAsync(user, u => u.Tokens, cancellationToken);
 
-            return Task.CompletedTask;
+            user.Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
         }
 
         /// <summary>
@@ -1114,13 +1137,15 @@ namespace Abp.Authorization.Users
         /// <param name="name">The name of the token.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public Task<string> GetTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
+        public async Task<string> GetTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
 
-            return Task.FromResult(user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name)?.Value);
+            await UserRepository.EnsureLoadedAsync(user, u => u.Tokens, cancellationToken);
+
+            return user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name)?.Value;
         }
 
         /// <summary>
@@ -1130,7 +1155,7 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            return await _userRepository.FirstOrDefaultAsync(
+            return await UserRepository.FirstOrDefaultAsync(
                 user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
                 );
         }
@@ -1161,14 +1186,14 @@ namespace Abp.Authorization.Users
                 return null;
             }
 
-            return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId);
+            return await UserRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId);
         }
 
         [UnitOfWork]
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
             var query = from userLogin in _userLoginRepository.GetAll()
-                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                        join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
                         where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
                         select user;
 
@@ -1180,7 +1205,7 @@ namespace Abp.Authorization.Users
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var query = from userLogin in _userLoginRepository.GetAll()
-                            join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                            join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
                             where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
                             select user;
 
@@ -1204,10 +1229,57 @@ namespace Abp.Authorization.Users
                     _unitOfWorkManager.Current.SetTenantId(outerUow.GetTenantId());
                 }
 
-                var user = await _userRepository.GetAsync(userId);
+                var user = await UserRepository.GetAsync(userId);
                 await uow.CompleteAsync();
                 return user.UserName;
             }
+        }
+
+        public virtual async Task AddPermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        {
+            if (await HasPermissionAsync(user.Id, permissionGrant))
+            {
+                return;
+            }
+
+            await _userPermissionSettingRepository.InsertAsync(
+                new UserPermissionSetting
+                {
+                    TenantId = user.TenantId,
+                    UserId = user.Id,
+                    Name = permissionGrant.Name,
+                    IsGranted = permissionGrant.IsGranted
+                });
+        }
+
+        public virtual async Task RemovePermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
+        {
+            await _userPermissionSettingRepository.DeleteAsync(
+                permissionSetting => permissionSetting.UserId == user.Id &&
+                                     permissionSetting.Name == permissionGrant.Name &&
+                                     permissionSetting.IsGranted == permissionGrant.IsGranted
+            );
+        }
+
+        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId)
+        {
+            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == userId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
+        }
+
+        public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
+        {
+            return await _userPermissionSettingRepository.FirstOrDefaultAsync(
+                       p => p.UserId == userId &&
+                            p.Name == permissionGrant.Name &&
+                            p.IsGranted == permissionGrant.IsGranted
+                   ) != null;
+        }
+
+        public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
+        {
+            await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
         }
     }
 }

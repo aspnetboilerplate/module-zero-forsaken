@@ -61,12 +61,6 @@ namespace Abp.Authorization.Roles
         [ForeignKey("RoleId")]
         public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
 
-        /// <summary>
-        /// Claims of this user.
-        /// </summary>
-        [ForeignKey("UserId")]
-        public virtual ICollection<RoleClaim> Claims { get; set; }
-
         protected AbpRoleBase()
         {
             Name = Guid.NewGuid().ToString("N");

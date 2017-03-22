@@ -10,7 +10,7 @@ namespace Abp.Authorization.Roles
     {
         public virtual int? TenantId { get; set; }
 
-        public virtual long UserId { get; set; }
+        public virtual int RoleId { get; set; }
 
         public virtual string ClaimType { get; set; }
 
@@ -24,7 +24,7 @@ namespace Abp.Authorization.Roles
         public RoleClaim(AbpRoleBase role, Claim claim)
         {
             TenantId = role.TenantId;
-            UserId = role.Id;
+            RoleId = role.Id;
             ClaimType = claim.Type;
             ClaimValue = claim.Value;
         }

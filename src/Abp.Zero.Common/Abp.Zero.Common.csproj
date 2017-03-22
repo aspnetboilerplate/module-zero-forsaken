@@ -29,11 +29,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp" Version="1.5.1" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Folder Include="Domain\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp\Abp.csproj" />
   </ItemGroup>
 
 </Project>

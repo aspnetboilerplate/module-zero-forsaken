@@ -1,4 +1,4 @@
-namespace Abp.Authorization.Users
+namespace Abp.Authorization
 {
     public enum AbpLoginResultType : byte
     {
@@ -15,9 +15,11 @@ namespace Abp.Authorization.Users
         TenantIsNotActive,
 
         UserEmailIsNotConfirmed,
-
+        
         UnknownExternalLogin,
 
-        LockedOut
+        LockedOut,
+
+        UserPhoneNumberIsNotConfirmed,
     }
 }

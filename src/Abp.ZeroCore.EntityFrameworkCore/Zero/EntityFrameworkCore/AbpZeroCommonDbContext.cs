@@ -47,6 +47,16 @@ namespace Abp.Zero.EntityFrameworkCore
         public virtual DbSet<UserClaim> UserClaims { get; set; }
 
         /// <summary>
+        /// User tokens.
+        /// </summary>
+        public virtual DbSet<UserToken> UserTokens { get; set; }
+
+        /// <summary>
+        /// Role claims.
+        /// </summary>
+        public virtual DbSet<RoleClaim> RoleClaims { get; set; }
+
+        /// <summary>
         /// Permissions.
         /// </summary>
         public virtual DbSet<PermissionSetting> Permissions { get; set; }
@@ -128,20 +138,29 @@ namespace Abp.Zero.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //TODO: Create needed indexes and other configuration before first release.
             
-            modelBuilder.Entity<TUser>(u =>
+            modelBuilder.Entity<TUser>(b =>
             {
-                u.HasOne(p => p.DeleterUser)
+                b.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+
+                b.HasOne(p => p.DeleterUser)
                     .WithMany()
                     .HasForeignKey(p => p.DeleterUserId);
 
-                u.HasOne(p => p.CreatorUser)
+                b.HasOne(p => p.CreatorUser)
                     .WithMany()
                     .HasForeignKey(p => p.CreatorUserId);
 
-                u.HasOne(p => p.LastModifierUser)
+                b.HasOne(p => p.LastModifierUser)
                     .WithMany()
                     .HasForeignKey(p => p.LastModifierUserId);
+            });
+
+            modelBuilder.Entity<TRole>(b =>
+            {
+                b.Property(r => r.ConcurrencyStamp).IsConcurrencyToken();
             });
         }
     }

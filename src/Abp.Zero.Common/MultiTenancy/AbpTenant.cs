@@ -9,7 +9,7 @@ namespace Abp.MultiTenancy
     /// <summary>
     /// Represents a Tenant of the application.
     /// </summary>
-    public abstract class AbpTenant<TUser> : AbpTenantBase, IFullAudited<TUser>, IPassivable
+    public abstract class AbpTenant<TUser> : AbpTenantBase, IFullAudited<TUser>
         where TUser : AbpUserBase
     {
         /// <summary>
@@ -39,12 +39,6 @@ namespace Abp.MultiTenancy
         [Required]
         [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
-
-        /// <summary>
-        /// Is this tenant active?
-        /// If as tenant is not active, no user of this tenant can use the application.
-        /// </summary>
-        public virtual bool IsActive { get; set; }
 
         /// <summary>
         /// Reference to the creator user of this entity.
