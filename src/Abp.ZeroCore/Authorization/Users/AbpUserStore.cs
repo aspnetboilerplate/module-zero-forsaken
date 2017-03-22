@@ -219,7 +219,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            user.ConcurrencyStamp = Guid.NewGuid().ToString(); //TODO: Needs attach before this?
+            user.ConcurrencyStamp = Guid.NewGuid().ToString();
             await UserRepository.UpdateAsync(user);
 
             try
@@ -399,7 +399,7 @@ namespace Abp.Authorization.Users
                 return;
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName); //TODO: Define normalizedRoleName?
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
             if (role == null)
             {
                 return;
@@ -414,7 +414,6 @@ namespace Abp.Authorization.Users
         /// <param name="user">The user whose roles should be retrieved.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>A <see cref="Task{TResult}"/> that contains the roles the user is a member of.</returns>
-        [UnitOfWork] //TODO: Added temporary to overcome an exception
         public virtual async Task<IList<string>> GetRolesAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -448,7 +447,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName); //TODO: Define normalizedRoleName?
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
             if (role == null)
             {
                 return false;
@@ -756,7 +755,7 @@ namespace Abp.Authorization.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return UserRepository.FirstOrDefaultAsync(u => u.NormalizedEmailAddress == normalizedEmail); //TODO: Add normalizedEmail?
+            return UserRepository.FirstOrDefaultAsync(u => u.NormalizedEmailAddress == normalizedEmail);
         }
 
         /// <summary>
@@ -1065,7 +1064,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentNullException(nameof(normalizedRoleName));
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName); //TODO: add normalizedRoleName?
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
 
             if (role == null)
             {
@@ -1100,7 +1099,7 @@ namespace Abp.Authorization.Users
             var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name);
             if (token == null)
             {
-                user.Tokens.Add(new UserToken(user.Id, loginProvider, name, value));
+                user.Tokens.Add(new UserToken(user, loginProvider, name, value));
             }
             else
             {

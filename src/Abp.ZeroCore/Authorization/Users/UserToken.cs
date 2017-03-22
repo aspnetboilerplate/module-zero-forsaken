@@ -4,15 +4,15 @@ using JetBrains.Annotations;
 
 namespace Abp.Authorization.Users
 {
-    //TODO: Implement IMayHaveTenant?
-
     /// <summary>
     /// Represents an authentication token for a user.
     /// </summary>
     [Table("AbpUserTokens")]
-    public class UserToken : Entity<long>
+    public class UserToken : Entity<long>, IMayHaveTenant
     {
         public const int MaxLoginProviderLength = 64;
+
+        public virtual int? TenantId { get; set; }
 
         /// <summary>
         /// Gets or sets the primary key of the user that the token belongs to.
@@ -39,12 +39,13 @@ namespace Abp.Authorization.Users
             
         }
 
-        protected internal UserToken(long userId, [NotNull] string loginProvider, [NotNull] string name, string value)
+        protected internal UserToken(AbpUserBase user, [NotNull] string loginProvider, [NotNull] string name, string value)
         {
             Check.NotNull(loginProvider, nameof(loginProvider));
             Check.NotNull(name, nameof(name));
 
-            UserId = userId;
+            TenantId = user.TenantId;
+            UserId = user.Id;
             LoginProvider = loginProvider;
             Name = name;
             Value = value;
