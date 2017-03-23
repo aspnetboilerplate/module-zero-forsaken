@@ -779,7 +779,9 @@ namespace Abp.Authorization.Users
                 return Task.FromResult<DateTimeOffset?>(null);
             }
 
-            return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(user.LockoutEndDateUtc.Value));
+            var lockoutEndDate = DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc);
+
+            return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(lockoutEndDate));
         }
 
         /// <summary>
