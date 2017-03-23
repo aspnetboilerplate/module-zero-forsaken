@@ -31,16 +31,16 @@ namespace Abp.Authorization.Roles
 
         public IRoleManagementConfig RoleManagementConfig { get; private set; }
 
-        private IRolePermissionStore<TRole, TUser> RolePermissionStore
+        private IRolePermissionStore<TRole> RolePermissionStore
         {
             get
             {
-                if (!(Store is IRolePermissionStore<TRole, TUser>))
+                if (!(Store is IRolePermissionStore<TRole>))
                 {
                     throw new AbpException("Store is not IRolePermissionStore");
                 }
 
-                return Store as IRolePermissionStore<TRole, TUser>;
+                return Store as IRolePermissionStore<TRole>;
             }
         }
 

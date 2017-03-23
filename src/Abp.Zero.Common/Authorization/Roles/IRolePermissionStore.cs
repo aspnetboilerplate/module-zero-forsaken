@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Authorization.Users;
 
 namespace Abp.Authorization.Roles
 {
     /// <summary>
     /// Used to perform permission database operations for a role.
     /// </summary>
-    public interface IRolePermissionStore<TRole, TUser> //TODO: Remove TUser?
+    public interface IRolePermissionStore<in TRole>
         where TRole : AbpRoleBase
-        where TUser : AbpUserBase
     {
         /// <summary>
         /// Adds a permission grant setting to a role.
