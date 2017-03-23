@@ -49,6 +49,34 @@ namespace Abp.Zero.Configuration
                 /// </summary>
                 public const string IsRememberBrowserEnabled = "Abp.Zero.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled";
             }
+
+            public static class PasswordComplexity
+            {
+                /// <summary>
+                /// "Abp.Zero.UserManagement.PasswordComplexity.RequiredLength"
+                /// </summary>
+                public const string RequiredLength = "Abp.Zero.UserManagement.PasswordComplexity.RequiredLength";
+
+                /// <summary>
+                /// "Abp.Zero.UserManagement.PasswordComplexity.RequireNonAlphanumeric"
+                /// </summary>
+                public const string RequireNonAlphanumeric = "Abp.Zero.UserManagement.PasswordComplexity.RequireNonAlphanumeric";
+
+                /// <summary>
+                /// "Abp.Zero.UserManagement.PasswordComplexity.RequireLowercase"
+                /// </summary>
+                public const string RequireLowercase = "Abp.Zero.UserManagement.PasswordComplexity.RequireLowercase";
+
+                /// <summary>
+                /// "Abp.Zero.UserManagement.PasswordComplexity.RequireUppercase"
+                /// </summary>
+                public const string RequireUppercase = "Abp.Zero.UserManagement.PasswordComplexity.RequireUppercase";
+
+                /// <summary>
+                /// "Abp.Zero.UserManagement.PasswordComplexity.RequireDigit"
+                /// </summary>
+                public const string RequireDigit = "Abp.Zero.UserManagement.PasswordComplexity.RequireDigit";
+            }
         }
 
         public static class OrganizationUnits

@@ -81,6 +81,46 @@ namespace Abp.Zero.Configuration
                            scopes: SettingScopes.Application | SettingScopes.Tenant,
                            isVisibleToClients: true
                            ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit,
+                           "false",
+                           new FixedLocalizableString("Require digit."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase,
+                           "false",
+                           new FixedLocalizableString("Require lowercase."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric,
+                           "false",
+                           new FixedLocalizableString("Require non alphanumeric."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase,
+                           "false",
+                           new FixedLocalizableString("Require upper case."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
+
+                       new SettingDefinition(
+                           AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength,
+                           "3",
+                           new FixedLocalizableString("Required length."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           )
                    };
         }
     }

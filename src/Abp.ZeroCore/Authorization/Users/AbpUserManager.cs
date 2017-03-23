@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Abp.Authorization.Users
 {
@@ -564,14 +565,21 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public virtual void InitializeOptions(int? tenantId)
+        public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
             Options = new IdentityOptions();
 
             //Lockout
-            Options.Lockout.AllowedForNewUsers = IsTrue(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
-            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
-            Options.Lockout.MaxFailedAccessAttempts = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+            Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
+            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
+            Options.Lockout.MaxFailedAccessAttempts = await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+
+            //Password complexity
+            Options.Password.RequireDigit = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit, tenantId);
+            Options.Password.RequireLowercase = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase, tenantId);
+            Options.Password.RequireNonAlphanumeric = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric, tenantId);
+            Options.Password.RequireUppercase = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase, tenantId);
+            Options.Password.RequiredLength = await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, tenantId);
         }
 
         //TODO: Skipped!
@@ -686,11 +694,23 @@ namespace Abp.Authorization.Users
             return GetSettingValue<bool>(settingName, tenantId);
         }
 
+        private Task<bool> IsTrueAsync(string settingName, int? tenantId)
+        {
+            return GetSettingValueAsync<bool>(settingName, tenantId);
+        }
+
         private T GetSettingValue<T>(string settingName, int? tenantId) where T : struct
         {
             return tenantId == null
                 ? _settingManager.GetSettingValueForApplication<T>(settingName)
                 : _settingManager.GetSettingValueForTenant<T>(settingName, tenantId.Value);
+        }
+
+        private Task<T> GetSettingValueAsync<T>(string settingName, int? tenantId) where T : struct
+        {
+            return tenantId == null
+                ? _settingManager.GetSettingValueForApplicationAsync<T>(settingName)
+                : _settingManager.GetSettingValueForTenantAsync<T>(settingName, tenantId.Value);
         }
 
         private string L(string name)

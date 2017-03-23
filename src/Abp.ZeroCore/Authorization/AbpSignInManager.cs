@@ -55,7 +55,7 @@ namespace Abp.Authorization
 
             using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
             {
-                UserManager.As<AbpUserManager<TRole, TUser>>().InitializeOptions(loginResult.Tenant?.Id);
+                await UserManager.As<AbpUserManager<TRole, TUser>>().InitializeOptionsAsync(loginResult.Tenant?.Id);
 
                 if (!bypassTwoFactor && IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, loginResult.Tenant?.Id))
                 {
