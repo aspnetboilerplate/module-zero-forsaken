@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="Email">E-posta</text>
+    <text name="EmailSecurityCodeSubject">Güvenlik Kodu</text>
+    <text name="EmailSecurityCodeBody">Güvenlik kodunuz: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Güvenlik kodunuz: {0}</text>
+  </texts>
+</localizationDictionary>

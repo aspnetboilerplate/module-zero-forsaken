@@ -18,6 +18,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-fa.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-lt.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-ru.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-tr.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="bin\Release\net452\Abp.Zero.pdb">
       <PackagePath>lib/net452/</PackagePath>
       <Pack>true</Pack>
