@@ -18,10 +18,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-de.xml" />
     <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-fa.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-fr.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-it.xml" />
     <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-lt.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-lv.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-pt-BR.xml" />
     <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-ru.xml" />
     <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-tr.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-zh-CN.xml" />
     <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero.xml" />
   </ItemGroup>
 

@@ -13,31 +13,34 @@ namespace Abp.IdentityFramework
 {
     public static class IdentityResultExtensions
     {
-        //TODO: Messages can be different for Identity Core.
         private static readonly Dictionary<string, string> IdentityLocalizations
             = new Dictionary<string, string>
               {
-                  {"User already in role.", "Identity.UserAlreadyInRole"},
-                  {"User is not in role.", "Identity.UserNotInRole"},
-                  {"Role {0} does not exist.", "Identity.RoleNotFound"},
-                  {"Incorrect password.", "Identity.PasswordMismatch"},
-                  {"User name {0} is invalid, can only contain letters or digits.", "Identity.InvalidUserName"},
-                  {"Passwords must be at least {0} characters.", "Identity.PasswordTooShort"},
-                  {"{0} cannot be null or empty.", "Identity.PropertyTooShort"},
-                  {"Name {0} is already taken.", "Identity.DuplicateName"},
-                  {"User already has a password set.", "Identity.UserAlreadyHasPassword"},
-                  {"Passwords must have at least one non letter or digit character.", "Identity.PasswordRequireNonLetterOrDigit"},
-                  {"UserId not found.", "Identity.UserIdNotFound"},
-                  {"Invalid token.", "Identity.InvalidToken"},
-                  {"Email '{0}' is invalid.", "Identity.InvalidEmail"},
-                  {"User {0} does not exist.", "Identity.UserNameNotFound"},
-                  {"Lockout is not enabled for this user.", "Identity.LockoutNotEnabled"},
-                  {"Passwords must have at least one uppercase ('A'-'Z').", "Identity.PasswordRequireUpper"},
-                  {"Passwords must have at least one digit ('0'-'9').", "Identity.PasswordRequireDigit"},
-                  {"Passwords must have at least one lowercase ('a'-'z').", "Identity.PasswordRequireLower"},
+                  {"Optimistic concurrency failure, object has been modified.", "Identity.ConcurrencyFailure"},
+                  {"An unknown failure has occurred.", "Identity.DefaultError"},
                   {"Email '{0}' is already taken.", "Identity.DuplicateEmail"},
-                  {"A user with that external login already exists.", "Identity.ExternalLoginExists"},
-                  {"An unknown failure has occured.", "Identity.DefaultError"}
+                  {"Role name '{0}' is already taken.", "Identity.DuplicateRoleName"},
+                  {"User name '{0}' is already taken.", "Identity.DuplicateUserName"},
+                  {"Email '{0}' is invalid.", "Identity.InvalidEmail"},
+                  {"The provided PasswordHasherCompatibilityMode is invalid.", "Identity.InvalidPasswordHasherCompatibilityMode"},
+                  {"The iteration count must be a positive integer.", "Identity.InvalidPasswordHasherIterationCount"},
+                  {"Role name '{0}' is invalid.", "Identity.InvalidRoleName"},
+                  {"Invalid token.", "Identity.InvalidToken"},
+                  {"User name '{0}' is invalid, can only contain letters or digits.", "Identity.InvalidUserName"},
+                  {"A user with this login already exists.", "Identity.LoginAlreadyAssociated"},
+                  {"Incorrect password.", "Identity.PasswordMismatch"},
+                  {"Passwords must have at least one digit ('0'-'9').", "Identity.PasswordRequiresDigit"},
+                  {"Passwords must have at least one lowercase ('a'-'z').", "Identity.PasswordRequiresLower"},
+                  {"Passwords must have at least one non alphanumeric character.", "Identity.PasswordRequiresNonAlphanumeric"},
+                  {"Passwords must have at least one uppercase ('A'-'Z').", "Identity.PasswordRequiresUpper"},
+                  {"Passwords must be at least {0} characters.", "Identity.PasswordTooShort"},
+                  {"Role {0} does not exist.", "Identity.RoleNotFound"},
+                  {"User already has a password set.", "Identity.UserAlreadyHasPassword"},
+                  {"User already in role '{0}'.", "Identity.UserAlreadyInRole"},
+                  {"User is locked out.", "Identity.UserLockedOut"},
+                  {"Lockout is not enabled for this user.", "Identity.UserLockoutNotEnabled"},
+                  {"User {0} does not exist.", "Identity.UserNameNotFound"},
+                  {"User is not in role '{0}'.", "Identity.UserNotInRole"}
               };
 
         /// <summary>
