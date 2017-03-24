@@ -37,6 +37,8 @@ namespace Microsoft.Extensions.DependencyInjection
             where TSecurityStampValidator : AbpSecurityStampValidator<TTenant, TRole, TUser>
             where TUserClaimsPrincipalFactory: AbpUserClaimsPrincipalFactory<TUser, TRole>
         {
+            //TODO: Remove signin manager and other stuff and use IdentityBuilder on startup.cs!!!
+
             services.TryAddScoped<UserManager<TUser>, TUserManager>();
             services.TryAddScoped<SignInManager<TUser>, TSignInManager>();
             services.TryAddScoped<RoleManager<TRole>, TRoleManager>();

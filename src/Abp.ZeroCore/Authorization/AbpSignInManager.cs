@@ -146,6 +146,22 @@ namespace Abp.Authorization
                    AbpZeroClaimsIdentityHelper.GetTenantId(result) == user.TenantId;
         }
 
+        public override async Task RememberTwoFactorClientAsync(TUser user)
+        {
+            var rememberBrowserIdentity = new ClaimsIdentity(Options.Cookies.TwoFactorRememberMeCookieAuthenticationScheme);
+
+            rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
+
+            if (user.TenantId.HasValue)
+            {
+                rememberBrowserIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
+            }
+
+            await Context.Authentication.SignInAsync(Options.Cookies.TwoFactorRememberMeCookieAuthenticationScheme,
+                new ClaimsPrincipal(rememberBrowserIdentity),
+                new AuthenticationProperties { IsPersistent = true });
+        }
+
         private bool IsTrue(string settingName, int? tenantId)
         {
             return tenantId == null
