@@ -3,6 +3,7 @@ using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore;
 using Abp.Modules;
 using Abp.MultiTenancy;
+using Abp.Reflection.Extensions;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Zero.EntityFrameworkCore
@@ -27,7 +28,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreEntityFrameworkCoreModule).GetAssembly());
         }
     }
 }

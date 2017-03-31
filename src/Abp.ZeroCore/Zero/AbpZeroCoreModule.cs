@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using Abp.Localization.Dictionaries.Xml;
+﻿using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 
 namespace Abp.Zero
 {
@@ -14,7 +14,7 @@ namespace Abp.Zero
                 new LocalizationSourceExtensionInfo(
                     AbpZeroConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Zero.Localization.SourceExt"
+                        typeof(AbpZeroCoreModule).GetAssembly(), "Abp.Zero.Localization.SourceExt"
                     )
                 )
             );
@@ -22,7 +22,7 @@ namespace Abp.Zero
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreModule).GetAssembly());
         }
     }
 }

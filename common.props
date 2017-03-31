@@ -8,4 +8,8 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/aspnetboilerplate/aspnetboilerplate</RepositoryUrl>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='net452'">
+    <DefineConstants>NET452</DefineConstants>
+  </PropertyGroup>
 </Project>

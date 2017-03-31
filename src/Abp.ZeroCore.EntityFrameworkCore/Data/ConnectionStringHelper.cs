@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿#if NET46
+using System.Configuration;
+#endif
 
 namespace Abp.Data
 {
@@ -9,11 +11,13 @@ namespace Abp.Data
         /// </summary>
         public static string GetConnectionString(string nameOrConnectionString)
         {
+#if NET46
             var connStrSection = ConfigurationManager.ConnectionStrings[nameOrConnectionString];
             if (connStrSection != null)
             {
                 return connStrSection.ConnectionString;
             }
+#endif
 
             return nameOrConnectionString;
         }

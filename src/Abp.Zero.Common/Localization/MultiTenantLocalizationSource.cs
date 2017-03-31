@@ -107,7 +107,7 @@ namespace Abp.Localization
         private static string GetBaseCultureName(string cultureName)
         {
             return cultureName.Contains("-")
-                ? cultureName.Left(cultureName.IndexOf("-", StringComparison.InvariantCulture))
+                ? cultureName.Left(cultureName.IndexOf("-", StringComparison.Ordinal))
                 : cultureName;
         }
     }

@@ -12,6 +12,7 @@ using Abp.MultiTenancy;
 using Abp.Reflection;
 using Abp.Zero.Configuration;
 using Abp.Configuration.Startup;
+using Abp.Reflection.Extensions;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Zero
@@ -38,7 +39,7 @@ namespace Abp.Zero
                 new DictionaryBasedLocalizationSource(
                     AbpZeroConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Zero.Localization.Source"
+                        typeof(AbpZeroCommonModule).GetAssembly(), "Abp.Zero.Localization.Source"
                         )));
 
             IocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
@@ -48,7 +49,7 @@ namespace Abp.Zero
         {
             FillMissingEntityTypes();
 
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
             IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient); //could not register conventionally
 
             RegisterTenantCache();
@@ -78,9 +79,9 @@ namespace Abp.Zero
                 using (var typeFinder = IocManager.ResolveAsDisposable<ITypeFinder>())
                 {
                     var types = typeFinder.Object.FindAll();
-                    entityTypes.Object.Tenant = types.FirstOrDefault(t => typeof(AbpTenantBase).IsAssignableFrom(t) && !t.IsAbstract);
-                    entityTypes.Object.Role = types.FirstOrDefault(t => typeof(AbpRoleBase).IsAssignableFrom(t) && !t.IsAbstract);
-                    entityTypes.Object.User = types.FirstOrDefault(t => typeof(AbpUserBase).IsAssignableFrom(t) && !t.IsAbstract);
+                    entityTypes.Object.Tenant = types.FirstOrDefault(t => typeof(AbpTenantBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
+                    entityTypes.Object.Role = types.FirstOrDefault(t => typeof(AbpRoleBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
+                    entityTypes.Object.User = types.FirstOrDefault(t => typeof(AbpUserBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
                 }
             }
         }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
@@ -67,13 +66,13 @@ namespace Abp.Localization
             var languages = _languageManager.GetLanguages();
             if (!languages.Any())
             {
-                throw new ApplicationException("No language defined!");
+                throw new AbpException("No language defined!");
             }
 
             var defaultLanguage = languages.FirstOrDefault(l => l.IsDefault);
             if (defaultLanguage == null)
             {
-                throw new ApplicationException("Default language is not defined!");
+                throw new AbpException("Default language is not defined!");
             }
 
             return _dictionaries.GetOrAdd(defaultLanguage.Name, s => CreateLocalizationDictionary(defaultLanguage));
@@ -83,7 +82,7 @@ namespace Abp.Localization
         {
             var internalDictionary =
                 _internalProvider.Dictionaries.GetOrDefault(language.Name) ??
-                new EmptyDictionary(CultureInfo.GetCultureInfo(language.Name));
+                new EmptyDictionary(new CultureInfo(language.Name)); //TODO: Don't use new?
 
             var dictionary =  _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
             {
