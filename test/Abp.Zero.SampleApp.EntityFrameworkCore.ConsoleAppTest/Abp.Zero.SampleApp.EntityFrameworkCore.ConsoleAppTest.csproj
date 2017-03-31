@@ -12,19 +12,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.2" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
     <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Abp.Castle.Log4Net" Version="1.5.1" />
-    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="1.1.0" />
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="1.3.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
