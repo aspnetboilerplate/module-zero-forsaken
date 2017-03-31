@@ -28,7 +28,7 @@
     <EmbeddedResource Include="Zero\Localization\Source\AbpZero.xml" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
