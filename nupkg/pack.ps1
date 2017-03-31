@@ -5,13 +5,16 @@ $srcPath = Join-Path $slnPath "src"
 
 # List of projects
 $projects = (
+    "Abp.Zero.Common",
+    "Abp.Zero.Ldap",
     "Abp.Zero",
     "Abp.Zero.Owin",
     "Abp.Zero.AspNetCore",
-    "Abp.Zero.Ldap",
     "Abp.Zero.EntityFramework",
     "Abp.Zero.EntityFrameworkCore",
-    "Abp.Zero.NHibernate"
+    "Abp.Zero.NHibernate",
+    "Abp.ZeroCore",
+    "Abp.ZeroCore.EntityFrameworkCore"
 )
 
 # Rebuild solution
