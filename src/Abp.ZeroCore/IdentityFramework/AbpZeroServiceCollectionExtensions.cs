@@ -29,8 +29,6 @@ namespace Microsoft.Extensions.DependencyInjection
             where TUser : AbpUser<TUser>
             where TSecurityStampValidator : AbpSecurityStampValidator<TTenant, TRole, TUser>
         {
-            //TODO: Remove signin manager and other stuff and use IdentityBuilder on startup.cs!!!
-
             services.TryAddScoped<ISecurityStampValidator, TSecurityStampValidator>();
 
             return services.AddIdentity<TUser, TRole>(setupAction);

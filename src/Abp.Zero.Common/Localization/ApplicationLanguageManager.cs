@@ -152,7 +152,7 @@ namespace Abp.Localization
         /// <param name="languageName">Name of the language.</param>
         public async Task SetDefaultLanguageAsync(int? tenantId, string languageName)
         {
-            var cultureInfo = new CultureInfo(languageName);
+            var cultureInfo = CultureInfoHelper.Get(languageName);
             if (tenantId.HasValue)
             {
                 await _settingManager.ChangeSettingForTenantAsync(tenantId.Value, LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);

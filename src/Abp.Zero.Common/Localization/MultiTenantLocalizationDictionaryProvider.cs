@@ -82,7 +82,7 @@ namespace Abp.Localization
         {
             var internalDictionary =
                 _internalProvider.Dictionaries.GetOrDefault(language.Name) ??
-                new EmptyDictionary(new CultureInfo(language.Name)); //TODO: Don't use new?
+                new EmptyDictionary(CultureInfoHelper.Get(language.Name));
 
             var dictionary =  _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
             {
