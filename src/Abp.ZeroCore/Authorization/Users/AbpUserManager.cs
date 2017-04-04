@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -14,7 +12,6 @@ using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
 using Abp.Runtime.Caching;
-using Abp.Runtime.Security;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero;
@@ -23,7 +20,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace Abp.Authorization.Users
 {
@@ -581,78 +577,6 @@ namespace Abp.Authorization.Users
             Options.Password.RequireUppercase = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase, tenantId);
             Options.Password.RequiredLength = await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, tenantId);
         }
-
-        //TODO: Skipped!
-        //public virtual void RegisterTwoFactorProviders(int? tenantId)
-        //{
-        //    TwoFactorProviders.Clear();
-
-        //    if (!IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, tenantId))
-        //    {
-        //        return;
-        //    }
-
-        //    if (EmailService != null &&
-        //        IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, tenantId))
-        //    {
-        //        RegisterTwoFactorProvider(
-        //            L("Email"),
-        //            new EmailTokenProvider<TUser, long>
-        //            {
-        //                Subject = L("EmailSecurityCodeSubject"),
-        //                BodyFormat = L("EmailSecurityCodeBody")
-        //            }
-        //        );
-        //    }
-
-        //    if (SmsService != null &&
-        //        IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, tenantId))
-        //    {
-        //        RegisterTwoFactorProvider(
-        //            L("Sms"),
-        //            new PhoneNumberTokenProvider<TUser, long>
-        //            {
-        //                MessageFormat = L("SmsSecurityCodeMessage")
-        //            }
-        //        );
-        //    }
-        //}
-
-        //public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(long userId)
-        //{
-        //    var user = await GetUserByIdAsync(userId);
-
-        //    RegisterTwoFactorProviders(user.TenantId);
-
-        //    return await base.GetValidTwoFactorProvidersAsync(userId);
-        //}
-
-        //public override async Task<IdentityResult> NotifyTwoFactorTokenAsync(long userId, string twoFactorProvider, string token)
-        //{
-        //    var user = await GetUserByIdAsync(userId);
-
-        //    RegisterTwoFactorProviders(user.TenantId);
-
-        //    return await base.NotifyTwoFactorTokenAsync(userId, twoFactorProvider, token);
-        //}
-
-        //public override async Task<string> GenerateTwoFactorTokenAsync(long userId, string twoFactorProvider)
-        //{
-        //    var user = await GetUserByIdAsync(userId);
-
-        //    RegisterTwoFactorProviders(user.TenantId);
-
-        //    return await base.GenerateTwoFactorTokenAsync(userId, twoFactorProvider);
-        //}
-
-        //public override async Task<bool> VerifyTwoFactorTokenAsync(long userId, string twoFactorProvider, string token)
-        //{
-        //    var user = await GetUserByIdAsync(userId);
-
-        //    RegisterTwoFactorProviders(user.TenantId);
-
-        //    return await base.VerifyTwoFactorTokenAsync(userId, twoFactorProvider, token);
-        //}
 
         protected virtual Task<string> GetOldUserNameAsync(long userId)
         {

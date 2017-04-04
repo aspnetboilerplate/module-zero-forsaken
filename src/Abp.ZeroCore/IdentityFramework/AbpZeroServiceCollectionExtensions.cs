@@ -12,38 +12,26 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AbpZeroServiceCollectionExtensions
     {
-        public static IdentityBuilder AddAbpIdentity<TTenant, TUser, TRole, TUserManager, TRoleManager, TSignInManager, TSecurityStampValidator, TUserClaimsPrincipalFactory>(this IServiceCollection services)
+        public static IdentityBuilder AddAbpIdentity<TTenant, TUser, TRole, TSecurityStampValidator>(this IServiceCollection services)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>, new()
             where TUser : AbpUser<TUser>
-            where TUserManager : AbpUserManager<TRole, TUser>
-            where TSignInManager : AbpSignInManager<TTenant, TRole, TUser>
-            where TRoleManager : AbpRoleManager<TRole, TUser>
             where TSecurityStampValidator : AbpSecurityStampValidator<TTenant, TRole, TUser>
-            where TUserClaimsPrincipalFactory: AbpUserClaimsPrincipalFactory<TUser, TRole>
         {
-            return services.AddAbpIdentity<TTenant, TUser, TRole, TUserManager, TRoleManager, TSignInManager, TSecurityStampValidator, TUserClaimsPrincipalFactory>(setupAction: null);
+            return services.AddAbpIdentity<TTenant, TUser, TRole, TSecurityStampValidator>(setupAction: null);
         }
 
-        public static IdentityBuilder AddAbpIdentity<TTenant, TUser, TRole, TUserManager, TRoleManager, TSignInManager, TSecurityStampValidator, TUserClaimsPrincipalFactory>(
+        public static IdentityBuilder AddAbpIdentity<TTenant, TUser, TRole, TSecurityStampValidator>(
             this IServiceCollection services,
             Action<IdentityOptions> setupAction)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>, new()
             where TUser : AbpUser<TUser>
-            where TUserManager : AbpUserManager<TRole, TUser>
-            where TSignInManager : AbpSignInManager<TTenant, TRole, TUser>
-            where TRoleManager : AbpRoleManager<TRole,TUser>
             where TSecurityStampValidator : AbpSecurityStampValidator<TTenant, TRole, TUser>
-            where TUserClaimsPrincipalFactory: AbpUserClaimsPrincipalFactory<TUser, TRole>
         {
             //TODO: Remove signin manager and other stuff and use IdentityBuilder on startup.cs!!!
 
-            services.TryAddScoped<UserManager<TUser>, TUserManager>();
-            services.TryAddScoped<SignInManager<TUser>, TSignInManager>();
-            services.TryAddScoped<RoleManager<TRole>, TRoleManager>();
             services.TryAddScoped<ISecurityStampValidator, TSecurityStampValidator>();
-            services.TryAddScoped<IUserClaimsPrincipalFactory<TUser>, TUserClaimsPrincipalFactory>();
 
             return services.AddIdentity<TUser, TRole>(setupAction);
         }
