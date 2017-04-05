@@ -129,6 +129,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.SignalR", "..\aspne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCompanyName.AbpZeroTemplate.ConsoleApiClient", "..\aspnet-zero-core\aspnet-core\test\MyCompanyName.AbpZeroTemplate.ConsoleApiClient\MyCompanyName.AbpZeroTemplate.ConsoleApiClient.csproj", "{D9306EEA-EB88-411A-8626-1901A16E540D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.HangFire.AspNetCore", "..\aspnetboilerplate\src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj", "{938FBE67-3B46-4BB2-A874-6E78FF19501A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -343,6 +345,10 @@ Global
 		{D9306EEA-EB88-411A-8626-1901A16E540D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9306EEA-EB88-411A-8626-1901A16E540D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9306EEA-EB88-411A-8626-1901A16E540D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{938FBE67-3B46-4BB2-A874-6E78FF19501A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938FBE67-3B46-4BB2-A874-6E78FF19501A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938FBE67-3B46-4BB2-A874-6E78FF19501A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938FBE67-3B46-4BB2-A874-6E78FF19501A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -406,5 +412,6 @@ Global
 		{0890063F-920D-4540-B98A-A981FE95BDDB} = {6026C5B1-F539-4CF5-AB6B-C3BEF853A30F}
 		{16A0E1F2-B8EC-493C-A551-633982B3E1B6} = {6026C5B1-F539-4CF5-AB6B-C3BEF853A30F}
 		{D9306EEA-EB88-411A-8626-1901A16E540D} = {DB5BDEFB-3554-4A36-BE56-D7FF1C25095F}
+		{938FBE67-3B46-4BB2-A874-6E78FF19501A} = {6026C5B1-F539-4CF5-AB6B-C3BEF853A30F}
 	EndGlobalSection
 EndGlobal
