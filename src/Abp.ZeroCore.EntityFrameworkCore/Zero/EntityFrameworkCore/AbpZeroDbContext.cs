@@ -53,6 +53,12 @@ namespace Abp.Zero.EntityFrameworkCore
         /// User accounts
         /// </summary>
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
+
+        /// <summary>
+        /// Notifications.
+        /// </summary>
+        public virtual DbSet<NotificationInfo> Notifications { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -70,68 +76,46 @@ namespace Abp.Zero.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-            #region BackgroundJobInfo.IX_IsAbandoned_NextTryTime
-
-
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .HasIndex(j => new { j.IsAbandoned, j.NextTryTime });
-
-            #endregion
-
-            #region NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId
-
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .HasIndex(ns => new
-                {
-                    ns.NotificationName,
-                    ns.EntityTypeName,
-                    ns.EntityId,
-                    ns.UserId
-                });
-
-            #endregion
-
-            #region UserNotificationInfo.IX_UserId_State_CreationTime
-
-            modelBuilder.Entity<UserNotificationInfo>()
-                .HasIndex(un => new { un.UserId, un.State, un.CreationTime });
-            #endregion
-
-            #region UserLoginAttempt.IX_TenancyName_UserNameOrEmailAddress_Result
-
-            modelBuilder.Entity<UserLoginAttempt>()
-                .HasIndex(ula => new
-                {
-                    ula.TenancyName,
-                    ula.UserNameOrEmailAddress,
-                    ula.Result
-                });
-
-            #endregion
-
-            #region UserLoginAttempt.IX_UserId_TenantId
-
-            modelBuilder.Entity<UserLoginAttempt>()
-                .HasIndex(ula => new { ula.UserId, ula.TenantId });
-
-            #endregion
-
-            modelBuilder.Entity<TTenant>(u =>
+            modelBuilder.Entity<BackgroundJobInfo>(b =>
             {
-                u.HasOne(p => p.DeleterUser)
+                b.HasIndex(e => new { e.IsAbandoned, e.NextTryTime });
+            });
+
+            modelBuilder.Entity<TenantFeatureSetting>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.Name });
+            });
+
+            modelBuilder.Entity<EditionFeatureSetting>(b =>
+            {
+                b.HasIndex(e => new { e.EditionId, e.Name });
+            });
+
+            modelBuilder.Entity<TTenant>(b =>
+            {
+                b.HasOne(p => p.DeleterUser)
                     .WithMany()
                     .HasForeignKey(p => p.DeleterUserId);
 
-                u.HasOne(p => p.CreatorUser)
+                b.HasOne(p => p.CreatorUser)
                     .WithMany()
                     .HasForeignKey(p => p.CreatorUserId);
 
-                u.HasOne(p => p.LastModifierUser)
+                b.HasOne(p => p.LastModifierUser)
                     .WithMany()
                     .HasForeignKey(p => p.LastModifierUserId);
+
+                b.HasIndex(e => e.TenancyName);
             });
 
+            modelBuilder.Entity<UserAccount>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.UserId });
+                b.HasIndex(e => new { e.TenantId, e.UserName });
+                b.HasIndex(e => new { e.TenantId, e.EmailAddress });
+                b.HasIndex(e => new { e.UserName });
+                b.HasIndex(e => new { e.EmailAddress });
+            });
         }
-
     }
 }

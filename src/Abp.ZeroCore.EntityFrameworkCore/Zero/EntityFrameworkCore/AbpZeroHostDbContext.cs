@@ -4,6 +4,7 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.MultiTenancy;
+using Abp.Notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abp.Zero.EntityFrameworkCore
@@ -51,6 +52,11 @@ namespace Abp.Zero.EntityFrameworkCore
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
         /// <summary>
+        /// Notifications.
+        /// </summary>
+        public virtual DbSet<NotificationInfo> Notifications { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="options"></param>
@@ -77,6 +83,47 @@ namespace Abp.Zero.EntityFrameworkCore
                 u.HasOne(p => p.LastModifierUser)
                     .WithMany()
                     .HasForeignKey(p => p.LastModifierUserId);
+            });
+
+            modelBuilder.Entity<TTenant>(b =>
+            {
+                b.HasOne(p => p.DeleterUser)
+                    .WithMany()
+                    .HasForeignKey(p => p.DeleterUserId);
+
+                b.HasOne(p => p.CreatorUser)
+                    .WithMany()
+                    .HasForeignKey(p => p.CreatorUserId);
+
+                b.HasOne(p => p.LastModifierUser)
+                    .WithMany()
+                    .HasForeignKey(p => p.LastModifierUserId);
+
+                b.HasIndex(e => e.TenancyName);
+            });
+
+            modelBuilder.Entity<BackgroundJobInfo>(b =>
+            {
+                b.HasIndex(e => new { e.IsAbandoned, e.NextTryTime });
+            });
+
+            modelBuilder.Entity<TenantFeatureSetting>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.Name });
+            });
+
+            modelBuilder.Entity<EditionFeatureSetting>(b =>
+            {
+                b.HasIndex(e => new { e.EditionId, e.Name });
+            });
+
+            modelBuilder.Entity<UserAccount>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.UserId });
+                b.HasIndex(e => new { e.TenantId, e.UserName });
+                b.HasIndex(e => new { e.TenantId, e.EmailAddress });
+                b.HasIndex(e => new { e.UserName });
+                b.HasIndex(e => new { e.EmailAddress });
             });
         }
     }
