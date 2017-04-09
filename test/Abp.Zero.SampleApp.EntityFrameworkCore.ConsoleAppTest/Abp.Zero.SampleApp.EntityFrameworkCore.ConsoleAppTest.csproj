@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Abp.Castle.Log4Net" Version="2.0.0-preview3" />
     <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.0-preview1" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.0-preview3" />
   </ItemGroup>
@@ -23,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
     <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.csproj" />
   </ItemGroup>
 

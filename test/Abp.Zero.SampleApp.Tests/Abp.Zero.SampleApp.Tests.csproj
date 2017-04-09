@@ -14,13 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.Zero.SampleApp\Abp.Zero.SampleApp.csproj" />
     <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFramework\Abp.Zero.SampleApp.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Abp.TestBase" Version="2.0.0-preview3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.2.0" />

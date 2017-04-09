@@ -25,8 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp.FluentMigrator\Abp.FluentMigrator.csproj" />
-    <ProjectReference Include="..\..\..\aspnetboilerplate\src\Abp.NHibernate\Abp.NHibernate.csproj" />
+    <PackageReference Include="Abp.NHibernate" Version="2.0.0-preview3" />
+    <PackageReference Include="Abp.FluentMigrator" Version="2.0.0-preview3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj" />
   </ItemGroup>
 
