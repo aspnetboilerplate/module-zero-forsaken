@@ -129,10 +129,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.SignalR", "..\aspne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.HangFire.AspNetCore", "..\aspnetboilerplate\src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj", "{938FBE67-3B46-4BB2-A874-6E78FF19501A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CastleAdapters", "CastleAdapters", "{DD921DBF-E955-446E-A7DB-1F0EB3DC247B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Windsor.MsDependencyInjection", "..\castle-windsor-ms-adapter\src\Castle.Windsor.MsDependencyInjection\Castle.Windsor.MsDependencyInjection.csproj", "{1D30FD9F-7CA3-4BAE-BB9A-0D74B44463F3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -347,10 +343,6 @@ Global
 		{938FBE67-3B46-4BB2-A874-6E78FF19501A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{938FBE67-3B46-4BB2-A874-6E78FF19501A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{938FBE67-3B46-4BB2-A874-6E78FF19501A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D30FD9F-7CA3-4BAE-BB9A-0D74B44463F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D30FD9F-7CA3-4BAE-BB9A-0D74B44463F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D30FD9F-7CA3-4BAE-BB9A-0D74B44463F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D30FD9F-7CA3-4BAE-BB9A-0D74B44463F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -414,7 +406,5 @@ Global
 		{0890063F-920D-4540-B98A-A981FE95BDDB} = {6026C5B1-F539-4CF5-AB6B-C3BEF853A30F}
 		{16A0E1F2-B8EC-493C-A551-633982B3E1B6} = {6026C5B1-F539-4CF5-AB6B-C3BEF853A30F}
 		{938FBE67-3B46-4BB2-A874-6E78FF19501A} = {6026C5B1-F539-4CF5-AB6B-C3BEF853A30F}
-		{DD921DBF-E955-446E-A7DB-1F0EB3DC247B} = {364398C2-9B6A-40B3-9845-23ABFB8D12AB}
-		{1D30FD9F-7CA3-4BAE-BB9A-0D74B44463F3} = {DD921DBF-E955-446E-A7DB-1F0EB3DC247B}
 	EndGlobalSection
 EndGlobal
