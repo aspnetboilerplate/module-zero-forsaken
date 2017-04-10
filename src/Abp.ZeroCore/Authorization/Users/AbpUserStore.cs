@@ -414,6 +414,7 @@ namespace Abp.Authorization.Users
         /// <param name="user">The user whose roles should be retrieved.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>A <see cref="Task{TResult}"/> that contains the roles the user is a member of.</returns>
+        [UnitOfWork]
         public virtual async Task<IList<string>> GetRolesAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -621,6 +622,7 @@ namespace Abp.Authorization.Users
         /// <returns>
         /// The <see cref="Task"/> for the asynchronous operation, containing the user, if any which matched the specified login provider and key.
         /// </returns>
+        [UnitOfWork]
         public virtual Task<TUser> FindByLoginAsync([NotNull] string loginProvider, [NotNull] string providerKey, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -1035,6 +1037,7 @@ namespace Abp.Authorization.Users
         /// <returns>
         /// The <see cref="Task"/> contains a list of users, if any, that contain the specified claim. 
         /// </returns>
+        [UnitOfWork]
         public virtual async Task<IList<TUser>> GetUsersForClaimAsync([NotNull] Claim claim, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -1057,6 +1060,7 @@ namespace Abp.Authorization.Users
         /// <returns>
         /// The <see cref="Task"/> contains a list of users, if any, that are in the specified role. 
         /// </returns>
+        [UnitOfWork]
         public virtual async Task<IList<TUser>> GetUsersInRoleAsync([NotNull] string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -1199,6 +1203,7 @@ namespace Abp.Authorization.Users
             return Task.FromResult(query.ToList());
         }
 
+        [UnitOfWork]
         public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))

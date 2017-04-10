@@ -54,7 +54,7 @@ namespace Abp.Authorization
         [UnitOfWork]
         public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
         {
-            if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
+            if (CurrentUnitOfWorkProvider?.Current == null)
             {
                 return await IsGrantedAsync(user.UserId, permissionName);
             }
