@@ -162,15 +162,13 @@ namespace Abp.Authorization.Users
                     return false;
                 }
             }
-
-            //User not found
-            if (await FindByIdAsync(userId) == null)
+            
+            //Get cached user permissions
+            var cacheItem = await GetUserPermissionCacheItemAsync(userId);
+            if (cacheItem == null)
             {
                 return false;
             }
-
-            //Get cached user permissions
-            var cacheItem = await GetUserPermissionCacheItemAsync(userId);
 
             //Check for user-specific value
             if (cacheItem.GrantedPermissions.Contains(permission.Name))
@@ -650,6 +648,12 @@ namespace Abp.Authorization.Users
             var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
             return await _cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
             {
+                var user = await FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return null;
+                }
+
                 var newCacheItem = new UserPermissionCacheItem(userId);
 
                 foreach (var roleName in await GetRolesAsync(userId))
