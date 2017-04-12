@@ -423,7 +423,7 @@ namespace Abp.Authorization.Users
 
             var query = from userRole in _userRoleRepository.GetAll()
                         join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                        where userRole.UserId.Equals(user.Id)
+                        where userRole.UserId == user.Id
                         select role.Name;
 
             return await _asyncQueryableExecuter.ToListAsync(query);
