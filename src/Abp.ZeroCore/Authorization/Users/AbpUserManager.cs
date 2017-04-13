@@ -377,7 +377,7 @@ namespace Abp.Authorization.Users
             var user = (await FindByNameAsync(userName));
             if (user != null && user.Id != expectedUserId)
             {
-                throw new UserFriendlyException(string.Format(L("Identity.DuplicateName"), userName));
+                throw new UserFriendlyException(string.Format(L("Identity.DuplicateUserName"), userName));
             }
 
             user = (await FindByEmailAsync(emailAddress));
