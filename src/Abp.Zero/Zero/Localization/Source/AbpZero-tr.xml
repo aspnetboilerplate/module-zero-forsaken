@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="tr">
-	<texts>
+  <texts>
     <text name="Identity.UserAlreadyInRole" value="Kullanıcı zaten bu role atanmış." />
     <text name="Identity.UserNotInRole" value="Kullanıcı bu rolde değil." />
     <text name="Identity.RoleNotFound" value="Rol {0} bulunamadı." />
