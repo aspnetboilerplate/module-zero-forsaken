@@ -30,10 +30,10 @@
     <text name="CanNotRenameAdminUser" value="{0} kullanıcı adı varsayılan yönetici kullanıcısı olduğu için değiştirilemez." />
     <text name="CanNotDeleteAdminUser" value="{0} kullanıcısı varsayılan yönetici kullanıcısı olduğu için silinemez." />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="{0} isminde bir birim zaten var. Aynı seviyede aynı isimli iki birim olamaz." />
-    <text name="Email">E-posta</text>
-    <text name="EmailSecurityCodeSubject">AbpZeroTemplate Güvenlik Kodu</text>
-    <text name="EmailSecurityCodeBody">Güvenlik kodunuz: {0}</text>
-    <text name="Sms">Sms</text>
-    <text name="SmsSecurityCodeMessage">Güvenlik kodunuz: {0}</text>
+    <text name="Email" value="E-posta" />
+    <text name="EmailSecurityCodeSubject" value="Güvenlik Kodu" />
+    <text name="EmailSecurityCodeBody" value="Güvenlik kodunuz: {0}" />
+    <text name="Sms" value="Sms" />
+    <text name="SmsSecurityCodeMessage" value="Güvenlik kodunuz: {0}" />
   </texts>
 </localizationDictionary>

@@ -30,5 +30,10 @@
     <text name="CanNotRenameAdminUser" value="Lietotājvārdu {0} nevar pārdēvēt, jo tas ir noklusētais administrators!" />
     <text name="CanNotDeleteAdminUser" value="Lietotāju {0} nevar dzēst, jo tas ir noklusētais administrators!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Organizācija {0} jau eksistē. Vienā līmenī nevar tikt izveidotas divas vienības ar tādu pašu nosaukumu." />
+    <text name="Email" value="E-pasta" />
+    <text name="EmailSecurityCodeSubject" value="Drošības kods" />
+    <text name="EmailSecurityCodeBody" value="Jūsu drošības kodu: {0}" />
+    <text name="Sms" value="Sms" />
+    <text name="SmsSecurityCodeMessage" value="Jūsu drošības kodu: {0}" />
   </texts>
 </localizationDictionary>
