@@ -22,5 +22,10 @@
     <text name="Identity.DuplicateEmail" value="E-pasta adrese '{0}' ir jau reģistrēta." />
     <text name="Identity.ExternalLoginExists" value="Lietotājs ar šādu ārējo lietotājvārdu eksistē." />
     <text name="Identity.DefaultError" value="Ir notikusi nezināma kļūda." />
+    <text name="Email" value="E-pasta" />
+    <text name="EmailSecurityCodeSubject" value="Drošības kods" />
+    <text name="EmailSecurityCodeBody" value="Jūsu drošības kodu: {0}" />
+    <text name="Sms" value="Sms" />
+    <text name="SmsSecurityCodeMessage" value="Jūsu drošības kodu: {0}" />
   </texts>
 </localizationDictionary>
