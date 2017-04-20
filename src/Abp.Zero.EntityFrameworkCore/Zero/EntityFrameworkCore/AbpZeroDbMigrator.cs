@@ -27,7 +27,7 @@ namespace Abp.Zero.EntityFrameworkCore
             _dbContextResolver = dbContextResolver;
         }
         
-        public void CreateOrMigrateForHost()
+        public virtual void CreateOrMigrateForHost()
         {
             CreateOrMigrateForHost(null);
         }
@@ -37,7 +37,7 @@ namespace Abp.Zero.EntityFrameworkCore
             CreateOrMigrate(null, seedAction);
         }
 
-        public void CreateOrMigrateForTenant(AbpTenantBase tenant)
+        public virtual void CreateOrMigrateForTenant(AbpTenantBase tenant)
         {
             CreateOrMigrateForTenant(tenant, null);
         }
