@@ -20,8 +20,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization
 {
-    //SignInManager<TUser, long>,
-    public class AbpLogInManager<TTenant, TRole, TUser> : ITransientDependency
+    public abstract class AbpLogInManager<TTenant, TRole, TUser> : ITransientDependency
         where TTenant : AbpTenant<TUser>
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
@@ -38,7 +37,7 @@ namespace Abp.Authorization
         protected IIocResolver IocResolver { get; }
         protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
-        public AbpLogInManager(
+        protected AbpLogInManager(
             AbpUserManager<TRole, TUser> userManager,
             IMultiTenancyConfig multiTenancyConfig,
             IRepository<TTenant> tenantRepository,

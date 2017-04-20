@@ -23,7 +23,7 @@ namespace Abp.IdentityFramework
                   {"User name {0} is invalid, can only contain letters or digits.", "Identity.InvalidUserName"},
                   {"Passwords must be at least {0} characters.", "Identity.PasswordTooShort"},
                   {"{0} cannot be null or empty.", "Identity.PropertyTooShort"},
-                  {"Name {0} is already taken.", "Identity.DuplicateName"},
+                  {"Name {0} is already taken.", "Identity.DuplicateUserName"},
                   {"User already has a password set.", "Identity.UserAlreadyHasPassword"},
                   {"Passwords must have at least one non letter or digit character.", "Identity.PasswordRequireNonLetterOrDigit"},
                   {"UserId not found.", "Identity.UserIdNotFound"},

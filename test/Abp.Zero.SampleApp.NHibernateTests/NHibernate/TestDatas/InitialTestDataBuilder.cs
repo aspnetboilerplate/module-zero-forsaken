@@ -13,8 +13,6 @@ namespace Abp.Zero.SampleApp.NHibernate.TestDatas
 
         public void Build()
         {
-            //_session.DisableAllFilters(); //TODO: Needs?
-
             new InitialTenantsBuilder(_session).Build();
             new InitialUsersBuilder(_session).Build();
             new InitialTestLanguagesBuilder(_session).Build();

@@ -1,6 +1,5 @@
 using System;
 using Abp.Authorization.Roles;
-using Abp.MultiTenancy;
 using Abp.Threading;
 
 namespace Abp.Authorization.Users
