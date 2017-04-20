@@ -43,7 +43,7 @@ namespace Abp.Authorization
 
         public virtual async Task<bool> IsGrantedAsync(string permissionName)
         {
-            return AbpSession.UserId.HasValue && await _userManager.IsGrantedAsync(AbpSession.UserId.Value, permissionName);
+            return AbpSession.UserId.HasValue && await IsGrantedAsync(AbpSession.UserId.Value, permissionName);
         }
 
         public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
@@ -61,7 +61,7 @@ namespace Abp.Authorization
 
             using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
             {
-                return await _userManager.IsGrantedAsync(user.UserId, permissionName);
+                return await IsGrantedAsync(user.UserId, permissionName);
             }
         }
     }
