@@ -19,7 +19,7 @@ namespace Abp.Auditing
             _auditLogRepository = auditLogRepository;
         }
 
-        public Task SaveAsync(AuditInfo auditInfo)
+        public virtual Task SaveAsync(AuditInfo auditInfo)
         {
             return _auditLogRepository.InsertAsync(AuditLog.CreateFromAuditInfo(auditInfo));
         }
