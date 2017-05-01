@@ -179,35 +179,35 @@ namespace Abp.Zero.EntityFramework
             #region AuditLog.Set_MaxLengths
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.ServiceName)
+                .Property(e => e.ServiceName)
                 .HasMaxLength(AuditLog.MaxServiceNameLength);
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.MethodName)
+                .Property(e => e.MethodName)
                 .HasMaxLength(AuditLog.MaxMethodNameLength);
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.Parameters)
+                .Property(e => e.Parameters)
                 .HasMaxLength(AuditLog.MaxParametersLength);
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.ClientIpAddress)
+                .Property(e => e.ClientIpAddress)
                 .HasMaxLength(AuditLog.MaxClientIpAddressLength);
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.ClientName)
+                .Property(e => e.ClientName)
                 .HasMaxLength(AuditLog.MaxClientNameLength);
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.BrowserInfo)
+                .Property(e => e.BrowserInfo)
                 .HasMaxLength(AuditLog.MaxBrowserInfoLength);
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.Exception)
+                .Property(e => e.Exception)
                 .HasMaxLength(AuditLog.MaxExceptionLength);
 
             modelBuilder.Entity<AuditLog>()
-                .Property(ula => ula.CustomData)
+                .Property(e => e.CustomData)
                 .HasMaxLength(AuditLog.MaxCustomDataLength);
 
             #endregion
