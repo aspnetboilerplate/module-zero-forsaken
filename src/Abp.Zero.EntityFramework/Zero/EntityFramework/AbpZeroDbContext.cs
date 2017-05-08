@@ -4,6 +4,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using Abp.Application.Editions;
 using Abp.Application.Features;
+using Abp.Auditing;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
@@ -174,6 +175,43 @@ namespace Abp.Zero.EntityFramework
                 .CreateIndex("IX_UserId_TenantId", 2);
 
             #endregion
+
+            #region AuditLog.Set_MaxLengths
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.ServiceName)
+                .HasMaxLength(AuditLog.MaxServiceNameLength);
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.MethodName)
+                .HasMaxLength(AuditLog.MaxMethodNameLength);
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.Parameters)
+                .HasMaxLength(AuditLog.MaxParametersLength);
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.ClientIpAddress)
+                .HasMaxLength(AuditLog.MaxClientIpAddressLength);
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.ClientName)
+                .HasMaxLength(AuditLog.MaxClientNameLength);
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.BrowserInfo)
+                .HasMaxLength(AuditLog.MaxBrowserInfoLength);
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.Exception)
+                .HasMaxLength(AuditLog.MaxExceptionLength);
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(e => e.CustomData)
+                .HasMaxLength(AuditLog.MaxCustomDataLength);
+
+            #endregion
+
         }
     }
 }
