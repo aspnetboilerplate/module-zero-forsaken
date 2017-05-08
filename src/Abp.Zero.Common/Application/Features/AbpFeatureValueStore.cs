@@ -62,7 +62,7 @@ namespace Abp.Application.Features
             return cacheItem.FeatureValues.GetOrDefault(featureName);
         }
 
-        public async Task<string> GetValueOrNullAsync(int tenantId, string featureName)
+        public virtual async Task<string> GetValueOrNullAsync(int tenantId, string featureName)
         {
             var cacheItem = await GetTenantFeatureCacheItemAsync(tenantId);
             var value = cacheItem.FeatureValues.GetOrDefault(featureName);
@@ -114,7 +114,7 @@ namespace Abp.Application.Features
             }
         }
 
-        protected async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
+        protected virtual async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
         {
             return await _cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {
