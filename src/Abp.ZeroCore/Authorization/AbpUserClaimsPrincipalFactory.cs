@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Runtime.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -24,6 +25,7 @@ namespace Abp.Authorization
 
         }
 
+        [UnitOfWork]
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
             var principal = await base.CreateAsync(user);
