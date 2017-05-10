@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <AssemblyName>Abp.Zero.SampleApp.NHibernateTests</AssemblyName>
     <PackageId>Abp.Zero.SampleApp.NHibernateTests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>Abp.Zero.SampleApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,17 +23,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Abp.TestBase" Version="2.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
     <PackageReference Include="Shouldly" Version="2.8.2" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.104" />
-    <PackageReference Include="Abp.TestBase" Version="1.5.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.105" />
     <PackageReference Include="NSubstitute" Version="2.0.2" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

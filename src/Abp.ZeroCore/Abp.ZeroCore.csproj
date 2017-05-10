@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Abp.ZeroCore</AssemblyName>
+    <PackageId>Abp.ZeroCore</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity</PackageTags>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <RootNamespace>Abp</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-de.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-fa.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-fr.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-it.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-lt.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-lv.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-pt-BR.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-ru.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-tr.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero-zh-CN.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\AbpZero.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+</Project>

@@ -1,3 +1,4 @@
+using System;
 using Abp.Modules;
 using Abp.TestBase;
 using Abp.Zero.Ldap;
@@ -14,6 +15,11 @@ namespace Abp.Zero.SampleApp.Tests
         typeof(AbpTestBaseModule))]
     public class SampleAppTestModule : AbpModule
     {
+        public override void PreInitialize()
+        {
+            Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(2);
+        }
+
         public override void Initialize()
         {
             IocManager.IocContainer.Register(

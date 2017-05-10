@@ -9,7 +9,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
         {
             DiscriminatorValue("EditionFeatureSetting");
 
-            References(x => x.Edition).Column("EditionId").Not.Nullable(); //TODO: Need to Map EditionId column?
+            References(x => x.Edition).Column("EditionId").Not.Nullable();
         }
     }
 }
