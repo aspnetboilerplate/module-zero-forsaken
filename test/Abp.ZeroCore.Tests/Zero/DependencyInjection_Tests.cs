@@ -49,5 +49,14 @@ namespace Abp.Zero
             LocalIocManager.Resolve<SecurityStampValidator>().ShouldBeOfType(validator.GetType());
             LocalIocManager.Resolve<SecurityStampValidator<User>>().ShouldBeOfType(validator.GetType());
         }
+
+        [Fact]
+        public void Should_Resolve_UserClaimsPrincipalFactory()
+        {
+            var factory = LocalIocManager.Resolve<UserClaimsPrincipalFactory>();
+            LocalIocManager.Resolve<UserClaimsPrincipalFactory<User, Role>>().ShouldBeOfType(factory.GetType());
+            LocalIocManager.Resolve<AbpUserClaimsPrincipalFactory<User, Role>>().ShouldBeOfType(factory.GetType());
+            LocalIocManager.Resolve<IUserClaimsPrincipalFactory<User>>().ShouldBeOfType(factory.GetType());
+        }
     }
 }

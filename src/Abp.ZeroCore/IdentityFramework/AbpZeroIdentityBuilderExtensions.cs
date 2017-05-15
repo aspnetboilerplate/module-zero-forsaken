@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Abp.Authorization.Users;
 using Abp.Authorization.Roles;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Abp.IdentityFramework
 {
@@ -56,6 +55,17 @@ namespace Abp.IdentityFramework
             builder.Services.AddScoped(typeof(SecurityStampValidator<>).MakeGenericType(builder.UserType), services => services.GetRequiredService(type));
             builder.Services.AddScoped(typeof(AbpSecurityStampValidator<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType), services => services.GetRequiredService(type));
             builder.Services.AddScoped(typeof(ISecurityStampValidator), services => services.GetRequiredService(type));
+            builder.Services.AddScoped(type);
+            return builder;
+        }
+
+        public static AbpIdentityBuilder AddAbpUserClaimsPrincipalFactory<TUserClaimsPrincipalFactory>(this AbpIdentityBuilder builder)
+            where TUserClaimsPrincipalFactory : class
+        {
+            var type = typeof(TUserClaimsPrincipalFactory);
+            builder.Services.AddScoped(typeof(UserClaimsPrincipalFactory<,>).MakeGenericType(builder.UserType, builder.RoleType), services => services.GetRequiredService(type));
+            builder.Services.AddScoped(typeof(AbpUserClaimsPrincipalFactory<,>).MakeGenericType(builder.UserType, builder.RoleType), services => services.GetRequiredService(type));
+            builder.Services.AddScoped(typeof(IUserClaimsPrincipalFactory<>).MakeGenericType(builder.UserType), services => services.GetRequiredService(type));
             builder.Services.AddScoped(type);
             return builder;
         }
