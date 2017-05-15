@@ -15,7 +15,7 @@ namespace Abp.Authorization
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {
-        protected AbpSecurityStampValidator(
+        public AbpSecurityStampValidator(
             IOptions<IdentityOptions> options,
             AbpSignInManager<TTenant, TRole, TUser> signInManager)
             : base(

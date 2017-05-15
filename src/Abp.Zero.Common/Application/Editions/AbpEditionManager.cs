@@ -9,7 +9,7 @@ using Abp.Runtime.Caching;
 
 namespace Abp.Application.Editions
 {
-    public abstract class AbpEditionManager : IDomainService
+    public class AbpEditionManager : IDomainService
     {
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
 
@@ -21,7 +21,7 @@ namespace Abp.Application.Editions
 
         protected IRepository<Edition> EditionRepository { get; set; }
 
-        protected AbpEditionManager(
+        public AbpEditionManager(
             IRepository<Edition> editionRepository,
             IAbpZeroFeatureValueStore featureValueStore)
         {

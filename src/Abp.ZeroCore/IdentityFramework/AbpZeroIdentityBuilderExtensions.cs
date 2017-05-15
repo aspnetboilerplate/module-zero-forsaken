@@ -11,13 +11,23 @@ namespace Abp.IdentityFramework
 {
     public static class AbpZeroIdentityBuilderExtensions
     {
-        public static AbpIdentityBuilder AddAbpUserManager<TUserManager>(this AbpIdentityBuilder builder)
-            where TUserManager : class
+        public static AbpIdentityBuilder AddAbpTenantManager<TTenantManager>(this AbpIdentityBuilder builder)
+            where TTenantManager : class
         {
-            var abpManagerType = typeof(AbpUserManager<,>).MakeGenericType(builder.RoleType, builder.UserType);
-            var managerType = typeof(UserManager<>).MakeGenericType(builder.UserType);
-            builder.Services.AddScoped(abpManagerType, services => services.GetRequiredService(managerType));
-            builder.AddUserManager<TUserManager>();
+            var type = typeof(TTenantManager);
+            var abpManagerType = typeof(AbpTenantManager<,>).MakeGenericType(builder.TenantType, builder.UserType);
+            builder.Services.AddTransient(type, provider => provider.GetService(abpManagerType));
+            builder.Services.AddTransient(abpManagerType, type);
+            return builder;
+        }
+
+        public static AbpIdentityBuilder AddAbpEditionManager<TEditionManager>(this AbpIdentityBuilder builder)
+            where TEditionManager : class
+        {
+            var type = typeof(TEditionManager);
+            var abpManagerType = typeof(AbpEditionManager);
+            builder.Services.AddTransient(type, provider => provider.GetService(abpManagerType));
+            builder.Services.AddTransient(abpManagerType, type);
             return builder;
         }
 
@@ -28,6 +38,16 @@ namespace Abp.IdentityFramework
             var managerType = typeof(RoleManager<>).MakeGenericType(builder.RoleType);
             builder.Services.AddScoped(abpManagerType, services => services.GetRequiredService(managerType));
             builder.AddRoleManager<TRoleManager>();
+            return builder;
+        }
+
+        public static AbpIdentityBuilder AddAbpUserManager<TUserManager>(this AbpIdentityBuilder builder)
+            where TUserManager : class
+        {
+            var abpManagerType = typeof(AbpUserManager<,>).MakeGenericType(builder.RoleType, builder.UserType);
+            var managerType = typeof(UserManager<>).MakeGenericType(builder.UserType);
+            builder.Services.AddScoped(abpManagerType, services => services.GetRequiredService(managerType));
+            builder.AddUserManager<TUserManager>();
             return builder;
         }
 
@@ -51,17 +71,6 @@ namespace Abp.IdentityFramework
             return builder;
         }
 
-        public static AbpIdentityBuilder AddAbpSecurityStampValidator<TSecurityStampValidator>(this AbpIdentityBuilder builder)
-            where TSecurityStampValidator : class, ISecurityStampValidator
-        {
-            var type = typeof(TSecurityStampValidator);
-            builder.Services.AddScoped(typeof(SecurityStampValidator<>).MakeGenericType(builder.UserType), services => services.GetRequiredService(type));
-            builder.Services.AddScoped(typeof(AbpSecurityStampValidator<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType), services => services.GetRequiredService(type));
-            builder.Services.AddScoped(typeof(ISecurityStampValidator), services => services.GetRequiredService(type));
-            builder.Services.AddScoped(type);
-            return builder;
-        }
-
         public static AbpIdentityBuilder AddAbpUserClaimsPrincipalFactory<TUserClaimsPrincipalFactory>(this AbpIdentityBuilder builder)
             where TUserClaimsPrincipalFactory : class
         {
@@ -73,23 +82,14 @@ namespace Abp.IdentityFramework
             return builder;
         }
 
-        public static AbpIdentityBuilder AddAbpTenantManager<TTenantManager>(this AbpIdentityBuilder builder)
-            where TTenantManager : class
+        public static AbpIdentityBuilder AddAbpSecurityStampValidator<TSecurityStampValidator>(this AbpIdentityBuilder builder)
+            where TSecurityStampValidator : class, ISecurityStampValidator
         {
-            var type = typeof(TTenantManager);
-            var abpManagerType = typeof(AbpTenantManager<,>).MakeGenericType(builder.TenantType, builder.UserType);
-            builder.Services.AddTransient(type, provider => provider.GetService(abpManagerType));
-            builder.Services.AddTransient(abpManagerType, type);
-            return builder;
-        }
-
-        public static AbpIdentityBuilder AddAbpEditionManager<TEditionManager>(this AbpIdentityBuilder builder)
-            where TEditionManager : class
-        {
-            var type = typeof(TEditionManager);
-            var abpManagerType = typeof(AbpEditionManager);
-            builder.Services.AddTransient(type, provider => provider.GetService(abpManagerType));
-            builder.Services.AddTransient(abpManagerType, type);
+            var type = typeof(TSecurityStampValidator);
+            builder.Services.AddScoped(typeof(SecurityStampValidator<>).MakeGenericType(builder.UserType), services => services.GetRequiredService(type));
+            builder.Services.AddScoped(typeof(AbpSecurityStampValidator<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType), services => services.GetRequiredService(type));
+            builder.Services.AddScoped(typeof(ISecurityStampValidator), services => services.GetRequiredService(type));
+            builder.Services.AddScoped(type);
             return builder;
         }
 
@@ -101,17 +101,6 @@ namespace Abp.IdentityFramework
             builder.Services.AddScoped(type);
             builder.Services.AddScoped(checkerType, provider => provider.GetService(type));
             builder.Services.AddScoped(typeof(IPermissionChecker), provider => provider.GetService(type));
-            return builder;
-        }
-
-        public static AbpIdentityBuilder AddFeatureValueStore<TFeatureValueStore>(this AbpIdentityBuilder builder)
-            where TFeatureValueStore : class
-        {
-            var type = typeof(TFeatureValueStore);
-            var storeType = typeof(AbpFeatureValueStore<,>).MakeGenericType(builder.TenantType, builder.UserType);
-            builder.Services.AddScoped(type);
-            builder.Services.AddScoped(storeType, provider => provider.GetService(type));
-            builder.Services.AddScoped(typeof(IFeatureValueStore), provider => provider.GetService(type));
             return builder;
         }
 
@@ -136,6 +125,17 @@ namespace Abp.IdentityFramework
             builder.Services.AddScoped(type);
             builder.Services.AddScoped(abpStoreType, services => services.GetRequiredService(type));
             builder.Services.AddScoped(storeType, services => services.GetRequiredService(type));
+            return builder;
+        }
+
+        public static AbpIdentityBuilder AddFeatureValueStore<TFeatureValueStore>(this AbpIdentityBuilder builder)
+            where TFeatureValueStore : class
+        {
+            var type = typeof(TFeatureValueStore);
+            var storeType = typeof(AbpFeatureValueStore<,>).MakeGenericType(builder.TenantType, builder.UserType);
+            builder.Services.AddScoped(type);
+            builder.Services.AddScoped(storeType, provider => provider.GetService(type));
+            builder.Services.AddScoped(typeof(IFeatureValueStore), provider => provider.GetService(type));
             return builder;
         }
     }

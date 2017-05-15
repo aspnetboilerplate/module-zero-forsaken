@@ -27,7 +27,7 @@ namespace Abp.Authorization
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly ISettingManager _settingManager;
 
-        protected AbpSignInManager(
+        public AbpSignInManager(
             AbpUserManager<TRole, TUser> userManager,
             IHttpContextAccessor contextAccessor,
             AbpUserClaimsPrincipalFactory<TUser, TRole> claimsFactory,

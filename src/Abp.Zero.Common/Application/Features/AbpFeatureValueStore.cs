@@ -15,7 +15,7 @@ namespace Abp.Application.Features
     /// <summary>
     /// Implements <see cref="IFeatureValueStore"/>.
     /// </summary>
-    public abstract class AbpFeatureValueStore<TTenant, TUser> : 
+    public class AbpFeatureValueStore<TTenant, TUser> : 
         IAbpZeroFeatureValueStore, 
         ITransientDependency,
         IEventHandler<EntityChangedEventData<Edition>>,
@@ -34,7 +34,7 @@ namespace Abp.Application.Features
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TUser}"/> class.
         /// </summary>
-        protected AbpFeatureValueStore(
+        public AbpFeatureValueStore(
             ICacheManager cacheManager,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
             IRepository<TTenant> tenantRepository,

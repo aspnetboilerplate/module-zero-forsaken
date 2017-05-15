@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <RootNamespace>Abp</RootNamespace>
+    <DefineConstants>OVERRIDE_DEFAULT_SERVICES_DISABLED</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

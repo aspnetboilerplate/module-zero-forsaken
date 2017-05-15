@@ -8,7 +8,10 @@ using Abp.ZeroCore.SampleApp.Core;
 using Microsoft.AspNetCore.Identity;
 using Shouldly;
 using Xunit;
+
+#if OVERRIDE_DEFAULT_SERVICES
 using SecurityStampValidator = Abp.ZeroCore.SampleApp.Core.SecurityStampValidator;
+#endif
 
 namespace Abp.Zero
 {
@@ -17,95 +20,131 @@ namespace Abp.Zero
         [Fact]
         public void Should_Resolve_UserManager()
         {
-            var manager = LocalIocManager.Resolve<UserManager<User>>();
-            LocalIocManager.Resolve<UserManager>().ShouldBeOfType(manager.GetType());
-            LocalIocManager.Resolve<AbpUserManager<Role, User>>().ShouldBeOfType(manager.GetType());
+            LocalIocManager.Resolve<UserManager<User>>();
+            LocalIocManager.Resolve<AbpUserManager<Role, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<UserManager>();
+#endif
         }
-        
+
         [Fact]
         public void Should_Resolve_RoleManager()
         {
-            var manager = LocalIocManager.Resolve<RoleManager<Role>>();
-            LocalIocManager.Resolve<RoleManager>().ShouldBeOfType(manager.GetType());
-            LocalIocManager.Resolve<AbpRoleManager<Role, User>>().ShouldBeOfType(manager.GetType());
+            LocalIocManager.Resolve<RoleManager<Role>>();
+            LocalIocManager.Resolve<AbpRoleManager<Role, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<RoleManager>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_SignInManager()
         {
-            var manager = LocalIocManager.Resolve<SignInManager<User>>();
-            LocalIocManager.Resolve<SignInManager>().ShouldBeOfType(manager.GetType());
-            LocalIocManager.Resolve<AbpSignInManager<Tenant, Role, User>>().ShouldBeOfType(manager.GetType());
+            LocalIocManager.Resolve<SignInManager<User>>();
+            LocalIocManager.Resolve<AbpSignInManager<Tenant, Role, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<SignInManager>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_LoginManager()
         {
-            var manager = LocalIocManager.Resolve<AbpLogInManager<Tenant, Role, User>>();
-            LocalIocManager.Resolve<LogInManager>().ShouldBeOfType(manager.GetType());
+            LocalIocManager.Resolve<AbpLogInManager<Tenant, Role, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<LogInManager>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_SecurityStampValidator()
         {
-            var validator = LocalIocManager.Resolve<AbpSecurityStampValidator<Tenant, Role, User>>();
-            LocalIocManager.Resolve<SecurityStampValidator>().ShouldBeOfType(validator.GetType());
-            LocalIocManager.Resolve<SecurityStampValidator<User>>().ShouldBeOfType(validator.GetType());
+            LocalIocManager.Resolve<AbpSecurityStampValidator<Tenant, Role, User>>();
+            LocalIocManager.Resolve<SecurityStampValidator<User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<SecurityStampValidator>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_UserClaimsPrincipalFactory()
         {
-            var factory = LocalIocManager.Resolve<UserClaimsPrincipalFactory>();
-            LocalIocManager.Resolve<UserClaimsPrincipalFactory<User, Role>>().ShouldBeOfType(factory.GetType());
-            LocalIocManager.Resolve<AbpUserClaimsPrincipalFactory<User, Role>>().ShouldBeOfType(factory.GetType());
-            LocalIocManager.Resolve<IUserClaimsPrincipalFactory<User>>().ShouldBeOfType(factory.GetType());
+            LocalIocManager.Resolve<UserClaimsPrincipalFactory<User, Role>>();
+            LocalIocManager.Resolve<AbpUserClaimsPrincipalFactory<User, Role>>();
+            LocalIocManager.Resolve<IUserClaimsPrincipalFactory<User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<UserClaimsPrincipalFactory>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_TenantManager()
         {
-            var manager = LocalIocManager.Resolve<TenantManager>();
-            LocalIocManager.Resolve<AbpTenantManager<Tenant, User>>().ShouldBeOfType(manager.GetType());
+            LocalIocManager.Resolve<AbpTenantManager<Tenant, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<TenantManager>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_EditionManager()
         {
-            var manager = LocalIocManager.Resolve<EditionManager>();
-            LocalIocManager.Resolve<AbpEditionManager>().ShouldBeOfType(manager.GetType());
+            LocalIocManager.Resolve<AbpEditionManager>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<EditionManager>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_PermissionChecker()
         {
-            var checker = LocalIocManager.Resolve<PermissionChecker>();
-            LocalIocManager.Resolve<IPermissionChecker>().ShouldBeOfType(checker.GetType());
-            LocalIocManager.Resolve<PermissionChecker<Tenant, Role, User>>().ShouldBeOfType(checker.GetType());
+            LocalIocManager.Resolve<IPermissionChecker>();
+            LocalIocManager.Resolve<PermissionChecker<Tenant, Role, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<PermissionChecker>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_FeatureValueStore()
         {
-            var checker = LocalIocManager.Resolve<FeatureValueStore>();
-            LocalIocManager.Resolve<IFeatureValueStore>().ShouldBeOfType(checker.GetType());
-            LocalIocManager.Resolve<AbpFeatureValueStore<Tenant, User>>().ShouldBeOfType(checker.GetType());
+            LocalIocManager.Resolve<IFeatureValueStore>();
+            LocalIocManager.Resolve<AbpFeatureValueStore<Tenant, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<FeatureValueStore>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_UserStore()
         {
-            var store = LocalIocManager.Resolve<UserStore>();
-            LocalIocManager.Resolve<IUserStore<User>>().ShouldBeOfType(store.GetType());
-            LocalIocManager.Resolve<AbpUserStore<Role, User>>().ShouldBeOfType(store.GetType());
+            LocalIocManager.Resolve<IUserStore<User>>();
+            LocalIocManager.Resolve<AbpUserStore<Role, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<UserStore>();
+#endif
         }
 
         [Fact]
         public void Should_Resolve_RoleStore()
         {
-            var store = LocalIocManager.Resolve<RoleStore>();
-            LocalIocManager.Resolve<IRoleStore<Role>>().ShouldBeOfType(store.GetType());
-            LocalIocManager.Resolve<AbpRoleStore<Role, User>>().ShouldBeOfType(store.GetType());
+            LocalIocManager.Resolve<IRoleStore<Role>>();
+            LocalIocManager.Resolve<AbpRoleStore<Role, User>>();
+
+#if OVERRIDE_DEFAULT_SERVICES
+            LocalIocManager.Resolve<RoleStore>();
+#endif
         }
     }
 }

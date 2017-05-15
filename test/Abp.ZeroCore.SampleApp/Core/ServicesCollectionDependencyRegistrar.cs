@@ -10,19 +10,20 @@ namespace Abp.ZeroCore.SampleApp.Core
             services.AddLogging();
 
             services.AddAbpIdentity<Tenant, User, Role>()
-                .AddAbpSecurityStampValidator<SecurityStampValidator>()
-                .AddAbpUserManager<UserManager>()
+#if OVERRIDE_DEFAULT_SERVICES
+                .AddAbpTenantManager<TenantManager>()
+                .AddAbpEditionManager<EditionManager>()
                 .AddAbpRoleManager<RoleManager>()
+                .AddAbpUserManager<UserManager>()
                 .AddAbpSignInManager<SignInManager>()
                 .AddAbpLogInManager<LogInManager>()
                 .AddAbpUserClaimsPrincipalFactory<UserClaimsPrincipalFactory>()
-                .AddAbpTenantManager<TenantManager>()
-                .AddAbpEditionManager<EditionManager>()
+                .AddAbpSecurityStampValidator<SecurityStampValidator>()
                 .AddPermissionChecker<PermissionChecker>()
-                .AddFeatureValueStore<FeatureValueStore>()
                 .AddAbpUserStore<UserStore>()
                 .AddAbpRoleStore<RoleStore>()
-
+                .AddFeatureValueStore<FeatureValueStore>()
+#endif
                 .AddDefaultTokenProviders();
         }
     }

@@ -12,11 +12,11 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization
 {
-    public abstract class AbpUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>, ITransientDependency
+    public class AbpUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>, ITransientDependency
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {
-        protected AbpUserClaimsPrincipalFactory(
+        public AbpUserClaimsPrincipalFactory(
             AbpUserManager<TRole, TUser> userManager,
             AbpRoleManager<TRole, TUser> roleManager,
             IOptions<IdentityOptions> optionsAccessor

@@ -58,7 +58,7 @@ namespace Abp.Authorization.Users
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
 
-        protected AbpUserManager(
+        public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
             AbpUserStore<TRole, TUser> store,
             IOptions<IdentityOptions> optionsAccessor,

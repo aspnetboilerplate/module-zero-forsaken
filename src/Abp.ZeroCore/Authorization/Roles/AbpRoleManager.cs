@@ -46,7 +46,7 @@ namespace Abp.Authorization.Roles
         private readonly ICacheManager _cacheManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        protected AbpRoleManager(
+        public AbpRoleManager(
             AbpRoleStore<TRole, TUser> store,
             IEnumerable<IRoleValidator<TRole>> roleValidators,
             ILookupNormalizer keyNormalizer,
