@@ -1,13 +1,13 @@
 ﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Abp.Authorization.Users;
 using Abp.Authorization.Roles;
 using Abp.MultiTenancy;
 
-namespace Abp.IdentityFramework
+// ReSharper disable once CheckNamespace - This is done to add extension methods to Microsoft.Extensions.DependencyInjection namespace
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AbpZeroIdentityBuilderExtensions
     {
