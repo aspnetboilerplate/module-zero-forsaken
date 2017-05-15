@@ -49,10 +49,17 @@ namespace Abp.Zero
         {
             FillMissingEntityTypes();
 
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
-            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient); //could not register conventionally
+            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
+            //IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
+
+            new TempBasicConventionalRegistrar().RegisterAssembly(IocManager, typeof(AbpZeroCommonModule).GetAssembly());
 
             RegisterTenantCache();
+        }
+
+        public override void PostInitialize()
+        {
+            FillMissingServices();
         }
 
         private void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
@@ -65,8 +72,15 @@ namespace Abp.Zero
             }
         }
 
+        private void FillMissingServices()
+        {
+            //TODO: register missing services like done for Abp.ZeroCore
+        }
+
         private void FillMissingEntityTypes()
         {
+            //TODO: These can be automatically set for Abp.ZeroCore!
+
             using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
             {
                 if (entityTypes.Object.User != null &&
