@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization
 {
-    public abstract class AbpSecurityStampValidator<TTenant, TRole, TUser> : SecurityStampValidator<TUser>
+    public class AbpSecurityStampValidator<TTenant, TRole, TUser> : SecurityStampValidator<TUser>
         where TTenant : AbpTenant<TUser>
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>

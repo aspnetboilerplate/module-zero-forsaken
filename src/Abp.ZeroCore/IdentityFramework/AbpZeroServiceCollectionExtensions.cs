@@ -1,5 +1,4 @@
 ﻿using System;
-using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
@@ -12,26 +11,26 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AbpZeroServiceCollectionExtensions
     {
-        public static IdentityBuilder AddAbpIdentity<TTenant, TUser, TRole, TSecurityStampValidator>(this IServiceCollection services)
+        public static AbpIdentityBuilder AddAbpIdentity<TTenant, TUser, TRole>(this IServiceCollection services)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>, new()
             where TUser : AbpUser<TUser>
-            where TSecurityStampValidator : AbpSecurityStampValidator<TTenant, TRole, TUser>
         {
-            return services.AddAbpIdentity<TTenant, TUser, TRole, TSecurityStampValidator>(setupAction: null);
+            return services.AddAbpIdentity<TTenant, TUser, TRole>(setupAction: null);
         }
 
-        public static IdentityBuilder AddAbpIdentity<TTenant, TUser, TRole, TSecurityStampValidator>(
-            this IServiceCollection services,
-            Action<IdentityOptions> setupAction)
+        public static AbpIdentityBuilder AddAbpIdentity<TTenant, TUser, TRole>(this IServiceCollection services, Action<IdentityOptions> setupAction)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>, new()
             where TUser : AbpUser<TUser>
-            where TSecurityStampValidator : AbpSecurityStampValidator<TTenant, TRole, TUser>
         {
-            services.TryAddScoped<ISecurityStampValidator, TSecurityStampValidator>();
+            //services.TryAddScoped<UserManager<TUser>, AbpUserManager<TRole, TUser>>();
+            //services.TryAddScoped(typeof(AbpUserManager<TRole, TUser>), provider => provider.GetService(typeof(UserManager<TUser>)));
 
-            return services.AddIdentity<TUser, TRole>(setupAction);
+            //services.TryAddScoped<RoleManager<TRole>, AbpRoleManager<TRole, TUser>>();
+            //services.TryAddScoped<SignInManager<TUser>, AbpSignInManager<TTenant, TRole, TUser>>();
+
+            return new AbpIdentityBuilder(services.AddIdentity<TUser, TRole>(setupAction), typeof(TTenant));
         }
     }
 }

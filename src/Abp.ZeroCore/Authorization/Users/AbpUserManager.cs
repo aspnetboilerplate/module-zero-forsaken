@@ -23,7 +23,7 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization.Users
 {
-    public abstract class AbpUserManager<TRole, TUser> : UserManager<TUser>, IDomainService
+    public class AbpUserManager<TRole, TUser> : UserManager<TUser>, IDomainService
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {
