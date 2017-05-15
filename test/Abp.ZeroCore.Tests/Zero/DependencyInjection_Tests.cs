@@ -1,6 +1,9 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Editions;
+using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.MultiTenancy;
 using Abp.ZeroCore.SampleApp.Core;
 using Microsoft.AspNetCore.Identity;
 using Shouldly;
@@ -57,6 +60,52 @@ namespace Abp.Zero
             LocalIocManager.Resolve<UserClaimsPrincipalFactory<User, Role>>().ShouldBeOfType(factory.GetType());
             LocalIocManager.Resolve<AbpUserClaimsPrincipalFactory<User, Role>>().ShouldBeOfType(factory.GetType());
             LocalIocManager.Resolve<IUserClaimsPrincipalFactory<User>>().ShouldBeOfType(factory.GetType());
+        }
+
+        [Fact]
+        public void Should_Resolve_TenantManager()
+        {
+            var manager = LocalIocManager.Resolve<TenantManager>();
+            LocalIocManager.Resolve<AbpTenantManager<Tenant, User>>().ShouldBeOfType(manager.GetType());
+        }
+
+        [Fact]
+        public void Should_Resolve_EditionManager()
+        {
+            var manager = LocalIocManager.Resolve<EditionManager>();
+            LocalIocManager.Resolve<AbpEditionManager>().ShouldBeOfType(manager.GetType());
+        }
+
+        [Fact]
+        public void Should_Resolve_PermissionChecker()
+        {
+            var checker = LocalIocManager.Resolve<PermissionChecker>();
+            LocalIocManager.Resolve<IPermissionChecker>().ShouldBeOfType(checker.GetType());
+            LocalIocManager.Resolve<PermissionChecker<Tenant, Role, User>>().ShouldBeOfType(checker.GetType());
+        }
+
+        [Fact]
+        public void Should_Resolve_FeatureValueStore()
+        {
+            var checker = LocalIocManager.Resolve<FeatureValueStore>();
+            LocalIocManager.Resolve<IFeatureValueStore>().ShouldBeOfType(checker.GetType());
+            LocalIocManager.Resolve<AbpFeatureValueStore<Tenant, User>>().ShouldBeOfType(checker.GetType());
+        }
+
+        [Fact]
+        public void Should_Resolve_UserStore()
+        {
+            var store = LocalIocManager.Resolve<UserStore>();
+            LocalIocManager.Resolve<IUserStore<User>>().ShouldBeOfType(store.GetType());
+            LocalIocManager.Resolve<AbpUserStore<Role, User>>().ShouldBeOfType(store.GetType());
+        }
+
+        [Fact]
+        public void Should_Resolve_RoleStore()
+        {
+            var store = LocalIocManager.Resolve<RoleStore>();
+            LocalIocManager.Resolve<IRoleStore<Role>>().ShouldBeOfType(store.GetType());
+            LocalIocManager.Resolve<AbpRoleStore<Role, User>>().ShouldBeOfType(store.GetType());
         }
     }
 }

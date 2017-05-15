@@ -16,6 +16,12 @@ namespace Abp.ZeroCore.SampleApp.Core
                 .AddAbpSignInManager<SignInManager>()
                 .AddAbpLogInManager<LogInManager>()
                 .AddAbpUserClaimsPrincipalFactory<UserClaimsPrincipalFactory>()
+                .AddAbpTenantManager<TenantManager>()
+                .AddAbpEditionManager<EditionManager>()
+                .AddPermissionChecker<PermissionChecker>()
+                .AddFeatureValueStore<FeatureValueStore>()
+                .AddAbpUserStore<UserStore>()
+                .AddAbpRoleStore<RoleStore>()
 
                 .AddDefaultTokenProviders();
         }
