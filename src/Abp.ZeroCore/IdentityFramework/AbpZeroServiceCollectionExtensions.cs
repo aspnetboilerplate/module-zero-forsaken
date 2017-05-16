@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
+using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -27,6 +28,13 @@ namespace Microsoft.Extensions.DependencyInjection
             where TRole : AbpRole<TUser>, new()
             where TUser : AbpUser<TUser>
         {
+            services.AddSingleton<IAbpZeroEntityTypes>(new AbpZeroEntityTypes
+            {
+                Tenant = typeof(TTenant),
+                Role = typeof(TRole),
+                User = typeof(TUser)
+            });
+
             //AbpTenantManager
             services.TryAddScoped<AbpTenantManager<TTenant, TUser>>();
 

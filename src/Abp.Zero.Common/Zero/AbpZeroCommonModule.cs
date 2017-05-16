@@ -25,10 +25,11 @@ namespace Abp.Zero
     {
         public override void PreInitialize()
         {
+            IocManager.RegisterIfNot<IAbpZeroEntityTypes, AbpZeroEntityTypes>(); //Registered on services.AddAbpIdentity() for Abp.ZeroCore.
+
             IocManager.Register<IRoleManagementConfig, RoleManagementConfig>();
             IocManager.Register<IUserManagementConfig, UserManagementConfig>();
             IocManager.Register<ILanguageManagementConfig, LanguageManagementConfig>();
-            IocManager.Register<IAbpZeroEntityTypes, AbpZeroEntityTypes>();
             IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
 
             Configuration.ReplaceService<ITenantStore, TenantStore>(DependencyLifeStyle.Transient);
@@ -50,16 +51,10 @@ namespace Abp.Zero
             FillMissingEntityTypes();
 
             IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
-            //IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
-
+            //IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly()); //TODO: Enable this, remove next line after Abp v2.1
             new TempBasicConventionalRegistrar().RegisterAssembly(IocManager, typeof(AbpZeroCommonModule).GetAssembly());
 
             RegisterTenantCache();
-        }
-
-        public override void PostInitialize()
-        {
-            FillMissingServices();
         }
 
         private void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
@@ -72,15 +67,8 @@ namespace Abp.Zero
             }
         }
 
-        private void FillMissingServices()
-        {
-            //TODO: register missing services like done for Abp.ZeroCore
-        }
-
         private void FillMissingEntityTypes()
         {
-            //TODO: These can be automatically set for Abp.ZeroCore!
-
             using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
             {
                 if (entityTypes.Object.User != null &&
