@@ -1,29 +1,33 @@
-﻿using Abp.Modules;
+﻿using System;
+using Abp.AutoMapper;
+using Abp.Modules;
 using Abp.Reflection.Extensions;
+using Abp.TestBase;
+using Abp.Zero.Configuration;
 using Abp.ZeroCore.SampleApp;
-using Castle.Windsor.MsDependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.Zero
 {
-    [DependsOn(typeof(AbpZeroCoreSampleAppModule))]
+    [DependsOn(typeof(AbpZeroCoreSampleAppModule), typeof(AbpTestBaseModule))]
     public class AbpZeroTestModule : AbpModule
     {
+        public AbpZeroTestModule(AbpZeroCoreSampleAppModule sampleAppModule)
+        {
+            sampleAppModule.SkipDbContextRegistration = true;
+        }
+
         public override void PreInitialize()
         {
+            Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
-
-            var services = new ServiceCollection();
-
-            var serviceProvider = WindsorRegistrationHelper.CreateServiceProvider(
-                IocManager.IocContainer,
-                services
-            );
+            Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
+            Configuration.UnitOfWork.IsTransactional = false;
         }
 
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(AbpZeroTestModule).GetAssembly());
+            TestServiceCollectionRegistrar.Register(IocManager);
         }
     }
 }

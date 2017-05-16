@@ -10,7 +10,6 @@ namespace Abp.ZeroCore.SampleApp.Core
             services.AddLogging();
 
             services.AddAbpIdentity<Tenant, User, Role>()
-#if OVERRIDE_DEFAULT_SERVICES
                 .AddAbpTenantManager<TenantManager>()
                 .AddAbpEditionManager<EditionManager>()
                 .AddAbpRoleManager<RoleManager>()
@@ -23,7 +22,6 @@ namespace Abp.ZeroCore.SampleApp.Core
                 .AddAbpUserStore<UserStore>()
                 .AddAbpRoleStore<RoleStore>()
                 .AddFeatureValueStore<FeatureValueStore>()
-#endif
                 .AddDefaultTokenProviders();
         }
     }

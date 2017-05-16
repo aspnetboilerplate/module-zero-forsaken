@@ -1,5 +1,4 @@
-﻿#if OVERRIDE_DEFAULT_SERVICES
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -85,6 +84,8 @@ namespace Abp.ZeroCore.SampleApp.Core
 
     public class EditionManager : AbpEditionManager
     {
+        public const string DefaultEditionName = "Standard";
+
         public EditionManager(
             IRepository<Edition> editionRepository,
             IAbpZeroFeatureValueStore featureValueStore)
@@ -271,4 +272,3 @@ namespace Abp.ZeroCore.SampleApp.Core
         }
     }
 }
-#endif

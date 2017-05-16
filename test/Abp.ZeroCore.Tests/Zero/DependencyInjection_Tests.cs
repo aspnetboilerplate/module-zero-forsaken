@@ -6,12 +6,9 @@ using Abp.Authorization.Users;
 using Abp.MultiTenancy;
 using Abp.ZeroCore.SampleApp.Core;
 using Microsoft.AspNetCore.Identity;
-using Shouldly;
 using Xunit;
 
-#if OVERRIDE_DEFAULT_SERVICES
 using SecurityStampValidator = Abp.ZeroCore.SampleApp.Core.SecurityStampValidator;
-#endif
 
 namespace Abp.Zero
 {
@@ -22,10 +19,7 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<UserManager<User>>();
             LocalIocManager.Resolve<AbpUserManager<Role, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<UserManager>();
-#endif
         }
 
         [Fact]
@@ -33,10 +27,7 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<RoleManager<Role>>();
             LocalIocManager.Resolve<AbpRoleManager<Role, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<RoleManager>();
-#endif
         }
 
         [Fact]
@@ -44,20 +35,14 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<SignInManager<User>>();
             LocalIocManager.Resolve<AbpSignInManager<Tenant, Role, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<SignInManager>();
-#endif
         }
 
         [Fact]
         public void Should_Resolve_LoginManager()
         {
             LocalIocManager.Resolve<AbpLogInManager<Tenant, Role, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<LogInManager>();
-#endif
         }
 
         [Fact]
@@ -65,10 +50,7 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<AbpSecurityStampValidator<Tenant, Role, User>>();
             LocalIocManager.Resolve<SecurityStampValidator<User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<SecurityStampValidator>();
-#endif
         }
 
         [Fact]
@@ -77,30 +59,21 @@ namespace Abp.Zero
             LocalIocManager.Resolve<UserClaimsPrincipalFactory<User, Role>>();
             LocalIocManager.Resolve<AbpUserClaimsPrincipalFactory<User, Role>>();
             LocalIocManager.Resolve<IUserClaimsPrincipalFactory<User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<UserClaimsPrincipalFactory>();
-#endif
         }
 
         [Fact]
         public void Should_Resolve_TenantManager()
         {
             LocalIocManager.Resolve<AbpTenantManager<Tenant, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<TenantManager>();
-#endif
         }
 
         [Fact]
         public void Should_Resolve_EditionManager()
         {
             LocalIocManager.Resolve<AbpEditionManager>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<EditionManager>();
-#endif
         }
 
         [Fact]
@@ -108,10 +81,7 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<IPermissionChecker>();
             LocalIocManager.Resolve<PermissionChecker<Tenant, Role, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<PermissionChecker>();
-#endif
         }
 
         [Fact]
@@ -119,10 +89,7 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<IFeatureValueStore>();
             LocalIocManager.Resolve<AbpFeatureValueStore<Tenant, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<FeatureValueStore>();
-#endif
         }
 
         [Fact]
@@ -130,10 +97,7 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<IUserStore<User>>();
             LocalIocManager.Resolve<AbpUserStore<Role, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<UserStore>();
-#endif
         }
 
         [Fact]
@@ -141,10 +105,7 @@ namespace Abp.Zero
         {
             LocalIocManager.Resolve<IRoleStore<Role>>();
             LocalIocManager.Resolve<AbpRoleStore<Role, User>>();
-
-#if OVERRIDE_DEFAULT_SERVICES
             LocalIocManager.Resolve<RoleStore>();
-#endif
         }
     }
 }
