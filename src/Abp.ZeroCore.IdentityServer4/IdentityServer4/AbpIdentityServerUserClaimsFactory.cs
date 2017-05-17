@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Domain.Uow;
 using Abp.Runtime.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -15,13 +16,14 @@ namespace Abp.IdentityServer4
         where TUser : AbpUser<TUser>
     {
         public AbpIdentityServerUserClaimsFactory(
-            UserManager<TUser> userManager, //TODO: Can inject?
-            RoleManager<TRole> roleManager, //TODO: Can inject?
+            UserManager<TUser> userManager,
+            RoleManager<TRole> roleManager,
             IOptions<IdentityOptions> optionsAccessor
         ) : base(userManager, roleManager, optionsAccessor)
         {
         }
 
+        [UnitOfWork]
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
             var principal = await base.CreateAsync(user);

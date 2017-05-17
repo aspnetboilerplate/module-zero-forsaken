@@ -9,13 +9,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Abp.IdentityServer4
 {
-    public class AbpProfileService<TRole, TUser> : ProfileService<TUser> 
-        where TRole : AbpRole<TUser>, new()
+    public class AbpProfileService<TUser> : ProfileService<TUser> 
         where TUser : AbpUser<TUser>
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        protected AbpProfileService( //TODO: Check if correct arguments passed
+        protected AbpProfileService(
             UserManager<TUser> userManager,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
             IUnitOfWorkManager unitOfWorkManager

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Abp.IdentityServer4
 {
-    //TODO: Replace claims service!
     public class AbpClaimsService : DefaultClaimsService
     {
         public AbpClaimsService(IProfileService profile, ILogger<DefaultClaimsService> logger)
