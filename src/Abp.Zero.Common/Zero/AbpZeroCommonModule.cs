@@ -25,10 +25,11 @@ namespace Abp.Zero
     {
         public override void PreInitialize()
         {
+            IocManager.RegisterIfNot<IAbpZeroEntityTypes, AbpZeroEntityTypes>(); //Registered on services.AddAbpIdentity() for Abp.ZeroCore.
+
             IocManager.Register<IRoleManagementConfig, RoleManagementConfig>();
             IocManager.Register<IUserManagementConfig, UserManagementConfig>();
             IocManager.Register<ILanguageManagementConfig, LanguageManagementConfig>();
-            IocManager.Register<IAbpZeroEntityTypes, AbpZeroEntityTypes>();
             IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
 
             Configuration.ReplaceService<ITenantStore, TenantStore>(DependencyLifeStyle.Transient);
@@ -49,8 +50,9 @@ namespace Abp.Zero
         {
             FillMissingEntityTypes();
 
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
-            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient); //could not register conventionally
+            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
+            //IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly()); //TODO: Enable this, remove next line after Abp v2.1
+            new TempBasicConventionalRegistrar().RegisterAssembly(IocManager, typeof(AbpZeroCommonModule).GetAssembly());
 
             RegisterTenantCache();
         }

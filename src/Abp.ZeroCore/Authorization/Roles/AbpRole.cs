@@ -30,7 +30,7 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Claims of this user.
         /// </summary>
-        [ForeignKey("UserId")]
+        [ForeignKey("RoleId")]
         public virtual ICollection<RoleClaim> Claims { get; set; }
 
         /// <summary>
