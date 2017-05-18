@@ -22,8 +22,8 @@ namespace Abp.IdentityServer4
         protected ILogger<ResourceOwnerPasswordValidator<TUser>> Logger { get; }
 
         public AbpResourceOwnerPasswordValidator(
-            UserManager<TUser> userManager, //TODO: Can inject?
-            SignInManager<TUser> signInManager, //TODO: Can inject?
+            UserManager<TUser> userManager,
+            SignInManager<TUser> signInManager,
             ILogger<ResourceOwnerPasswordValidator<TUser>> logger
         )
             : base(userManager, signInManager, logger)

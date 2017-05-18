@@ -51,8 +51,7 @@ namespace Abp.Zero
             FillMissingEntityTypes();
 
             IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
-            //IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly()); //TODO: Enable this, remove next line after Abp v2.1
-            new TempBasicConventionalRegistrar().RegisterAssembly(IocManager, typeof(AbpZeroCommonModule).GetAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
 
             RegisterTenantCache();
         }
