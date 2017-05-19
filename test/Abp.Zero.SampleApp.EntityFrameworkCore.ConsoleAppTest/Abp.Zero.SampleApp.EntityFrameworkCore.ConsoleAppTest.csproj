@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.Castle.Log4Net" Version="2.1.0-beta1" />
+    <PackageReference Include="Abp.Castle.Log4Net" Version="2.1.0-beta2" />
     <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.0" />
   </ItemGroup>
