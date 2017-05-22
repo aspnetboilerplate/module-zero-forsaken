@@ -15,7 +15,7 @@ namespace Abp.Application.Features
     /// <summary>
     /// Implements <see cref="IFeatureValueStore"/>.
     /// </summary>
-    public abstract class AbpFeatureValueStore<TTenant, TUser> : 
+    public class AbpFeatureValueStore<TTenant, TUser> : 
         IAbpZeroFeatureValueStore, 
         ITransientDependency,
         IEventHandler<EntityChangedEventData<Edition>>,
@@ -34,7 +34,7 @@ namespace Abp.Application.Features
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TUser}"/> class.
         /// </summary>
-        protected AbpFeatureValueStore(
+        public AbpFeatureValueStore(
             ICacheManager cacheManager,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
             IRepository<TTenant> tenantRepository,
@@ -62,7 +62,7 @@ namespace Abp.Application.Features
             return cacheItem.FeatureValues.GetOrDefault(featureName);
         }
 
-        public async Task<string> GetValueOrNullAsync(int tenantId, string featureName)
+        public virtual async Task<string> GetValueOrNullAsync(int tenantId, string featureName)
         {
             var cacheItem = await GetTenantFeatureCacheItemAsync(tenantId);
             var value = cacheItem.FeatureValues.GetOrDefault(featureName);
@@ -114,7 +114,7 @@ namespace Abp.Application.Features
             }
         }
 
-        protected async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
+        protected virtual async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
         {
             return await _cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {

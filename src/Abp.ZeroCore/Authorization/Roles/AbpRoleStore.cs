@@ -19,7 +19,7 @@ namespace Abp.Authorization.Roles
     /// <summary>
     /// Creates a new instance of a persistence store for roles.
     /// </summary>
-    public abstract class AbpRoleStore<TRole, TUser> :
+    public class AbpRoleStore<TRole, TUser> :
         IRoleStore<TRole>,
         IRoleClaimStore<TRole>,
         IRolePermissionStore<TRole>,
@@ -50,7 +50,7 @@ namespace Abp.Authorization.Roles
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
 
-        protected AbpRoleStore(
+        public AbpRoleStore(
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<TRole> roleRepository, 
             IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)

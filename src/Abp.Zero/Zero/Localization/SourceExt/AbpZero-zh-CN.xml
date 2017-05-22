@@ -8,7 +8,7 @@
     <text name="Identity.InvalidUserName" value="用户名{0}不符合要求, 只能包含字母和数字." />
     <text name="Identity.PasswordTooShort" value="密码至少要{0}位." />
     <text name="Identity.PropertyTooShort" value="{0}不能为空." />
-    <text name="Identity.DuplicateName" value="名字{0}已被占用." />
+    <text name="Identity.DuplicateUserName" value="名字{0}已被占用." />
     <text name="Identity.UserAlreadyHasPassword" value="用户已设置密码." />
     <text name="Identity.PasswordRequireNonLetterOrDigit" value="密码必须包含一位非字母特殊符号或数字." />
     <text name="Identity.UserIdNotFound" value="用户不存在." />

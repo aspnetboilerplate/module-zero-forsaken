@@ -19,7 +19,7 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization
 {
-    public abstract class AbpSignInManager<TTenant, TRole, TUser> : SignInManager<TUser>, ITransientDependency
+    public class AbpSignInManager<TTenant, TRole, TUser> : SignInManager<TUser>, ITransientDependency
         where TTenant : AbpTenant<TUser>
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
@@ -27,7 +27,7 @@ namespace Abp.Authorization
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly ISettingManager _settingManager;
 
-        protected AbpSignInManager(
+        public AbpSignInManager(
             AbpUserManager<TRole, TUser> userManager,
             IHttpContextAccessor contextAccessor,
             AbpUserClaimsPrincipalFactory<TUser, TRole> claimsFactory,

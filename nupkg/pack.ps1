@@ -14,13 +14,13 @@ $projects = (
     "Abp.Zero.EntityFrameworkCore",
     "Abp.Zero.NHibernate",
     "Abp.ZeroCore",
+    "Abp.ZeroCore.IdentityServer4",
     "Abp.ZeroCore.EntityFrameworkCore"
 )
 
 # Rebuild solution
 Set-Location $slnPath
 & dotnet restore
-& dotnet msbuild /t:Rebuild /p:Configuration=Release
 
 # Copy all nuget packages to the pack folder
 foreach($project in $projects) {
@@ -29,7 +29,8 @@ foreach($project in $projects) {
 
     # Create nuget pack
     Set-Location $projectFolder
-    & dotnet msbuild /t:pack /p:Configuration=Release /p:IncludeSymbols=true
+    Remove-Item -Recurse (Join-Path $projectFolder "bin/Release")
+    & dotnet msbuild /t:pack /p:Configuration=Release /p:IncludeSymbols=true /p:SourceLinkCreate=true
 
     # Copy nuget package
     $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")

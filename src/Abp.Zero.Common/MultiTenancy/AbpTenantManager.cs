@@ -24,7 +24,7 @@ namespace Abp.MultiTenancy
     /// </summary>
     /// <typeparam name="TTenant">Type of the application Tenant</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
-    public abstract class AbpTenantManager<TTenant, TUser> : IDomainService,
+    public class AbpTenantManager<TTenant, TUser> : IDomainService,
         IEventHandler<EntityChangedEventData<TTenant>>,
         IEventHandler<EntityDeletedEventData<Edition>>
         where TTenant : AbpTenant<TUser>
@@ -44,7 +44,7 @@ namespace Abp.MultiTenancy
 
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
 
-        protected AbpTenantManager(
+        public AbpTenantManager(
             IRepository<TTenant> tenantRepository, 
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
             AbpEditionManager editionManager,

@@ -23,7 +23,7 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization.Users
 {
-    public abstract class AbpUserManager<TRole, TUser> : UserManager<TUser>, IDomainService
+    public class AbpUserManager<TRole, TUser> : UserManager<TUser>, IDomainService
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {
@@ -58,7 +58,7 @@ namespace Abp.Authorization.Users
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
 
-        protected AbpUserManager(
+        public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
             AbpUserStore<TRole, TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
