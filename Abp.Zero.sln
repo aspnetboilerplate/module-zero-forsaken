@@ -65,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.SampleApp", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.Tests", "test\Abp.ZeroCore.Tests\Abp.ZeroCore.Tests.csproj", "{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.Configuration", "src\Abp.Zero.Configuration\Abp.Zero.Configuration.csproj", "{AECDF1B2-083C-463C-B6B5-F8040F573C1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFramework.SettingStore", "src\Abp.EntityFramework.SettingStore\Abp.EntityFramework.SettingStore.csproj", "{5B0C9B90-BAB6-4175-8614-B2F622B5D501}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,10 +157,10 @@ Global
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AECDF1B2-083C-463C-B6B5-F8040F573C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AECDF1B2-083C-463C-B6B5-F8040F573C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AECDF1B2-083C-463C-B6B5-F8040F573C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AECDF1B2-083C-463C-B6B5-F8040F573C1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +192,6 @@ Global
 		{4B03D73D-D453-4FCB-95C8-F23D1B300DE7} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
 		{D1084B66-375B-433A-9742-FD4A703994E1} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
-		{AECDF1B2-083C-463C-B6B5-F8040F573C1F} = {12068527-E860-4AC1-88C3-62B435E4BBE5}
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501} = {12068527-E860-4AC1-88C3-62B435E4BBE5}
 	EndGlobalSection
 EndGlobal
