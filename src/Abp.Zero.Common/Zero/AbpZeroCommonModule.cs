@@ -20,7 +20,7 @@ namespace Abp.Zero
     /// <summary>
     /// ABP zero core module.
     /// </summary>
-    [DependsOn(typeof(AbpKernelModule))]
+    [DependsOn(typeof(AbpKernelModule), typeof(SettingsModule))]
     public class AbpZeroCommonModule : AbpModule
     {
         public override void PreInitialize()
