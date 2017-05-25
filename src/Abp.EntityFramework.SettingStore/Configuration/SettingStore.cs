@@ -53,7 +53,7 @@ namespace Abp.Configuration
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
                     return (await _settingRepository.FirstOrDefaultAsync(s => s.UserId == userId && s.Name == name && s.TenantId == tenantId))
-                    .ToSettingInfo();
+                        .ToSettingInfo();
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace Abp.Configuration
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
                     await _settingRepository.DeleteAsync(
-                    s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name && s.TenantId == settingInfo.TenantId
+                        s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name && s.TenantId == settingInfo.TenantId
                     );
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
@@ -97,7 +97,7 @@ namespace Abp.Configuration
                         s => s.TenantId == settingInfo.TenantId &&
                              s.UserId == settingInfo.UserId &&
                              s.Name == settingInfo.Name
-                        );
+                    );
 
                     if (setting != null)
                     {

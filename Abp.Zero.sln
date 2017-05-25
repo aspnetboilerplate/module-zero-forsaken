@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{364398C2-9B6A-40B3-9845-23ABFB8D12AB}"
 EndProject
@@ -41,11 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.Owin", "src\Abp.Ze
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.AspNetCore", "src\Abp.Zero.AspNetCore\Abp.Zero.AspNetCore.csproj", "{8EE2ACFF-CB44-4A7E-8FE7-5709AD245F44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore", "src\Abp.ZeroCore\Abp.ZeroCore.csproj", "{C5F4218F-2637-4629-B43B-7728D28CB19E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore", "src\Abp.ZeroCore\Abp.ZeroCore.csproj", "{C5F4218F-2637-4629-B43B-7728D28CB19E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Zero.Common", "src\Abp.Zero.Common\Abp.Zero.Common.csproj", "{EABE7BBB-A837-4607-9B0D-BE41E4A0F81F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Zero.Common", "src\Abp.Zero.Common\Abp.Zero.Common.csproj", "{EABE7BBB-A837-4607-9B0D-BE41E4A0F81F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.EntityFrameworkCore", "src\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj", "{39A3807E-4309-43D7-98C1-246547108006}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.EntityFrameworkCore", "src\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj", "{39A3807E-4309-43D7-98C1-246547108006}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ZeroCore", "ZeroCore", "{A6CB86B2-8C58-42D7-917A-F1DEB29C121A}"
 EndProject
@@ -55,15 +55,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zero", "Zero", "{4A2AFB7B-F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{12068527-E860-4AC1-88C3-62B435E4BBE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.IdentityServer4", "src\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj", "{41608BBD-C619-4579-AA32-CA6FC6B7F810}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.IdentityServer4", "src\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj", "{41608BBD-C619-4579-AA32-CA6FC6B7F810}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ZeroCore", "ZeroCore", "{01532A9D-77F4-477E-A43E-0E7078E4E9DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.IdentityServer4.Tests", "test\Abp.ZeroCore.IdentityServer4.Tests\Abp.ZeroCore.IdentityServer4.Tests.csproj", "{4B03D73D-D453-4FCB-95C8-F23D1B300DE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.IdentityServer4.Tests", "test\Abp.ZeroCore.IdentityServer4.Tests\Abp.ZeroCore.IdentityServer4.Tests.csproj", "{4B03D73D-D453-4FCB-95C8-F23D1B300DE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.SampleApp", "test\Abp.ZeroCore.SampleApp\Abp.ZeroCore.SampleApp.csproj", "{D1084B66-375B-433A-9742-FD4A703994E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.SampleApp", "test\Abp.ZeroCore.SampleApp\Abp.ZeroCore.SampleApp.csproj", "{D1084B66-375B-433A-9742-FD4A703994E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.Tests", "test\Abp.ZeroCore.Tests\Abp.ZeroCore.Tests.csproj", "{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.Tests", "test\Abp.ZeroCore.Tests\Abp.ZeroCore.Tests.csproj", "{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFramework.SettingStore", "src\Abp.EntityFramework.SettingStore\Abp.EntityFramework.SettingStore.csproj", "{5B0C9B90-BAB6-4175-8614-B2F622B5D501}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,10 @@ Global
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,5 +192,6 @@ Global
 		{4B03D73D-D453-4FCB-95C8-F23D1B300DE7} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
 		{D1084B66-375B-433A-9742-FD4A703994E1} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
+		{5B0C9B90-BAB6-4175-8614-B2F622B5D501} = {12068527-E860-4AC1-88C3-62B435E4BBE5}
 	EndGlobalSection
 EndGlobal
