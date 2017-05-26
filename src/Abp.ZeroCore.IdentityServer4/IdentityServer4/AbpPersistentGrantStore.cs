@@ -9,9 +9,9 @@ namespace Abp.IdentityServer4
 {
     public class AbpPersistedGrantStore : AbpServiceBase, IPersistedGrantStore
     {
-        private readonly IRepository<PersistedGrantEntity, long> _persistedGrantRepository;
+        private readonly IRepository<PersistedGrantEntity, string> _persistedGrantRepository;
 
-        public AbpPersistedGrantStore(IRepository<PersistedGrantEntity, long> persistedGrantRepository)
+        public AbpPersistedGrantStore(IRepository<PersistedGrantEntity, string> persistedGrantRepository)
         {
             _persistedGrantRepository = persistedGrantRepository;
         }
@@ -19,7 +19,7 @@ namespace Abp.IdentityServer4
         [UnitOfWork]
         public virtual async Task StoreAsync(PersistedGrant grant)
         {
-            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(x => x.Key == grant.Key);
+            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(grant.Key);
             if (entity == null)
             {
                 await _persistedGrantRepository.InsertAsync(ObjectMapper.Map<PersistedGrantEntity>(grant));
@@ -33,7 +33,7 @@ namespace Abp.IdentityServer4
         [UnitOfWork]
         public virtual async Task<PersistedGrant> GetAsync(string key)
         {
-            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(x => x.Key == key);
+            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(key);
             if (entity == null)
             {
                 return null;
@@ -52,7 +52,7 @@ namespace Abp.IdentityServer4
         [UnitOfWork]
         public virtual async Task RemoveAsync(string key)
         {
-            await _persistedGrantRepository.DeleteAsync(x => x.Key == key);
+            await _persistedGrantRepository.DeleteAsync(key);
         }
 
         [UnitOfWork]
