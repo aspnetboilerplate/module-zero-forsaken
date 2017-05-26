@@ -16,7 +16,7 @@ $projects = (
     "Abp.ZeroCore",
     "Abp.ZeroCore.EntityFrameworkCore",
     "Abp.ZeroCore.IdentityServer4",
-    "Abp.ZeroCore.IdentityServer4.EntityFrameworkCore",
+    "Abp.ZeroCore.IdentityServer4.EntityFrameworkCore"
 )
 
 # Rebuild solution
