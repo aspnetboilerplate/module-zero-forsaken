@@ -5,11 +5,11 @@ using Abp.Zero;
 namespace Abp.IdentityServer4
 {
     [DependsOn(typeof(AbpZeroCoreModule))]
-    public class AbpZeroIdentityServerModule : AbpModule
+    public class AbpZeroCoreIdentityServerModule : AbpModule
     {
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroIdentityServerModule).GetAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreIdentityServerModule).GetAssembly());
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Abp.IdentityFramework;
 
 namespace Abp.ZeroCore.SampleApp.Core
 {
