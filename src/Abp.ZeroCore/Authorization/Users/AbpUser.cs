@@ -48,7 +48,7 @@ namespace Abp.Authorization.Users
 
         public void SetNormalizedNames()
         {
-            NormalizedUserName = AdminUserName.ToUpperInvariant();
+            NormalizedUserName = UserName.ToUpperInvariant();
             NormalizedEmailAddress = EmailAddress.ToUpperInvariant();
         }
     }
