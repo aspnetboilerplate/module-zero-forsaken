@@ -75,7 +75,7 @@ namespace Abp.Localization
 
         public virtual LanguageInfo ToLanguageInfo()
         {
-            return new LanguageInfo(Name, DisplayName, Icon); //TODO: Set IsDisabled after ABP v2.1.
+            return new LanguageInfo(Name, DisplayName, Icon, isDisabled: IsDisabled);
         }
     }
 }

@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp" Version="2.1.0-beta4" />
+    <PackageReference Include="Abp" Version="2.1.0-rc1" />
   </ItemGroup>
 
 </Project>
