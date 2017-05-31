@@ -54,6 +54,11 @@ namespace Abp.Localization
         public virtual string Icon { get; set; }
 
         /// <summary>
+        /// Is this language active. Inactive languages are not get by <see cref="IApplicationLanguageManager"/>.
+        /// </summary>
+        public bool IsDisabled { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="ApplicationLanguage"/> object.
         /// </summary>
         public ApplicationLanguage()
@@ -70,7 +75,7 @@ namespace Abp.Localization
 
         public virtual LanguageInfo ToLanguageInfo()
         {
-            return new LanguageInfo(Name, DisplayName, Icon);
+            return new LanguageInfo(Name, DisplayName, Icon); //TODO: Set IsDisabled after ABP v2.1.
         }
     }
 }
