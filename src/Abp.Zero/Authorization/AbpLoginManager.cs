@@ -45,7 +45,7 @@ namespace Abp.Authorization
             ISettingManager settingManager,
             IRepository<UserLoginAttempt, long> userLoginAttemptRepository,
             IUserManagementConfig userManagementConfig,
-            IIocResolver iocResolver, 
+            IIocResolver iocResolver,
             AbpRoleManager<TRole, TUser> roleManager)
         {
             MultiTenancyConfig = multiTenancyConfig;
@@ -174,17 +174,14 @@ namespace Abp.Authorization
                     }
 
                     var verificationResult = UserManager.PasswordHasher.VerifyHashedPassword(user.Password, plainPassword);
-                    if (verificationResult != PasswordVerificationResult.Success)
+                    if (verificationResult == PasswordVerificationResult.Failed)
                     {
-                        if (shouldLockout)
-                        {
-                            if (await TryLockOutAsync(tenantId, user.Id))
-                            {
-                                return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
-                            }
-                        }
+                        return await GetFailedPasswordValidationAsLoginResultAsync(user, tenant, shouldLockout);
+                    }
 
-                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidPassword, tenant, user);
+                    if (verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
+                    {
+                        return await GetSuccessRehashNeededAsLoginResultAsync(user, tenant);
                     }
 
                     await UserManager.ResetAccessFailedCountAsync(user.Id);
@@ -192,6 +189,24 @@ namespace Abp.Authorization
 
                 return await CreateLoginResultAsync(user, tenant);
             }
+        }
+
+        protected virtual async Task<AbpLoginResult<TTenant, TUser>> GetFailedPasswordValidationAsLoginResultAsync(TUser user, TTenant tenant = null, bool shouldLockout = false)
+        {
+            if (shouldLockout)
+            {
+                if (await TryLockOutAsync(user.TenantId, user.Id))
+                {
+                    return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
+                }
+            }
+
+            return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidPassword, tenant, user);
+        }
+
+        protected virtual async Task<AbpLoginResult<TTenant, TUser>> GetSuccessRehashNeededAsLoginResultAsync(TUser user, TTenant tenant = null, bool shouldLockout = false)
+        {
+            return await GetFailedPasswordValidationAsLoginResultAsync(user, tenant, shouldLockout);
         }
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> CreateLoginResultAsync(TUser user, TTenant tenant = null)
@@ -231,7 +246,7 @@ namespace Abp.Authorization
                         TenantId = tenantId,
                         TenancyName = tenancyName,
 
-                        UserId = loginResult.User != null ? loginResult.User.Id : (long?) null,
+                        UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
                         UserNameOrEmailAddress = userNameOrEmailAddress,
 
                         Result = loginResult.Result,
@@ -257,7 +272,7 @@ namespace Abp.Authorization
                 {
                     (await UserManager.AccessFailedAsync(userId)).CheckErrors();
 
-                    var isLockOut =  await UserManager.IsLockedOutAsync(userId);
+                    var isLockOut = await UserManager.IsLockedOutAsync(userId);
 
                     await UnitOfWorkManager.Current.SaveChangesAsync();
 
@@ -301,7 +316,7 @@ namespace Abp.Authorization
                                         user.Roles.Add(new UserRole(tenantId, user.Id, defaultRole.Id));
                                     }
                                 }
-                                
+
                                 await UserManager.AbpStore.CreateAsync(user);
                             }
                             else
