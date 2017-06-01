@@ -65,12 +65,13 @@ namespace Abp.Localization
         {
         }
 
-        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null)
+        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null, bool isDisabled = false)
         {
             TenantId = tenantId;
             Name = name;
             DisplayName = displayName;
             Icon = icon;
+            IsDisabled = isDisabled;
         }
 
         public virtual LanguageInfo ToLanguageInfo()
