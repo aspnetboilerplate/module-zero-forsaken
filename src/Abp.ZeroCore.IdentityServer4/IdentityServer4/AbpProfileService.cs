@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Domain.Uow;
 using Abp.Runtime.Security;
@@ -14,7 +13,7 @@ namespace Abp.IdentityServer4
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        protected AbpProfileService(
+        public AbpProfileService(
             UserManager<TUser> userManager,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
             IUnitOfWorkManager unitOfWorkManager

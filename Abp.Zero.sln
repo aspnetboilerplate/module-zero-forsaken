@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{364398C2-9B6A-40B3-9845-23ABFB8D12AB}"
 EndProject
@@ -64,6 +64,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.SampleApp", "test\Abp.ZeroCore.SampleApp\Abp.ZeroCore.SampleApp.csproj", "{D1084B66-375B-433A-9742-FD4A703994E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.Tests", "test\Abp.ZeroCore.Tests\Abp.ZeroCore.Tests.csproj", "{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.IdentityServer4.EntityFrameworkCore", "src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj", "{F4A295A8-3FE6-4397-B3F5-0CFF9EC483E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,10 @@ Global
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4A295A8-3FE6-4397-B3F5-0CFF9EC483E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4A295A8-3FE6-4397-B3F5-0CFF9EC483E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4A295A8-3FE6-4397-B3F5-0CFF9EC483E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4A295A8-3FE6-4397-B3F5-0CFF9EC483E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,5 +192,6 @@ Global
 		{4B03D73D-D453-4FCB-95C8-F23D1B300DE7} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
 		{D1084B66-375B-433A-9742-FD4A703994E1} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
 		{72427FA6-BC94-42AA-B9AC-3CF2E257E41B} = {01532A9D-77F4-477E-A43E-0E7078E4E9DD}
+		{F4A295A8-3FE6-4397-B3F5-0CFF9EC483E9} = {A6CB86B2-8C58-42D7-917A-F1DEB29C121A}
 	EndGlobalSection
 EndGlobal

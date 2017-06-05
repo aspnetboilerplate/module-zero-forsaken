@@ -64,7 +64,7 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<RoleClaim>(modelBuilder, prefix + "RoleClaims", schemaName);
         }
 
-        private static void SetTableName<TEntity>(ModelBuilder modelBuilder, string tableName, string schemaName)
+        internal static void SetTableName<TEntity>(this ModelBuilder modelBuilder, string tableName, string schemaName)
             where TEntity : class
         {
             if (schemaName == null)
