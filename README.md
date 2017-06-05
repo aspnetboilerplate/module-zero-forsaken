@@ -1,5 +1,7 @@
 ASP.NET Boilerplate - Module Zero
 ===========
+[![Build status](https://ci.appveyor.com/api/projects/status/n02ctnbvhjeduuov/branch/master?svg=true)](https://ci.appveyor.com/project/SecComm/module-zero/branch/master)
+
 
 AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/56e9cadwavg3lj64?svg=true)](https://ci.appveyor.com/project/hikalkan/module-zero)
 
