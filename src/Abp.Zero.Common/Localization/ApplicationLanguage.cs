@@ -54,23 +54,29 @@ namespace Abp.Localization
         public virtual string Icon { get; set; }
 
         /// <summary>
+        /// Is this language active. Inactive languages are not get by <see cref="IApplicationLanguageManager"/>.
+        /// </summary>
+        public bool IsDisabled { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="ApplicationLanguage"/> object.
         /// </summary>
         public ApplicationLanguage()
         {
         }
 
-        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null)
+        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null, bool isDisabled = false)
         {
             TenantId = tenantId;
             Name = name;
             DisplayName = displayName;
             Icon = icon;
+            IsDisabled = isDisabled;
         }
 
         public virtual LanguageInfo ToLanguageInfo()
         {
-            return new LanguageInfo(Name, DisplayName, Icon);
+            return new LanguageInfo(Name, DisplayName, Icon, isDisabled: IsDisabled);
         }
     }
 }
