@@ -97,7 +97,7 @@ namespace Microsoft.Extensions.DependencyInjection
             where TPermissionChecker : class
         {
             var type = typeof(TPermissionChecker);
-            var checkerType = typeof(PermissionChecker<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType);
+            var checkerType = typeof(PermissionChecker<,>).MakeGenericType(builder.RoleType, builder.UserType);
             builder.Services.AddScoped(type);
             builder.Services.AddScoped(checkerType, provider => provider.GetService(type));
             builder.Services.AddScoped(typeof(IPermissionChecker), provider => provider.GetService(type));

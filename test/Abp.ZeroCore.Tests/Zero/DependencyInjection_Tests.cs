@@ -80,7 +80,7 @@ namespace Abp.Zero
         public void Should_Resolve_PermissionChecker()
         {
             LocalIocManager.Resolve<IPermissionChecker>();
-            LocalIocManager.Resolve<PermissionChecker<Tenant, Role, User>>();
+            LocalIocManager.Resolve<PermissionChecker<Role, User>>();
             LocalIocManager.Resolve<PermissionChecker>();
         }
 

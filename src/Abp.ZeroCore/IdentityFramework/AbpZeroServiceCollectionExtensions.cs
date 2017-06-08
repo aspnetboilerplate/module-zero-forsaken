@@ -67,8 +67,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped(typeof(ISecurityStampValidator), provider => provider.GetService(typeof(AbpSecurityStampValidator<TTenant, TRole, TUser>)));
 
             //PermissionChecker
-            services.TryAddScoped<PermissionChecker<TTenant, TRole, TUser>>();
-            services.TryAddScoped(typeof(IPermissionChecker), provider => provider.GetService(typeof(PermissionChecker<TTenant, TRole, TUser>)));
+            services.TryAddScoped<PermissionChecker<TRole, TUser>>();
+            services.TryAddScoped(typeof(IPermissionChecker), provider => provider.GetService(typeof(PermissionChecker<TRole, TUser>)));
 
             //AbpUserStore
             services.TryAddScoped<AbpUserStore<TRole, TUser>>();
