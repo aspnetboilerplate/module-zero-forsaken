@@ -1,7 +1,7 @@
 ﻿using Abp.Organizations;
 using Abp.ZeroCore.SampleApp.EntityFramework;
 
-namespace Abp.Zero
+namespace Abp.Zero.TestData
 {
     /* Creates OU tree for default tenant as shown below:
      * 

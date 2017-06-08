@@ -391,7 +391,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<IdentityResult> SetRoles(TUser user, string[] roleNames)
         {
-            await AbpStore.UserRepository.EnsureLoadedAsync(user, u => u.Roles);
+            await AbpStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
             
             //Remove from removed roles
             foreach (var userRole in user.Roles.ToList())

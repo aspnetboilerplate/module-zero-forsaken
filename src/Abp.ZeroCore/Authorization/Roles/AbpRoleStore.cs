@@ -280,7 +280,7 @@ namespace Abp.Authorization.Roles
 
             Check.NotNull(role, nameof(role));
 
-            await _roleRepository.EnsureLoadedAsync(role, u => u.Claims, cancellationToken);
+            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
 
             return role.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
         }
@@ -299,7 +299,7 @@ namespace Abp.Authorization.Roles
             Check.NotNull(role, nameof(role));
             Check.NotNull(claim, nameof(claim));
 
-            await _roleRepository.EnsureLoadedAsync(role, u => u.Claims, cancellationToken);
+            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
 
             role.Claims.Add(new RoleClaim(role, claim));
         }
@@ -316,7 +316,7 @@ namespace Abp.Authorization.Roles
             Check.NotNull(role, nameof(role));
             Check.NotNull(claim, nameof(claim));
 
-            await _roleRepository.EnsureLoadedAsync(role, u => u.Claims, cancellationToken);
+            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
 
             role.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
         }

@@ -454,7 +454,7 @@ namespace Abp.Authorization.Users
                 return false;
             }
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Roles, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
 
             return user.Roles.Any(r => r.RoleId == role.Id);
         }
@@ -479,7 +479,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
 
             return user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
         }
@@ -498,7 +498,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
 
             foreach (var claim in claims)
             {
@@ -522,7 +522,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(claim, nameof(claim));
             Check.NotNull(newClaim, nameof(newClaim));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
 
             var userClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
             foreach (var userClaim in userClaims)
@@ -546,7 +546,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Claims, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
 
             foreach (var claim in claims)
             {
@@ -568,7 +568,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(login, nameof(login));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Logins, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Logins, cancellationToken);
 
             user.Logins.Add(new UserLogin(user.TenantId, user.Id, login.LoginProvider, login.ProviderKey));
         }
@@ -589,7 +589,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(loginProvider, nameof(loginProvider));
             Check.NotNull(providerKey, nameof(providerKey));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Logins, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Logins, cancellationToken);
 
             user.Logins.RemoveAll(userLogin => userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey);
         }
@@ -608,7 +608,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Logins, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Logins, cancellationToken);
 
             return user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)).ToList();
         }
@@ -1100,7 +1100,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Tokens, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
 
             var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name);
             if (token == null)
@@ -1127,7 +1127,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Tokens, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
 
             user.Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
         }
@@ -1146,7 +1146,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureLoadedAsync(user, u => u.Tokens, cancellationToken);
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
 
             return user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name)?.Value;
         }

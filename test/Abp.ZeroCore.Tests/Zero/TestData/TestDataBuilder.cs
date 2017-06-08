@@ -1,6 +1,6 @@
 ﻿using Abp.ZeroCore.SampleApp.EntityFramework;
 
-namespace Abp.Zero
+namespace Abp.Zero.TestData
 {
     public class TestDataBuilder
     {
@@ -15,6 +15,7 @@ namespace Abp.Zero
 
         public void Create()
         {
+            new TestRolesBuilder(_context, _tenantId).Create();
             new TestOrganizationUnitsBuilder(_context, _tenantId).Create();
 
             _context.SaveChanges();

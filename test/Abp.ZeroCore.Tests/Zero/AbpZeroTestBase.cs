@@ -7,6 +7,7 @@ using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Runtime.Session;
 using Abp.TestBase;
+using Abp.Zero.TestData;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.EntityFramework;
 using Microsoft.EntityFrameworkCore;
