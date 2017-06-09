@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.EntityFrameworkCore" Version="2.1.1" />
+    <PackageReference Include="Abp.EntityFrameworkCore" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
