@@ -4,7 +4,7 @@ AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/56e9cadwa
 
 ## What is 'module zero'?
 
-This is an <a href="https://aspnetboilerplate.com/" target="_blank">ASP.NET Boilerplate</a> module integrated to Microsoft <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Identity</a>
+This is an <a href="https://aspnetboilerplate.com/" target="_blank">ASP.NET Boilerplate</a> module integrated to Microsoft <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Identity</a>.
 
 Implements abstract concepts of ASP.NET Boilerplate framework:
 
