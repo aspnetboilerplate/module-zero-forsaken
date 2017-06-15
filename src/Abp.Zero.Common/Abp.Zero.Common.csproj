@@ -15,17 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-de.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-fa.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-fr.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-it.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-lt.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-lv.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-pt-BR.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-ru.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-tr.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero-zh-CN.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\AbpZero.xml" />
+    <EmbeddedResource Include="Zero\Localization\Source\*.xml" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
