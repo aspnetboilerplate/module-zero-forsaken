@@ -9,7 +9,7 @@ namespace Abp.Authorization.Users
     /// Represents membership of a User to an OU.
     /// </summary>
     [Table("AbpUserOrganizationUnits")]
-    public class UserOrganizationUnit : CreationAuditedEntity<long>, IMayHaveTenant
+    public class UserOrganizationUnit : CreationAuditedEntity<long>, IMayHaveTenant, ISoftDelete
     {
         /// <summary>
         /// TenantId of this entity.
@@ -25,6 +25,11 @@ namespace Abp.Authorization.Users
         /// Id of the <see cref="OrganizationUnit"/>.
         /// </summary>
         public virtual long OrganizationUnitId { get; set; }
+
+        /// <summary>
+        /// Specifies if the organization is soft deleted or not.
+        /// </summary>
+        public virtual bool IsDeleted { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserOrganizationUnit"/> class.
