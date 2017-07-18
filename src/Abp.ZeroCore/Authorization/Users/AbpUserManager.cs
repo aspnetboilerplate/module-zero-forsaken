@@ -65,7 +65,7 @@ namespace Abp.Authorization.Users
             IPasswordHasher<TUser> passwordHasher,
             IEnumerable<IUserValidator<TUser>> userValidators,
             IEnumerable<IPasswordValidator<TUser>> passwordValidators,
-            ILookupNormalizer keyNormalizer, 
+            ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             IServiceProvider services,
             ILogger<UserManager<TUser>> logger,
@@ -367,7 +367,7 @@ namespace Abp.Authorization.Users
             {
                 return IdentityResult.Failed(errors.ToArray());
             }
-            
+
             await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
             return IdentityResult.Success;
         }
@@ -392,7 +392,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<IdentityResult> SetRoles(TUser user, string[] roleNames)
         {
             await AbpStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
-            
+
             //Remove from removed roles
             foreach (var userRole in user.Roles.ToList())
             {
@@ -593,7 +593,7 @@ namespace Abp.Authorization.Users
                 }
 
                 var newCacheItem = new UserPermissionCacheItem(userId);
-                
+
                 foreach (var roleName in await GetRolesAsync(user))
                 {
                     newCacheItem.RoleIds.Add((await RoleManager.GetRoleByNameAsync(roleName)).Id);
@@ -613,6 +613,30 @@ namespace Abp.Authorization.Users
 
                 return newCacheItem;
             });
+        }
+
+        public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(TUser user)
+        {
+            var providers = new List<string>();
+
+            foreach (var provider in await base.GetValidTwoFactorProvidersAsync(user))
+            {
+                if (provider == "Email" &&
+                    !await IsTrueAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, user.TenantId))
+                {
+                    continue;
+                }
+
+                if (provider == "Phone" &&
+                    !await IsTrueAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, user.TenantId))
+                {
+                    continue;
+                }
+
+                providers.Add(provider);
+            }
+
+            return providers;
         }
 
         private bool IsTrue(string settingName, int? tenantId)
