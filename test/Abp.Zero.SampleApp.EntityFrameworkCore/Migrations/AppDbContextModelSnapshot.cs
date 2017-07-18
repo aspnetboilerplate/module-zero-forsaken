@@ -287,6 +287,8 @@ namespace Abp.Zero.SampleApp.EntityFrameworkCore.Migrations
 
                     b.Property<long>("UserId");
 
+                    b.Property<bool>("IsDeleted");
+
                     b.HasKey("Id");
 
                     b.ToTable("AbpUserOrganizationUnits");

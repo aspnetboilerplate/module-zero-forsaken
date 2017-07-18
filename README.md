@@ -37,9 +37,10 @@ A screenshot from ASP.NET Core based startup template:
 
 ![](doc/img/module-zero-core-template.png)
 
-## Documentation
+## Links
 
-http://www.aspnetboilerplate.com/Pages/Documents
+* Documentation: https://aspnetboilerplate.com/Pages/Documents
+* Questions & Answers: https://stackoverflow.com/questions/tagged/aspnetboilerplate?sort=newest
 
 ## Nuget Packages
 

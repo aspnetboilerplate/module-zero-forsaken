@@ -61,7 +61,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             //Assert
             (await _userManager.IsInOrganizationUnitAsync(_defaultTenantAdmin, ou11)).ShouldBe(false);
-            UsingDbContext(context => context.UserOrganizationUnits.FirstOrDefault(ou => ou.UserId == _defaultTenantAdmin.Id && ou.OrganizationUnitId == ou11.Id).ShouldBeNull());
+            UsingDbContext(context => context.UserOrganizationUnits.FirstOrDefault(ou => ou.UserId == _defaultTenantAdmin.Id && ou.OrganizationUnitId == ou11.Id).IsDeleted.ShouldBeTrue());
         }
 
         [Fact]
