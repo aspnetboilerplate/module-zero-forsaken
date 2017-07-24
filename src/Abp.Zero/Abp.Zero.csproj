@@ -18,11 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Zero\Localization\SourceExt\*.xml"/>
+    <EmbeddedResource Include="Zero\Localization\SourceExt\*.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\Abp.Zero.pdb">
+    <None Include="bin\Release\net46\Abp.Zero.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>

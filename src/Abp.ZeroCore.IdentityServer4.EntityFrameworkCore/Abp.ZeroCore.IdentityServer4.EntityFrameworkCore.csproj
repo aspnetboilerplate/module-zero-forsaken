@@ -21,5 +21,16 @@
     <ProjectReference Include="..\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Release\net46\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.pdb">
+      <PackagePath>lib/net46/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+    <None Include="bin\Release\netstandard16\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.pdb">
+      <PackagePath>lib/netstandard16/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
   
 </Project>

@@ -12,6 +12,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="bin\Release\net46\Abp.ZeroCore.EntityFrameworkCore.pdb">
+      <PackagePath>lib/net46/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+    <None Include="bin\Release\netstandard16\Abp.ZeroCore.EntityFrameworkCore.pdb">
+      <PackagePath>lib/netstandard16/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
   </ItemGroup>
 

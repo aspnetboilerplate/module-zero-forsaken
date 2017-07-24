@@ -22,6 +22,17 @@
     <PackageReference Include="Abp.AutoMapper" Version="2.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="bin\Release\net46\Abp.ZeroCore.IdentityServer4.pdb">
+      <PackagePath>lib/net46/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+    <None Include="bin\Release\netstandard16\Abp.ZeroCore.IdentityServer4.pdb">
+      <PackagePath>lib/netstandard16/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>

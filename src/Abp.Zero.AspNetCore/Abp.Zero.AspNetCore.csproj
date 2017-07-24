@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\Abp.Zero.AspNetCore.pdb">
+    <None Include="bin\Release\net46\Abp.Zero.AspNetCore.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
