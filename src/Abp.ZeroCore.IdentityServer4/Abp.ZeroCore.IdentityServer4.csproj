@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
-    <PackageReference Include="Abp.AutoMapper" Version="2.2.1" />
+    <PackageReference Include="Abp.AutoMapper" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
